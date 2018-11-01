@@ -1,6 +1,16 @@
 language: android
 sudo: true
 
+android:
+   components:
+   # The BuildTools version used by project
+   - tools
+   - platform-tools
+   - tools
+   - build-tools-28.0.3
+   # The SDK version used to complie project
+   - android-28
+
 jdk:
    - oraclejdk8
 
@@ -11,6 +21,5 @@ install:
   - echo yes | sdkmanager "platforms;android-26" &>/dev/null
 
 script:
-  - ./gradlew clean testDebug lintDebug jacocoDebugReport coveralls -Dscan --stacktrace
-
-
+  - ./gradlew clean
+  - ./gradlew builde
