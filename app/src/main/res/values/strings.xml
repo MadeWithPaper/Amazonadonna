@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AmazonHandmade</string>
+    <string name="title_activity_show_all_artisans">ShowAllArtisans</string>
 </resources>
