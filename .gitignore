@@ -10,3 +10,6 @@
 /captures
 .externalNativeBuild
 /keys
+**/node_modules
+**/dist
+**/.env

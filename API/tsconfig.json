@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "declaration": false,
+        "importHelpers": true,
+        "lib": ["dom", "es2017"],
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "target": "es5",
+        "sourceMap": true,
+        "removeComments": true,
+        "noStrictGenericChecks": true,
+        "plugins": [{ "name": "tslint-language-service" }]
+    }
+}
