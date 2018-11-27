@@ -1,8 +1,6 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-// Look into amazon sdk
-
 import * as path from 'path'
 import * as express from 'express'
 import * as bodyParser from 'body-parser'
@@ -27,6 +25,13 @@ app.get('/', (req: express.Request, res: express.Response) => {
         console.log(data)
     })
     res.send('I did it!')
+    ddb.listTables({ Limit: 10 }, (err, data) => {
+        if (err) {
+            console.log('Error', err.code)
+        } else {
+            console.log('Table names are ', data.TableNames)
+        }
+    })
     // res.sendFile(path.resolve(__dirname, 'frontEnd', 'index.html'))
 })
 
@@ -54,9 +59,34 @@ app.get('/getDatabase', (req: express.Request, res: express.Response) => {
     res.json({ name: 'Mitchell' })
 })
 
-app.post('/addToDatabase', (req: express.Request, res: express.Response) => {
-    console.log(req.body)
-    res.send()
-})
+app.post(
+    '/addArtisanToDatabase',
+    (req: express.Request, res: express.Response) => {
+        console.log(req.body)
+        console.log(req.body.long)
+        const params: aws.DynamoDB.PutItemInput = {
+            TableName: 'artisan',
+            Item: {
+                artisanId: { S: req.body.artisanId },
+                cgoId: { S: req.body.cgoId },
+                bio: { S: req.body.bio },
+                city: { S: req.body.city },
+                country: { S: req.body.country },
+                name: { S: req.body.name },
+                lat: { N: req.body.lat },
+                lon: { N: req.body.lon }
+            }
+        }
+        ddb.putItem(params, (err, data) => {
+            if (err) {
+                console.log('Error', err.code)
+                res.send(err.message)
+            } else {
+                console.log('Attributes ', data)
+                res.send('Successfully added')
+            }
+        })
+    }
+)
 
 // app.use(express.static(path.resolve(__dirname, 'frontEnd')))
