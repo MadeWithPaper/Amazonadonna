@@ -36,29 +36,31 @@ app.get('/getDatabase', (req: express.Request, res: express.Response) => {
     res.json({ name: 'Mitchell' })
 })
 
-const params: aws.DynamoDB.PutItemInput = {
-    TableName: 'artisan',
-    Item: {
-        artisanId: { S: '1928485' },
-        cgoId: { S: '90218495' },
-        bio: { S: 'Hi I am artisan' },
-        city: { S: 'Tijuana' },
-        country: { S: 'MX' },
-        name: { S: 'Jose Calderon' },
-        lat: { N: '32.5149' },
-        long: { N: '117.0382' }
-    }
-}
 app.post(
     '/addArtisanToDatabase',
     (req: express.Request, res: express.Response) => {
         console.log(req.body)
-        res.send()
+        console.log(req.body.long)
+        const params: aws.DynamoDB.PutItemInput = {
+            TableName: 'artisan',
+            Item: {
+                artisanId: { S: req.body.artisanId },
+                cgoId: { S: req.body.cgoId },
+                bio: { S: req.body.bio },
+                city: { S: req.body.city },
+                country: { S: req.body.country },
+                name: { S: req.body.name },
+                lat: { N: req.body.lat },
+                lon: { N: req.body.lon }
+            }
+        }
         ddb.putItem(params, (err, data) => {
             if (err) {
                 console.log('Error', err.code)
+                res.send(err.message)
             } else {
                 console.log('Attributes ', data)
+                res.send('Successfully added')
             }
         })
     }
