@@ -5,12 +5,13 @@
 
 
 
-Cal Poly Software Engineering Capstone 2018 - 2019 (Fall 2018, Winter 2019, Spring 2019)
-Team Members: 
+Cal Poly Software Engineering Capstone 2018 - 2019 (Fall 2018, Winter 2019, Spring 2019)\
 
-Jacky Huang
-Cory Baxes
-Jaz Singh
-Liam Schmid
-Mitchell Overfield
-Vector Wei
+Team Members:\
+
+Jacky Huang\
+Cory Baxes\
+Jaz Singh\
+Liam Schmid\
+Mitchell Overfield\
+Vector Wei\
