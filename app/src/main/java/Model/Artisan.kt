@@ -1,6 +1,4 @@
-import com.beust.klaxon.Json
-
-class Artisan (val artisanID : String){
+data class Artisan (val name : String){
 
 //    @Json(artisanId = "artisanId")
 //    val artisanID : String,
