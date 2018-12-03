@@ -26,7 +26,6 @@ class ListArtisanAdapter (private val artisans : ArrayList<Artisan>) : RecyclerV
 }
 
 
-
 class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
 
     fun bindArtisian(artisan: Artisan) {
@@ -36,4 +35,4 @@ class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
                 "is a testing bio  his is a tehis is a testing bio this is a testing bio this is a testing bio this is a testing bio\"\n"
         view.textView_artisanCity.text = "Mexico City"
     }
-}
+}   

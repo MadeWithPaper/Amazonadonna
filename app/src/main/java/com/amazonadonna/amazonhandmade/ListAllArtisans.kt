@@ -17,12 +17,13 @@ class ListAllArtisans : AppCompatActivity() {
         setContentView(R.layout.list_all_artisans)
         val artisans = ArrayList<Artisan>()
         //TODO remove test data
-        artisans.add(Artisan("jaz"))
-        artisans.add(Artisan("quinn"))
-        artisans.add(Artisan("jacky"))
-        artisans.add(Artisan("cory"))
-        artisans.add(Artisan("liam"))
-        artisans.add(Artisan("Mitchell"))
+        artisans.add(Artisan("jaz", "testID", "Mexico City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
+        artisans.add(Artisan("jaz", "testID", "Mexico City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
+        artisans.add(Artisan("jaz", "testID", "Mexico City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
+        artisans.add(Artisan("jaz", "testID", "Mexico City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
+        artisans.add(Artisan("jaz", "testID", "Mexico City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
+        artisans.add(Artisan("jaz", "testID", "Mexico City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
+
 
 //        Log.d("info","in List All Artisan on create")
 //        val apiCallUrl = "http://ec2-18-232-77-58.compute-1.amazonaws.com:3000/artisans"
