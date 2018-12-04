@@ -30,7 +30,7 @@ class HomeScreen : AppCompatActivity() {
 //
 //        //starts new screen
        // val intent = Intent(this, ListAllArtisans::class.java)
-        val url = "https://api.letsbuildthatapp.com/youtube/home_feed"
+        val url = "https://29d4c6b3.ngrok.io/artisans"
         val request = Request.Builder().url(url).build()
 
         val client = OkHttpClient()
