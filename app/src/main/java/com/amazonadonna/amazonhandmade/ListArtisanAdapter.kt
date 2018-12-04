@@ -33,6 +33,6 @@ class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
         view.textView_artisanBio.text = "this is a testing bio this is a testing bio this is a testing bio this is a testing bio  his is a testing " +
                 "bio this is a testing bio this is a testing bio this is a testing bio  his is a tehis is a testing bio this is a testing bio this is a testing bio this " +
                 "is a testing bio  his is a tehis is a testing bio this is a testing bio this is a testing bio this is a testing bio\"\n"
-        view.textView_artisanCity.text = "Mexico City"
+        view.textView_artisanCity.text = artisan.city
     }
 }   

@@ -16,6 +16,7 @@ data class Artisan (var name : String,
 
     private fun generateArtisanID() {
         //TODO fill in logic for generating unique ID for artisan
+
     }
 
 

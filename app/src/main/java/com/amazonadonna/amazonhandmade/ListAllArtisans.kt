@@ -18,11 +18,11 @@ class ListAllArtisans : AppCompatActivity() {
         val artisans = ArrayList<Artisan>()
         //TODO remove test data
         artisans.add(Artisan("jaz", "testID", "Mexico City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
-        artisans.add(Artisan("jaz", "testID", "Mexico City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
-        artisans.add(Artisan("jaz", "testID", "Mexico City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
-        artisans.add(Artisan("jaz", "testID", "Mexico City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
-        artisans.add(Artisan("jaz", "testID", "Mexico City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
-        artisans.add(Artisan("jaz", "testID", "Mexico City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
+        artisans.add(Artisan("Jacky", "testID", "SLO", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
+        artisans.add(Artisan("Mitchell", "testID", "Azure City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
+        artisans.add(Artisan("Victor", "testID", "AWS", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
+        artisans.add(Artisan("Liam", "testID", "Cal Poly", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
+        artisans.add(Artisan("Quinn", "testID", "Mexico City", "Mexico", "hello i am an artisan", "test cgo id", 10.0, 10.0))
 
 
 //        Log.d("info","in List All Artisan on create")
