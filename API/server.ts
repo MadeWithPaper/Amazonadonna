@@ -56,7 +56,7 @@ app.get('/artisans', (req: express.Request, res: express.Response) => {
                 })
             })
             Promise.all(convert).then(items => {
-                res.json(JSON.stringify(items))
+                res.json({ ...items })
             })
         }
     })
