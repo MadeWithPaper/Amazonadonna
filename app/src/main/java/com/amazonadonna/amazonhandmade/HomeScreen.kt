@@ -33,28 +33,8 @@ class HomeScreen : AppCompatActivity() {
 //
 //        //starts new screen
         val intent = Intent(this, ListAllArtisans::class.java)
-        val url = "https://29d4c6b3.ngrok.io/artisans"
-        val request = Request.Builder().url(url).build()
-
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object: Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                println(body) //To change body of created functions use File | Settings | File Templates.
-                val gson = GsonBuilder().create()
-                val artisans : List<Artisan> =  gson.fromJson(body, mutableListOf<Artisan>().javaClass)
-                println("i did it" + artisans)
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                println("Failed to execute request") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
-//        // To pass any data to next activity
-//        //OPTIONAL: intent.putExtra("keyIdentifier", value)
-//        // start your next activity
         startActivity(intent)
-        Log.d("INFO", "Starting to fetch")
+
     }
 
     private fun addSingleArtisan() {
@@ -64,34 +44,34 @@ class HomeScreen : AppCompatActivity() {
         //OPTIONAL: intent.putExtra("keyIdentifier", value)
         // start your next activity
         startActivity(intent)
-
-        val url = "https://api.letsbuildthatapp.com/youtube/home_feed"
-        val requestBody = FormBody.Builder().add("artisanId","parse_artisanId")
-                .add("cgoId","parse_cgoID")
-                .add("bio", "parse_bio")
-                .add("city","parse_city")
-                .add("country", "parse_country")
-                .add("name", "parse_name")
-                .add("lat", "parse_lat")
-                .add("lon", "parse_lon")
-                .build()
-        val client = OkHttpClient()
-
-        val request = Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build()
-
-        client.newCall(request).enqueue(object: Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                println(body) //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                println("Failed to execute request") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
+//
+//        val url = "https://api.letsbuildthatapp.com/youtube/home_feed"
+//        val requestBody = FormBody.Builder().add("artisanId","parse_artisanId")
+//                .add("cgoId","parse_cgoID")
+//                .add("bio", "parse_bio")
+//                .add("city","parse_city")
+//                .add("country", "parse_country")
+//                .add("name", "parse_name")
+//                .add("lat", "parse_lat")
+//                .add("lon", "parse_lon")
+//                .build()
+//        val client = OkHttpClient()
+//
+//        val request = Request.Builder()
+//                .url(url)
+//                .post(requestBody)
+//                .build()
+//
+//        client.newCall(request).enqueue(object: Callback {
+//            override fun onResponse(call: Call?, response: Response?) {
+//                val body = response?.body()?.string()
+//                println(body) //To change body of created functions use File | Settings | File Templates.
+//            }
+//
+//            override fun onFailure(call: Call?, e: IOException?) {
+//                println("Failed to execute request") //To change body of created functions use File | Settings | File Templates.
+//            }
+//        })
 
 
 
