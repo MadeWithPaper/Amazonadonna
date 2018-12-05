@@ -29,7 +29,7 @@ class HomeScreen : AppCompatActivity() {
         //TODO add funtion to do GET reqest to back end
 //
 //        //starts new screen
-       // val intent = Intent(this, ListAllArtisans::class.java)
+        val intent = Intent(this, ListAllArtisans::class.java)
         val url = "https://29d4c6b3.ngrok.io/artisans"
         val request = Request.Builder().url(url).build()
 
@@ -47,27 +47,18 @@ class HomeScreen : AppCompatActivity() {
 //        // To pass any data to next activity
 //        //OPTIONAL: intent.putExtra("keyIdentifier", value)
 //        // start your next activity
-//        startActivity(intent)
+        startActivity(intent)
         Log.d("INFO", "Starting to fetch")
     }
 
     private fun addSingleArtisan() {
         //starts new screen
-        //val intent = Intent(this, AddArtisan::class.java)
+        val intent = Intent(this, AddArtisan::class.java)
         // To pass any data to next activity
         //OPTIONAL: intent.putExtra("keyIdentifier", value)
         // start your next activity
-        //startActivity(intent)
-//        {
-//            "artisanId":"56145",
-//            "cgoId": "0",
-//            "bio": "Hi I make necklaces",
-//            "city": "Tijuana",
-//            "country": "MX",
-//            "name": "Mitchell",
-//            "lat": "32.5149",
-//            "lon": "117.0382"
-//        }
+        startActivity(intent)
+
         val url = "https://api.letsbuildthatapp.com/youtube/home_feed"
         val requestBody = FormBody.Builder().add("artisanId","parse_artisanId")
                 .add("cgoId","parse_cgoID")
