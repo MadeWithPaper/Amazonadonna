@@ -4,9 +4,12 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_home_screen.*
 import okhttp3.*
 import java.io.IOException
+import Artisan
+import com.google.gson.GsonBuilder
 
 class HomeScreen : AppCompatActivity() {
 
@@ -38,6 +41,9 @@ class HomeScreen : AppCompatActivity() {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
                 println(body) //To change body of created functions use File | Settings | File Templates.
+                val gson = GsonBuilder().create()
+                val artisans : List<Artisan> =  gson.fromJson(body, mutableListOf<Artisan>().javaClass)
+                println("i did it" + artisans)
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
