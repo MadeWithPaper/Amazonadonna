@@ -35,9 +35,10 @@ class AddArtisan : AppCompatActivity() {
         val cgo = editText_CGOName.text.toString()
         val number = editText_ContactNumber.text.toString()
 
-        if (validFields) {
-        val newArtisan = Artisan(name, "place holder", "", "", bio, cgo,0.0,0.0)
 
+        if (validFields) {
+        val newArtisan = Artisan(name, "e", "", "", bio, cgo,0.0,0.0)
+            newArtisan.generateArtisanID()
         //parse location info
         parseLoc(newArtisan)
 //
@@ -63,7 +64,7 @@ class AddArtisan : AppCompatActivity() {
         System.out.print(rawLoc.substring(0, ind))
 
 
-        artisan.city = rawLoc.substring(0, ind+1)
+        artisan.city = rawLoc.substring(0, ind)
         artisan.country = rawLoc.substring(ind+1)
 
         System.out.print(artisan)
