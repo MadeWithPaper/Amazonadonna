@@ -17,4 +17,7 @@ data class Artisan (
         var num = Random().nextInt()
         artisanID = name + cgoID + num.toString()
     }
+
+
+    //TODO need to add maps functionality
 }

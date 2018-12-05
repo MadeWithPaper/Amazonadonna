@@ -22,60 +22,57 @@ class AddArtisan : AppCompatActivity() {
         }
     }
 
-
     //TODO clean up
     fun makeNewArtisan() {
         //Log.d("INFO", "add button clicked")
         var validFields = false
         //validate fields
         validFields = validateFields()
-
+        Log.d("INFO", "validate fields performed, result: " + validFields.toString())
         val name = editText_Name.text.toString()
         val bio = editText_bio.text.toString()
-        val cgo = editText_CGOName.text.toString()
         val number = editText_ContactNumber.text.toString()
 
 
         if (validFields) {
-        val newArtisan = Artisan(name, "e", "", "", bio, cgo,0.0,0.0)
-            newArtisan.generateArtisanID()
-        //parse location info
-        parseLoc(newArtisan)
-//
-//        System.out.print(newArtisan)
+            val newArtisan = Artisan(name, "e", "", "", bio, "0",0.0,0.0)
+                newArtisan.generateArtisanID()
+            //parse location info
+            parseLoc(newArtisan)
+            Log.d("INFO", "created new Artisan" + newArtisan.toString())
 
-        Log.d("INFO", "created new Artisan" + newArtisan.toString())
+            //pop screen and add
+            submitToDB(newArtisan)
+            //clear all fields
+            clearFields()
+        }
 
-        //pop screen and add
-        submitToDB(newArtisan)
-        //clear all fields
-        clearFields() }
         Toast.makeText(this@AddArtisan, "Artisan added to database.", Toast.LENGTH_SHORT).show()
-
     }
 
     fun parseLoc (artisan: Artisan) {
         val rawLoc = editText_loc.text.toString()
 
         val ind = rawLoc.indexOf(',')
-
-        System.out.print(rawLoc)
-        System.out.print(ind)
-        System.out.print(rawLoc.substring(0, ind))
+//
+//        System.out.print(rawLoc)
+//        System.out.print(ind)
+//        System.out.print(rawLoc.substring(0, ind))
 
 
         artisan.city = rawLoc.substring(0, ind)
         artisan.country = rawLoc.substring(ind+1)
 
-        System.out.print(artisan)
+//        System.out.print(artisan)
     }
 
     fun clearFields() {
         editText_Name.text.clear()
-        editText_CGOName.text.clear()
         editText_ContactNumber.text.clear()
         editText_bio.text.clear()
         editText_loc.text.clear()
+
+        Log.d("INFO", "Clearing fields")
     }
 
     //Validate all fields entered
@@ -86,7 +83,7 @@ class AddArtisan : AppCompatActivity() {
             return false
         }
 
-        if (editText_loc.text.isEmpty()) {
+        if (TextUtils.isEmpty(editText_loc.text.toString())) {
             editText_loc.setError("Location field can not be empty")
             return false
         }
@@ -96,17 +93,12 @@ class AddArtisan : AppCompatActivity() {
             return false
         }
 
-        if (editText_CGOName.text.isEmpty()){
-            editText_CGOName.setError("CGO Name field can not be empty")
-            return false
-        }
-
-        if (editText_ContactNumber.text.isEmpty()){
+        if (TextUtils.isEmpty(editText_ContactNumber.text.toString())){
             editText_ContactNumber.setError("Contact Number can not be empty")
             return false
         }
 
-        if (editText_bio.text.isEmpty()){
+        if (TextUtils.isEmpty(editText_bio.text.toString())){
             editText_bio.setError("bio is empty")
             return false
         }
@@ -117,6 +109,7 @@ class AddArtisan : AppCompatActivity() {
 
     fun submitToDB(artisan: Artisan) {
         val url = "https://29d4c6b3.ngrok.io/addArtisanToDatabase"
+
         val requestBody = FormBody.Builder().add("artisanId",artisan.artisanID)
                 .add("cgoId", artisan.cgoID)
                 .add("bio", artisan.bio)
@@ -126,6 +119,7 @@ class AddArtisan : AppCompatActivity() {
                 .add("lat", artisan.lat.toString())
                 .add("lon", artisan.lon.toString())
                 .build()
+
         val client = OkHttpClient()
 
         val request = Request.Builder()
@@ -136,11 +130,11 @@ class AddArtisan : AppCompatActivity() {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                println(body) //To change body of created functions use File | Settings | File Templates.
+                Log.d("INFO", body)
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                println("Failed to execute request") //To change body of created functions use File | Settings | File Templates.
+                Log.d("ERROR", "failed to do POST request to database")
             }
         })
     }

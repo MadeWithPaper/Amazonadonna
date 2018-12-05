@@ -7,29 +7,12 @@
     tools:context=".AddArtisan">
 
     <EditText
-        android:id="@+id/editText_CGOName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:hint="CGO Name"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.594"
-        app:layout_constraintStart_toEndOf="@+id/textView_CGOName"
-        app:layout_constraintTop_toBottomOf="@+id/editText_loc" />
-
-    <EditText
         android:id="@+id/editText_ContactNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="76dp"
@@ -38,10 +21,10 @@
         android:inputType="number"
         app:layout_constraintBottom_toTopOf="@+id/button_addArtisan"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.675"
+        app:layout_constraintHorizontal_bias="0.652"
         app:layout_constraintStart_toEndOf="@+id/textView_ContactNumber"
-        app:layout_constraintTop_toBottomOf="@+id/editText_CGOName"
-        app:layout_constraintVertical_bias="0.109" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_loc"
+        app:layout_constraintVertical_bias="0.139" />
 
     <ImageView
         android:id="@+id/imageView_artisanProfilePic"
@@ -130,26 +113,15 @@
         app:layout_constraintTop_toBottomOf="@+id/textView_Name" />
 
     <TextView
-        android:id="@+id/textView_CGOName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="44dp"
-        android:text="CGO Name:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_Loc" />
-
-    <TextView
         android:id="@+id/textView_ContactNumber"
         android:layout_width="wrap_content"
         android:layout_height="19dp"
         android:layout_marginStart="12dp"
         android:layout_marginLeft="12dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="52dp"
         android:text="Contact:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_CGOName" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_Loc" />
 
     <EditText
         android:id="@+id/editText_bio"
@@ -165,10 +137,10 @@
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toTopOf="@+id/button_addArtisan"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.355"
+        app:layout_constraintHorizontal_bias="0.254"
         app:layout_constraintStart_toEndOf="@+id/textView_bio"
         app:layout_constraintTop_toBottomOf="@+id/editText_ContactNumber"
-        app:layout_constraintVertical_bias="0.215" />
+        app:layout_constraintVertical_bias="0.09" />
 
     <TextView
         android:id="@+id/textView_bio"
@@ -182,5 +154,5 @@
         app:layout_constraintBottom_toTopOf="@+id/button_addArtisan"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_ContactNumber"
-        app:layout_constraintVertical_bias="0.388" />
+        app:layout_constraintVertical_bias="0.298" />
 </android.support.constraint.ConstraintLayout>
