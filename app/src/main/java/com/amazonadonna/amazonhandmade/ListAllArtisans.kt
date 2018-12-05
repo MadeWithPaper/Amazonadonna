@@ -2,8 +2,14 @@ package com.amazonadonna.amazonhandmade
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.content.Intent
-import java.net.URL
+import android.support.v7.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.list_all_artisans.*
+import Artisan
+import android.util.Log
+import com.google.gson.GsonBuilder
+import okhttp3.*
+import java.io.IOException
+import com.google.gson.reflect.TypeToken
 
 
 class ListAllArtisans : AppCompatActivity() {
@@ -11,18 +17,37 @@ class ListAllArtisans : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_all_artisans)
-        val result = URL("").readText()
 
-//          JSON data sample
-//        { city: { S: ‘CityName’ },
-//            bio: { S: ’Hi I\‘m Juan.’ },
-//            lon: { N: ‘0’ },
-//            artisanId: { S: ‘F5SJ72’ },
-//            lat: { N: ‘0’ },
-//            country: { S: ‘MX’ },
-//            name: { S: ‘Juan Gonzalez’ },
-//            cgoId: { S: ‘0’ } }
-
+        fetchJSON()
+        //TODO add search bar
+        recyclerView_listAllartisans.layoutManager = LinearLayoutManager(this)
     }
 
+    private fun fetchJSON() {
+        val url = "https://29d4c6b3.ngrok.io/artisans"
+        val request = Request.Builder().url(url).build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object: Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()?.string()
+
+                println(body)
+                val gson = GsonBuilder().create()
+                //val artisans : List<Artisan> =  gson.fromJson(body, mutableListOf<Artisan>().javaClass)
+                //System.out.print(artisans.get(0))
+                val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
+
+
+                runOnUiThread {
+                    recyclerView_listAllartisans.adapter = ListArtisanAdapter(artisans)
+                }
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                println("Failed to execute request")
+                Log.d("ERROR", "Failed to execute GET request to " + url)
+            }
+        })
+    }
 }

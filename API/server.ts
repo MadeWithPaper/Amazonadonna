@@ -50,7 +50,14 @@ app.get('/artisans', (req: express.Request, res: express.Response) => {
             console.log(err)
             res.sendStatus(400)
         } else {
-            res.json(data.Items)
+            const convert = data.Items.map(item => {
+                return new Promise(resolve => {
+                    resolve(aws.DynamoDB.Converter.unmarshall(item))
+                })
+            })
+            Promise.all(convert).then(items => {
+                res.json(items)
+            })
         }
     })
 })

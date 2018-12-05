@@ -1,29 +1,23 @@
 import com.beust.klaxon.Json
+import java.io.Serializable
+import java.util.*
 
-class Artisan (val artisanID : String){
+data class Artisan (
+        @Json(name = "name") var name : String,
+        @Json(name = "artisanID") var artisanID : String,
+        @Json(name = "city") var city : String,
+        @Json(name = "country") var country : String,
+        @Json(name = "bio")var bio : String,
+        @Json(name = "cgoId") var cgoID : String,
+        @Json(name = "lon") var lon : Double,
+        @Json(name = "lat") var lat : Double) : Serializable {
 
-//    @Json(artisanId = "artisanId")
-//    val artisanID : String,
-//    @Json(name = "name")
-//    val artisanName : String,
-
-
-
-
-//          JSON data sample
-//        { city: { S: ‘CityName’ },
-//            bio: { S: ’Hi I\‘m Juan.’ },
-//            lon: { N: ‘0’ },
-//            artisanId: { S: ‘F5SJ72’ },
-//            lat: { N: ‘0’ },
-//            country: { S: ‘MX’ },
-//            name: { S: ‘Juan Gonzalez’ },
-//            cgoId: { S: ‘0’ } }
-
-
-    private fun generateArtisanID() {
+    fun generateArtisanID() {
         //TODO fill in logic for generating unique ID for artisan
+        var num = Random().nextInt()
+        artisanID = name + cgoID + num.toString()
     }
 
 
+    //TODO need to add maps functionality
 }

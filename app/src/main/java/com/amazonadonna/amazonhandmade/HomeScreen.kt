@@ -3,7 +3,13 @@ package com.amazonadonna.amazonhandmade
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_home_screen.*
+import okhttp3.*
+import java.io.IOException
+import Artisan
+import com.google.gson.GsonBuilder
 
 class HomeScreen : AppCompatActivity() {
 
@@ -23,22 +29,16 @@ class HomeScreen : AppCompatActivity() {
 
 
     private fun queryAllArtisan() {
-        //TODO add funtion to do GET reqest to back end
-
-        //starts new screen
+        //go to list all artisan screen
         val intent = Intent(this, ListAllArtisans::class.java)
-        // To pass any data to next activity
-        //OPTIONAL: intent.putExtra("keyIdentifier", value)
-        // start your next activity
         startActivity(intent)
+
     }
 
     private fun addSingleArtisan() {
-        //starts new screen
+        //go to add artisan screen
         val intent = Intent(this, AddArtisan::class.java)
-        // To pass any data to next activity
-        //OPTIONAL: intent.putExtra("keyIdentifier", value)
-        // start your next activity
         startActivity(intent)
+
     }
 }
