@@ -4,7 +4,10 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_add_artisan.*
 import Artisan
+import android.content.pm.PackageManager
 import android.text.TextUtils
+import android.content.Intent
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import okhttp3.*
@@ -16,14 +19,41 @@ class AddArtisan : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_artisan)
 
-        button_addArtisan.setOnClickListener{
+        button_addArtisan.setOnClickListener {
             //Toast.makeText(this@AddArtisan, "add button clicked.", Toast.LENGTH_SHORT).show()
             makeNewArtisan()
+        }
+
+        imageView_artisanProfilePic.setOnClickListener {
+            //Toast.makeText(this@AddArtisan, "Profile image clicked.", Toast.LENGTH_SHORT).show()
+            selectImage()
+        }
+    }
+
+    private fun selectImage() {
+        takePicture()
+    }
+
+    //TODO clean up
+    private fun takePicture() {
+        val REQUEST_IMAGE_CAPTURE = 1
+
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            // Takes picture
+            Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+                takePictureIntent.resolveActivity(packageManager)?.also {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                }
+            }
+
+        }
+        else {
+            Toast.makeText(this@AddArtisan, "No camera", Toast.LENGTH_SHORT).show()
         }
     }
 
     //TODO clean up
-    fun makeNewArtisan() {
+    private fun makeNewArtisan() {
         //Log.d("INFO", "add button clicked")
         var validFields = false
         //validate fields
@@ -50,7 +80,7 @@ class AddArtisan : AppCompatActivity() {
         }
     }
 
-    fun parseLoc (artisan: Artisan) {
+    private fun parseLoc (artisan: Artisan) {
         val rawLoc = editText_loc.text.toString()
 
         val ind = rawLoc.indexOf(',')
@@ -66,7 +96,7 @@ class AddArtisan : AppCompatActivity() {
 //        System.out.print(artisan)
     }
 
-    fun clearFields() {
+    private fun clearFields() {
         editText_Name.text.clear()
         editText_ContactNumber.text.clear()
         editText_bio.text.clear()
@@ -77,7 +107,7 @@ class AddArtisan : AppCompatActivity() {
 
     //Validate all fields entered
     //TODO add more checks
-    fun validateFields() : Boolean {
+    private fun validateFields() : Boolean {
         if (TextUtils.isEmpty(editText_Name.text.toString())){
             editText_Name.setError("Artisan Name can not be empty")
             return false
@@ -107,7 +137,7 @@ class AddArtisan : AppCompatActivity() {
     }
 
 
-    fun submitToDB(artisan: Artisan) {
+    private fun submitToDB(artisan: Artisan) {
         val url = "https://29d4c6b3.ngrok.io/addArtisanToDatabase"
 
         val requestBody = FormBody.Builder().add("artisanId",artisan.artisanID)
