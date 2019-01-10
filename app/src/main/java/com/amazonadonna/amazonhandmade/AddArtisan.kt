@@ -45,9 +45,9 @@ class AddArtisan : AppCompatActivity() {
             submitToDB(newArtisan)
             //clear all fields
             clearFields()
+            Toast.makeText(this@AddArtisan, "Artisan added to database.", Toast.LENGTH_SHORT).show()
+            super.onBackPressed()
         }
-
-        Toast.makeText(this@AddArtisan, "Artisan added to database.", Toast.LENGTH_SHORT).show()
     }
 
     fun parseLoc (artisan: Artisan) {

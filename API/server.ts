@@ -71,6 +71,7 @@ app.post(
     (req: express.Request, res: express.Response) => {
         console.log(req.body)
         console.log(req.body.long)
+
         const params: aws.DynamoDB.PutItemInput = {
             TableName: 'artisan',
             Item: {
@@ -88,6 +89,7 @@ app.post(
             if (err) {
                 console.log('Error', err.code)
                 res.send(err.message)
+                res.sendStatus(400)
             } else {
                 console.log('Attributes ', data)
                 res.send('Successfully added')
