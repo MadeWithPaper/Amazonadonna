@@ -7,6 +7,7 @@ import * as bodyParser from 'body-parser'
 import * as aws from 'aws-sdk'
 import * as multer from 'multer'
 import * as multerS3 from 'multer-s3'
+import * as mime from 'mime'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -25,7 +26,10 @@ const upload = multer({
             cb(null, { fieldName: file.fieldname })
         },
         key: (req, file, cb) => {
-            cb(null, Date.now().toString() + file.mimetype)
+            cb(
+                null,
+                Date.now().toString() + '.' + mime.getExtension(file.mimetype)
+            )
         }
     })
 })
