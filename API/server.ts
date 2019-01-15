@@ -5,6 +5,8 @@ import * as path from 'path'
 import * as express from 'express'
 import * as bodyParser from 'body-parser'
 import * as aws from 'aws-sdk'
+import * as multer from 'multer'
+import * as multerS3 from 'multer-s3'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -12,6 +14,23 @@ const dev = process.env.PROD === 'false'
 
 aws.config.update({ region: 'us-east-1' })
 const ddb = new aws.DynamoDB({ apiVersion: '2012-10-08' })
+const s3 = new aws.S3()
+
+const upload = multer({
+    storage: multerS3({
+        s3,
+        bucket: 'artisan-prof-pics',
+        acl: 'private',
+        metadata: (req, file, cb) => {
+            cb(null, { fieldName: file.fieldname })
+        },
+        key: (req, file, cb) => {
+            cb(null, Date.now().toString())
+        }
+    })
+})
+
+const singleUpload = upload.single('image')
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -97,5 +116,16 @@ app.post(
         })
     }
 )
+
+app.post('/image-test', (req: express.Request, res: express.Response) => {
+    singleUpload(req, res, err => {
+        if (err) {
+            return res.status(422).send({
+                errors: [{ title: 'Image Upload Error', detail: err.message }]
+            })
+        }
+        return res.json({ imageUrl: req.file.path })
+    })
+})
 
 // app.use(express.static(path.resolve(__dirname, 'frontEnd')))
