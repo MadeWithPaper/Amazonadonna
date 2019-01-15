@@ -124,6 +124,7 @@ app.post('/image-test', (req: express.Request, res: express.Response) => {
                 errors: [{ title: 'Image Upload Error', detail: err.message }]
             })
         }
+        console.log(req.file)
         return res.json({ imageUrl: req.file.path })
     })
 })
