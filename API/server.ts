@@ -22,10 +22,12 @@ const upload = multer({
         s3,
         bucket: 'artisan-prof-pics',
         acl: 'public-read',
+        contentType: (req, file, cb) => {
+            cb(null, file.mimetype)
+        },
         metadata: (req, file, cb) => {
             cb(null, {
-                fieldName: file.fieldname,
-                'Content-Type': file.mimetype
+                fieldName: file.fieldname
             })
         },
         key: (req, file, cb) => {
