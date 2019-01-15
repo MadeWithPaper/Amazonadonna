@@ -20,7 +20,7 @@ const upload = multer({
     storage: multerS3({
         s3,
         bucket: 'artisan-prof-pics',
-        acl: 'private',
+        acl: 'public-read',
         metadata: (req, file, cb) => {
             cb(null, { fieldName: file.fieldname })
         },
