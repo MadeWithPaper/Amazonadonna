@@ -10,7 +10,7 @@ class SigninHelper(context : Context, signupCallback : SignUpHandler) {
     private val userPool = CognitoUserPool(context, "us-east-1_8U1ix0dOw", "143e5qqmq52kq9tkvqvvvau2t4", null, Regions.US_EAST_1)
     private val signupCallback = signupCallback
 
-    fun signUpCGA(username: String, password: String, email: String?, phoneNumber: String?) {
+    fun signUpArtisan(username: String, password: String, email: String?, phoneNumber: String?) {
         // Create a CognitoUserAttributes object and add user attributes
         val userAttributes = CognitoUserAttributes()
 
