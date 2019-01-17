@@ -90,7 +90,6 @@ app.post(
         ddb.putItem(params, (err, data) => {
             if (err) {
                 console.log('Error', err.code)
-                res.send(err.message)
                 res.sendStatus(400)
             } else {
                 console.log('Attributes ', data)
