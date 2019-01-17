@@ -136,7 +136,7 @@ app.post(
 
                 const params: aws.DynamoDB.UpdateItemInput = {
                     TableName: 'artisan',
-                    Key: { artisanId: req.body.artisanId },
+                    Key: { artisanId: { S: req.body.artisanId } },
                     UpdateExpression: 'set picURL = :u',
                     ExpressionAttributeValues: { ':u': { S: picURL } },
                     ReturnValues: 'UPDATED_NEW'
