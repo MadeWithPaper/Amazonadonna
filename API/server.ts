@@ -103,6 +103,8 @@ app.post(
 app.post(
     '/updateArtisanImage',
     (req: express.Request, res: express.Response) => {
+        const aID = req.body.artisanId
+        console.log('ID IS: ' + aID)
         // setup pic uploader with artisanId as filename
         const artisanPicsUploader = multer({
             storage: multerS3({
@@ -116,12 +118,7 @@ app.post(
                     cb(null, { fieldName: file.fieldname })
                 },
                 key: (picReq, file, cb) => {
-                    cb(
-                        null,
-                        req.body.artisanId +
-                            '.' +
-                            mime.getExtension(file.mimetype)
-                    )
+                    cb(null, aID + '.' + mime.getExtension(file.mimetype))
                 }
             })
         })
