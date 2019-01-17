@@ -134,7 +134,10 @@ app.post(
                 res.send(picErr.message)
                 res.sendStatus(422)
             } else {
-                const picURL = (req.file as any).location
+                let picURL = 'Error on upload'
+                if (req.file) {
+                    picURL = (req.file as any).location
+                }
                 console.log('Pic added: ' + picURL)
 
                 // update db record with new URL
@@ -152,7 +155,7 @@ app.post(
                         res.send(err.message)
                         res.sendStatus(400)
                     } else {
-                        res.json({ imageUrl: (req.file as any).location })
+                        res.json({ imageUrl: picURL })
                     }
                 })
             }
