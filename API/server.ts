@@ -17,28 +17,6 @@ aws.config.update({ region: 'us-east-1' })
 const ddb = new aws.DynamoDB({ apiVersion: '2012-10-08' })
 const s3 = new aws.S3()
 
-const upload = multer({
-    storage: multerS3({
-        s3,
-        bucket: 'artisan-prof-pics',
-        acl: 'public-read',
-        contentType: (req, file, cb) => {
-            cb(null, file.mimetype)
-        },
-        metadata: (req, file, cb) => {
-            cb(null, { fieldName: file.fieldname })
-        },
-        key: (req, file, cb) => {
-            cb(
-                null,
-                Date.now().toString() + '.' + mime.getExtension(file.mimetype)
-            )
-        }
-    })
-})
-
-const singleUpload = upload.single('image')
-
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
@@ -78,7 +56,8 @@ app.get('/artisans', (req: express.Request, res: express.Response) => {
         } else {
             const convert = data.Items.map(item => {
                 return new Promise(resolve => {
-                    resolve(aws.DynamoDB.Converter.unmarshall(item))
+                    const unmarshed = aws.DynamoDB.Converter.unmarshall(item)
+                    resolve(unmarshed)
                 })
             })
             Promise.all(convert).then(items => {
@@ -86,10 +65,6 @@ app.get('/artisans', (req: express.Request, res: express.Response) => {
             })
         }
     })
-})
-
-app.get('/getDatabase', (req: express.Request, res: express.Response) => {
-    res.json({ name: 'Mitchell' })
 })
 
 app.post(
@@ -108,7 +83,8 @@ app.post(
                 country: { S: req.body.country },
                 name: { S: req.body.name },
                 lat: { N: req.body.lat },
-                lon: { N: req.body.lon }
+                lon: { N: req.body.lon },
+                picURL: { S: 'Not set' }
             }
         }
         ddb.putItem(params, (err, data) => {
@@ -124,15 +100,65 @@ app.post(
     }
 )
 
-app.post('/image-test', (req: express.Request, res: express.Response) => {
-    singleUpload(req, res, err => {
-        if (err) {
-            return res.status(422).send({
-                errors: [{ title: 'Image Upload Error', detail: err.message }]
+app.post(
+    '/updateArtisanImage',
+    (req: express.Request, res: express.Response) => {
+        // setup pic uploader with artisanId as filename
+        const artisanPicsUploader = multer({
+            storage: multerS3({
+                s3,
+                bucket: 'artisan-prof-pics',
+                acl: 'public-read',
+                contentType: (picReq, file, cb) => {
+                    cb(null, file.mimetype)
+                },
+                metadata: (picReq, file, cb) => {
+                    cb(null, { fieldName: file.fieldname })
+                },
+                key: (picReq, file, cb) => {
+                    cb(
+                        null,
+                        req.body.artisanId +
+                            '.' +
+                            mime.getExtension(file.mimetype)
+                    )
+                }
             })
-        }
-        return res.json({ imageUrl: (req.file as any).location })
-    })
-})
+        })
+
+        const singleArtisanPicUpload = artisanPicsUploader.single('image')
+
+        // upload pic
+        singleArtisanPicUpload(req, res, picErr => {
+            if (picErr) {
+                console.log('Error', picErr.code)
+                res.send(picErr.message)
+                res.sendStatus(422)
+            } else {
+                const picURL = (req.file as any).location
+                console.log('Pic added: ' + picURL)
+
+                // update db record with new URL
+                const params: aws.DynamoDB.UpdateItemInput = {
+                    TableName: 'artisan',
+                    Key: { artisanId: { S: req.body.artisanId } },
+                    UpdateExpression: 'set picURL = :u',
+                    ExpressionAttributeValues: { ':u': { S: picURL } },
+                    ReturnValues: 'UPDATED_NEW'
+                }
+
+                ddb.updateItem(params, (err, data) => {
+                    if (err) {
+                        console.log('Error', err.code)
+                        res.send(err.message)
+                        res.sendStatus(400)
+                    } else {
+                        res.json({ imageUrl: (req.file as any).location })
+                    }
+                })
+            }
+        })
+    }
+)
 
 // app.use(express.static(path.resolve(__dirname, 'frontEnd')))
