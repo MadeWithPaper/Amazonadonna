@@ -116,7 +116,6 @@ app.post(
                     cb(null, { fieldName: file.fieldname })
                 },
                 key: (picReq, file, cb) => {
-                    console.log(file)
                     cb(
                         null,
                         req.body.artisanId +
