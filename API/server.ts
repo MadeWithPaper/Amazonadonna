@@ -17,7 +17,7 @@ aws.config.update({ region: 'us-east-1' })
 const ddb = new aws.DynamoDB({ apiVersion: '2012-10-08' })
 const s3 = new aws.S3()
 
-const upload = multer({
+const artisanPicsUploader = multer({
     storage: multerS3({
         s3,
         bucket: 'artisan-prof-pics',
@@ -28,16 +28,16 @@ const upload = multer({
         metadata: (req, file, cb) => {
             cb(null, { fieldName: file.fieldname })
         },
-        key: (req, file, cb) => {
+        key: (req: express.Request, file, cb) => {
             cb(
                 null,
-                Date.now().toString() + '.' + mime.getExtension(file.mimetype)
+                req.body.artisanId + '.' + mime.getExtension(file.mimetype)
             )
         }
     })
 })
 
-const singleUpload = upload.single('image')
+const singleArtisanPicUpload = artisanPicsUploader.single('image')
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -78,7 +78,8 @@ app.get('/artisans', (req: express.Request, res: express.Response) => {
         } else {
             const convert = data.Items.map(item => {
                 return new Promise(resolve => {
-                    resolve(aws.DynamoDB.Converter.unmarshall(item))
+                    const unmarshed = aws.DynamoDB.Converter.unmarshall(item)
+                    resolve(unmarshed)
                 })
             })
             Promise.all(convert).then(items => {
@@ -88,44 +89,57 @@ app.get('/artisans', (req: express.Request, res: express.Response) => {
     })
 })
 
-app.get('/getDatabase', (req: express.Request, res: express.Response) => {
-    res.json({ name: 'Mitchell' })
-})
-
 app.post(
     '/addArtisanToDatabase',
     (req: express.Request, res: express.Response) => {
         console.log(req.body)
         console.log(req.body.long)
 
-        const params: aws.DynamoDB.PutItemInput = {
-            TableName: 'artisan',
-            Item: {
-                artisanId: { S: req.body.artisanId },
-                cgoId: { S: req.body.cgoId },
-                bio: { S: req.body.bio },
-                city: { S: req.body.city },
-                country: { S: req.body.country },
-                name: { S: req.body.name },
-                lat: { N: req.body.lat },
-                lon: { N: req.body.lon }
+        let picURL =
+            'https://artisan-prof-pics.s3.amazonaws.com/' +
+            req.body.artisanId +
+            '.' +
+            mime.getExtension(req.file.mimetype)
+        // Upload artisan picture
+        singleArtisanPicUpload(req, res, picErr => {
+            if (picErr) {
+                console.log('Error', picErr.code)
+                picURL = 'NULL'
             }
-        }
-        ddb.putItem(params, (err, data) => {
-            if (err) {
-                console.log('Error', err.code)
-                res.send(err.message)
-                res.sendStatus(400)
-            } else {
-                console.log('Attributes ', data)
-                res.send('Successfully added')
+
+            console.log('Pic added: ' + (req.file as any).location)
+
+            // add to ddb
+            const params: aws.DynamoDB.PutItemInput = {
+                TableName: 'artisan',
+                Item: {
+                    artisanId: { S: req.body.artisanId },
+                    cgoId: { S: req.body.cgoId },
+                    bio: { S: req.body.bio },
+                    city: { S: req.body.city },
+                    country: { S: req.body.country },
+                    name: { S: req.body.name },
+                    lat: { N: req.body.lat },
+                    lon: { N: req.body.lon },
+                    picURL: { S: picURL }
+                }
             }
+            ddb.putItem(params, (err, data) => {
+                if (err) {
+                    console.log('Error', err.code)
+                    res.send(err.message)
+                    res.sendStatus(400)
+                } else {
+                    console.log('Attributes ', data)
+                    res.json({ imageUrl: (req.file as any).location })
+                }
+            })
         })
     }
 )
 
 app.post('/image-test', (req: express.Request, res: express.Response) => {
-    singleUpload(req, res, err => {
+    singleArtisanPicUpload(req, res, err => {
         if (err) {
             return res.status(422).send({
                 errors: [{ title: 'Image Upload Error', detail: err.message }]
