@@ -18,7 +18,7 @@ const ddb = new aws.DynamoDB({ apiVersion: '2012-10-08' })
 const s3 = new aws.S3()
 
 const upload = multer()
-
+const type = upload.none()
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
@@ -104,8 +104,10 @@ app.post(
 
 app.post(
     '/updateArtisanImage',
-    upload.none(),
     (req: express.Request, res: express.Response) => {
+        type(req, res, err => {
+            console.log(req.body.artisanId)
+        })
         // setup pic uploader with artisanId as filename
         const artisanPicsUploader = multer({
             storage: multerS3({
