@@ -134,7 +134,7 @@ app.post(
                 res.send(picErr.message)
                 res.sendStatus(422)
             } else {
-                let picURL = 'Error on upload'
+                let picURL = 'Error: no picture attached'
                 if (req.file) {
                     picURL = (req.file as any).location
                 }
