@@ -102,6 +102,7 @@ app.post(
     '/updateArtisanImage',
     (req: express.Request, res: express.Response) => {
         // setup pic uploader with artisanId as filename
+        console.log('update hit')
         const artisanPicsUploader = multer({
             storage: multerS3({
                 s3,
