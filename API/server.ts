@@ -26,9 +26,7 @@ const upload = multer({
             cb(null, file.mimetype)
         },
         metadata: (req, file, cb) => {
-            cb(null, {
-                fieldName: file.fieldname
-            })
+            cb(null, { fieldName: file.fieldname })
         },
         key: (req, file, cb) => {
             cb(
