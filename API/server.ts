@@ -107,61 +107,62 @@ app.post(
     '/updateArtisanImage',
     (req: express.Request, res: express.Response) => {
         multFieldsOnly(req, res, err => {
-            // setup pic uploader with artisanId as filename
-            const artisanPicsUploader = multer({
-                storage: multerS3({
-                    s3,
-                    bucket: 'artisan-prof-pics',
-                    acl: 'public-read',
-                    contentType: (picReq, file, cb) => {
-                        cb(null, file.mimetype)
-                    },
-                    metadata: (picReq, file, cb) => {
-                        cb(null, { fieldName: file.fieldname })
-                    },
-                    key: (picReq, file, cb) => {
-                        cb(
-                            null,
-                            req.body.artisanId +
-                                '.' +
-                                mime.getExtension(file.mimetype)
-                        )
-                    }
-                })
-            })
-
-            const singleArtisanPicUpload = artisanPicsUploader.single('image')
-
-            // upload pic
-            singleArtisanPicUpload(req, res, picErr => {
-                if (picErr) {
-                    console.log('Error', picErr.code)
-                    res.send(picErr.message)
-                    res.sendStatus(422)
-                } else {
-                    const picURL = (req.file as any).location
-                    console.log('Pic added: ' + picURL)
-
-                    // update db record with new URL
-                    const params: aws.DynamoDB.UpdateItemInput = {
-                        TableName: 'artisan',
-                        Key: { artisanId: { S: req.body.artisanId } },
-                        UpdateExpression: 'set picURL = :u',
-                        ExpressionAttributeValues: { ':u': { S: picURL } },
-                        ReturnValues: 'UPDATED_NEW'
-                    }
-
-                    ddb.updateItem(params, (dbbErr, data) => {
-                        if (dbbErr) {
-                            console.log('Error', dbbErr.code)
-                            res.send(dbbErr.message)
-                            res.sendStatus(400)
-                        } else {
-                            res.json({ imageUrl: (req.file as any).location })
-                        }
-                    })
+            console.log(req.body.artisanId)
+        })
+        // setup pic uploader with artisanId as filename
+        const artisanPicsUploader = multer({
+            storage: multerS3({
+                s3,
+                bucket: 'artisan-prof-pics',
+                acl: 'public-read',
+                contentType: (picReq, file, cb) => {
+                    cb(null, file.mimetype)
+                },
+                metadata: (picReq, file, cb) => {
+                    cb(null, { fieldName: file.fieldname })
+                },
+                key: (picReq, file, cb) => {
+                    cb(
+                        null,
+                        req.body.artisanId +
+                            '.' +
+                            mime.getExtension(file.mimetype)
+                    )
                 }
             })
+        })
+
+        const singleArtisanPicUpload = artisanPicsUploader.single('image')
+
+        // upload pic
+        singleArtisanPicUpload(req, res, picErr => {
+            if (picErr) {
+                console.log('Error', picErr.code)
+                res.send(picErr.message)
+                res.sendStatus(422)
+            } else {
+                const picURL = req.file.path
+                console.log('Pic added: ' + picURL)
+
+                // update db record with new URL
+                const params: aws.DynamoDB.UpdateItemInput = {
+                    TableName: 'artisan',
+                    Key: { artisanId: { S: req.body.artisanId } },
+                    UpdateExpression: 'set picURL = :u',
+                    ExpressionAttributeValues: { ':u': { S: picURL } },
+                    ReturnValues: 'UPDATED_NEW'
+                }
+
+                ddb.updateItem(params, (err, data) => {
+                    if (err) {
+                        console.log('Error', err.code)
+                        res.send(err.message)
+                        res.sendStatus(400)
+                    } else {
+                        res.json({ imageUrl: req.file.path })
+                    }
+                })
+            }
         })
     }
 )
