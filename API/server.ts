@@ -95,45 +95,28 @@ app.post(
         console.log(req.body)
         console.log(req.body.long)
 
-        let picURL =
-            'https://artisan-prof-pics.s3.amazonaws.com/' +
-            req.body.artisanId +
-            '.' +
-            mime.getExtension(req.file.mimetype)
-        // Upload artisan picture
-        singleArtisanPicUpload(req, res, picErr => {
-            if (picErr) {
-                console.log('Error', picErr.code)
-                picURL = 'NULL'
+        const params: aws.DynamoDB.PutItemInput = {
+            TableName: 'artisan',
+            Item: {
+                artisanId: { S: req.body.artisanId },
+                cgoId: { S: req.body.cgoId },
+                bio: { S: req.body.bio },
+                city: { S: req.body.city },
+                country: { S: req.body.country },
+                name: { S: req.body.name },
+                lat: { N: req.body.lat },
+                lon: { N: req.body.lon },
+                picURL: { S: 'Not set' }
             }
-
-            console.log('Pic added: ' + (req.file as any).location)
-
-            // add to ddb
-            const params: aws.DynamoDB.PutItemInput = {
-                TableName: 'artisan',
-                Item: {
-                    artisanId: { S: req.body.artisanId },
-                    cgoId: { S: req.body.cgoId },
-                    bio: { S: req.body.bio },
-                    city: { S: req.body.city },
-                    country: { S: req.body.country },
-                    name: { S: req.body.name },
-                    lat: { N: req.body.lat },
-                    lon: { N: req.body.lon },
-                    picURL: { S: picURL }
-                }
+        }
+        ddb.putItem(params, (err, data) => {
+            if (err) {
+                console.log('Error', err.code)
+                res.send(err.message)
+                res.sendStatus(400)
+            } else {
+                console.log('Attributes ', data)
             }
-            ddb.putItem(params, (err, data) => {
-                if (err) {
-                    console.log('Error', err.code)
-                    res.send(err.message)
-                    res.sendStatus(400)
-                } else {
-                    console.log('Attributes ', data)
-                    res.json({ imageUrl: (req.file as any).location })
-                }
-            })
         })
     }
 )
