@@ -8,7 +8,6 @@ import * as aws from 'aws-sdk'
 import * as multer from 'multer'
 import * as multerS3 from 'multer-s3'
 import * as mime from 'mime'
-import * as multiparty from 'multiparty'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -17,6 +16,8 @@ const dev = process.env.PROD === 'false'
 aws.config.update({ region: 'us-east-1' })
 const ddb = new aws.DynamoDB({ apiVersion: '2012-10-08' })
 const s3 = new aws.S3()
+
+const upload = multer()
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -103,9 +104,8 @@ app.post(
 
 app.post(
     '/updateArtisanImage',
+    upload.none(),
     (req: express.Request, res: express.Response) => {
-        const form = new multiparty.Form()
-
         // setup pic uploader with artisanId as filename
         const artisanPicsUploader = multer({
             storage: multerS3({
@@ -119,15 +119,12 @@ app.post(
                     cb(null, { fieldName: file.fieldname })
                 },
                 key: (picReq, file, cb) => {
-                    form.parse(req, (err, fields, files) => {
-                        console.log(fields)
-                        cb(
-                            null,
-                            fields.artisanId +
-                                '.' +
-                                mime.getExtension(file.mimetype)
-                        )
-                    })
+                    cb(
+                        null,
+                        req.body.artisanId +
+                            '.' +
+                            mime.getExtension(file.mimetype)
+                    )
                 }
             })
         })
