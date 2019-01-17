@@ -105,6 +105,8 @@ app.post(
     (req: express.Request, res: express.Response) => {
         const aID = req.body.artisanId
         console.log('ID IS: ' + aID)
+        console.log(req.body)
+        console.log(req)
         // setup pic uploader with artisanId as filename
         const artisanPicsUploader = multer({
             storage: multerS3({
