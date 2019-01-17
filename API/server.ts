@@ -116,6 +116,41 @@ app.post(
                 res.sendStatus(400)
             } else {
                 console.log('Attributes ', data)
+                res.send('Successfully added')
+            }
+        })
+    }
+)
+
+app.post(
+    'updateArtisanImage',
+    (req: express.Request, res: express.Response) => {
+        singleArtisanPicUpload(req, res, picErr => {
+            if (picErr) {
+                console.log('Error', picErr.code)
+                res.send(picErr.message)
+                res.sendStatus(422)
+            } else {
+                const picURL = (req.file as any).location
+                console.log('Pic added: ' + picURL)
+
+                const params: aws.DynamoDB.UpdateItemInput = {
+                    TableName: 'artisan',
+                    Key: req.body.artisanId,
+                    UpdateExpression: 'set picURL = :u',
+                    ExpressionAttributeValues: { ':u': picURL },
+                    ReturnValues: 'UPDATED_NEW'
+                }
+
+                ddb.updateItem(params, (err, data) => {
+                    if (err) {
+                        console.log('Error', err.code)
+                        res.send(err.message)
+                        res.sendStatus(400)
+                    } else {
+                        res.json({ imageUrl: (req.file as any).location })
+                    }
+                })
             }
         })
     }
