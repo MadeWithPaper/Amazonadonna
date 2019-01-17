@@ -8,6 +8,8 @@ import * as aws from 'aws-sdk'
 import * as multer from 'multer'
 import * as multerS3 from 'multer-s3'
 import * as mime from 'mime'
+import * as chai from 'chai'
+import * as chaiHttp from 'chai-http'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -16,6 +18,8 @@ const dev = process.env.PROD === 'false'
 aws.config.update({ region: 'us-east-1' })
 const ddb = new aws.DynamoDB({ apiVersion: '2012-10-08' })
 const s3 = new aws.S3()
+
+const should = chai.should()
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
