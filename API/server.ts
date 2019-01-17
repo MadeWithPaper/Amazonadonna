@@ -123,7 +123,7 @@ app.post(
 )
 
 app.post(
-    'updateArtisanImage',
+    '/updateArtisanImage',
     (req: express.Request, res: express.Response) => {
         singleArtisanPicUpload(req, res, picErr => {
             if (picErr) {
