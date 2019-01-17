@@ -14,9 +14,11 @@ import com.google.gson.GsonBuilder
 class HomeScreen : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_screen)
 
+        //actionBar.set
         //List All Artisan button
         listAllArtisan.setOnClickListener{
             queryAllArtisan()

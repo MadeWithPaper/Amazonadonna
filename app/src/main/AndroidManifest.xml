@@ -16,8 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomeScreen">
-        </activity>
+        <activity android:name=".HomeScreen"
+            />
         <activity android:name=".LoginScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,8 +27,7 @@
         </activity>
         <activity
             android:name=".ListAllArtisans"
-            android:label="@string/title_activity_show_all_artisans"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity android:name=".AddArtisan" />
         <!--<activity-->
             <!--android:name=".LoginScreen"-->

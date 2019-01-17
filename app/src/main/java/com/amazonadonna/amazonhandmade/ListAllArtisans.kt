@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder
 import okhttp3.*
 import java.io.IOException
 import com.google.gson.reflect.TypeToken
+import android.support.v7.widget.DividerItemDecoration
 
 
 class ListAllArtisans : AppCompatActivity() {
@@ -18,13 +19,16 @@ class ListAllArtisans : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_all_artisans)
 
+
+
         fetchJSON()
         //TODO add search bar
         recyclerView_listAllartisans.layoutManager = LinearLayoutManager(this)
+        recyclerView_listAllartisans.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
     private fun fetchJSON() {
-        val url = "https://29d4c6b3.ngrok.io/artisans"
+        val url = "https://4585da82.ngrok.io/artisans"
         val request = Request.Builder().url(url).build()
 
         val client = OkHttpClient()

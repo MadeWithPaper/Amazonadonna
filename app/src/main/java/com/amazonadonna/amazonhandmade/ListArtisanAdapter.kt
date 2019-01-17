@@ -31,7 +31,7 @@ class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
     fun bindArtisian(artisan: Artisan) {
         view.imageView_artisanProfilePic.setImageResource(R.drawable.download)
         view.textView_artisanName.text = artisan.name
-        view.textView_bio.text = artisan.bio
-        view.textView_artisanLoc.text = (artisan.city + " , " + artisan.country)
+        //view.textView_bio.text = artisan.bio
+        view.textView_artisanLoc.text = (artisan.city + "," + artisan.country)
     }
 }   
