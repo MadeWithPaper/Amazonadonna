@@ -14,6 +14,7 @@ android:
    - platform-tools
    - build-tools-$ANDROID_BUILD_TOOLS
    - extra
+   - addon-google_apis-google-$ANDROID_API
    # The SDK version used to complie project
    - android-$ANDROID_API
    # needed to run emulator for ui tests
@@ -30,13 +31,11 @@ jdk:
    - oraclejdk8
 
 # Emulator Management: Create, Start and Wait
-before_script:
-   - android -v create avd --force --name "test android-28" --abi armeabi-v7a
-   - emulator -avd test -no-skin -no-audio -no-window &
-   - android-wait-for-emulator
-   - adb shell input keyevent 82 &
+#before_script:
+#   - android -v create avd --force --name "test android-28" --abi armeabi-v7a
+#   - emulator -avd test -no-skin -no-audio -no-window &
+#   - android-wait-for-emulator
+#   - adb shell input keyevent 82 &
 
 script:
-   - ./gradlew clean
-   - ./gradlew builde
-   - ./gradlew test
+   - ./gradlew clea build checkn
