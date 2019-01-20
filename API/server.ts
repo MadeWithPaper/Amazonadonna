@@ -71,7 +71,6 @@ app.post(
     '/addArtisanToDatabase',
     (req: express.Request, res: express.Response) => {
         console.log(req.body)
-        console.log(req.body.long)
 
         const params: aws.DynamoDB.PutItemInput = {
             TableName: 'artisan',
@@ -90,10 +89,9 @@ app.post(
         ddb.putItem(params, (err, data) => {
             if (err) {
                 console.log('Error', err.code)
-                res.send(err.message)
                 res.sendStatus(400)
             } else {
-                console.log('Attributes ', data)
+                console.log('Successfully added to database')
                 res.send('Successfully added')
             }
         })
@@ -104,6 +102,7 @@ app.post(
     '/updateArtisanImage',
     (req: express.Request, res: express.Response) => {
         // setup pic uploader with artisanId as filename
+        console.log('update hit')
         const artisanPicsUploader = multer({
             storage: multerS3({
                 s3,
@@ -116,6 +115,7 @@ app.post(
                     cb(null, { fieldName: file.fieldname })
                 },
                 key: (picReq, file, cb) => {
+                    console.log('artisan Id in update: ' + req.body.artisanId)
                     cb(
                         null,
                         req.body.artisanId +
@@ -135,7 +135,10 @@ app.post(
                 res.send(picErr.message)
                 res.sendStatus(422)
             } else {
-                const picURL = (req.file as any).location
+                let picURL = 'Error: no picture attached'
+                if (req.file) {
+                    picURL = (req.file as any).location
+                }
                 console.log('Pic added: ' + picURL)
 
                 // update db record with new URL
@@ -153,7 +156,7 @@ app.post(
                         res.send(err.message)
                         res.sendStatus(400)
                     } else {
-                        res.json({ imageUrl: (req.file as any).location })
+                        res.json({ imageUrl: picURL })
                     }
                 })
             }
