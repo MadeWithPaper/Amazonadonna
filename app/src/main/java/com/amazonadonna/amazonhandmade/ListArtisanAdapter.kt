@@ -29,7 +29,7 @@ class ListArtisanAdapter (private val artisans : List<Artisan>) : RecyclerView.A
 class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
 
     fun bindArtisian(artisan: Artisan) {
-        view.imageView_artisanProfilePic.setImageResource(R.drawable.download)
+        view.imageView_artisanProfilePic.setImageResource(R.drawable.placeholder)
         view.textView_artisanName.text = artisan.name
         //view.textView_bio.text = artisan.bio
         view.textView_artisanLoc.text = (artisan.city + "," + artisan.country)
