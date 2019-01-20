@@ -20,15 +20,12 @@ android:
    - android-$EMULATOR_API_LEVEL
    - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API_LEVEL
    - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API_LEVEL
-
+licenses:
+   - android-sdk-preview-license-.+
+   - android-sdk-license-.+
+   - google-gdk-license-.+
 jdk:
    - oraclejdk8
-
-install:
-   - echo yes | sdkmanager "tools" &>/dev/null
-   - echo yes | sdkmanager "platform-tools" &>/dev/null
-   - echo yes | sdkmanager "build-tools;26.0.2" &>/dev/null
-   - echo yes | sdkmanager "platforms;android-26" &>/dev/null
 
 # Emulator Management: Create, Start and Wait
 before_script:
