@@ -11,8 +11,8 @@ android:
    components:
    # The BuildTools version used by project
    - tools
-   - tools
    - platform-tools
+   - tools  
    - build-tools-$ANDROID_BUILD_TOOLS
    - extra
    - addon-google_apis-google-$ANDROID_API
@@ -20,9 +20,8 @@ android:
    - android-$ANDROID_API
    # needed to run emulator for ui tests
    - android-$EMULATOR_API_LEVEL
-   - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API_LEVEL
-   - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API_LEVEL
    - sys-img-armeabi-v7a-android-28
+   - sys-img-armeabi-v7a-android-26
 
 licenses:
    - android-sdk-preview-license-.+
@@ -34,7 +33,7 @@ jdk:
 
 # Emulator Management: Create, Start and Wait
 before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi armeabi-v7a
+    - echo no | android create avd --force -n test -t android-26 --abi armeabi-v7a
     - emulator -avd test -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
