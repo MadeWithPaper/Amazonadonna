@@ -106,6 +106,34 @@ class AddArtisan : AppCompatActivity() {
         return true
     }
 
+    fun submitPictureToDB(artisan: Artisan) {
+        Log.d("hitFunction", "we here")
+        val url = "https://4585da82.ngrok.io/updateArtisanImage"
+        val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("artisanId", artisan.artisanID)
+                .addFormDataPart("image","test", RequestBody.create(MediaType.parse("image/jpeg"),"@drawable/handmade_logo.png"))
+                .build()
+
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build()
+
+        client.newCall(request).enqueue(object: Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()?.string()
+                Log.d("INFO", body)
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.d("ERROR", "failed to do POST request to database")
+            }
+        })
+
+
+    }
 
     fun submitToDB(artisan: Artisan) {
         val url = "https://29d4c6b3.ngrok.io/addArtisanToDatabase"
@@ -131,6 +159,7 @@ class AddArtisan : AppCompatActivity() {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
                 Log.d("INFO", body)
+                submitPictureToDB(artisan)
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
