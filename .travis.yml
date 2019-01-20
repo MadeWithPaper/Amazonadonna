@@ -20,16 +20,18 @@ android:
    - android-$EMULATOR_API_LEVEL
    - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API_LEVEL
    - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API_LEVEL
+
 licenses:
    - android-sdk-preview-license-.+
    - android-sdk-license-.+
    - google-gdk-license-.+
+
 jdk:
    - oraclejdk8
 
 # Emulator Management: Create, Start and Wait
 before_script:
-   - echo no | android create avd --force -n test android-28 --abi armeabi-v7a
+   - echo no | android create avd --force -n "test android-28" --abi armeabi-v7a
    - emulator -avd test -no-skin -no-audio -no-window &
    - android-wait-for-emulator
    - adb shell input keyevent 82 &
