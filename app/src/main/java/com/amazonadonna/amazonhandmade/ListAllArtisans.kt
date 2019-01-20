@@ -19,11 +19,15 @@ class ListAllArtisans : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_all_artisans)
 
-
-
         fetchJSON()
         //TODO add search bar
+
         recyclerView_listAllartisans.layoutManager = LinearLayoutManager(this)
+
+        //load an empty list as placeholder before GET request completes
+        val emptyArtisanList : List<Artisan> = emptyList()
+        recyclerView_listAllartisans.adapter = ListArtisanAdapter(emptyArtisanList)
+
         recyclerView_listAllartisans.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
