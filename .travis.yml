@@ -10,6 +10,7 @@ services:
 
 before_script:
   - cd API
+  - npm i
 
 script:
   - npm test
