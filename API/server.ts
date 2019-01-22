@@ -213,6 +213,7 @@ app.get('/deleteAllArtisans', (req: express.Request, res: express.Response) => {
                                     deleteErr.message
                             )
                         }
+                        resolve('Deleted: ' + unmarshed.artisanId)
                     })
                 })
             })
