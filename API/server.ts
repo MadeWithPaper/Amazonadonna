@@ -203,7 +203,6 @@ app.get('/deleteAllArtisans', (req: express.Request, res: express.Response) => {
                         Key: { artisanId: { S: unmarshed.artisanId } }
                     }
                     ddb.deleteItem(params, deleteErr => {
-                        console.log('deleting...')
                         if (deleteErr) {
                             console.log(
                                 'Error in deleting an artisan in deleteAllArtisans: ' +
@@ -218,6 +217,7 @@ app.get('/deleteAllArtisans', (req: express.Request, res: express.Response) => {
                 })
             })
             Promise.all(convert).then(items => {
+                console.log('All artisans have been deleted')
                 res.send('All artisans have been deleted')
             })
         }
