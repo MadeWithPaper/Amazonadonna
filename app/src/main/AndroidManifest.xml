@@ -36,10 +36,6 @@
         </activity>
         <activity android:name=".LoginScreen"
                   android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
-<<<<<<< HEAD
-=======
-
->>>>>>> f3098f1f4d7dfda16252f7eb6def2ca50f2f4bd6
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
