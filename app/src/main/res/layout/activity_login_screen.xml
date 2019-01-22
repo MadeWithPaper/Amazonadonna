@@ -72,6 +72,14 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <ImageButton
+                android:id="@+id/login_with_amazon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:src="@drawable/loginwithamazon_button"
+                />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
