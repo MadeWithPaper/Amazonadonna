@@ -19,7 +19,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.amazon.identity.auth.device.workflow.WorkflowActivity"
+
+      <activity android:name="com.amazon.identity.auth.device.workflow.WorkflowActivity"
             android:theme="@android:style/Theme.NoDisplay"
             android:allowTaskReparenting="true"
             android:launchMode="singleTask">
@@ -35,6 +36,10 @@
         </activity>
         <activity android:name=".LoginScreen"
                   android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
+<<<<<<< HEAD
+=======
+
+>>>>>>> f3098f1f4d7dfda16252f7eb6def2ca50f2f4bd6
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
