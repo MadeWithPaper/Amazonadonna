@@ -25,7 +25,8 @@ class AddArtisan : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_artisan)
         val GET_FROM_GALLERY = 1
-        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 3)
+        val IMAGE_UPLOADING_PERMISSION = 3
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
 //        button_addArtisan.setOnClickListener{
 //            //Toast.makeText(this@AddArtisan, "add button clicked.", Toast.LENGTH_SHORT).show()
 //            makeNewArtisan()
