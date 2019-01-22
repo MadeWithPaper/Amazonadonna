@@ -1,5 +1,6 @@
 package com.amazonadonna.amazonhandmade
 
+import android.content.Context
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
@@ -24,6 +25,12 @@ import android.widget.TextView
 import java.util.ArrayList
 import android.Manifest.permission.READ_CONTACTS
 import android.content.Intent
+import android.support.annotation.RestrictTo
+import android.widget.Toast
+import com.amazon.identity.auth.device.AuthError
+import com.amazon.identity.auth.device.api.Listener
+import com.amazon.identity.auth.device.api.authorization.*
+import com.amazon.identity.auth.device.api.workflow.RequestContext
 
 import kotlinx.android.synthetic.main.activity_login_screen.*
 
@@ -33,12 +40,49 @@ import kotlinx.android.synthetic.main.activity_login_screen.*
 class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
-     */
+     **/
     private var mAuthTask: UserLoginTask? = null
+    private var context : Context = this
+    private var requestContext : RequestContext = RequestContext.create(context)
+    private var signUpListener = object  : AuthorizeListener() {
+        /* Authorization was completed successfully. */
+        override fun onSuccess(result: AuthorizeResult) {
+            /* Your app is now authorized for the requested scopes */
+            val intent = Intent(this@LoginScreen, HomeScreen::class.java)
+            startActivity(intent)
+
+        }
+
+        /* There was an error during the attempt to authorize the
+        application. */
+        override fun onError(ae: AuthError) {
+            /* Inform the user of the error */
+        }
+
+        /* Authorization was cancelled before it could be completed. */
+        override fun onCancel(cancellation: AuthCancellation) {
+            /* Reset the UI to a ready-to-login state */
+        }
+    }
+    private var checkTokenListener = object  : Listener<AuthorizeResult, AuthError> {
+        override fun onSuccess(ar: AuthorizeResult?) {
+            if(ar?.getAccessToken() != null) { //user already signed in to app
+                val intent = Intent(this@LoginScreen, HomeScreen::class.java)
+                startActivity(intent)
+            }
+        }
+
+        override fun onError(ae: AuthError?) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_screen)
+
+        requestContext.registerListener(signUpListener)
+
         // Set up the login form.
         populateAutoComplete()
         password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
@@ -50,6 +94,24 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
         })
 
         email_sign_in_button.setOnClickListener { test()/*attemptLogin()*/ }
+
+        login_with_amazon.setOnClickListener(View.OnClickListener {
+            _ -> AuthorizationManager.authorize(AuthorizeRequest
+                        .Builder(requestContext)
+                        .addScopes(ProfileScope.profile(), ProfileScope.postalCode())
+                        .build())
+        })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val scopes : Array<Scope> = arrayOf(ProfileScope.profile(), ProfileScope.postalCode())
+        AuthorizationManager.getToken(this, scopes, checkTokenListener)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requestContext.onResume()
     }
 
     private fun test() {
