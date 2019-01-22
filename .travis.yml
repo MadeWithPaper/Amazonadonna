@@ -1,40 +1,12 @@
-matrix:
-  include:
-   - language: android
-   sudo: true
+- language: node_js
+node_js:
+   - "node"
 
-   android:
-      components:
-         # The BuildTools version used by project
-         - tools
-         - platform-tools
-         - tools
-         - build-tools-28.0.3
-         # The SDK version used to complie project
-         - android-28
+services:
+   - docker
 
-      jdk:
-         - oraclejdk8
-
-   install:
-      - echo yes | sdkmanager "tools" &>/dev/null
-      - echo yes | sdkmanager "platform-tools" &>/dev/null
-      - echo yes | sdkmanager "build-tools;26.0.2" &>/dev/null
-      - echo yes | sdkmanager "platforms;android-26" &>/dev/null
-
-   script:
-      - ./gradlew clean
-      - ./gradlew builde
-
-   - language: node_js
-   node_js:
-      - "node"
-
-   services:
-      - docker
-
-   before_install:
-      - docker pull amazon/dynamodb-local
-      - docker run -p 8000:8000 amazon/dynamodb-local
+before_install:
+   - docker pull amazon/dynamodb-local
+   - docker run -p 8000:8000 amazon/dynamodb-local
    
 
