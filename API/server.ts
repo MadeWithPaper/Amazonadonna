@@ -110,7 +110,6 @@ app.post(
     '/updateArtisanImage',
     (req: express.Request, res: express.Response) => {
         // setup pic uploader with artisanId as filename
-        console.log('update hit')
         const artisanPicsUploader = multer({
             storage: multerS3({
                 s3,
@@ -123,7 +122,6 @@ app.post(
                     cb(null, { fieldName: file.fieldname })
                 },
                 key: (picReq, file, cb) => {
-                    console.log('artisan Id in update: ' + req.body.artisanId)
                     cb(
                         null,
                         req.body.artisanId +
@@ -205,6 +203,7 @@ app.get('/deleteAllArtisans', (req: express.Request, res: express.Response) => {
                         Key: { artisanId: { S: unmarshed.artisanId } }
                     }
                     ddb.deleteItem(params, deleteErr => {
+                        console.log('deleting...')
                         if (deleteErr) {
                             console.log(
                                 'Error in deleting an artisan in deleteAllArtisans: ' +
