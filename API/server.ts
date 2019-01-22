@@ -200,11 +200,26 @@ app.get('/deleteAllArtisans', (req: express.Request, res: express.Response) => {
             const convert = data.Items.map(item => {
                 return new Promise(resolve => {
                     const unmarshed = aws.DynamoDB.Converter.unmarshall(item)
-                    resolve(unmarshed)
+                    const params: aws.DynamoDB.DeleteItemInput = {
+                        TableName: 'artisan',
+                        Key: { artisanId: { S: unmarshed.artisanId } }
+                    }
+                    ddb.deleteItem(params, deleteErr => {
+                        if (deleteErr) {
+                            console.log(
+                                'Error in deleting an artisan in deleteAllArtisans: ' +
+                                    deleteErr
+                            )
+                            res.status(402).send(
+                                'Error in deleting an artisan in deleteAllArtisans: ' +
+                                    deleteErr.message
+                            )
+                        }
+                    })
                 })
             })
             Promise.all(convert).then(items => {
-                res.json(items)
+                res.send('All artisans have been deleted')
             })
         }
     })
