@@ -106,7 +106,7 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
     override fun onStart() {
         super.onStart()
         val scopes : Array<Scope> = arrayOf(ProfileScope.profile(), ProfileScope.postalCode())
-        AuthorizationManager.getToken(this, scopes, signUpListener)
+        AuthorizationManager.getToken(this, scopes, checkTokenListener)
     }
 
     override fun onResume() {
