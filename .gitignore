@@ -13,4 +13,4 @@
 **/node_modules
 **/dist
 **/.env
-./app/src/main/assets/api_key.txt
+/app/src/main/assets/api_key.txt
