@@ -4,23 +4,50 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_add_artisan.*
 import Artisan
+import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import okhttp3.*
-import java.io.IOException
+import android.content.Intent
+import android.provider.MediaStore
+import android.graphics.Bitmap
+import android.app.Activity
+import android.graphics.BitmapFactory
+import android.support.v4.app.ActivityCompat
+import java.io.*
+import java.util.jar.Manifest
+
 
 class AddArtisan : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_artisan)
+        val GET_FROM_GALLERY = 1
+        val IMAGE_UPLOADING_PERMISSION = 3
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
+//        button_addArtisan.setOnClickListener{
+//            //Toast.makeText(this@AddArtisan, "add button clicked.", Toast.LENGTH_SHORT).show()
+//            makeNewArtisan()
+//        }
 
-        button_addArtisan.setOnClickListener{
-            //Toast.makeText(this@AddArtisan, "add button clicked.", Toast.LENGTH_SHORT).show()
+
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            3 -> {
+                button_addArtisan.setOnClickListener{
+                                //Toast.makeText(this@AddArtisan, "add button clicked.", Toast.LENGTH_SHORT).show()
             makeNewArtisan()
         }
+            }
+        }
     }
+
+
+
 
     //TODO clean up
     fun makeNewArtisan() {
@@ -106,21 +133,65 @@ class AddArtisan : AppCompatActivity() {
         return true
     }
 
+
+
+
     fun submitPictureToDB(artisan: Artisan) {
+
+//        val url = "https://4585da82.ngrok.io/updateArtisanImage"
         Log.d("hitFunction", "we here")
-        val url = "https://4585da82.ngrok.io/updateArtisanImage"
-        val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("artisanId", artisan.artisanID)
-                .addFormDataPart("image","test", RequestBody.create(MediaType.parse("image/jpeg"),"@drawable/handmade_logo.png"))
-                .build()
+            val sourceFile = File(Environment.getExternalStorageDirectory().path+"/handmade_logo.png")
+            //val sourceFile = File("file:///android_asset/handmade_logo.png")
+            Log.d("drake", "File...::::" + sourceFile + " : " + sourceFile.exists())
+
+//
+//
+//       // val IMGUR_CLIENT_ID = "...";
+//        val MEDIA_TYPE_PNG = MediaType.parse("image/png");
+//
+//        val client = OkHttpClient();
+//
+//            // Use the imgur image upload API as documented at https://api.imgur.com/endpoints/image
+//            val requestBody = MultipartBody.Builder()
+//                    .setType(MultipartBody.FORM)
+//                    .addFormDataPart("artisanId", artisan.artisanID)
+//                    .addFormDataPart("image", "logo-square.png",
+//                            RequestBody.create(MEDIA_TYPE_PNG, sourceFile))
+//                    .build()
+//
+//            val request = Request.Builder()
+//                    .url(url)
+//                    .post(requestBody)
+//                    .build()
+//
+//        client.newCall(request).enqueue(object: Callback {
+//            override fun onResponse(call: Call?, response: Response?) {
+//                val body = response?.body()?.string()
+//                Log.d("INFO", body)
+//            }
+//
+//            override fun onFailure(call: Call?, e: IOException?) {
+//                Log.d("ERROR", "failed to do POST request to database")
+//            }
+//        })
+
+//
+//           // val MEDIA_TYPE = sourceImageFile.endsWith("png") ?
+           val MEDIA_TYPE = MediaType.parse("image/png")
+
+
+            val requestBody = MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("artisanId", artisan.artisanID)
+                    .addFormDataPart("image", "profile.png", RequestBody.create(MEDIA_TYPE, sourceFile))
+                    .build()
+
+            val request = Request.Builder()
+                    .url("https://4585da82.ngrok.io/updateArtisanImage")
+                    .post(requestBody)
+                    .build()
 
         val client = OkHttpClient()
-
-        val request = Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build()
-
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
@@ -133,10 +204,38 @@ class AddArtisan : AppCompatActivity() {
         })
 
 
+
+//        Log.d("hitFunction", "we here")
+//        val file = File("@drawable/handmade_logo.png")
+//        val url = "https://4585da82.ngrok.io/updateArtisanImage"
+//        val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
+//                .addFormDataPart("artisanId", artisan.artisanID)
+//                .addFormDataPart("image","test", RequestBody.create(MediaType.parse("image/jpeg"),Environment.getExternalStorageDirectory().path+"/hsadklf.png"))
+//                .build()
+//
+//        val client = OkHttpClient()
+//
+//        val request = Request.Builder()
+//                .url(url)
+//                .post(requestBody)
+//                .build()
+//
+//        client.newCall(request).enqueue(object: Callback {
+//            override fun onResponse(call: Call?, response: Response?) {
+//                val body = response?.body()?.string()
+//                Log.d("INFO", body)
+//            }
+//
+//            override fun onFailure(call: Call?, e: IOException?) {
+//                Log.d("ERROR", "failed to do POST request to database")
+//            }
+//        })
+
+
     }
 
     fun submitToDB(artisan: Artisan) {
-        val url = "https://29d4c6b3.ngrok.io/addArtisanToDatabase"
+        val url = "https://4585da82.ngrok.io/addArtisanToDatabase"
 
         val requestBody = FormBody.Builder().add("artisanId",artisan.artisanID)
                 .add("cgoId", artisan.cgoID)
