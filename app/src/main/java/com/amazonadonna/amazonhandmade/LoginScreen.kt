@@ -25,6 +25,7 @@ import android.widget.TextView
 import java.util.ArrayList
 import android.Manifest.permission.READ_CONTACTS
 import android.content.Intent
+import android.support.annotation.RestrictTo
 import android.widget.Toast
 import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
