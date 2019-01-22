@@ -8,18 +8,23 @@ import * as aws from 'aws-sdk'
 import * as multer from 'multer'
 import * as multerS3 from 'multer-s3'
 import * as mime from 'mime'
-import * as chai from 'chai'
-import * as chaiHttp from 'chai-http'
 
 const app = express()
 const port = process.env.PORT || 3000
 const dev = process.env.PROD === 'false'
+const test = process.env.NODE_TEST === 'test'
 
 aws.config.update({ region: 'us-east-1' })
-const ddb = new aws.DynamoDB({ apiVersion: '2012-10-08' })
-const s3 = new aws.S3()
+let ddb = new aws.DynamoDB({ apiVersion: '2012-10-08' })
 
-const should = chai.should()
+if (test) {
+    ddb = new aws.DynamoDB({
+        apiVersion: '2012-10-08',
+        endpoint: 'http://localhost:8000'
+    })
+}
+
+const s3 = new aws.S3()
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -228,5 +233,7 @@ app.get('/deleteAllArtisans', (req: express.Request, res: express.Response) => {
         }
     })
 })
+
+export { app as server }
 
 // app.use(express.static(path.resolve(__dirname, 'frontEnd')))
