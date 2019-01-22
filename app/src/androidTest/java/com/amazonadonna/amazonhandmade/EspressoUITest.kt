@@ -6,6 +6,7 @@ import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.rule.GrantPermissionRule
 import org.junit.Test
 import org.junit.Rule
 
@@ -14,6 +15,8 @@ class EspressoUITest {
     @get: Rule
     var activityRule : IntentsTestRule<LoginScreen> = IntentsTestRule(LoginScreen::class.java)
 
+    @Rule @JvmField
+    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.READ_CONTACTS)
 
     @Test
     fun login_button_pressed() {
