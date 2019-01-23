@@ -43,4 +43,4 @@ before_script:
    - ./gradlew clean build 
      
 script:
-   - ./gradlew connectedCheck --info
+   - ./gradlew connectedCheck

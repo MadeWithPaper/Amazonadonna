@@ -1,5 +1,6 @@
 package com.amazonadonna.amazonhandmade
 
+import android.util.Log
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.intent.Intents.intended
@@ -22,7 +23,7 @@ class EspressoUITest {
     fun login_button_pressed() {
 
         onView(withId(R.id.email_sign_in_button)).perform(click())
-        println("RUNNING THE TEST")
+        Log.d("INFO", "ran test")
         intended(hasComponent(HomeScreen::class.java.getName()))
 
     }
