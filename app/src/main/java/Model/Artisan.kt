@@ -10,7 +10,8 @@ data class Artisan (
         @Json(name = "bio")var bio : String,
         @Json(name = "cgoId") var cgoID : String,
         @Json(name = "lon") var lon : Double,
-        @Json(name = "lat") var lat : Double) : Serializable {
+        @Json(name = "lat") var lat : Double,
+        @Json(name = "pictureURL") var pictureURL : String) : Serializable {
 
     fun generateArtisanID() {
         //TODO fill in logic for generating unique ID for artisan

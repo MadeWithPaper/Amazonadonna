@@ -12,7 +12,7 @@
         "start:watch": "./node_modules/.bin/tsc -p ./tsconfig.backend.json --watch",
         "build:backend": "./node_modules/.bin/tsc -p ./tsconfig.backend.json",
         "build": "./node_modules/.bin/npm-run-all lint clean build:backend",
-        "lint": "tslint --project ./tsconfig.backend.json",
+        "lint": "./node_modules/.bin/tslint --project ./tsconfig.backend.json",
         "test": "echo \"Error: no test specified\" && exit 1",
         "clean": "./node_modules/.bin/rimraf ./dist"
     },

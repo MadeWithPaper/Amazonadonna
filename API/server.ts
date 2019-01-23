@@ -51,8 +51,10 @@ const listAllArtisansParams: aws.DynamoDB.Types.QueryInput = {
 app.get('/artisans', (req: express.Request, res: express.Response) => {
     ddb.query(listAllArtisansParams, (err, data) => {
         if (err) {
-            console.log(err)
-            res.sendStatus(400)
+            console.log('Error fetching artisans in artisans: ' + err)
+            res.status(400).send(
+                'Error fetching artisans in artisans: ' + err.message
+            )
         } else {
             const convert = data.Items.map(item => {
                 return new Promise(resolve => {
@@ -88,8 +90,14 @@ app.post(
         }
         ddb.putItem(params, (err, data) => {
             if (err) {
-                console.log('Error', err.code)
-                res.sendStatus(400)
+                console.log(
+                    'Error adding artisan in addArtisanToDatabase: ',
+                    err
+                )
+                res.status(400).send(
+                    'Error adding artisan in addArtisanToDatabase: ' +
+                        err.message
+                )
             } else {
                 console.log('Successfully added to database')
                 res.send('Successfully added')
@@ -102,7 +110,6 @@ app.post(
     '/updateArtisanImage',
     (req: express.Request, res: express.Response) => {
         // setup pic uploader with artisanId as filename
-        console.log('update hit')
         const artisanPicsUploader = multer({
             storage: multerS3({
                 s3,
@@ -115,7 +122,6 @@ app.post(
                     cb(null, { fieldName: file.fieldname })
                 },
                 key: (picReq, file, cb) => {
-                    console.log('artisan Id in update: ' + req.body.artisanId)
                     cb(
                         null,
                         req.body.artisanId +
@@ -131,9 +137,14 @@ app.post(
         // upload pic
         singleArtisanPicUpload(req, res, picErr => {
             if (picErr) {
-                console.log('Error', picErr.code)
-                res.send(picErr.message)
-                res.sendStatus(422)
+                console.log(
+                    'Error uploading picture in updateArtisanImage',
+                    picErr
+                )
+                res.status(422).send(
+                    'Error uploading picture in updateArtisanImage: ' +
+                        picErr.message
+                )
             } else {
                 let picURL = 'Error: no picture attached'
                 if (req.file) {
@@ -152,9 +163,18 @@ app.post(
 
                 ddb.updateItem(params, (err, data) => {
                     if (err) {
-                        console.log('Error', err.code)
-                        res.send(err.message)
-                        res.sendStatus(400)
+                        console.log(
+                            'Error updating artisan record ' +
+                                req.body.artisanId +
+                                ' : ' +
+                                err
+                        )
+                        res.status(400).send(
+                            'Error updating artisan record ' +
+                                req.body.artisanId +
+                                ' : ' +
+                                err.message
+                        )
                     } else {
                         res.json({ imageUrl: picURL })
                     }
@@ -163,5 +183,46 @@ app.post(
         })
     }
 )
+
+app.get('/deleteAllArtisans', (req: express.Request, res: express.Response) => {
+    ddb.query(listAllArtisansParams, (err, data) => {
+        if (err) {
+            console.log(
+                'Error getting all artisans in deleteAllArtisans: ' + err
+            )
+            res.status(400).send(
+                'Error getting all artisans in deleteAllArtisans: ' +
+                    err.message
+            )
+        } else {
+            const convert = data.Items.map(item => {
+                return new Promise(resolve => {
+                    const unmarshed = aws.DynamoDB.Converter.unmarshall(item)
+                    const params: aws.DynamoDB.DeleteItemInput = {
+                        TableName: 'artisan',
+                        Key: { artisanId: { S: unmarshed.artisanId } }
+                    }
+                    ddb.deleteItem(params, deleteErr => {
+                        if (deleteErr) {
+                            console.log(
+                                'Error in deleting an artisan in deleteAllArtisans: ' +
+                                    deleteErr
+                            )
+                            res.status(402).send(
+                                'Error in deleting an artisan in deleteAllArtisans: ' +
+                                    deleteErr.message
+                            )
+                        }
+                        resolve('Deleted: ' + unmarshed.artisanId)
+                    })
+                })
+            })
+            Promise.all(convert).then(items => {
+                console.log('All artisans have been deleted')
+                res.send('All artisans have been deleted')
+            })
+        }
+    })
+})
 
 // app.use(express.static(path.resolve(__dirname, 'frontEnd')))
