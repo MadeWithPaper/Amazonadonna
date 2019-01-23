@@ -33,8 +33,7 @@ jdk:
 # Emulator Management: Create, Start and Wait
 before_script:
     #- android list targets
-    - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
-    - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
+    - android-update-sdk --components=sys-img-armeabi-v7a-android25 --accept-licenses='android-sdk-license-[0-9a-f]{8}'
     - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a --tag google_apis
     - emulator -avd test -no-window &
     - android-wait-for-emulator
