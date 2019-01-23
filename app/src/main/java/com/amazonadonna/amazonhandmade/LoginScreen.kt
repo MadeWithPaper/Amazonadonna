@@ -73,7 +73,7 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
         }
 
         override fun onError(ae: AuthError?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            //To change body of created functions use File | Settings | File Templates.
         }
     }
 
