@@ -11,12 +11,12 @@ android:
    components:
    # The BuildTools version used by project
    - tools
-   - android-$EMULATOR_API
    - platform-tools
    - tools  
    - build-tools-$ANDROID_BUILD_TOOLS
    # The SDK version used to complie project
    - android-$ANDROID_API
+   - android-$EMULATOR_API  
    - extra-android-support
    - extra-google-m2repository
    - extra-android-m2repository
@@ -31,16 +31,12 @@ jdk:
    - oraclejdk8
 
 # Emulator Management: Create, Start and Wait
-before_script:
-   #- android list targets
-   # - android-update-sdk --components=sys-img-armeabi-v7a-android20 --accept-licenses='android-sdk-license-[0-9a-f]{8}'
-   - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a --tag google_apis
+#before_script:
+script: 
+   - android list targets
+   - echo no | android create avd --force -n test -t "android-"$EMULATOR_API --abi armeabi-v7a --tag google_apis
    - emulator -avd test -no-window &
-   - ./gradlew clean 
-   - ./gradlew build
    - android-wait-for-emulator
    - adb shell input keyevent 82 &
-   - adb shell svc power stayon true
-
-script:
-    - ./gradlew connectedCheck --info --error
+#script:
+    - ./gradlew clean build connectedCheck --info --error
