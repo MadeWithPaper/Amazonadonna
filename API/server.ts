@@ -12,7 +12,7 @@ import * as mime from 'mime'
 const app = express()
 const port = process.env.PORT || 3000
 const dev = process.env.PROD === 'false'
-const test = process.env.NODE_TEST === 'test'
+const test = process.env.NODE_ENV === 'test'
 
 aws.config.update({ region: 'us-east-1' })
 let ddb = new aws.DynamoDB({ apiVersion: '2012-10-08' })
@@ -58,6 +58,7 @@ const listAllArtisansParams: aws.DynamoDB.Types.QueryInput = {
 }
 
 app.get('/artisans', (req: express.Request, res: express.Response) => {
+    console.log(test)
     ddb.query(listAllArtisansParams, (err, data) => {
         if (err) {
             console.log('Error fetching artisans in artisans: ' + err)
