@@ -5,6 +5,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_add_artisan.*
 import com.amazonadonna.model.Artisan
 import android.annotation.TargetApi
+import android.widget.ImageView
 
 import android.text.TextUtils
 import android.util.Log
@@ -20,6 +21,10 @@ import android.provider.DocumentsContract
 import android.content.ContentUris
 import android.net.Uri
 import java.io.*
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+
+
 
 class AddArtisan : AppCompatActivity() {
     private var photoFile: File? = null
@@ -78,6 +83,14 @@ class AddArtisan : AppCompatActivity() {
         }
     }
 
+    private fun setImageView() {
+        val takenImage = BitmapFactory.decodeFile(photoFile!!.absolutePath)
+        // RESIZE BITMAP, see section below
+        // Load the taken image into a preview
+        val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
+        ivPreview.setImageBitmap(takenImage)
+    }
+
     @TargetApi(19)
     private fun createImageFile(data: Intent?) {
         var imagePath: String? = null
@@ -106,7 +119,6 @@ class AddArtisan : AppCompatActivity() {
 
     private fun imagePath(uri: Uri?, selection: String?): String {
         var path: String? = null
-//        通过Uri和selection获取路径
         val cursor = contentResolver.query(uri, null, selection, null, null )
         if (cursor != null){
             if (cursor.moveToFirst()) {
@@ -140,7 +152,8 @@ class AddArtisan : AppCompatActivity() {
                         Log.d("AFTERGALLERY", "Data was null")
                     }
                 }
-        }
+            }
+        setImageView()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
