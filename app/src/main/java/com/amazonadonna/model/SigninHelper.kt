@@ -1,3 +1,5 @@
+package com.amazonadonna.model
+
 import android.content.Context
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool
