@@ -4,7 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#fff"
     tools:context=".AddArtisan">
+
+    <Button
+        android:id="@+id/takePicture"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:background="@android:drawable/ic_menu_camera"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_artisanProfilePic"
+        app:layout_constraintStart_toStartOf="@+id/imageView_artisanProfilePic" />
+
+    <Button
+        android:id="@+id/selectPicture"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="75dp"
+        android:background="@android:drawable/ic_menu_gallery"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_artisanProfilePic"
+        app:layout_constraintStart_toStartOf="@+id/imageView_artisanProfilePic" />
 
     <EditText
         android:id="@+id/editText_ContactNumber"
@@ -53,8 +72,6 @@
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
-        android:autoText="true"
-        android:editable="true"
         android:ems="10"
         android:hint="Artisan Name"
         android:inputType="textPersonName"
@@ -70,7 +87,11 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="50dp"
-        android:text="Add Artisan"
+        android:text=" Add Artisan "
+        android:background="#00a8e1"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

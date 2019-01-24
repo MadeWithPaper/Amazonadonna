@@ -1,30 +1,39 @@
-package com.amazonadonna.amazonhandmade
+package com.amazonadonna.view
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_add_artisan.*
-import Artisan
-import android.os.Environment
+import com.amazonadonna.model.Artisan
+import android.annotation.TargetApi
+import android.widget.ImageView
+
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import okhttp3.*
 import android.content.Intent
 import android.provider.MediaStore
-import android.graphics.Bitmap
+import android.support.v4.content.FileProvider
 import android.app.Activity
-import android.graphics.BitmapFactory
+import android.widget.Button
 import android.support.v4.app.ActivityCompat
+import android.provider.DocumentsContract
+import android.content.ContentUris
+import android.net.Uri
 import java.io.*
-import java.util.jar.Manifest
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
 
 
 class AddArtisan : AppCompatActivity() {
+    private var photoFile: File? = null
+    private val fileName: String = "output.png"
+    private val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034
+    private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_artisan)
-        val GET_FROM_GALLERY = 1
         val IMAGE_UPLOADING_PERMISSION = 3
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
 //        button_addArtisan.setOnClickListener{
@@ -32,22 +41,130 @@ class AddArtisan : AppCompatActivity() {
 //            makeNewArtisan()
 //        }
 
+        val takePhoto: Button = findViewById(R.id.takePicture)
+        val chooseFromAlbum: Button = findViewById(R.id.selectPicture)
 
+        takePhoto.setOnClickListener{
+            takePhoto()
+        }
+
+        chooseFromAlbum.setOnClickListener{
+            selectImageInAlbum()
+        }
+
+    }
+
+    private fun selectImageInAlbum() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivityForResult(intent, CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE)
+        }
+    }
+
+    private fun takePhoto() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+        photoFile = File(externalCacheDir, fileName)
+
+        if(photoFile!!.exists()) {
+            photoFile!!.delete()
+        }
+        photoFile!!.createNewFile()
+
+        val fileProvider = FileProvider.getUriForFile(this@AddArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
+
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE)
+        }
+    }
+
+    private fun setImageView() {
+        val takenImage = BitmapFactory.decodeFile(photoFile!!.absolutePath)
+        // RESIZE BITMAP, see section below
+        // Load the taken image into a preview
+        val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
+        ivPreview.setImageBitmap(takenImage)
+    }
+
+    @TargetApi(19)
+    private fun createImageFile(data: Intent?) {
+        var imagePath: String? = null
+        val uri = data!!.data
+        if (DocumentsContract.isDocumentUri(this, uri)){
+            val docId = DocumentsContract.getDocumentId(uri)
+            if ("com.android.providers.media.documents" == uri.authority){
+                val id = docId.split(":")[1]
+                val selsetion = MediaStore.Images.Media._ID + "=" + id
+                imagePath = imagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selsetion)
+            }
+            else if ("com.android.providers.downloads.documents" == uri.authority){
+                val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(docId))
+                imagePath = imagePath(contentUri, null)
+            }
+        }
+        else if ("content".equals(uri.scheme, ignoreCase = true)){
+            imagePath = imagePath(uri, null)
+        }
+        else if ("file".equals(uri.scheme, ignoreCase = true)){
+            imagePath = uri.path
+        }
+
+        photoFile = File(imagePath)
+    }
+
+    private fun imagePath(uri: Uri?, selection: String?): String {
+        var path: String? = null
+        val cursor = contentResolver.query(uri, null, selection, null, null )
+        if (cursor != null){
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
+            }
+            cursor.close()
+        }
+        return path!!
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ->
+                if (resultCode == Activity.RESULT_OK) {
+                    try {
+                        Log.d("AFTERPHOTO", "IT WORK 34")
+                        Log.d("AFTERPHOTO", "Exists?: " + photoFile!!.exists())
+                    }
+                    catch(e: Error) {
+                        Log.d("AFTERPHOTO", "AINT WORK 34")
+                    }
+                }
+            CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE ->
+                if (resultCode == Activity.RESULT_OK) {
+                    if (data != null) {
+                        createImageFile(data)
+                        Log.d("AFTERGALLERY", "File:  Exists?: " + photoFile!!.exists())
+                    }
+                    else {
+                        Log.d("AFTERGALLERY", "Data was null")
+                    }
+                }
+            }
+        setImageView()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             3 -> {
                 button_addArtisan.setOnClickListener{
-                                //Toast.makeText(this@AddArtisan, "add button clicked.", Toast.LENGTH_SHORT).show()
-            makeNewArtisan()
-        }
+                    //Toast.makeText(this@AddArtisan, "add button clicked.", Toast.LENGTH_SHORT).show()
+                    makeNewArtisan()
+                }
             }
         }
     }
-
-
-
 
     //TODO clean up
     fun makeNewArtisan() {
@@ -63,7 +180,7 @@ class AddArtisan : AppCompatActivity() {
 
         if (validFields) {
             val newArtisan = Artisan(name, "", "", "", bio, "0",0.0,0.0, "")
-                newArtisan.generateArtisanID()
+            newArtisan.generateArtisanID()
             //parse location info
             parseLoc(newArtisan)
             Log.d("INFO", "created new Artisan" + newArtisan.toString())
@@ -130,19 +247,23 @@ class AddArtisan : AppCompatActivity() {
             return false
         }
 
+        if(photoFile == null) {
+            Toast.makeText(this@AddArtisan, "No photo selected.", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
         return true
     }
 
-
-
-
+    // source file does not exist
     fun submitPictureToDB(artisan: Artisan) {
 
 //        val url = "https://4585da82.ngrok.io/updateArtisanImage"
         Log.d("hitFunction", "we here")
-            val sourceFile = File(Environment.getExternalStorageDirectory().path+"/handmade_logo.png")
-            //val sourceFile = File("file:///android_asset/handmade_logo.png")
-            Log.d("drake", "File...::::" + sourceFile + " : " + sourceFile.exists())
+//            val sourceFile = File(Environment.getExternalStorageDirectory().path+"/handmade_logo.png")
+        val sourceFile = photoFile!!
+        //val sourceFile = File("file:///android_asset/handmade_logo.png")
+        Log.d("drake", "File...::::" + sourceFile + " : " + sourceFile!!.exists())
 
 //
 //
@@ -177,19 +298,19 @@ class AddArtisan : AppCompatActivity() {
 
 //
 //           // val MEDIA_TYPE = sourceImageFile.endsWith("png") ?
-           val MEDIA_TYPE = MediaType.parse("image/png")
+        val MEDIA_TYPE = MediaType.parse("image/png")
 
 
-            val requestBody = MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("artisanId", artisan.artisanID)
-                    .addFormDataPart("image", "profile.png", RequestBody.create(MEDIA_TYPE, sourceFile))
-                    .build()
+        val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("artisanId", artisan.artisanId)
+                .addFormDataPart("image", "profile.png", RequestBody.create(MEDIA_TYPE, sourceFile))
+                .build()
 
-            val request = Request.Builder()
-                    .url("https://4585da82.ngrok.io/updateArtisanImage")
-                    .post(requestBody)
-                    .build()
+        val request = Request.Builder()
+                .url("https://4585da82.ngrok.io/updateArtisanImage")
+                .post(requestBody)
+                .build()
 
         val client = OkHttpClient()
         client.newCall(request).enqueue(object: Callback {
@@ -237,8 +358,8 @@ class AddArtisan : AppCompatActivity() {
     fun submitToDB(artisan: Artisan) {
         val url = "https://4585da82.ngrok.io/addArtisanToDatabase"
 
-        val requestBody = FormBody.Builder().add("artisanId",artisan.artisanID)
-                .add("cgoId", artisan.cgoID)
+        val requestBody = FormBody.Builder().add("artisanId",artisan.artisanId)
+                .add("cgoId", artisan.cgoId)
                 .add("bio", artisan.bio)
                 .add("city",artisan.city)
                 .add("country", artisan.country)

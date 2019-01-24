@@ -1,15 +1,11 @@
-package com.amazonadonna.amazonhandmade
+package com.amazonadonna.view
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_home_screen.*
-import okhttp3.*
-import java.io.IOException
-import Artisan
-import com.google.gson.GsonBuilder
+import android.arch.persistence.room.Room
+import com.amazonadonna.database.AppDatabase
 
 class HomeScreen : AppCompatActivity() {
 
@@ -19,7 +15,7 @@ class HomeScreen : AppCompatActivity() {
         setContentView(R.layout.activity_home_screen)
 
         //actionBar.set
-        //List All Artisan button
+        //List All com.amazonadonna.model.Artisan button
         listAllArtisan.setOnClickListener{
             queryAllArtisan()
         }

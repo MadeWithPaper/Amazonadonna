@@ -1,10 +1,10 @@
-package com.amazonadonna.amazonhandmade
+package com.amazonadonna.view
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import Artisan
+import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.list_artisan_cell.view.*
 
 class ListArtisanAdapter (private val artisans : List<Artisan>) : RecyclerView.Adapter<ArtisanViewHolder> () {
@@ -29,7 +29,7 @@ class ListArtisanAdapter (private val artisans : List<Artisan>) : RecyclerView.A
 class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
 
     fun bindArtisian(artisan: Artisan) {
-        view.imageView_artisanProfilePic.setImageResource(R.drawable.download)
+        view.imageView_artisanProfilePic.setImageResource(R.drawable.placeholder)
         view.textView_artisanName.text = artisan.name
         //view.textView_bio.text = artisan.bio
         view.textView_artisanLoc.text = (artisan.city + "," + artisan.country)
