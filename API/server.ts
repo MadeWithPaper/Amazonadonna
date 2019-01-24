@@ -58,7 +58,6 @@ const listAllArtisansParams: aws.DynamoDB.Types.QueryInput = {
 }
 
 app.get('/artisans', (req: express.Request, res: express.Response) => {
-    console.log(test)
     ddb.query(listAllArtisansParams, (err, data) => {
         if (err) {
             console.log('Error fetching artisans in artisans: ' + err)
