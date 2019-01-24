@@ -6,6 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".AddArtisan">
 
+    <Button
+        android:id="@+id/takePicture"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_artisanProfilePic"
+        app:layout_constraintStart_toStartOf="@+id/imageView_artisanProfilePic" />
+
+    <Button
+        android:id="@+id/selectPicture"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="75dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_artisanProfilePic"
+        app:layout_constraintStart_toStartOf="@+id/imageView_artisanProfilePic" />
+
     <EditText
         android:id="@+id/editText_ContactNumber"
         android:layout_width="wrap_content"
