@@ -1,4 +1,4 @@
-package com.amazonadonna.amazonhandmade
+package com.amazonadonna.view
 
 import android.util.Log
 import androidx.test.espresso.Espresso.onView

@@ -1,9 +1,9 @@
-package com.amazonadonna.amazonhandmade
+package com.amazonadonna.view
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_add_artisan.*
-import Artisan
+import com.amazonadonna.model.Artisan
 import android.annotation.TargetApi
 
 import android.text.TextUtils
@@ -75,7 +75,7 @@ class AddArtisan : AppCompatActivity() {
 
         if (intent.resolveActivity(packageManager) != null) {
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE)
-      }
+        }
     }
 
     @TargetApi(19)
@@ -147,9 +147,9 @@ class AddArtisan : AppCompatActivity() {
         when (requestCode) {
             3 -> {
                 button_addArtisan.setOnClickListener{
-                                //Toast.makeText(this@AddArtisan, "add button clicked.", Toast.LENGTH_SHORT).show()
-            makeNewArtisan()
-        }
+                    //Toast.makeText(this@AddArtisan, "add button clicked.", Toast.LENGTH_SHORT).show()
+                    makeNewArtisan()
+                }
             }
         }
     }
@@ -168,7 +168,7 @@ class AddArtisan : AppCompatActivity() {
 
         if (validFields) {
             val newArtisan = Artisan(name, "", "", "", bio, "0",0.0,0.0, "")
-                newArtisan.generateArtisanID()
+            newArtisan.generateArtisanID()
             //parse location info
             parseLoc(newArtisan)
             Log.d("INFO", "created new Artisan" + newArtisan.toString())
@@ -249,9 +249,9 @@ class AddArtisan : AppCompatActivity() {
 //        val url = "https://4585da82.ngrok.io/updateArtisanImage"
         Log.d("hitFunction", "we here")
 //            val sourceFile = File(Environment.getExternalStorageDirectory().path+"/handmade_logo.png")
-            val sourceFile = photoFile!!
-            //val sourceFile = File("file:///android_asset/handmade_logo.png")
-            Log.d("drake", "File...::::" + sourceFile + " : " + sourceFile!!.exists())
+        val sourceFile = photoFile!!
+        //val sourceFile = File("file:///android_asset/handmade_logo.png")
+        Log.d("drake", "File...::::" + sourceFile + " : " + sourceFile!!.exists())
 
 //
 //
@@ -286,19 +286,19 @@ class AddArtisan : AppCompatActivity() {
 
 //
 //           // val MEDIA_TYPE = sourceImageFile.endsWith("png") ?
-           val MEDIA_TYPE = MediaType.parse("image/png")
+        val MEDIA_TYPE = MediaType.parse("image/png")
 
 
-            val requestBody = MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("artisanId", artisan.artisanID)
-                    .addFormDataPart("image", "profile.png", RequestBody.create(MEDIA_TYPE, sourceFile))
-                    .build()
+        val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("artisanId", artisan.artisanId)
+                .addFormDataPart("image", "profile.png", RequestBody.create(MEDIA_TYPE, sourceFile))
+                .build()
 
-            val request = Request.Builder()
-                    .url("https://4585da82.ngrok.io/updateArtisanImage")
-                    .post(requestBody)
-                    .build()
+        val request = Request.Builder()
+                .url("https://4585da82.ngrok.io/updateArtisanImage")
+                .post(requestBody)
+                .build()
 
         val client = OkHttpClient()
         client.newCall(request).enqueue(object: Callback {
@@ -346,8 +346,8 @@ class AddArtisan : AppCompatActivity() {
     fun submitToDB(artisan: Artisan) {
         val url = "https://4585da82.ngrok.io/addArtisanToDatabase"
 
-        val requestBody = FormBody.Builder().add("artisanId",artisan.artisanID)
-                .add("cgoId", artisan.cgoID)
+        val requestBody = FormBody.Builder().add("artisanId",artisan.artisanId)
+                .add("cgoId", artisan.cgoId)
                 .add("bio", artisan.bio)
                 .add("city",artisan.city)
                 .add("country", artisan.country)
