@@ -234,6 +234,6 @@ app.get('/deleteAllArtisans', (req: express.Request, res: express.Response) => {
     })
 })
 
-export { app as server }
+export { app as server, ddb }
 
 // app.use(express.static(path.resolve(__dirname, 'frontEnd')))
