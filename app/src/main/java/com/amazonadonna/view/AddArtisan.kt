@@ -1,22 +1,16 @@
-package com.amazonadonna.amazonhandmade
+package com.amazonadonna.view
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_add_artisan.*
-import Artisan
+import com.amazonadonna.model.Artisan
 import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import okhttp3.*
-import android.content.Intent
-import android.provider.MediaStore
-import android.graphics.Bitmap
-import android.app.Activity
-import android.graphics.BitmapFactory
 import android.support.v4.app.ActivityCompat
 import java.io.*
-import java.util.jar.Manifest
 
 
 class AddArtisan : AppCompatActivity() {
@@ -62,17 +56,17 @@ class AddArtisan : AppCompatActivity() {
 
 
         if (validFields) {
-            val newArtisan = Artisan(name, "", "", "", bio, "0",0.0,0.0, "")
+            val newArtisan = Artisan(name, "", "", "", bio, "0", 0.0, 0.0, "")
                 newArtisan.generateArtisanID()
             //parse location info
             parseLoc(newArtisan)
-            Log.d("INFO", "created new Artisan" + newArtisan.toString())
+            Log.d("INFO", "created new com.amazonadonna.model.Artisan" + newArtisan.toString())
 
             //pop screen and add
             submitToDB(newArtisan)
             //clear all fields
             clearFields()
-            Toast.makeText(this@AddArtisan, "Artisan added to database.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@AddArtisan, "com.amazonadonna.model.Artisan added to database.", Toast.LENGTH_SHORT).show()
             super.onBackPressed()
         }
     }
@@ -106,7 +100,7 @@ class AddArtisan : AppCompatActivity() {
     //TODO add more checks
     fun validateFields() : Boolean {
         if (TextUtils.isEmpty(editText_Name.text.toString())){
-            editText_Name.setError("Artisan Name can not be empty")
+            editText_Name.setError("com.amazonadonna.model.Artisan Name can not be empty")
             return false
         }
 
@@ -182,7 +176,7 @@ class AddArtisan : AppCompatActivity() {
 
             val requestBody = MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("artisanId", artisan.artisanID)
+                    .addFormDataPart("artisanId", artisan.artisanId)
                     .addFormDataPart("image", "profile.png", RequestBody.create(MEDIA_TYPE, sourceFile))
                     .build()
 
@@ -237,8 +231,8 @@ class AddArtisan : AppCompatActivity() {
     fun submitToDB(artisan: Artisan) {
         val url = "https://4585da82.ngrok.io/addArtisanToDatabase"
 
-        val requestBody = FormBody.Builder().add("artisanId",artisan.artisanID)
-                .add("cgoId", artisan.cgoID)
+        val requestBody = FormBody.Builder().add("artisanId",artisan.artisanId)
+                .add("cgoId", artisan.cgoId)
                 .add("bio", artisan.bio)
                 .add("city",artisan.city)
                 .add("country", artisan.country)

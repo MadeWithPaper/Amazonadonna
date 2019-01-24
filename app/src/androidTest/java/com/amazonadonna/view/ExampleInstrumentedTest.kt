@@ -1,11 +1,4 @@
-package com.amazonadonna.amazonhandmade
-
-import androidx.test.platform.app.InstrumentationRegistry
-
-import org.junit.Test
-import org.junit.runner.RunWith
-
-import org.junit.Assert.*
+package com.amazonadonna.view
 
 /**
  * Instrumented test, which will execute on an Android device.

@@ -1,16 +1,19 @@
-package com.amazonadonna.amazonhandmade
+package com.amazonadonna.view
 
+import android.arch.persistence.room.Room
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.list_all_artisans.*
-import Artisan
+import com.amazonadonna.model.Artisan
 import android.util.Log
 import com.google.gson.GsonBuilder
 import okhttp3.*
 import java.io.IOException
 import com.google.gson.reflect.TypeToken
 import android.support.v7.widget.DividerItemDecoration
+import com.amazonadonna.database.AppDatabase
+import com.amazonadonna.database.ArtisanDao
 
 
 class ListAllArtisans : AppCompatActivity() {
@@ -42,14 +45,29 @@ class ListAllArtisans : AppCompatActivity() {
 
                 println(body)
                 val gson = GsonBuilder().create()
-                //val artisans : List<Artisan> =  gson.fromJson(body, mutableListOf<Artisan>().javaClass)
+                //val artisans : List<com.amazonadonna.model.Artisan> =  gson.fromJson(body, mutableListOf<com.amazonadonna.model.Artisan>().javaClass)
                 //System.out.print(artisans.get(0))
                 val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
-
 
                 runOnUiThread {
                     recyclerView_listAllartisans.adapter = ListArtisanAdapter(artisans)
                 }
+
+                //!--------------------------------!
+                //SQLite Prototype Code
+                val db = Room.databaseBuilder(
+                        applicationContext,
+                        AppDatabase::class.java, "amazonadonna-main"
+                ).fallbackToDestructiveMigration().build()
+                val artisanDao = db.artisanDao();
+
+                val tempArtisan = artisans.get(10)
+                val tempId = tempArtisan.artisanId
+
+                artisanDao.insertAll(artisans)
+                val testArtisan = artisanDao.findByID(tempId)
+                Log.d("ASSERT", "Retrieved Artisan '" + testArtisan.name + "' from the database!")
+                //!--------------------------------!
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
