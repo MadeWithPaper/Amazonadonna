@@ -61,7 +61,7 @@ class ListAllArtisans : AppCompatActivity() {
                 ).fallbackToDestructiveMigration().build()
                 val artisanDao = db.artisanDao();
 
-                val tempArtisan = artisans.get(10)
+                val tempArtisan = artisans.get(0)
                 val tempId = tempArtisan.artisanId
 
                 artisanDao.insertAll(artisans)

@@ -25,7 +25,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Bitmap
 
 
-
 class AddArtisan : AppCompatActivity() {
     private var photoFile: File? = null
     private val fileName: String = "output.png"
