@@ -23,7 +23,6 @@ import android.net.Uri
 import java.io.*
 import android.graphics.BitmapFactory
 
-
 class AddArtisan : AppCompatActivity() {
     private var photoFile: File? = null
     private val fileName: String = "output.png"
