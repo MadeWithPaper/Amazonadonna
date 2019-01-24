@@ -4,8 +4,29 @@ env:
     - EMULATOR_API=24
     - ANDROID_BUILD_TOOLS=28.0.3
 
+sudo: true
+
 matrix:
   include:
+    - language: node_js
+      node_js:
+        - 'node'
+
+      services:
+        - docker
+      before_install:
+        - docker pull amazon/dynamodb-local
+        - docker run -d -p 8000:8000 amazon/dynamodb-local
+
+      before_script:
+        - mkdir ~/.aws
+        - cd API
+        - cp ./credentials ~/.aws/
+        - npm i
+
+      script:
+        - npm test
+
     - language: android
       android:
         components:
