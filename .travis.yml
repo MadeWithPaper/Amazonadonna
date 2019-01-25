@@ -44,10 +44,10 @@ matrix:
           - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
           - sys-img-armeabi-v7a-android-$EMULATOR_API
 
-      licenses:
-        - android-sdk-preview-license-.+
-        - android-sdk-license-.+
-        - google-gdk-license-.+
+        licenses:
+          - android-sdk-preview-license-.+
+          - android-sdk-license-.+
+          - google-gdk-license-.+
 
       jdk:
         - oraclejdk8
