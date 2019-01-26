@@ -10,7 +10,7 @@
         "start:server": "nodemon --inspect ./dist/server.js",
         "start:serverProd": "node ./dist/server.js",
         "start:watch": "tsc -p ./tsconfig.backend.json --watch",
-        "start:test": "cross-env NODE_ENV=test mocha \"dist/test/*.js\" --timeout 5000 --exit",
+        "start:test": "cross-env NODE_ENV=test mocha \"dist/test/*.js\" --timeout 4000 --exit",
         "start:localdb": "docker run -d -p 8000:8000 --name ddblocal amazon/dynamodb-local",
         "build:backend": "tsc -p ./tsconfig.backend.json",
         "build:test": "tsc -p ./tsconfig.test.json",
