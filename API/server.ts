@@ -81,8 +81,6 @@ app.get('/artisans', (req: express.Request, res: express.Response) => {
 app.post(
     '/addArtisanToDatabase',
     (req: express.Request, res: express.Response) => {
-        console.log(req.body)
-
         const params: aws.DynamoDB.PutItemInput = {
             TableName: 'artisan',
             Item: {
@@ -108,7 +106,6 @@ app.post(
                         err.message
                 )
             } else {
-                console.log('Successfully added to database')
                 res.send('Successfully added')
             }
         })
@@ -159,7 +156,6 @@ app.post(
                 if (req.file) {
                     picURL = (req.file as any).location
                 }
-                console.log('Pic added: ' + picURL)
 
                 // update db record with new URL
                 const params: aws.DynamoDB.UpdateItemInput = {
@@ -227,7 +223,6 @@ app.get('/deleteAllArtisans', (req: express.Request, res: express.Response) => {
                 })
             })
             Promise.all(convert).then(items => {
-                console.log('All artisans have been deleted')
                 res.send('All artisans have been deleted')
             })
         }

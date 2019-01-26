@@ -136,4 +136,47 @@ describe('artisans', () => {
             })
         })
     })
+
+    describe('addArtisanToDatabase', () => {
+        it('it should POST an artisan', done => {
+            chai.request(server)
+                .post('/addArtisanToDatabase')
+                .send({
+                    artisanId: '5678',
+                    cgoId: '0',
+                    bio: 'testing adding artisan',
+                    city: 'Tampa',
+                    country: 'USA',
+                    name: 'Jackson',
+                    lat: '32.5149',
+                    lon: '117.0382'
+                })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    done()
+                })
+        })
+        it('it should GET the new artisan', done => {
+            chai.request(server)
+                .get('/artisans')
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('Array')
+                    res.body.length.should.be.eql(2)
+                    res.body[1].should.be.an('Object')
+                    res.body[1].should.be.eql({
+                        artisanId: '5678',
+                        cgoId: '0',
+                        bio: 'testing adding artisan',
+                        city: 'Tampa',
+                        country: 'USA',
+                        name: 'Jackson',
+                        lat: 32.5149,
+                        lon: 117.0382,
+                        picURL: 'Not set'
+                    })
+                    done()
+                })
+        })
+    })
 })
