@@ -12,9 +12,18 @@ import * as mime from 'mime'
 const app = express()
 const port = process.env.PORT || 3000
 const dev = process.env.PROD === 'false'
+const test = process.env.NODE_ENV === 'test'
 
 aws.config.update({ region: 'us-east-1' })
-const ddb = new aws.DynamoDB({ apiVersion: '2012-10-08' })
+let ddb = new aws.DynamoDB({ apiVersion: '2012-10-08' })
+
+if (test) {
+    ddb = new aws.DynamoDB({
+        apiVersion: '2012-10-08',
+        endpoint: 'http://localhost:8000'
+    })
+}
+
 const s3 = new aws.S3()
 
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -72,8 +81,6 @@ app.get('/artisans', (req: express.Request, res: express.Response) => {
 app.post(
     '/addArtisanToDatabase',
     (req: express.Request, res: express.Response) => {
-        console.log(req.body)
-
         const params: aws.DynamoDB.PutItemInput = {
             TableName: 'artisan',
             Item: {
@@ -99,7 +106,6 @@ app.post(
                         err.message
                 )
             } else {
-                console.log('Successfully added to database')
                 res.send('Successfully added')
             }
         })
@@ -150,7 +156,6 @@ app.post(
                 if (req.file) {
                     picURL = (req.file as any).location
                 }
-                console.log('Pic added: ' + picURL)
 
                 // update db record with new URL
                 const params: aws.DynamoDB.UpdateItemInput = {
@@ -218,11 +223,12 @@ app.get('/deleteAllArtisans', (req: express.Request, res: express.Response) => {
                 })
             })
             Promise.all(convert).then(items => {
-                console.log('All artisans have been deleted')
                 res.send('All artisans have been deleted')
             })
         }
     })
 })
+
+export { app as server, ddb }
 
 // app.use(express.static(path.resolve(__dirname, 'frontEnd')))
