@@ -80,7 +80,7 @@ describe('artisans', () => {
     describe('listAllArtisans', () => {
         it('it should GET all the artisans (empty)', done => {
             chai.request(server)
-                .get('/artisans')
+                .get('/artisan/listAll')
                 .end((err, res) => {
                     res.should.have.status(200)
                     res.body.should.be.an('Array')
@@ -114,7 +114,7 @@ describe('artisans', () => {
             })
             it('it should GET all the artisans', done => {
                 chai.request(server)
-                    .get('/artisans')
+                    .get('/artisan/listAll')
                     .end((err, res) => {
                         res.should.have.status(200)
                         res.body.should.be.an('Array')
@@ -140,7 +140,7 @@ describe('artisans', () => {
     describe('addArtisanToDatabase', () => {
         it('it should POST an artisan', done => {
             chai.request(server)
-                .post('/addArtisanToDatabase')
+                .post('/artisan/add')
                 .send({
                     artisanId: '5678',
                     cgoId: '0',
@@ -158,7 +158,7 @@ describe('artisans', () => {
         })
         it('it should GET the new artisan', done => {
             chai.request(server)
-                .get('/artisans')
+                .get('/artisan/listAll')
                 .end((err, res) => {
                     res.should.have.status(200)
                     res.body.should.be.an('Array')
