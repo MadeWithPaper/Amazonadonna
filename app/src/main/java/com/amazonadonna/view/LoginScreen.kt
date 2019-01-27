@@ -202,7 +202,8 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true)
+            //TODO fix showprogress to show spinner
+            //showProgress(true)
             mAuthTask = UserLoginTask(emailStr, passwordStr)
             mAuthTask!!.execute(null as Void?)
         }
@@ -218,43 +219,43 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
         return password.length > 4
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private fun showProgress(show: Boolean) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
-
-            login_form.visibility = if (show) View.GONE else View.VISIBLE
-            login_form.animate()
-                    .setDuration(shortAnimTime)
-                    .alpha((if (show) 0 else 1).toFloat())
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator) {
-                            login_form.visibility = if (show) View.GONE else View.VISIBLE
-                        }
-                    })
-
-            login_progress.visibility = if (show) View.VISIBLE else View.GONE
-            login_progress.animate()
-                    .setDuration(shortAnimTime)
-                    .alpha((if (show) 1 else 0).toFloat())
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator) {
-                            login_progress.visibility = if (show) View.VISIBLE else View.GONE
-                        }
-                    })
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            login_progress.visibility = if (show) View.VISIBLE else View.GONE
-            login_form.visibility = if (show) View.GONE else View.VISIBLE
-        }
-    }
+//    /**
+//     * Shows the progress UI and hides the login form.
+//     */
+//    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+//    private fun showProgress(show: Boolean) {
+//        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+//        // for very easy animations. If available, use these APIs to fade-in
+//        // the progress spinner.
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+//            val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+//
+//            login_form.visibility = if (show) View.GONE else View.VISIBLE
+//            login_form.animate()
+//                    .setDuration(shortAnimTime)
+//                    .alpha((if (show) 0 else 1).toFloat())
+//                    .setListener(object : AnimatorListenerAdapter() {
+//                        override fun onAnimationEnd(animation: Animator) {
+//                            login_form.visibility = if (show) View.GONE else View.VISIBLE
+//                        }
+//                    })
+//
+//            login_progress.visibility = if (show) View.VISIBLE else View.GONE
+//            login_progress.animate()
+//                    .setDuration(shortAnimTime)
+//                    .alpha((if (show) 1 else 0).toFloat())
+//                    .setListener(object : AnimatorListenerAdapter() {
+//                        override fun onAnimationEnd(animation: Animator) {
+//                            login_progress.visibility = if (show) View.VISIBLE else View.GONE
+//                        }
+//                    })
+//        } else {
+//            // The ViewPropertyAnimator APIs are not available, so simply show
+//            // and hide the relevant UI components.
+//            login_progress.visibility = if (show) View.VISIBLE else View.GONE
+//            login_form.visibility = if (show) View.GONE else View.VISIBLE
+//        }
+//    }
 
     override fun onCreateLoader(i: Int, bundle: Bundle?): Loader<Cursor> {
         return CursorLoader(this,
@@ -279,20 +280,20 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
             cursor.moveToNext()
         }
 
-        addEmailsToAutoComplete(emails)
+       // addEmailsToAutoComplete(emails)
     }
 
     override fun onLoaderReset(cursorLoader: Loader<Cursor>) {
 
     }
 
-    private fun addEmailsToAutoComplete(emailAddressCollection: List<String>) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        val adapter = ArrayAdapter(this@LoginScreen,
-                android.R.layout.simple_dropdown_item_1line, emailAddressCollection)
-
-        email.setAdapter(adapter)
-    }
+//    private fun addEmailsToAutoComplete(emailAddressCollection: List<String>) {
+//        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
+//        val adapter = ArrayAdapter(this@LoginScreen,
+//                android.R.layout.simple_dropdown_item_1line, emailAddressCollection)
+//
+//        email.setAdapter(adapter)
+//    }
 
     object ProfileQuery {
         val PROJECTION = arrayOf(
@@ -330,7 +331,7 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
         override fun onPostExecute(success: Boolean?) {
             mAuthTask = null
-            showProgress(false)
+            //showProgress(false)
 
             if (success!!) {
                 finish()
@@ -342,7 +343,7 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
         override fun onCancelled() {
             mAuthTask = null
-            showProgress(false)
+            //showProgress(false)
         }
     }
 
