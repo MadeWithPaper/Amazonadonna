@@ -20,9 +20,6 @@ class HomeScreen : AppCompatActivity() {
             queryAllArtisan()
         }
 
-        addArtisan.setOnClickListener{
-            addSingleArtisan()
-        }
     }
 
 
@@ -33,10 +30,4 @@ class HomeScreen : AppCompatActivity() {
 
     }
 
-    private fun addSingleArtisan() {
-        //go to add artisan screen
-        val intent = Intent(this, AddArtisan::class.java)
-        startActivity(intent)
-
-    }
 }
