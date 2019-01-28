@@ -3,10 +3,7 @@
     package="com.amazonadonna.view">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -20,19 +17,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-      <activity android:name="com.amazon.identity.auth.device.workflow.WorkflowActivity"
-            android:theme="@android:style/Theme.NoDisplay"
+        <activity
+            android:name=".ArtisanProfile"
+            android:label="@string/title_activity_artisan_profile"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ListAllArtisans">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ListAllArtisans"/>
+        </activity>
+        <activity
+            android:name="com.amazon.identity.auth.device.workflow.WorkflowActivity"
             android:allowTaskReparenting="true"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
                 <!-- android:host must use the full package name found in Manifest General Attributes -->
-                <data android:host="${applicationId}" android:scheme="amzn"/>
+                <data
+                    android:host="${applicationId}"
+                    android:scheme="amzn" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.amazonadonna.amazonhandmade.fileprovider"
@@ -40,25 +50,24 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/fileprovider"
-                />
+                android:resource="@xml/fileprovider" />
         </provider>
-        <activity android:name="com.amazonadonna.view.HomeScreen">
-        </activity>
-        <activity android:name="com.amazonadonna.view.LoginScreen"
-                  android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
+
+        <activity android:name=".HomeScreen"></activity>
+        <activity
+            android:name=".LoginScreen"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.amazonadonna.view.ListAllArtisans"
-            android:theme="@style/AppTheme" />
-        <activity android:name="com.amazonadonna.view.AddArtisan" />
-        <!--<activity-->
-            <!--android:name=".LoginScreen"-->
-            <!--android:label="@string/title_activity_login_screen"></activity>-->
+            android:name=".ListAllArtisans"
+            android:theme="@style/AppTheme"
+            android:launchMode="singleTop"/>
+        <activity android:name=".AddArtisan" />
     </application>
 
 </manifest>

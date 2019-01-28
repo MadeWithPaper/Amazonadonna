@@ -1,6 +1,7 @@
 package com.amazonadonna.view
 
 import android.arch.persistence.room.Room
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -12,6 +13,7 @@ import okhttp3.*
 import java.io.IOException
 import com.google.gson.reflect.TypeToken
 import android.support.v7.widget.DividerItemDecoration
+import android.view.Menu
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.database.ArtisanDao
 
@@ -29,13 +31,24 @@ class ListAllArtisans : AppCompatActivity() {
 
         //load an empty list as placeholder before GET request completes
         val emptyArtisanList : List<Artisan> = emptyList()
-        recyclerView_listAllartisans.adapter = ListArtisanAdapter(emptyArtisanList)
+        recyclerView_listAllartisans.adapter = ListArtisanAdapter(this, emptyArtisanList)
 
         recyclerView_listAllartisans.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
+        toolbar_addartisan.setOnClickListener{
+            addArtisan()
+        }
+    }
+
+    private fun addArtisan() {
+        //go to add artisan screen
+        val intent = Intent(this, AddArtisan::class.java)
+        startActivity(intent)
+
     }
 
     private fun fetchJSON() {
-        val url = "https://4585da82.ngrok.io/artisans"
+        val url = "https://4585da82.ngrok.io/artisan/listAll"
         val request = Request.Builder().url(url).build()
 
         val client = OkHttpClient()
@@ -50,7 +63,7 @@ class ListAllArtisans : AppCompatActivity() {
                 val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
 
                 runOnUiThread {
-                    recyclerView_listAllartisans.adapter = ListArtisanAdapter(artisans)
+                    recyclerView_listAllartisans.adapter = ListArtisanAdapter(applicationContext, artisans)
                 }
 
                 //!--------------------------------!

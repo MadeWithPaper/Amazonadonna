@@ -354,7 +354,7 @@ class AddArtisan : AppCompatActivity() {
     }
 
     fun submitToDB(artisan: Artisan) {
-        val url = "https://4585da82.ngrok.io/addArtisanToDatabase"
+        val url = "https://4585da82.ngrok.io/artisans"
 
         val requestBody = FormBody.Builder().add("artisanId",artisan.artisanId)
                 .add("cgoId", artisan.cgoId)
