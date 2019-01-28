@@ -49,8 +49,7 @@ matrix:
           - android-sdk-license-.+
           - google-gdk-license-.+
 
-      jdk:
-        - oraclejdk8
+      jdk: oraclejdk8
 
       # Emulator Management: Create, Start and Wait
       before_script:
