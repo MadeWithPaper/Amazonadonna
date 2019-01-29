@@ -43,8 +43,8 @@ describe('artisans', () => {
                             { AttributeName: 'artisanId', KeyType: 'HASH' }
                         ],
                         ProvisionedThroughput: {
-                            ReadCapacityUnits: 10,
-                            WriteCapacityUnits: 10
+                            ReadCapacityUnits: 5,
+                            WriteCapacityUnits: 5
                         },
                         GlobalSecondaryIndexes: [
                             {
@@ -59,8 +59,8 @@ describe('artisans', () => {
                                     ProjectionType: 'ALL'
                                 },
                                 ProvisionedThroughput: {
-                                    ReadCapacityUnits: 10,
-                                    WriteCapacityUnits: 10
+                                    ReadCapacityUnits: 1,
+                                    WriteCapacityUnits: 1
                                 }
                             }
                         ]

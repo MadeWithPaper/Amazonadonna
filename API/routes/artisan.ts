@@ -64,12 +64,12 @@ router.post('/add', (req: Request, res: Response) => {
     })
 })
 
-router.post('/update', (req: Request, res: Response) => {
+router.post('/updateImage', (req: Request, res: Response) => {
     // setup pic uploader with artisanId as filename
     const artisanPicsUploader = multer({
         storage: multerS3({
             s3,
-            bucket: 'artisan-prof-pics',
+            bucket: 'artisan-prof-pics-new',
             acl: 'public-read',
             contentType: (picReq, file, cb) => {
                 cb(null, file.mimetype)
