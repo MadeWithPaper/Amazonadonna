@@ -22,8 +22,6 @@ import android.content.ContentUris
 import android.net.Uri
 import java.io.*
 import android.graphics.BitmapFactory
-import android.graphics.Bitmap
-
 
 class AddArtisan : AppCompatActivity() {
     private var photoFile: File? = null
