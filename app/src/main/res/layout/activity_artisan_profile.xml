@@ -47,17 +47,22 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="50dp"
         android:text="TextView"
+        android:textSize="20sp"
+        android:textColor="#000"
         app:layout_constraintStart_toEndOf="@+id/artisanProfilePicture"
         app:layout_constraintTop_toBottomOf="@+id/artisanProfileToolbar" />
 
     <TextView
         android:id="@+id/artisanProfileBio"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="40dp"
         android:text="TextView"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:textAlignment="gravity"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/artisanProfilePicture" />

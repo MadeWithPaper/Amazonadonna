@@ -17,6 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".AddItem"></activity>
+        <activity android:name=".ArtisanItemList" />
         <activity
             android:name=".ArtisanProfile"
             android:label="@string/title_activity_artisan_profile"
@@ -24,7 +26,7 @@
             android:parentActivityName=".ListAllArtisans">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ListAllArtisans"/>
+                android:value=".ListAllArtisans" />
         </activity>
         <activity
             android:name="com.amazon.identity.auth.device.workflow.WorkflowActivity"
@@ -53,7 +55,7 @@
                 android:resource="@xml/fileprovider" />
         </provider>
 
-        <activity android:name=".HomeScreen"></activity>
+        <activity android:name=".HomeScreen" />
         <activity
             android:name=".LoginScreen"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
@@ -65,8 +67,8 @@
         </activity>
         <activity
             android:name=".ListAllArtisans"
-            android:theme="@style/AppTheme"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme" />
         <activity android:name=".AddArtisan" />
     </application>
 
