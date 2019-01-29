@@ -1,5 +1,6 @@
 package com.amazonadonna.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
 import com.amazonadonna.model.Artisan
@@ -16,6 +17,31 @@ class ArtisanProfile : AppCompatActivity() {
 
         artisanProfileName.text = artisan?.name
         artisanProfileBio.text = artisan?.bio
+
+        artisanProfileItemListButton.setOnClickListener {
+
+            artisanItemList()
+        }
+
+        artisanProfileOrdersButton.setOnClickListener {
+            listArtisanOrders()
+        }
     }
+
+    private fun artisanItemList(){
+
+        val intent = Intent(this, ArtisanItemList::class.java)
+        startActivity(intent)
+    }
+
+    private fun listArtisanOrders(){
+
+        val intent = Intent(this, ListOrders::class.java)
+        startActivity(intent)
+    }
+
+    //TODO add new intent to orders
+    //TODO profile pic
+    //TODO rating system
 
 }
