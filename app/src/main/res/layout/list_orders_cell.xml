@@ -30,8 +30,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView_OrderID"
         app:layout_constraintStart_toStartOf="@+id/textView_OrderID"
         android:textSize="15sp"
-        android:textColor="#000"
-        android:text="<Date ordered>"/>
+        android:textColor="#000"/>
 
     <TextView
         android:id="@+id/textView_ArtisanConfirmed"
