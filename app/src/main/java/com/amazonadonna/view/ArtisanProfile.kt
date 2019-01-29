@@ -22,11 +22,21 @@ class ArtisanProfile : AppCompatActivity() {
 
             artisanItemList()
         }
+
+        artisanProfileOrdersButton.setOnClickListener {
+            listArtisanOrders()
+        }
     }
 
-    fun artisanItemList(){
+    private fun artisanItemList(){
 
         val intent = Intent(this, ArtisanItemList::class.java)
+        startActivity(intent)
+    }
+
+    private fun listArtisanOrders(){
+
+        val intent = Intent(this, ListOrders::class.java)
         startActivity(intent)
     }
 

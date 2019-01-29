@@ -20,6 +20,10 @@ class HomeScreen : AppCompatActivity() {
             queryAllArtisan()
         }
 
+        listOrders.setOnClickListener {
+            queryAllOrder()
+        }
+
     }
 
 
@@ -29,5 +33,14 @@ class HomeScreen : AppCompatActivity() {
         startActivity(intent)
 
     }
+
+
+    private fun queryAllOrder() {
+        //go to list all artisan screen
+        val intent = Intent(this, ListOrders::class.java)
+        startActivity(intent)
+
+    }
+
 
 }
