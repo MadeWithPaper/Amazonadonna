@@ -10,9 +10,6 @@ import android.support.v7.widget.LinearLayoutManager
 import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.activity_list_orders.*
 
-// TODO
-//  - Change List<Artisan> to List<Orders> once a model class is created
-//  - Implement a fetch of order data once backend route/database are configured
 class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,10 +18,12 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
         recyclerView_listOrders.layoutManager = LinearLayoutManager(this)
 
+        // TODO change List<Artisan> to List<Orders> once a model class is created
         //load an empty list as placeholder before GET request completes
         val emptyOrdersList : List<Artisan> = emptyList()
         recyclerView_listOrders.adapter = ListArtisanAdapter(this, emptyOrdersList)
-
+        // TODO implement a fetch of order data once backend route/database are configured
+        // TODO implement a ListOrders adapter
         recyclerView_listOrders.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
