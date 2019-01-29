@@ -1,15 +1,21 @@
 package com.amazonadonna.model
 
-class Product (var itemName : String, var price : Double, var owner : Artisan) {
-    var SKU : String = ""
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.ColumnInfo
+import com.beust.klaxon.Json
+import java.io.Serializable
+import java.util.*
 
-    init {
-        generateSKU()
-    }
+@Entity(tableName = "product")
+data class Product (
+        @ColumnInfo(name = "price") @Json(name = "price") var name : Double,
+        @PrimaryKey @Json(name = "itemId") var itemId : String,
+        @ColumnInfo(name = "description") @Json(name = "description") var description : String,
+        @ColumnInfo(name = "artisanId") @Json(name = "artisanId") var artisanId : String,
+        @ColumnInfo(name = "pictureURL") @Json(name = "pictureURL")var pictureURL : String,
+        @ColumnInfo(name = "itemName") @Json(name = "itemName") var itemName : String) : Serializable {
 
-    private fun generateSKU () {
-        SKU = "x"
-    }
 
 
 }
