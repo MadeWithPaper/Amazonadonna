@@ -48,7 +48,6 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
             /* Your app is now authorized for the requested scopes */
             val intent = Intent(this@LoginScreen, HomeScreen::class.java)
             startActivity(intent)
-
         }
 
         /* There was an error during the attempt to authorize the
