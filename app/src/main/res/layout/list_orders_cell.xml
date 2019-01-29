@@ -12,7 +12,6 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -21,7 +20,7 @@
         app:layout_constraintVertical_bias="1.0"
         android:textSize="30sp"
         android:textColor="#000"
-        android:text="Order ID: "/>
+        android:text="@string/order_id"/>
 
     <TextView
         android:id="@+id/textView_OrderDate"
@@ -43,7 +42,7 @@
         app:layout_constraintStart_toStartOf="@+id/textView_OrderID"
         android:textSize="18sp"
         android:textColor="#000"
-        android:text="Artisan Confirmed: <Pending/Date>"/>
+        android:text="@string/artisan_confirmed"/>
 
     <TextView
         android:id="@+id/textView_Shipped"
@@ -54,7 +53,7 @@
         app:layout_constraintStart_toStartOf="@+id/textView_OrderID"
         android:textSize="18sp"
         android:textColor="#000"
-        android:text="Shipped: <Pending/Date>"/>
+        android:text="@string/order_shipped"/>
 
     <TextView
         android:id="@+id/textView_Payout"
@@ -65,7 +64,7 @@
         app:layout_constraintStart_toStartOf="@+id/textView_OrderID"
         android:textSize="18sp"
         android:textColor="#000"
-        android:text="Artisan Payout: <Pending/Date>"/>
+        android:text="@string/artisan_payout"/>
 
 
 </android.support.constraint.ConstraintLayout>

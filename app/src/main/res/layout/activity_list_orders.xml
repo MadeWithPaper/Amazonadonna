@@ -33,7 +33,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="Orders"
+        android:text="@string/title_list_orders"
         android:textSize="30sp"
         android:textColor="#FFF"
         android:textAlignment="center"
