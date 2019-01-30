@@ -24,27 +24,24 @@ class ArtisanProfile : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_profile)
 
-        resizeProfilePicImageView()
+        val artisan = intent.extras?.getSerializable("artisan") as Artisan
 
         artisanProfileBio.setMovementMethod(ScrollingMovementMethod())
 
-        populateSelectedArtisan()
+        populateSelectedArtisan(artisan)
 
         artisanProfileItemListButton.setOnClickListener {
-
-            artisanItemList()
+            artisanItemList(artisan)
         }
 
         artisanProfileOrdersButton.setOnClickListener {
-            listArtisanOrders()
+            listArtisanOrders(artisan)
         }
     }
 
-    private fun populateSelectedArtisan() {
-        val artisan = intent.extras?.getSerializable("artisan") as? Artisan
-
-        if (artisan?.picURL != "Not set")
-            Picasso.with(this).load(artisan!!.picURL).into(this.artisanProfilePicture)
+    private fun populateSelectedArtisan(artisan : Artisan) {
+        if (artisan.picURL != "Not set")
+            Picasso.with(this).load(artisan.picURL).into(this.artisanProfilePicture)
         //DownLoadImageTask(view.imageView_artisanProfilePic).execute(artisan.picURL)
         else
             this.artisanProfilePicture.setImageResource(R.drawable.placeholder)
@@ -54,21 +51,13 @@ class ArtisanProfile : AppCompatActivity() {
 
     }
 
-    private fun resizeProfilePicImageView() {
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-        var screenWidth = displayMetrics.widthPixels
-        var screenHeight = displayMetrics.heightPixels
-
-    }
-    private fun artisanItemList(){
-
+    private fun artisanItemList(artisan : Artisan){
         val intent = Intent(this, ArtisanItemList::class.java)
+        intent.putExtra("selectedArtisan", artisan)
         startActivity(intent)
     }
 
-    private fun listArtisanOrders(){
+    private fun listArtisanOrders(artisan: Artisan){
 
         val intent = Intent(this, ListOrders::class.java)
         startActivity(intent)
