@@ -18,7 +18,7 @@ class ArtisanItemList : AppCompatActivity() {
 
     private fun addItem() {
         //go to list all artisan screen
-        val intent = Intent(this, AddItem::class.java)
+        val intent = Intent(this, AddItemCategory::class.java)
         startActivity(intent)
     }
 

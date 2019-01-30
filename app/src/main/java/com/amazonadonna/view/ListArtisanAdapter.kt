@@ -37,7 +37,6 @@ class ListArtisanAdapter (private val context: Context, private val artisans : L
 
         holder.view.setOnClickListener{
             val intent = Intent(context, ArtisanProfile::class.java)
-            val artisanBundle = Bundle()
             intent.putExtra("artisan", artisan)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
