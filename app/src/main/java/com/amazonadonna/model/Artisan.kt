@@ -17,7 +17,7 @@ data class Artisan (
         @ColumnInfo(name = "cgoId") @Json(name = "cgoId") var cgoId : String,
         @ColumnInfo(name = "lat") @Json(name = "lon") var lon : Double,
         @ColumnInfo(name = "lon") @Json(name = "lat") var lat : Double,
-        @ColumnInfo(name = "pictureURL") @Json(name = "pictureURL") var pictureURL : String?) : Serializable {
+        @ColumnInfo(name = "picURL") @Json(name = "picURL") var picURL : String?) : Serializable {
 
     fun generateArtisanID() {
         //TODO fill in logic for generating unique ID for artisan

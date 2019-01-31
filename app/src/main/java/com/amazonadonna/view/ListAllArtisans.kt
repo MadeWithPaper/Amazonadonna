@@ -48,7 +48,7 @@ class ListAllArtisans : AppCompatActivity() {
     }
 
     private fun fetchJSON() {
-        val url = "https://4585da82.ngrok.io/artisan/listAll"
+        val url = "https://7bd92aed.ngrok.io/artisan/listAll"
         val request = Request.Builder().url(url).build()
 
         val client = OkHttpClient()

@@ -31,32 +31,39 @@
         app:srcCompat="@drawable/handmade_logo" />
 
     <android.support.v7.widget.GridLayout
+        android:id="@+id/homescreen_grid"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:horizontalSpacing="3dp"
         android:verticalSpacing="3dp"
+        app:columnCount="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintVertical_bias="1.0"
+        app:rowCount="4">
 
         <ImageButton
             android:id="@+id/listAllArtisan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="0.5dp"
             android:background="#4CAF50"
+            app:layout_column="0"
+            app:layout_row="0"
             app:srcCompat="@drawable/communitywithtext" />
 
         <ImageButton
             android:id="@+id/listOrders"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="0.5dp"
             android:background="#2196F3"
             app:layout_column="1"
             app:layout_row="0"
-            app:srcCompat="@drawable/adduserwithtext" />
+            app:srcCompat="@drawable/orderwithtext" />
 
         <ImageButton
             android:id="@+id/imageButton4"

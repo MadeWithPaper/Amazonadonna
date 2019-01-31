@@ -4,8 +4,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_home_screen.*
-import android.arch.persistence.room.Room
-import com.amazonadonna.database.AppDatabase
+
 
 class HomeScreen : AppCompatActivity() {
 

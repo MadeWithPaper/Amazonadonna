@@ -28,6 +28,8 @@ class AddArtisan : AppCompatActivity() {
     private val fileName: String = "output.png"
     private val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
+    private val addArtisanURL = "https://7bd92aed.ngrok.io/artisan/add"
+    private val artisanPicURL = "https://7bd92aed.ngrok.io/artisan/updateImage"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -306,7 +308,7 @@ class AddArtisan : AppCompatActivity() {
                 .build()
 
         val request = Request.Builder()
-                .url("https://4585da82.ngrok.io/updateArtisanImage")
+                .url(artisanPicURL)
                 .post(requestBody)
                 .build()
 
@@ -354,7 +356,6 @@ class AddArtisan : AppCompatActivity() {
     }
 
     fun submitToDB(artisan: Artisan) {
-        val url = "https://4585da82.ngrok.io/artisans"
 
         val requestBody = FormBody.Builder().add("artisanId",artisan.artisanId)
                 .add("cgoId", artisan.cgoId)
@@ -369,7 +370,7 @@ class AddArtisan : AppCompatActivity() {
         val client = OkHttpClient()
 
         val request = Request.Builder()
-                .url(url)
+                .url(addArtisanURL)
                 .post(requestBody)
                 .build()
 
