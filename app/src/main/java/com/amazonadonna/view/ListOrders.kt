@@ -7,21 +7,24 @@ import android.os.Bundle
 import android.support.v4.content.Loader
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import com.amazonadonna.model.Artisan
+import com.amazonadonna.model.Order
 import kotlinx.android.synthetic.main.activity_list_orders.*
 
 class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
+    val testOrder : Order = Order(artisanID = "1010101", shippingAddress = "1 Street", cgaId = "101120",
+            confirmationStatus = false, totalCost = 30.12, orderDate = "1/12/19", orderId = "284521",
+            products = emptyList(), shippingStatus = false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_orders)
 
+
         recyclerView_listOrders.layoutManager = LinearLayoutManager(this)
 
-        // TODO change List<Artisan> to List<Orders> once a model class is created
         //load an empty list as placeholder before GET request completes
-        val emptyOrdersList : List<Artisan> = emptyList()
-        recyclerView_listOrders.adapter = ListArtisanAdapter(this, emptyOrdersList)
+        val emptyOrdersList : List<Order> = listOf(testOrder)
+        recyclerView_listOrders.adapter = ListOrdersAdapter(this, emptyOrdersList)
         // TODO implement a fetch of order data once backend route/database are configured
         // TODO implement a ListOrders adapter
         recyclerView_listOrders.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))

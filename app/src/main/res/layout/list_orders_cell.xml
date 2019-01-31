@@ -23,6 +23,17 @@
         android:text="@string/order_id"/>
 
     <TextView
+        android:id="@+id/textView_OrderID_input"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/textView_OrderID"
+        app:layout_constraintTop_toTopOf="@+id/textView_OrderID"
+        app:layout_constraintVertical_bias="1.0"
+        android:textSize="30sp"
+        android:textColor="#000"/>
+
+    <TextView
         android:id="@+id/textView_OrderDate"
         android:layout_width="0dp"
         android:layout_height="25dp"
@@ -44,6 +55,16 @@
         android:text="@string/artisan_confirmed"/>
 
     <TextView
+        android:id="@+id/textView_ArtisanConfirmed_input"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/textView_ArtisanConfirmed"
+        app:layout_constraintTop_toTopOf="@+id/textView_ArtisanConfirmed"
+        app:layout_constraintVertical_bias="1.0"
+        android:textSize="18sp"/>
+
+    <TextView
         android:id="@+id/textView_Shipped"
         android:layout_width="0dp"
         android:layout_height="30dp"
@@ -55,6 +76,16 @@
         android:text="@string/order_shipped"/>
 
     <TextView
+        android:id="@+id/textView_Shipped_input"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/textView_Shipped"
+        app:layout_constraintTop_toTopOf="@+id/textView_Shipped"
+        app:layout_constraintVertical_bias="1.0"
+        android:textSize="18sp"/>
+
+    <TextView
         android:id="@+id/textView_Payout"
         android:layout_width="0dp"
         android:layout_height="30dp"
@@ -64,6 +95,16 @@
         android:textSize="18sp"
         android:textColor="#000"
         android:text="@string/artisan_payout"/>
+
+    <TextView
+        android:id="@+id/textView_Payout_input"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/textView_Payout"
+        app:layout_constraintTop_toTopOf="@+id/textView_Payout"
+        app:layout_constraintVertical_bias="1.0"
+        android:textSize="18sp"/>
 
 
 </android.support.constraint.ConstraintLayout>

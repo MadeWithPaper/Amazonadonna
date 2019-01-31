@@ -19,6 +19,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".AddItemCategory"></activity>
         <activity android:name=".ArtisanItemList" />
+        <activity android:name=".OrderScreen" />
         <activity
             android:name=".ArtisanProfile"
             android:label="@string/title_activity_artisan_profile"
