@@ -14,10 +14,6 @@ import android.view.Display
 import android.text.method.ScrollingMovementMethod
 
 
-
-
-
-
 class ArtisanProfile : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
