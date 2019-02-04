@@ -42,4 +42,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <android.support.v7.widget.GridLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/addItemImage_continueButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addItemProgress_2">
+
+    </android.support.v7.widget.GridLayout>
+
+    <TextView
+        android:id="@+id/addItemImage_ToolBarText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Item Image"
+        android:textAlignment="center"
+        android:textColor="#fff"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="@+id/addItemImage_toolBar"
+        app:layout_constraintStart_toStartOf="@+id/addItemImage_toolBar"
+        app:layout_constraintTop_toTopOf="@+id/addItemImage_toolBar" />
+
 </android.support.constraint.ConstraintLayout>
