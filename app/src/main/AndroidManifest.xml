@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddItemCategory"></activity>
+        <activity android:name="com.amazonadonna.amazonhandmade.AddItemInfo"></activity>
+        <activity android:name=".AddItemCategory" />
         <activity android:name=".ArtisanItemList" />
         <activity
             android:name=".ArtisanProfile"
@@ -70,7 +71,7 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
         <activity android:name=".AddArtisan" />
-        <activity android:name=".ListOrders"/>
+        <activity android:name=".ListOrders" />
     </application>
 
 </manifest>
