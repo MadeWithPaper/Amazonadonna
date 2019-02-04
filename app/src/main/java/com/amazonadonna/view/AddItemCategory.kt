@@ -3,13 +3,13 @@ package com.amazonadonna.view
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.activity_add_item_category.*
 import android.widget.Spinner
-import com.amazonadonna.amazonhandmade.AddItemInfo
 import com.amazonadonna.model.Product
 
 
@@ -222,6 +222,7 @@ class AddItemCategory : AppCompatActivity() {
 
     private fun addItemCategoryContinue(main : String, sub : String, specific : String, artisanID : String) {
         if (main != SELECT_CATEGORY && sub != SELECT_SUBCATEGORY && specific != SELECT_SPECIFICCATEGORY){
+            Log.i("AddItemCategory", "Main: " + main + " Sub: " + sub + " Specific: " + specific)
             val intent = Intent(this, AddItemInfo::class.java)
             //Create and set product detail
             var product = Product(0.0, "placeholder", "placeholder", artisanID, "placeholder", "placeholder")

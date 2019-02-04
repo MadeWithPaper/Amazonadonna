@@ -17,7 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.amazonadonna.amazonhandmade.AddItemInfo"></activity>
+        <activity android:name=".AddItemReview"></activity>
+        <activity android:name=".AddItemImages" />
+        <activity android:name=".AddItemInfo" />
         <activity android:name=".AddItemCategory" />
         <activity android:name=".ArtisanItemList" />
         <activity

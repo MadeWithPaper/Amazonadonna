@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.amazonadonna.view.AddItemInfo">
+    tools:context="com.amazonadonna.view.AddItemReview">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/addItemInfo_toolBar"
+        android:id="@+id/addItemReview_toolBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -23,23 +23,22 @@
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:max="4"
-        android:progress="2"
+        android:progress="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_toolBar" />
+        app:layout_constraintTop_toBottomOf="@+id/addItemReview_toolBar" />
 
     <Button
-        android:id="@+id/addItemInfo_continueButton"
+        android:id="@+id/addItemReview_continueButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="50dp"
-        android:text="Continue"
+        android:text="Confirm Listing"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 </android.support.constraint.ConstraintLayout>
