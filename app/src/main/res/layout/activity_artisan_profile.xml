@@ -125,4 +125,19 @@
         app:layout_constraintTop_toBottomOf="@+id/artisanProfileBio"
         app:srcCompat="@drawable/item_list" />
 
+    <RatingBar
+        android:id="@+id/ratingBar"
+        style="@style/Widget.AppCompat.RatingBar.Indicator"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        android:numStars="5"
+        android:rating="3"
+        android:stepSize="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/artisanProfilePicture"
+        app:layout_constraintTop_toBottomOf="@+id/artisanProfileName" />
+
 </android.support.constraint.ConstraintLayout>

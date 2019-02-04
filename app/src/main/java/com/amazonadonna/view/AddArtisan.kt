@@ -180,6 +180,7 @@ class AddArtisan : AppCompatActivity() {
 
         if (validFields) {
             val newArtisan = Artisan(name, "", "", "", bio, "0",0.0,0.0, "")
+            //TODO move to back end soon
             newArtisan.generateArtisanID()
             //parse location info
             parseLoc(newArtisan)
