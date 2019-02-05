@@ -99,40 +99,39 @@ router.post('/updateImage', (req: Request, res: Response) => {
             if (!req.body.file) {
                 console.log('No picture attached!')
                 res.status(422).send('No picture attached!')
-            } else {
-                let picURL = 'Error: no picture attached'
-                if (req.file) {
-                    picURL = (req.file as any).location
-                }
-
-                // update db record with new URL
-                const params: aws.DynamoDB.UpdateItemInput = {
-                    TableName: 'artisan',
-                    Key: { artisanId: { S: req.body.artisanId } },
-                    UpdateExpression: 'set picURL = :u',
-                    ExpressionAttributeValues: { ':u': { S: picURL } },
-                    ReturnValues: 'UPDATED_NEW'
-                }
-                // check string, params
-                ddb.updateItem(params, (err, data) => {
-                    if (err) {
-                        console.log(
-                            'Error updating artisan record ' +
-                                req.body.artisanId +
-                                ' : ' +
-                                err
-                        )
-                        res.status(400).send(
-                            'Error updating artisan record ' +
-                                req.body.artisanId +
-                                ' : ' +
-                                err.message
-                        )
-                    } else {
-                        res.json({ imageUrl: picURL })
-                    }
-                })
             }
+            let picURL = 'Error: no picture attached'
+            if (req.file) {
+                picURL = (req.file as any).location
+            }
+
+            // update db record with new URL
+            const params: aws.DynamoDB.UpdateItemInput = {
+                TableName: 'artisan',
+                Key: { artisanId: { S: req.body.artisanId } },
+                UpdateExpression: 'set picURL = :u',
+                ExpressionAttributeValues: { ':u': { S: picURL } },
+                ReturnValues: 'UPDATED_NEW'
+            }
+            // check string, params
+            ddb.updateItem(params, (err, data) => {
+                if (err) {
+                    console.log(
+                        'Error updating artisan record ' +
+                            req.body.artisanId +
+                            ' : ' +
+                            err
+                    )
+                    res.status(400).send(
+                        'Error updating artisan record ' +
+                            req.body.artisanId +
+                            ' : ' +
+                            err.message
+                    )
+                } else {
+                    res.json({ imageUrl: picURL })
+                }
+            })
         }
     })
 })
