@@ -33,7 +33,6 @@ class ListOrdersAdapter (private val context: Context, private val orders : List
 
         holder.view.setOnClickListener{
             val intent = Intent(context, OrderScreen::class.java)
-            val artisanBundle = Bundle()
             intent.putExtra("order", order)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
@@ -47,7 +46,6 @@ class OrdersViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
     fun bindOrder(order: Order) {
         view.textView_OrderID_input.text = order.orderId
         view.textView_OrderDate.text = order.orderDate
-        view.textView_ArtisanConfirmed_input.text = order.confirmationStatus.toString()
         view.textView_Shipped_input.text = order.shippingStatus.toString()
         view.textView_Payout_input.text = order.totalCost.toString()
     }

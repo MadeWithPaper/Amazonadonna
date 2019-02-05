@@ -40,36 +40,26 @@
         android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@+id/textView_OrderID"
         app:layout_constraintStart_toStartOf="@+id/textView_OrderID"
-        android:textSize="15sp"
-        android:textColor="#000"/>
-
-    <TextView
-        android:id="@+id/textView_ArtisanConfirmed"
-        android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView_OrderDate"
-        app:layout_constraintStart_toStartOf="@+id/textView_OrderID"
         android:textSize="18sp"
         android:textColor="#000"
-        android:text="@string/artisan_confirmed"/>
+        android:text="@string/order_date"/>
 
     <TextView
-        android:id="@+id/textView_ArtisanConfirmed_input"
+        android:id="@+id/textView_OrderDate_input"
         android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@+id/textView_ArtisanConfirmed"
-        app:layout_constraintTop_toTopOf="@+id/textView_ArtisanConfirmed"
-        app:layout_constraintVertical_bias="1.0"
-        android:textSize="18sp"/>
+        android:layout_height="25dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintTop_toTopOf="@+id/textView_OrderDate"
+        app:layout_constraintStart_toEndOf="@+id/textView_OrderDate"
+        android:textSize="15sp"
+        android:textColor="#000"/>
 
     <TextView
         android:id="@+id/textView_Shipped"
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView_ArtisanConfirmed"
+        app:layout_constraintTop_toBottomOf="@+id/textView_OrderDate"
         app:layout_constraintStart_toStartOf="@+id/textView_OrderID"
         android:textSize="18sp"
         android:textColor="#000"
@@ -94,7 +84,7 @@
         app:layout_constraintStart_toStartOf="@+id/textView_OrderID"
         android:textSize="18sp"
         android:textColor="#000"
-        android:text="@string/artisan_payout"/>
+        android:text="@string/order_cost"/>
 
     <TextView
         android:id="@+id/textView_Payout_input"

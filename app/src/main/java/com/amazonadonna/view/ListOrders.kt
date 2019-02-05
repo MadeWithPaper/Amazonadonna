@@ -11,8 +11,8 @@ import com.amazonadonna.model.Order
 import kotlinx.android.synthetic.main.activity_list_orders.*
 
 class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
-    val testOrder : Order = Order(artisanID = "1010101", shippingAddress = "1 Street", cgaId = "101120",
-            confirmationStatus = false, totalCost = 30.12, orderDate = "1/12/19", orderId = "284521",
+    val testOrder : Order = Order(shippingAddress = "1 Street", cgaId = "101120",
+            totalCost = 30.12, orderDate = "1/12/19", orderId = "284521",
             products = emptyList(), shippingStatus = false)
 
     override fun onCreate(savedInstanceState: Bundle?) {

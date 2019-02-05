@@ -11,12 +11,10 @@ import java.util.*
 data class Order (
         @ColumnInfo(name = "shippingAddress") @Json(name = "shippingAddress") var shippingAddress : String,
         @PrimaryKey @Json(name = "orderId") var orderId : String,
-        @ColumnInfo(name = "artisanID") @Json(name = "artisanID") var artisanID : String,
         @ColumnInfo(name = "totalCost") @Json(name = "totalCost") var totalCost : Double,
         @ColumnInfo(name = "products") @Json(name = "products") var products : List<Product>,
         @ColumnInfo(name = "cgaId") @Json(name = "cgaId") var cgaId : String,
         @ColumnInfo(name = "shippingStatus") @Json(name = "shippingStatus") var shippingStatus : Boolean,
-        @ColumnInfo(name = "confirmationStatus") @Json(name = "confirmationStatus") var confirmationStatus : Boolean,
         //TODO change format of date
         @ColumnInfo(name = "orderDate") @Json(name = "orderDate") var orderDate : String): Serializable {
 
