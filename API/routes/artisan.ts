@@ -38,7 +38,7 @@ router.get('/listAll', (req: Request, res: Response) => {
 })
 
 router.post('/add', (req: Request, res: Response) => {
-    const params: aws.DynamoDB.PutItemInput = {
+    const putItemParams: aws.DynamoDB.PutItemInput = {
         TableName: 'artisan',
         Item: {
             artisanId: { S: req.body.artisanId },
@@ -52,7 +52,7 @@ router.post('/add', (req: Request, res: Response) => {
             picURL: { S: 'Not set' }
         }
     }
-    ddb.putItem(params, (err, data) => {
+    ddb.putItem(putItemParams, (err, data) => {
         if (err) {
             console.log('Error adding artisan in artisan/add: ', err)
             res.status(400).send(
@@ -96,38 +96,43 @@ router.post('/updateImage', (req: Request, res: Response) => {
                 'Error uploading picture in artisan/update: ' + picErr.message
             )
         } else {
-            let picURL = 'Error: no picture attached'
-            if (req.file) {
-                picURL = (req.file as any).location
-            }
-
-            // update db record with new URL
-            const params: aws.DynamoDB.UpdateItemInput = {
-                TableName: 'artisan',
-                Key: { artisanId: { S: req.body.artisanId } },
-                UpdateExpression: 'set picURL = :u',
-                ExpressionAttributeValues: { ':u': { S: picURL } },
-                ReturnValues: 'UPDATED_NEW'
-            }
-            // check string, params
-            ddb.updateItem(params, (err, data) => {
-                if (err) {
-                    console.log(
-                        'Error updating artisan record ' +
-                            req.body.artisanId +
-                            ' : ' +
-                            err
-                    )
-                    res.status(400).send(
-                        'Error updating artisan record ' +
-                            req.body.artisanId +
-                            ' : ' +
-                            err.message
-                    )
-                } else {
-                    res.json({ imageUrl: picURL })
+            if (!req.body.file) {
+                console.log('No picture attached!')
+                res.status(422).send('No picture attached!')
+            } else {
+                let picURL = 'Error: no picture attached'
+                if (req.file) {
+                    picURL = (req.file as any).location
                 }
-            })
+
+                // update db record with new URL
+                const params: aws.DynamoDB.UpdateItemInput = {
+                    TableName: 'artisan',
+                    Key: { artisanId: { S: req.body.artisanId } },
+                    UpdateExpression: 'set picURL = :u',
+                    ExpressionAttributeValues: { ':u': { S: picURL } },
+                    ReturnValues: 'UPDATED_NEW'
+                }
+                // check string, params
+                ddb.updateItem(params, (err, data) => {
+                    if (err) {
+                        console.log(
+                            'Error updating artisan record ' +
+                                req.body.artisanId +
+                                ' : ' +
+                                err
+                        )
+                        res.status(400).send(
+                            'Error updating artisan record ' +
+                                req.body.artisanId +
+                                ' : ' +
+                                err.message
+                        )
+                    } else {
+                        res.json({ imageUrl: picURL })
+                    }
+                })
+            }
         }
     })
 })
