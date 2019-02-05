@@ -3,29 +3,37 @@ package com.amazonadonna.view
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputType
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import kotlinx.android.synthetic.main.activity_add_item_info.*
 
 class AddItemInfo : AppCompatActivity() {
 
     val SELECT_SHIPPING_METHOD = "--Select Shipping Method--"
-    val shippingSpinnerValues = arrayOf(SELECT_SHIPPING_METHOD, "Fulfilled by Amazon", "")
+    val shippingSpinnerValues = arrayOf(SELECT_SHIPPING_METHOD, "Fulfilled by Amazon", "Self Shipping")
     var shippmentMethod = SELECT_SHIPPING_METHOD
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_info)
 
         val product = intent.extras?.getSerializable("product") as Product
+        val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
 
         addItemInfo_continueButton.setOnClickListener {
-            addItemInfoContinue(product)
+            addItemInfoContinue(product, artisan)
         }
+
+        addItemInfo_ProductDescriptionTF.setImeOptions(EditorInfo.IME_ACTION_NEXT)
+        addItemInfo_ProductDescriptionTF.setRawInputType(InputType.TYPE_CLASS_TEXT)
+
 
         val shippingArrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, shippingSpinnerValues)
         // Set layout to use when the list of choices appear
@@ -44,14 +52,16 @@ class AddItemInfo : AppCompatActivity() {
         }
     }
 
-    private fun addItemInfoContinue(product: Product) {
+    private fun addItemInfoContinue(product: Product, artisan: Artisan) {
         val intent = Intent(this, AddItemImages::class.java)
-        validateFields()
-        updateProduct(product)
-        intent.putExtra("product", product)
-        Log.i("AddItemInfo", "product updated 2/4: " + product)
-        clearFields()
-        startActivity(intent)
+        if (validateFields()) {
+            updateProduct(product)
+            intent.putExtra("product", product)
+            intent.putExtra("selectedArtisan", artisan)
+            Log.i("AddItemInfo", "product updated 2/4: " + product)
+            clearFields()
+            startActivity(intent)
+        }
     }
 
     //TODO add more checks
@@ -98,6 +108,9 @@ class AddItemInfo : AppCompatActivity() {
         product.itemName = addItemInfo_ProductNameTF.text.toString()
         product.price = addItemInfo_ProductPriceTF.text.toString().toDouble()
         product.description = addItemInfo_ProductDescriptionTF.text.toString()
+        product.itemQuantity = addItemInfo_ProductQuantityTF.text.toString().toInt()
+        product.ShippingOption = shippmentMethod
+        product.productionTime = addItemInfo_ProductionTimeTF.text.toString().toInt()
     }
 
 

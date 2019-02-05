@@ -41,14 +41,14 @@ class AddArtisan : AppCompatActivity() {
 //            makeNewArtisan()
 //        }
 
-        val takePhoto: Button = findViewById(R.id.takePicture)
-        val chooseFromAlbum: Button = findViewById(R.id.selectPicture)
+        //val takePhoto: Button = findViewById(R.id.takePicture)
+        //val chooseFromAlbum: Button = findViewById(R.id.selectPicture)
 
-        takePhoto.setOnClickListener{
+        takePicture.setOnClickListener{
             takePhoto()
         }
 
-        chooseFromAlbum.setOnClickListener{
+        selectPicture.setOnClickListener{
             selectImageInAlbum()
         }
 
@@ -378,12 +378,12 @@ class AddArtisan : AppCompatActivity() {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.d("INFO", body)
+                Log.i("AddArtisan", body)
                 submitPictureToDB(artisan)
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.d("ERROR", "failed to do POST request to database")
+                Log.e("AddArtisan", "failed to do POST request to database")
             }
         })
     }
