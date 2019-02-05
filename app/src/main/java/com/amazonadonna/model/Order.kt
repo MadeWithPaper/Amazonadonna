@@ -26,7 +26,4 @@ data class Order (
         orderId = shippingAddress + cgaId + num.toString()
     }
 
-
-
->>>>>>> 689695743842a638334a1cceb2bcfbffc5b84095
 }
