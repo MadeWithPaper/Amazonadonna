@@ -96,10 +96,6 @@ router.post('/updateImage', (req: Request, res: Response) => {
                 'Error uploading picture in artisan/update: ' + picErr.message
             )
         } else {
-            if (!req.body.file) {
-                console.log('No picture attached!')
-                res.status(422).send('No picture attached!')
-            }
             let picURL = 'Error: no picture attached'
             if (req.file) {
                 picURL = (req.file as any).location
