@@ -24,10 +24,9 @@ class OrderScreen : AppCompatActivity() {
 
         // TODO implement a fetch of order data once backend route/database are configured
         orderScreen_recyclerView.layoutManager = LinearLayoutManager(this)
-        //TODO replace with list of products, make a ListItemsAdapter
         //load an empty list as placeholder before GET request completes
-        val emptyItemList : List<Order> = emptyList()
-        orderScreen_recyclerView.adapter = ListOrdersAdapter(this, emptyItemList)
+        val emptyItemList : List<Product> = emptyList()
+        orderScreen_recyclerView.adapter = ListItemsAdapter(this, emptyItemList)
         //TODO make order screen adapter
         orderScreen_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
@@ -41,8 +40,5 @@ class OrderScreen : AppCompatActivity() {
         orderDateTextView.text = order.orderDate
         orderShippedTextView.text = order.shippingStatus.toString()
         orderCostTextView.text = order.totalCost.toString()
-
-
-
     }
 }

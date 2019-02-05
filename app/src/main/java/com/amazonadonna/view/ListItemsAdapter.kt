@@ -38,7 +38,7 @@ class ListItemsAdapter (private val context: Context, private val products : Lis
 
 class ItemsViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
     //TODO fill in cell info from the passes in order
-    fun bindOrder(product: Product: Product) {
+    fun bindOrder(product: Product) {
 
     }
 }
