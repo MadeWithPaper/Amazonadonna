@@ -19,4 +19,14 @@ data class Order (
         @ColumnInfo(name = "confirmationStatus") @Json(name = "confirmationStatus") var confirmationStatus : Boolean,
         //TODO change format of date
         @ColumnInfo(name = "orderDate") @Json(name = "orderDate") var orderDate : String): Serializable {
+
+    fun generateOrderID() {
+        //TODO fill in logic for generating unique ID for artisan
+        var num = Random().nextInt()
+        orderId = shippingAddress + cgaId + num.toString()
+    }
+
+
+
+>>>>>>> 689695743842a638334a1cceb2bcfbffc5b84095
 }

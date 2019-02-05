@@ -24,7 +24,7 @@ class ListAllArtisans : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_all_artisans)
 
-        fetchJSON()
+        //fetchJSON()
         //TODO add search bar
 
         recyclerView_listAllartisans.layoutManager = LinearLayoutManager(this)
@@ -38,6 +38,12 @@ class ListAllArtisans : AppCompatActivity() {
         toolbar_addartisan.setOnClickListener{
             addArtisan()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        fetchJSON()
     }
 
     private fun addArtisan() {

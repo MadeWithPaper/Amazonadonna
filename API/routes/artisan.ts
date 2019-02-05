@@ -109,7 +109,7 @@ router.post('/updateImage', (req: Request, res: Response) => {
                 ExpressionAttributeValues: { ':u': { S: picURL } },
                 ReturnValues: 'UPDATED_NEW'
             }
-
+            // check string, params
             ddb.updateItem(params, (err, data) => {
                 if (err) {
                     console.log(

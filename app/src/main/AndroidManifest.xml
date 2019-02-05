@@ -17,7 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddItemCategory"></activity>
+        <activity android:name=".AddItemReview"
+            />
+        <activity android:name=".AddItemImages" />
+        <activity android:name=".AddItemInfo"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity android:name=".AddItemCategory" />
         <activity android:name=".ArtisanItemList" />
         <activity android:name=".OrderScreen" />
         <activity
@@ -70,8 +76,10 @@
             android:name=".ListAllArtisans"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
-        <activity android:name=".AddArtisan" />
-        <activity android:name=".ListOrders"/>
+        <activity
+            android:name=".AddArtisan"
+            />
+        <activity android:name=".ListOrders" />
     </application>
 
 </manifest>
