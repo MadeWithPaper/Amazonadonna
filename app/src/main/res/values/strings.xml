@@ -16,14 +16,12 @@
         completions."
     </string>
     <string name="title_activity_artisan_profile">ArtisanProfile</string>
-    <string name="artisan_confirmed">Artisan confirmed: </string>
     <string name="order_id">Order ID: </string>
     <string name="order_shipped">Shipped: </string>
-    <string name="artisan_payout">Artisan payout: </string>
     <string name="edit">Edit</string>
     <string name="placeholder_text">__placeholder__</string>
     <string name="items_listed">Items listed: </string>
-    <string name="outstanding_orders">Outstanding orders: </string>
-    <string name="quantity">Quantity: </string>
+    <string name="order_date">Order Date: </string>
+    <string name="order_cost">Total Cost: </string>
     <string name="title_list_orders">Orders</string>
 </resources>

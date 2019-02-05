@@ -38,7 +38,7 @@ router.get('/listAll', (req: Request, res: Response) => {
 })
 
 router.post('/add', (req: Request, res: Response) => {
-    const params: aws.DynamoDB.PutItemInput = {
+    const putItemParams: aws.DynamoDB.PutItemInput = {
         TableName: 'artisan',
         Item: {
             artisanId: { S: req.body.artisanId },
@@ -52,7 +52,7 @@ router.post('/add', (req: Request, res: Response) => {
             picURL: { S: 'Not set' }
         }
     }
-    ddb.putItem(params, (err, data) => {
+    ddb.putItem(putItemParams, (err, data) => {
         if (err) {
             console.log('Error adding artisan in artisan/add: ', err)
             res.status(400).send(
@@ -109,7 +109,7 @@ router.post('/updateImage', (req: Request, res: Response) => {
                 ExpressionAttributeValues: { ':u': { S: picURL } },
                 ReturnValues: 'UPDATED_NEW'
             }
-
+            // check string, params
             ddb.updateItem(params, (err, data) => {
                 if (err) {
                     console.log(

@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="150dp"
         android:layout_marginTop="30dp"
-        android:text="@string/quantity"
+        android:text="@string/order_cost"
         android:textColor="#000"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@+id/orderScreenCell_item_image"

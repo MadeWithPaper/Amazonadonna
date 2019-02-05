@@ -136,6 +136,7 @@ class AddArtisan : AppCompatActivity() {
                     try {
                         Log.d("AFTERPHOTO", "IT WORK 34")
                         Log.d("AFTERPHOTO", "Exists?: " + photoFile!!.exists())
+                        setImageView()
                     }
                     catch(e: Error) {
                         Log.d("AFTERPHOTO", "AINT WORK 34")
@@ -146,13 +147,13 @@ class AddArtisan : AppCompatActivity() {
                     if (data != null) {
                         createImageFile(data)
                         Log.d("AFTERGALLERY", "File:  Exists?: " + photoFile!!.exists())
+                        setImageView()
                     }
                     else {
                         Log.d("AFTERGALLERY", "Data was null")
                     }
                 }
             }
-        setImageView()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -248,10 +249,10 @@ class AddArtisan : AppCompatActivity() {
             return false
         }
 
-        if(photoFile == null) {
-            Toast.makeText(this@AddArtisan, "No photo selected.", Toast.LENGTH_SHORT).show()
-            return false
-        }
+//        if(photoFile == null) {
+//            Toast.makeText(this@AddArtisan, "No photo selected.", Toast.LENGTH_SHORT).show()
+//            return false
+//        }
 
         return true
     }
