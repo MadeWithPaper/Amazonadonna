@@ -56,6 +56,11 @@ class ListAllArtisans : AppCompatActivity() {
     private fun fetchJSON() {
         val url = "https://7bd92aed.ngrok.io/artisan/listAll"
         val request = Request.Builder().url(url).build()
+        val db = Room.databaseBuilder(
+                applicationContext,
+                AppDatabase::class.java, "amazonadonna-main"
+        ).fallbackToDestructiveMigration().build()
+        val artisanDao = db.artisanDao()
 
         val client = OkHttpClient()
         client.newCall(request).enqueue(object: Callback {
@@ -68,25 +73,13 @@ class ListAllArtisans : AppCompatActivity() {
                 //System.out.print(artisans.get(0))
                 val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
 
+                artisanDao.insertAll(artisans)
+                val dbArtisans : List<Artisan> = artisanDao.getAll()
+
                 runOnUiThread {
-                    recyclerView_listAllartisans.adapter = ListArtisanAdapter(applicationContext, artisans)
+                    recyclerView_listAllartisans.adapter = ListArtisanAdapter(applicationContext, dbArtisans)
                 }
 
-                //!--------------------------------!
-                //SQLite Prototype Code
-                val db = Room.databaseBuilder(
-                        applicationContext,
-                        AppDatabase::class.java, "amazonadonna-main"
-                ).fallbackToDestructiveMigration().build()
-                val artisanDao = db.artisanDao();
-
-                val tempArtisan = artisans.get(0)
-                val tempId = tempArtisan.artisanId
-
-                artisanDao.insertAll(artisans)
-                val testArtisan = artisanDao.findByID(tempId)
-                Log.d("ASSERT", "Retrieved Artisan '" + testArtisan.name + "' from the database!")
-                //!--------------------------------!
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
