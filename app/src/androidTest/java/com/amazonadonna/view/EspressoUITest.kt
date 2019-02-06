@@ -15,7 +15,7 @@ import org.junit.Rule
 class EspressoUITest {
 
     @get: Rule
-    var activityRule : IntentsTestRule<LoginScreen> = IntentsTestRule(LoginScreen::class.java)
+    var activityRule : IntentsTestRule<HomeScreen> = IntentsTestRule(HomeScreen::class.java)
 
     @Rule @JvmField
     val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.READ_CONTACTS)
@@ -23,9 +23,6 @@ class EspressoUITest {
     @Test
     fun login_button_pressed() {
 
-//        onView(withId(R.id.email_sign_in_button)).perform(click())
-//        Log.d("INFO", "ran test")
-//        intended(hasComponent(HomeScreen::class.java.getName()))
 
     }
 

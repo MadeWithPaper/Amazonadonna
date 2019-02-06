@@ -9,12 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.amazonadonna.model.Product
 import android.os.Bundle
+import kotlinx.android.synthetic.main.list_item_cell.view.*
 
 class ListItemsAdapter (private val context: Context, private val products : List<Product>) : RecyclerView.Adapter<ItemsViewHolder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val cellForRow = layoutInflater.inflate(R.layout.list_orders_cell, parent, false)
+        val cellForRow = layoutInflater.inflate(R.layout.list_item_cell, parent, false)
         return ItemsViewHolder(cellForRow)
     }
 
@@ -27,7 +28,7 @@ class ListItemsAdapter (private val context: Context, private val products : Lis
         holder.bindOrder(product)
 
         holder.view.setOnClickListener{
-            val intent = Intent(context, OrderScreen::class.java)
+            val intent = Intent(context, ProductDetails::class.java)
             intent.putExtra("product", product)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
@@ -39,6 +40,8 @@ class ListItemsAdapter (private val context: Context, private val products : Lis
 class ItemsViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
     //TODO fill in cell info from the passes in order
     fun bindOrder(product: Product) {
-
+        view.itemCellName.text = product.itemName
+        view.itemCellPrice.text = product.price.toString()
+        view.itemCellQuantity.text = product.itemQuantity.toString()
     }
 }
