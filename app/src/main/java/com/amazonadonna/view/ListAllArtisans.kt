@@ -43,6 +43,12 @@ class ListAllArtisans : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
+        // If offline, do this instead
+        /*val dbArtisans : List<Artisan> = artisanDao.getAll()
+        runOnUiThread {
+            recyclerView_listAllartisans.adapter = ListArtisanAdapter(applicationContext, dbArtisans)
+        }*/
+
         fetchJSON()
     }
 
@@ -74,10 +80,9 @@ class ListAllArtisans : AppCompatActivity() {
                 val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
 
                 artisanDao.insertAll(artisans)
-                val dbArtisans : List<Artisan> = artisanDao.getAll()
 
                 runOnUiThread {
-                    recyclerView_listAllartisans.adapter = ListArtisanAdapter(applicationContext, dbArtisans)
+                    recyclerView_listAllartisans.adapter = ListArtisanAdapter(applicationContext, artisans)
                 }
 
             }
