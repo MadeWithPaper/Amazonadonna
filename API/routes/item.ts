@@ -224,7 +224,12 @@ router.post('/editItem', (req: Request, res: Response) => {
                                     shippingOption = :shippingOption,
                                     itemQuantity = :itemQuantity,
                                     productionTime = :productionTime,
-                                    picURLs = :picURLs`,
+                                    pic0URL = :pic0URL,
+                                    pic1URL = :pic1URL,
+                                    pic2URL = :pic2URL,
+                                    pic3URL = :pic3URL,
+                                    pic4URL = :pic4URL,
+                                    pic5URL = :pic5URL`,
                 ExpressionAttributeValues: {
                     ':artisanId': { S: whatToUpdate.artisanId },
                     ':price': { S: whatToUpdate.price },
