@@ -114,45 +114,37 @@ router.post('/updateImage', (req: Request, res: Response) => {
                 'Error uploading picture in item/updateImage: ' + picErr.message
             )
         } else {
-            let picURLs: aws.DynamoDB.AttributeValue[] = []
-            if (req.files) {
-                const getURLs = (req.files as any[]).map(file => {
-                    return new Promise<aws.DynamoDB.AttributeValue>(resolve => {
-                        resolve({ S: (file as any).location })
-                    })
-                })
-                const updateExpress = 'set pic' + req.body.picIndex + 'URL = :u'
-                Promise.all(getURLs).then(urls => {
-                    picURLs = urls
-                    // update db record with new URL
-                    const params: aws.DynamoDB.UpdateItemInput = {
-                        TableName: 'item',
-                        Key: { itemId: { N: req.body.itemId } },
-                        UpdateExpression: updateExpress,
-                        ExpressionAttributeValues: { ':u': { L: picURLs } },
-                        ReturnValues: 'UPDATED_NEW'
-                    }
-                    // check string, params
-                    ddb.updateItem(params, (err, data) => {
-                        if (err) {
-                            console.log(
-                                'Error updating item record with pic ' +
-                                    req.body.itemId +
-                                    ' : ' +
-                                    err
-                            )
-                            res.status(400).send(
-                                'Error updating item record with pic ' +
-                                    req.body.itemId +
-                                    ' : ' +
-                                    err.message
-                            )
-                        } else {
-                            res.json(picURLs)
-                        }
-                    })
-                })
+            let picURL = 'Error: no picture attached'
+            if (req.file) {
+                picURL = (req.file as any).location
             }
+            const updateExpress = 'set pic' + req.body.picIndex + 'URL = :u'
+            const params: aws.DynamoDB.UpdateItemInput = {
+                TableName: 'item',
+                Key: { itemId: { N: req.body.itemId } },
+                UpdateExpression: updateExpress,
+                ExpressionAttributeValues: { ':u': { S: picURL } },
+                ReturnValues: 'UPDATED_NEW'
+            }
+            // check string, params
+            ddb.updateItem(params, (err, data) => {
+                if (err) {
+                    console.log(
+                        'Error updating item record with pic ' +
+                            req.body.itemId +
+                            ' : ' +
+                            err
+                    )
+                    res.status(400).send(
+                        'Error updating item record with pic ' +
+                            req.body.itemId +
+                            ' : ' +
+                            err.message
+                    )
+                } else {
+                    res.json(picURL)
+                }
+            })
         }
     })
 })
