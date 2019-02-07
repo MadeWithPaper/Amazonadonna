@@ -12,7 +12,7 @@ import android.os.Bundle
 import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.list_item_cell.view.*
 
-class ListItemsAdapter (private val context: Context, private val products : List<Product>, private val artisan : Artisan? = null ) : RecyclerView.Adapter<ItemsViewHolder> () {
+class ListItemsAdapter (private val context: Context, private val products : List<Product>, private val artisan : Artisan? = Artisan("name", "id", "city", "country", "bio", "cogid", 0.0, 0.0, "url") ) : RecyclerView.Adapter<ItemsViewHolder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
