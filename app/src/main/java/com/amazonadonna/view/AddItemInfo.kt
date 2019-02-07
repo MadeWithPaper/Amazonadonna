@@ -14,18 +14,29 @@ import android.widget.Toast
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import kotlinx.android.synthetic.main.activity_add_item_info.*
+import kotlinx.android.synthetic.main.list_item_cell.*
 
 class AddItemInfo : AppCompatActivity() {
 
     val SELECT_SHIPPING_METHOD = "--Select Shipping Method--"
     val shippingSpinnerValues = arrayOf(SELECT_SHIPPING_METHOD, "Fulfilled by Amazon", "Self Shipping")
     var shippmentMethod = SELECT_SHIPPING_METHOD
+    var editMode : Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_info)
 
         val product = intent.extras?.getSerializable("product") as Product
         val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        editMode = intent.extras?.get("editMode") as Boolean
+
+        if (editMode) {
+            addItemInfo_ProductNameTF.setText(product.itemName)
+            addItemInfo_ProductPriceTF.setText(product.price.toString())
+            addItemInfo_ProductDescriptionTF.setText(product.description)
+            addItemInfo_ProductQuantityTF.setText(product.itemQuantity.toString())
+            addItemInfo_ProductionTimeTF.setText(product.productionTime.toString())
+        }
 
         addItemInfo_continueButton.setOnClickListener {
             addItemInfoContinue(product, artisan)
@@ -50,6 +61,10 @@ class AddItemInfo : AppCompatActivity() {
                  shippmentMethod = addItemInfo_ProductShippingSpinner.getSelectedItem().toString()
             }
         }
+
+        if (editMode) {
+            addItemInfo_ProductShippingSpinner.setSelection(shippingArrayAdapter.getPosition(product.category))
+        }
     }
 
     private fun addItemInfoContinue(product: Product, artisan: Artisan) {
@@ -58,9 +73,11 @@ class AddItemInfo : AppCompatActivity() {
             updateProduct(product)
             intent.putExtra("product", product)
             intent.putExtra("selectedArtisan", artisan)
+            intent.putExtra("editMode", editMode)
             Log.i("AddItemInfo", "product updated 2/4: " + product)
             clearFields()
             startActivity(intent)
+            finish()
         }
     }
 

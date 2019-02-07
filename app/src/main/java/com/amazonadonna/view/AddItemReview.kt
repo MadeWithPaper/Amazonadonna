@@ -10,16 +10,11 @@ import com.amazonadonna.model.Product
 import kotlinx.android.synthetic.main.activity_add_item_review.*
 import okhttp3.*
 import java.io.IOException
-import android.R.id
 import android.annotation.TargetApi
 import android.content.ContentUris
-import android.graphics.BitmapFactory
-import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Parcelable
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import java.io.File
 
 
 class AddItemReview : AppCompatActivity() {
@@ -27,7 +22,8 @@ class AddItemReview : AppCompatActivity() {
     //private var photoFile: File? = null
     private val addItemURL = "https://7bd92aed.ngrok.io/item/add"
     private val addItemImageURL = "https://7bd92aed.ngrok.io/item/updateImages"
-
+    private val editItemURL = "https://7bd92aed.ngrok.io/item/editItem"
+    var editMode : Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_review)
@@ -38,6 +34,8 @@ class AddItemReview : AppCompatActivity() {
         val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
 
         val product = intent.extras?.getSerializable("product") as Product
+        editMode = intent.extras?.get("editMode") as Boolean
+
 
         var categoryString = ""
         if (product.specificCategory == "-- Not Applicable --") {
@@ -76,6 +74,13 @@ class AddItemReview : AppCompatActivity() {
 
     private fun submitToDB(product: Product, artisan: Artisan) {
         var status = false
+        var url = ""
+        if (editMode) {
+            Log.i("editmode", editMode.toString())
+            url = editItemURL
+        } else {
+            url = addItemURL
+        }
         //TODO add process bar to show submitting process
         val requestBody = FormBody.Builder().add("itemId", product.itemId)
                 .add("itemName", product.itemName)
@@ -90,11 +95,11 @@ class AddItemReview : AppCompatActivity() {
                 .add("productionTime", product.productionTime.toString())
                 .build()
 
-        Log.d("AddItemReview", requestBody.toString())
+        Log.d("AddItemReview", product.toString())
         val client = OkHttpClient()
 
         val request = Request.Builder()
-                .url(addItemURL)
+                .url(url)
                 .post(requestBody)
                 .build()
 
@@ -112,7 +117,7 @@ class AddItemReview : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("AddItemReview", "failed to do POST request to database")
+                Log.e("AddItemReview", "failed to do POST request to database: " + url)
             }
         })
 

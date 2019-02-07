@@ -26,7 +26,7 @@ data class Product (
     fun generateProductID() {
         //TODO fill in logic for generating unique ID for product
         var num = Random().nextInt()
-        itemId = (itemName.hashCode() * 13 + num).toString()
+        itemId = ((artisanId.hashCode() + itemName.hashCode()) * 13).toString()
     }
 
 }

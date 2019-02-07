@@ -52,6 +52,7 @@ class ArtisanItemList : AppCompatActivity() {
         val intent = Intent(this, AddItemCategory::class.java)
         intent.putExtra("selectedArtisan", artisan)
         startActivity(intent)
+        finish()
     }
 
     //TODO GET request to query for all items associated to selected artisan
@@ -78,7 +79,7 @@ class ArtisanItemList : AppCompatActivity() {
                 val products : List<Product> = gson.fromJson(body,  object : TypeToken<List<Product>>() {}.type)
 
                 runOnUiThread {
-                    artisanItemList_recyclerView.adapter = ListItemsAdapter(applicationContext, products)
+                    artisanItemList_recyclerView.adapter = ListItemsAdapter(applicationContext, products, artisan)
                 }
             }
 
