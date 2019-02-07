@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.amazonadonna.view.AddItemReview">
+    tools:context="com.amazonadonna.view.ProductDetails">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/addItemReview_toolBar"
+        android:id="@+id/itemDetail_toolBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -17,81 +17,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ProgressBar
-        android:id="@+id/addItemProgress_2"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="20dp"
-        android:max="4"
-        android:progress="4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemReview_toolBar" />
-
-    <Button
-        android:id="@+id/addItemReview_continueButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="50dp"
-        android:text="Confirm Listing"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemReview_itemDescription" />
-
     <TextView
-        android:id="@+id/addItemReview_ToolBarText"
+        android:id="@+id/itemDetail_ToolBarText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Review Item"
         android:textAlignment="center"
         android:textColor="#fff"
         android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="@+id/addItemReview_toolBar"
-        app:layout_constraintStart_toStartOf="@+id/addItemReview_toolBar"
-        app:layout_constraintTop_toTopOf="@+id/addItemReview_toolBar" />
+        app:layout_constraintEnd_toEndOf="@+id/itemDetail_toolBar"
+        app:layout_constraintStart_toStartOf="@+id/itemDetail_toolBar"
+        app:layout_constraintTop_toTopOf="@+id/itemDetail_toolBar" />
 
     <TextView
-        android:id="@+id/addItemReview_categories"
+        android:id="@+id/itemDetail_categories"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="#000"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemProgress_2" />
+        app:layout_constraintTop_toBottomOf="@+id/itemDetail_toolBar" />
 
     <TextView
-        android:id="@+id/addIemReview_ProductNameTF"
+        android:id="@+id/itemDetail_ProductNameTF"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:textColor="#000"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemReview_categories" />
+        app:layout_constraintStart_toEndOf="@+id/itemDetail_Image"
+        app:layout_constraintTop_toBottomOf="@+id/itemDetail_categories" />
 
     <ImageView
-        android:id="@+id/addItemReview_Image"
+        android:id="@+id/itemDetail_Image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addIemReview_ProductNameTF"
-        app:srcCompat="@drawable/placeholder" />
+        app:layout_constraintTop_toBottomOf="@+id/itemDetail_categories"
+        app:srcCompat="@drawable/insertimage" />
 
     <TextView
-        android:id="@+id/addItemReview_itemPrice"
+        android:id="@+id/itemDetail_itemPrice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -100,11 +73,11 @@
         android:textColor="#000"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/addItemReview_Image"
-        app:layout_constraintTop_toBottomOf="@+id/addIemReview_ProductNameTF" />
+        app:layout_constraintStart_toEndOf="@+id/itemDetail_Image"
+        app:layout_constraintTop_toBottomOf="@+id/itemDetail_ProductNameTF" />
 
     <TextView
-        android:id="@+id/addItemReview_ItemQuantity"
+        android:id="@+id/itemDetail_ItemQuantity"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -113,11 +86,11 @@
         android:textColor="#000"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/addItemReview_Image"
-        app:layout_constraintTop_toBottomOf="@+id/addItemReview_itemPrice" />
+        app:layout_constraintStart_toEndOf="@+id/itemDetail_Image"
+        app:layout_constraintTop_toBottomOf="@+id/itemDetail_itemPrice" />
 
     <TextView
-        android:id="@+id/addItemReview_itemTime"
+        android:id="@+id/itemDetail_itemTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -126,11 +99,11 @@
         android:textColor="#000"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/addItemReview_Image"
-        app:layout_constraintTop_toBottomOf="@+id/addItemReview_ItemQuantity" />
+        app:layout_constraintStart_toEndOf="@+id/itemDetail_Image"
+        app:layout_constraintTop_toBottomOf="@+id/itemDetail_ItemQuantity" />
 
     <TextView
-        android:id="@+id/addItemReview_shippingOption"
+        android:id="@+id/itemDetail_shippingOption"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -139,20 +112,20 @@
         android:textColor="#000"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/addItemReview_Image"
-        app:layout_constraintTop_toBottomOf="@+id/addItemReview_itemTime" />
+        app:layout_constraintStart_toEndOf="@+id/itemDetail_Image"
+        app:layout_constraintTop_toBottomOf="@+id/itemDetail_itemTime" />
 
     <TextView
-        android:id="@+id/addItemReview_itemDescription"
+        android:id="@+id/itemDetail_itemDescription"
         android:layout_width="0dp"
         android:layout_height="200dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="20dp"
         android:textColor="#000"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemReview_Image" />
-
+        app:layout_constraintTop_toBottomOf="@+id/itemDetail_Image" />
 </android.support.constraint.ConstraintLayout>

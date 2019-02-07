@@ -12,6 +12,9 @@ interface ArtisanDao {
     @Query("SELECT * FROM artisan")
     fun getAll(): List<Artisan>
 
+    @Query("SELECT picURL FROM artisan")
+    fun getAllImages(): List<String>
+
     @Query("SELECT * FROM artisan WHERE artisanId IN (:artisanIds)")
     fun loadAllByIds(artisanIds: IntArray): List<Artisan>
 
