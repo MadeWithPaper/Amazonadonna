@@ -18,25 +18,33 @@ import java.io.IOException
 
 class ArtisanItemList : AppCompatActivity() {
 
+    lateinit var artisan : Artisan
+    val listAllItemsURL = "https://7bd92aed.ngrok.io/item/listAllForArtisan"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_item_list)
 
-        val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
 
         artisanItemList_recyclerView.layoutManager = LinearLayoutManager(this)
 
         //load an empty list as placeholder before GET request completes
         //TODO remove testing
-        val testItem = Product(1.0, "id", "des", "aid", "url", "cate", "sub", "spce", "name", "shipping", 1, 2)
-        val emptyProductList : List<Product> = listOf(testItem)
-        artisanItemList_recyclerView.adapter = ListItemsAdapter(this, emptyProductList)
+        //val testItem = Product(1.0, "id", "des", "aid", "url", "Jewelry", "Earrings", "Hoop Earrings", "item name", "shipping", 1, 2)
+        val emptyProductList : List<Product> = emptyList()
+        artisanItemList_recyclerView.adapter = ListItemsAdapter(this, emptyProductList, artisan)
 
         artisanItemList_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
         artisanItemList_addItemButton.setOnClickListener{
             addItem(artisan)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        fetchJSON()
     }
 
     private fun addItem(artisan: Artisan) {
@@ -50,15 +58,23 @@ class ArtisanItemList : AppCompatActivity() {
     //TODO need search bar
 
     private fun fetchJSON() {
-        val url = ""
-        val request = Request.Builder().url(url).build()
-
         val client = OkHttpClient()
+
+        val requestBody = FormBody.Builder().add("artisanId",artisan.artisanId).build()
+
+
+        val request = Request.Builder()
+                .url(listAllItemsURL)
+                .post(requestBody)
+                .build()
+
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-
+                Log.i("ArtisanItemList", body)
                 val gson = GsonBuilder().create()
+                //val artisans : List<com.amazonadonna.model.Artisan> =  gson.fromJson(body, mutableListOf<com.amazonadonna.model.Artisan>().javaClass)
+                //System.out.print(artisans.get(0))
                 val products : List<Product> = gson.fromJson(body,  object : TypeToken<List<Product>>() {}.type)
 
                 runOnUiThread {
@@ -67,7 +83,7 @@ class ArtisanItemList : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("ListArtisanItem", "Failed to execute GET request to " + url)
+                Log.e("ArtisanItemList", "failed to do POST request to database")
             }
         })
     }

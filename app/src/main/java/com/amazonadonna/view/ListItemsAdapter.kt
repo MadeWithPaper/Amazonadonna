@@ -9,9 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.amazonadonna.model.Product
 import android.os.Bundle
+import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.list_item_cell.view.*
 
-class ListItemsAdapter (private val context: Context, private val products : List<Product>) : RecyclerView.Adapter<ItemsViewHolder> () {
+class ListItemsAdapter (private val context: Context, private val products : List<Product>, private val artisan : Artisan? = null ) : RecyclerView.Adapter<ItemsViewHolder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -30,6 +31,7 @@ class ListItemsAdapter (private val context: Context, private val products : Lis
         holder.view.setOnClickListener{
             val intent = Intent(context, ProductDetails::class.java)
             intent.putExtra("product", product)
+            intent.putExtra("selectedArtisan", artisan)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
         }
