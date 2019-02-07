@@ -153,7 +153,7 @@ router.post('/editItem', (req: Request, res: Response) => {
     // Get current item data
     const getItemParams: aws.DynamoDB.Types.GetItemInput = {
         TableName: 'item',
-        Key: { itemId: { S: req.body.itemId } }
+        Key: { itemId: { N: req.body.itemId } }
     }
     ddb.getItem(getItemParams, (err, data) => {
         if (err) {
