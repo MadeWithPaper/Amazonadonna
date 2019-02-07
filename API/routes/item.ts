@@ -46,7 +46,7 @@ router.post('/add', (req: Request, res: Response) => {
     const putItemParams: aws.DynamoDB.PutItemInput = {
         TableName: 'item',
         Item: {
-            itemId: { S: req.body.itemId },
+            itemId: { N: req.body.itemId },
             artisanId: { S: req.body.artisanId },
             price: { S: req.body.price },
             description: { S: req.body.description },
