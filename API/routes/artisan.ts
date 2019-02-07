@@ -135,7 +135,7 @@ router.post('/updateImage', (req: Request, res: Response) => {
 router.post('/getById', (req: Request, res: Response) => {
     const getArtisanParams: aws.DynamoDB.Types.GetItemInput = {
         TableName: 'artisan',
-        Key: { itemId: { S: req.body.artisanId } }
+        Key: { artisanId: { S: req.body.artisanId } }
     }
     ddb.getItem(getArtisanParams, (err, data) => {
         if (err) {
