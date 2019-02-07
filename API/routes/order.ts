@@ -43,7 +43,7 @@ router.post('/add', (req: Request, res: Response) => {
         Item: {
             orderId: { S: req.body.orderd },
             cgoId: { S: req.body.cgoId },
-            shipped: { BOOL: req.body.shipped },
+            shippedStatus: { BOOL: req.body.shippedStatus },
             numItems: { N: req.body.numItems },
             shippingAddress: { S: req.body.shippingAddress },
             totalCostDollars: { N: req.body.totalCostDollars },
@@ -69,14 +69,14 @@ router.post('/getItems', (req: Request, res: Response) => {
         IndexName: 'orderId-index',
         KeyConditionExpression: 'orderId = :id',
         ExpressionAttributeValues: {
-            ':id': { S: req.body.orderId }
+            ':id': { N: req.body.orderId }
         }
     }
     ddb.query(getItemsParams, (err, data) => {
         if (err) {
-            console.log('Error fetching orders in order/listAll: ' + err)
+            console.log('Error fetching orderItem in order/getItems: ' + err)
             res.status(400).send(
-                'Error fetching orders in order/listAll: ' + err.message
+                'Error fetching orderItem in order/getItems: ' + err.message
             )
         } else {
             const convert = data.Items.map(item => {
@@ -90,18 +90,21 @@ router.post('/getItems', (req: Request, res: Response) => {
                     return new Promise(resolve => {
                         const getItemParams: aws.DynamoDB.Types.GetItemInput = {
                             TableName: 'item',
-                            Key: { itemId: { S: item.itemId } }
+                            Key: { itemId: { N: item.itemId.toString() } }
                         }
                         ddb.getItem(
                             getItemParams,
-                            (getItemErr, getItemData) => {
+                            (
+                                getItemErr,
+                                getItemData: aws.DynamoDB.Types.GetItemOutput
+                            ) => {
                                 if (getItemErr) {
                                     console.log(
-                                        'Error fetching orders in order/getItems/getItem: ' +
+                                        'Error fetching items in order/getItems/getItem: ' +
                                             getItemErr
                                     )
                                     res.status(400).send(
-                                        'Error fetching orders in order/getItems/getItem: ' +
+                                        'Error fetching items in order/getItems/getItem: ' +
                                             getItemErr.message
                                     )
                                 } else {
@@ -111,15 +114,14 @@ router.post('/getItems', (req: Request, res: Response) => {
                         )
                     })
                 })
-
                 Promise.all(queryItems).then(
-                    (marshallItems: aws.DynamoDB.AttributeMap[]) => {
+                    (marshallItems: aws.DynamoDB.Types.GetItemOutput[]) => {
                         const convertItems = marshallItems.map(marshallItem => {
                             return new Promise(resolve => {
-                                const unmarshed = aws.DynamoDB.Converter.unmarshall(
-                                    marshallItem
+                                const unmarshedItem = aws.DynamoDB.Converter.unmarshall(
+                                    marshallItem.Item
                                 )
-                                resolve(unmarshed)
+                                resolve(unmarshedItem)
                             })
                         })
                         Promise.all(convertItems).then(itemData => {
@@ -128,6 +130,32 @@ router.post('/getItems', (req: Request, res: Response) => {
                     }
                 )
             })
+        }
+    })
+})
+
+router.post('/setShippedStatus', (req: Request, res: Response) => {
+    const setShippedStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
+        TableName: 'order',
+        Key: { orderId: { N: req.body.orderId } },
+        UpdateExpression: 'set shippedStatus = :u',
+        ExpressionAttributeValues: {
+            ':u': { BOOL: req.body.shippedStatus }
+        },
+        ReturnValues: 'UPDATED_NEW'
+    }
+    ddb.updateItem(setShippedStatusParams, (err, data) => {
+        if (err) {
+            console.log(
+                'Error updating shipped status in order/setShippedStatus: ' +
+                    err
+            )
+            res.status(400).send(
+                'Error updating shipped status in order/setShippedStatus: ' +
+                    err.message
+            )
+        } else {
+            res.send('Success!')
         }
     })
 })
