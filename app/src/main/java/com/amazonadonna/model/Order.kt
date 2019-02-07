@@ -9,12 +9,15 @@ import java.util.*
 
 @Entity(tableName = "order")
 data class Order (
+        @ColumnInfo(name = "numItems") @Json(name = "numItems") var numItems : Int,
         @ColumnInfo(name = "shippingAddress") @Json(name = "shippingAddress") var shippingAddress : String,
         @PrimaryKey @Json(name = "orderId") var orderId : String,
-        @ColumnInfo(name = "totalCost") @Json(name = "totalCost") var totalCost : Double,
+        @ColumnInfo(name = "shippedStatus") @Json(name = "shippedStatus") var shippedStatus : Boolean,
+        @ColumnInfo(name = "totalCostDollars") @Json(name = "totalCostDollars") var totalCostDollars : Int,
+        @ColumnInfo(name = "totalCostCents") @Json(name = "totalCostCents") var totalCostCents : Int,
+        @ColumnInfo(name = "amOrderNumber") @Json(name = "amOrderNumber") var amOrderNumber : String,
         @ColumnInfo(name = "products") @Json(name = "products") var products : List<Product>,
         @ColumnInfo(name = "cgaId") @Json(name = "cgaId") var cgaId : String,
-        @ColumnInfo(name = "shippingStatus") @Json(name = "shippingStatus") var shippingStatus : Boolean,
         //TODO change format of date
         @ColumnInfo(name = "orderDate") @Json(name = "orderDate") var orderDate : String): Serializable {
 

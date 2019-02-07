@@ -19,6 +19,7 @@ import android.provider.ContactsContract
 import android.text.TextUtils
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.TextView
 
@@ -63,9 +64,10 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
     }
     private var checkTokenListener = object  : Listener<AuthorizeResult, AuthError> {
         override fun onSuccess(ar: AuthorizeResult?) {
-            if(ar?.getAccessToken() != null) { //user already signed in to app
+            if(ar?.accessToken != null) { //user already signed in to app
                 val intent = Intent(this@LoginScreen, HomeScreen::class.java)
                 startActivity(intent)
+                Log.d("TOKEN", ar?.accessToken)
             }
         }
 
