@@ -17,10 +17,12 @@ import android.widget.ImageView
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import kotlinx.android.synthetic.main.activity_add_item_images.*
-import okhttp3.*
 import java.io.File
-import java.io.IOException
-import java.util.*
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.Bitmap
+
+
+
 
 class AddItemImages : AppCompatActivity() {
 
@@ -93,6 +95,10 @@ class AddItemImages : AppCompatActivity() {
         val intent = Intent(this, AddItemReview::class.java)
         intent.putExtra("product", product)
         intent.putExtra("selectedArtisan", artisan)
+//        val bitmap = (addItemImage0.drawable as BitmapDrawable).bitmap
+//        val pic = Bitmap.createScaledBitmap(bitmap, 300, 300, true)
+//
+//        intent.putExtra("image0", pic)
         Log.i("AddItemImage", "product updated 3/4: " + product)
         startActivity(intent)
     }

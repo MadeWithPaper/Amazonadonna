@@ -10,19 +10,41 @@ import com.amazonadonna.model.Product
 import kotlinx.android.synthetic.main.activity_add_item_review.*
 import okhttp3.*
 import java.io.IOException
+import android.R.id
+import android.annotation.TargetApi
+import android.content.ContentUris
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Parcelable
+import android.provider.DocumentsContract
+import android.provider.MediaStore
+import java.io.File
 
 
 class AddItemReview : AppCompatActivity() {
 
+    //private var photoFile: File? = null
     private val addItemURL = "https://7bd92aed.ngrok.io/item/add"
+    private val addItemImageURL = "https://7bd92aed.ngrok.io/item/updateImages"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_review)
+
+//        val bitmap = this.intent.getParcelableExtra<Parcelable>("image0") as Bitmap
+//        addItemReview_Image.setImageBitmap(bitmap)
+
         val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
 
         val product = intent.extras?.getSerializable("product") as Product
 
-        val categoryString = product.category + " > " + product.subCategory + " > " + product.specificCategory
+        var categoryString = ""
+        if (product.specificCategory == "-- Not Applicable --") {
+            categoryString = product.category + " > " + product.subCategory
+        } else {
+            categoryString = product.category + " > " + product.subCategory + " > " + product.specificCategory
+        }
         val priceString = "$ " + product.price.toString()
         val productionTimeString = "Usuall shipped within " + product.productionTime
         val productQuantityString =product.itemQuantity.toString() + " In Stock"
@@ -49,9 +71,11 @@ class AddItemReview : AppCompatActivity() {
         Log.i("AddItemReview", "review done adding item to db")
         intent.putExtra("artisan", artisan)
         startActivity(intent)
+        finish()
     }
 
     private fun submitToDB(product: Product, artisan: Artisan) {
+        var status = false
         //TODO add process bar to show submitting process
         val requestBody = FormBody.Builder().add("itemId", product.itemId)
                 .add("itemName", product.itemName)
@@ -80,20 +104,22 @@ class AddItemReview : AppCompatActivity() {
                 Log.i("AddItemReview", body)
 
 //                Thread().run {
-//                    submitPictureToDB(product)
+                    submitPictureToDB(product)
+                submitDismiss(artisan)
+
 //                }
 
-               // showResponseDialog(artisan, true)
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("AddItemReview", "failed to do POST request to database")
-               // showResponseDialog(artisan, false)
             }
         })
+
+        //showResponseDialog(artisan, status)
     }
 
-    private fun showResponseDialog(artisan: Artisan, status: Boolean){
+    private fun showResponseDialog(artisan: Artisan, status: Boolean) {
         val builder = AlertDialog.Builder(this@AddItemReview)
         if (status) {
             builder.setTitle("Item Listing ...")
@@ -112,21 +138,21 @@ class AddItemReview : AppCompatActivity() {
     }
     //TODO change product pic to an array of url as it can have more than one pic or have multiple fields for the images
     fun submitPictureToDB(product: Product) {
-
+//
 //        Log.d("hitFunction", "we here")
 //        val sourceFile = photoFile!!
-//        Log.d("drake", "File...::::" + sourceFile + " : " + sourceFile!!.exists())
+//        Log.d("AddItemReview", "File...::::" + sourceFile + " : " + sourceFile!!.exists())
 //
 //        val MEDIA_TYPE = MediaType.parse("image/png")
 //
 //        val requestBody = MultipartBody.Builder()
 //                .setType(MultipartBody.FORM)
-//                .addFormDataPart("artisanId", artisan.artisanId)
-//                .addFormDataPart("image", "profile.png", RequestBody.create(MEDIA_TYPE, sourceFile))
+//                .addFormDataPart("itemId", product.itemId)
+//                .addFormDataPart("image", "itemImage.png", RequestBody.create(MEDIA_TYPE, sourceFile))
 //                .build()
 //
 //        val request = Request.Builder()
-//                .url(artisanPicURL)
+//                .url(addItemImageURL)
 //                .post(requestBody)
 //                .build()
 //
@@ -141,5 +167,43 @@ class AddItemReview : AppCompatActivity() {
 //                Log.e("ERROR", "failed to do POST request to database")
 //            }
 //        })
+    }
+
+    @TargetApi(19)
+    private fun createImageFile(data: Intent?) {
+        var imagePath: String? = null
+        val uri = data!!.data
+        if (DocumentsContract.isDocumentUri(this, uri)){
+            val docId = DocumentsContract.getDocumentId(uri)
+            if ("com.android.providers.media.documents" == uri.authority){
+                val id = docId.split(":")[1]
+                val selsetion = MediaStore.Images.Media._ID + "=" + id
+                imagePath = imagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selsetion)
+            }
+            else if ("com.android.providers.downloads.documents" == uri.authority){
+                val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(docId))
+                imagePath = imagePath(contentUri, null)
+            }
+        }
+        else if ("content".equals(uri.scheme, ignoreCase = true)){
+            imagePath = imagePath(uri, null)
+        }
+        else if ("file".equals(uri.scheme, ignoreCase = true)){
+            imagePath = uri.path
+        }
+
+        //photoFile = File(imagePath)
+    }
+
+    private fun imagePath(uri: Uri?, selection: String?): String {
+        var path: String? = null
+        val cursor = contentResolver.query(uri, null, selection, null, null )
+        if (cursor != null){
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
+            }
+            cursor.close()
+        }
+        return path!!
     }
 }

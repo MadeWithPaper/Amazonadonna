@@ -265,7 +265,6 @@ class AddItemCategory : AppCompatActivity() {
             product.subCategory = sub
             product.specificCategory = specific
             product.artisanId = artisan.artisanId
-            product.generateProductID()
             intent.putExtra("product", product)
             intent.putExtra("selectedArtisan", artisan)
             startActivity(intent)
