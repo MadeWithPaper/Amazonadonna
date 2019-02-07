@@ -64,7 +64,6 @@ router.post('/add', (req: Request, res: Response) => {
 })
 
 router.post('/getItems', (req: Request, res: Response) => {
-    console.log(req.body.orderId)
     const getItemsParams: aws.DynamoDB.Types.QueryInput = {
         TableName: 'orderItem',
         IndexName: 'orderId-index',
@@ -87,14 +86,12 @@ router.post('/getItems', (req: Request, res: Response) => {
                 })
             })
             Promise.all(convert).then((items: OrderItem[]) => {
-                console.log(items)
                 const queryItems = items.map(item => {
                     return new Promise(resolve => {
                         const getItemParams: aws.DynamoDB.Types.GetItemInput = {
                             TableName: 'item',
                             Key: { itemId: { N: item.itemId.toString() } }
                         }
-                        console.log(getItemParams)
                         ddb.getItem(
                             getItemParams,
                             (
@@ -111,7 +108,6 @@ router.post('/getItems', (req: Request, res: Response) => {
                                             getItemErr.message
                                     )
                                 } else {
-                                    console.log(getItemData)
                                     resolve(getItemData)
                                 }
                             }
@@ -121,13 +117,10 @@ router.post('/getItems', (req: Request, res: Response) => {
                 Promise.all(queryItems).then(
                     (marshallItems: aws.DynamoDB.Types.GetItemOutput[]) => {
                         const convertItems = marshallItems.map(marshallItem => {
-                            console.log(marshallItem)
                             return new Promise(resolve => {
-                                console.log(marshallItem)
                                 const unmarshedItem = aws.DynamoDB.Converter.unmarshall(
                                     marshallItem.Item
                                 )
-                                console.log(unmarshedItem)
                                 resolve(unmarshedItem)
                             })
                         })
