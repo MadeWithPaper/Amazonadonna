@@ -43,7 +43,7 @@ router.post('/add', (req: Request, res: Response) => {
         Item: {
             orderId: { S: req.body.orderd },
             cgoId: { S: req.body.cgoId },
-            shipped: { BOOL: req.body.shipped },
+            shippedStatus: { BOOL: req.body.shippedStatus },
             numItems: { N: req.body.numItems },
             shippingAddress: { S: req.body.shippingAddress },
             totalCostDollars: { N: req.body.totalCostDollars },
@@ -137,6 +137,32 @@ router.post('/getItems', (req: Request, res: Response) => {
                     }
                 )
             })
+        }
+    })
+})
+
+router.post('/setShippedStatus', (req: Request, res: Response) => {
+    const setShippedStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
+        TableName: 'order',
+        Key: { orderId: { N: req.body.orderId } },
+        UpdateExpression: 'set shipped = :u',
+        ExpressionAttributeValues: {
+            ':u': { BOOL: req.body.shippedStatus }
+        },
+        ReturnValues: 'UPDATED_NEW'
+    }
+    ddb.updateItem(setShippedStatusParams, (err, data) => {
+        if (err) {
+            console.log(
+                'Error updating shipped status in order/setShippedStatus: ' +
+                    err
+            )
+            res.status(400).send(
+                'Error updating shipped status in order/setShippedStatus: ' +
+                    err.message
+            )
+        } else {
+            res.send('Success!')
         }
     })
 })
