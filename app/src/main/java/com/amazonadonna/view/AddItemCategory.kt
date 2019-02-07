@@ -90,7 +90,7 @@ class AddItemCategory : AppCompatActivity() {
     val pacifierssub = arrayOf(SELECT_SPECIFICCATEGORY, "Pacifier Accessories", "Pacifiers", "Teethers")
 
     var product : Product = Product(0.0, "0", "placeholder", "placeholder", arrayOf("testingurl", "Not set"), "placeholder", "placeholder", "placeholder", "placeholder", "Placeholder", 0,  0)
-
+    var editMode : Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_category)
@@ -219,15 +219,16 @@ class AddItemCategory : AppCompatActivity() {
             //edit product
             product = intent.extras?.getSerializable("product") as Product
             Log.i("Edit Item", product.toString())
+            editMode = true
             //Log.i("AddItemCategoryEdit", mainArrayAdapter.getPosition(product.category).toString())
             itemCategory_mainSpinner.setSelection(mainArrayAdapter.getPosition(product.category))
-
-            val subInt = editPosition(itemCategory_subSpinner, product.subCategory)
-
-            itemCategory_subSpinner.setSelection(subInt)
-
-
-            itemCategory_specificSpinner.setSelection(editPosition(itemCategory_specificSpinner, product.specificCategory))
+//
+//            val subInt = editPosition(itemCategory_subSpinner, product.subCategory)
+//
+//            itemCategory_subSpinner.setSelection(subInt)
+//
+//
+//            itemCategory_specificSpinner.setSelection(editPosition(itemCategory_specificSpinner, product.specificCategory))
         } else {
             //creating new product set artisanID
             product.artisanId = artisan.artisanId
@@ -265,10 +266,11 @@ class AddItemCategory : AppCompatActivity() {
             product.subCategory = sub
             product.specificCategory = specific
             product.artisanId = artisan.artisanId
-            product.generateProductID()
             intent.putExtra("product", product)
+            intent.putExtra("editMode", editMode)
             intent.putExtra("selectedArtisan", artisan)
             startActivity(intent)
+            finish()
         } else {
             // do nothing not all categories are set correctly
             //TODO warning message?

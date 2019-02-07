@@ -13,7 +13,7 @@ class ProductDetails : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_details)
 
-        //val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
 
         val product = intent.extras?.getSerializable("product") as Product
 
@@ -21,7 +21,7 @@ class ProductDetails : AppCompatActivity() {
 
         val categoryString = product.category + " > " + product.subCategory + " > " + product.specificCategory
         val priceString = "$ " + product.price.toString()
-        val productionTimeString = "Usuall shipped within " + product.productionTime
+        val productionTimeString = "Usuall shipped within " + product.productionTime + " Days."
         val productQuantityString =product.itemQuantity.toString() + " In Stock"
         itemDetail_categories.text = categoryString
         itemDetail_ProductNameTF.text = product.itemName
@@ -32,9 +32,9 @@ class ProductDetails : AppCompatActivity() {
         itemDetail_itemTime.text = productionTimeString
 
         //TODO edit items
-//        itemDetail_edit.setOnClickListener {
-//            editItem(product, artisan)
-//        }
+        itemDetail_edit.setOnClickListener {
+            editItem(product, artisan)
+        }
     }
 
     private fun editItem(product: Product, artisan: Artisan) {

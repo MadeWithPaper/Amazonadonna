@@ -17,10 +17,12 @@ import android.widget.ImageView
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import kotlinx.android.synthetic.main.activity_add_item_images.*
-import okhttp3.*
 import java.io.File
-import java.io.IOException
-import java.util.*
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.Bitmap
+
+
+
 
 class AddItemImages : AppCompatActivity() {
 
@@ -29,7 +31,8 @@ class AddItemImages : AppCompatActivity() {
     private var imageNum : Int = 0
 
     private val imageViewMap = SparseArray<ImageView>()
-
+    //TODO add editMode functionality
+    var editMode : Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_images)
@@ -46,6 +49,7 @@ class AddItemImages : AppCompatActivity() {
 
         val product = intent.extras?.getSerializable("product") as Product
         val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        editMode = intent.extras?.get("editMode") as Boolean
 
         addItemImage_continueButton.setOnClickListener {
             addItemImageContinue(product, artisan)
@@ -93,8 +97,14 @@ class AddItemImages : AppCompatActivity() {
         val intent = Intent(this, AddItemReview::class.java)
         intent.putExtra("product", product)
         intent.putExtra("selectedArtisan", artisan)
+//        val bitmap = (addItemImage0.drawable as BitmapDrawable).bitmap
+//        val pic = Bitmap.createScaledBitmap(bitmap, 300, 300, true)
+//
+//        intent.putExtra("image0", pic)
+        intent.putExtra("editMode", editMode)
         Log.i("AddItemImage", "product updated 3/4: " + product)
         startActivity(intent)
+        finish()
     }
 
     private fun selectImageInAlbum() {
