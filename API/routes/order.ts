@@ -1,9 +1,6 @@
 import { Router, Request, Response } from 'express'
 import * as aws from 'aws-sdk'
-import * as multer from 'multer'
-import * as multerS3 from 'multer-s3'
-import * as mime from 'mime'
-import { ddb, s3 } from '../server'
+import { ddb } from '../server'
 import { OrderItem } from '../models/orderItem'
 
 const router = Router()
