@@ -156,7 +156,7 @@ router.post('/updateImages', (req: Request, res: Response) => {
                             err.message
                     )
                 } else {
-                    res.send('urls updated!')
+                    res.json(picURLs)
                 }
             })
         }
