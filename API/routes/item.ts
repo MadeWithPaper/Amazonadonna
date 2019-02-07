@@ -58,14 +58,7 @@ router.post('/add', (req: Request, res: Response) => {
             itemQuantity: { N: req.body.itemQuantity },
             productionTime: { N: req.body.productionTime },
             picURLs: {
-                L: [
-                    { S: 'Not set' },
-                    { S: 'Not set' },
-                    { S: 'Not set' },
-                    { S: 'Not set' },
-                    { S: 'Not set' },
-                    { S: 'Not set' }
-                ]
+                L: []
             }
         }
     }
@@ -117,14 +110,7 @@ router.post('/updateImages', (req: Request, res: Response) => {
                 'Error uploading picture in item/updateImage: ' + picErr.message
             )
         } else {
-            let picURLs: aws.DynamoDB.AttributeValue[] = [
-                { S: 'Not set' },
-                { S: 'Not set' },
-                { S: 'Not set' },
-                { S: 'Not set' },
-                { S: 'Not set' },
-                { S: 'Not set' }
-            ]
+            let picURLs: aws.DynamoDB.AttributeValue[] = []
             if (req.files) {
                 const getURLs = (req.files as any[]).map(file => {
                     return new Promise<aws.DynamoDB.AttributeValue>(resolve => {
@@ -171,16 +157,16 @@ router.post('/editItem', (req: Request, res: Response) => {
         TableName: 'item',
         Key: { itemId: { N: req.body.itemId } },
         UpdateExpression: `set artisanId = :artisanId, 
-                           set price = :price, 
-                           set description = :desciption,
-                           set category = :category,
-                           set subCategory = :subCategory,
-                           set specificCategory = :specificCategory,
-                           set itemName = :itemName,
-                           set shippingOption = :shippingOption,
-                           set itemQuantity = :itemQuantity,
-                           set productionTime = :productionTime,
-                           set picURLs = :picURLs`,
+                            price = :price, 
+                            description = :desciption,
+                            category = :category,
+                            subCategory = :subCategory,
+                            specificCategory = :specificCategory,
+                            itemName = :itemName,
+                            shippingOption = :shippingOption,
+                            itemQuantity = :itemQuantity,
+                            productionTime = :productionTime,
+                            picURLs = :picURLs`,
         ExpressionAttributeValues: {
             ':artisanId': { S: req.body.artisanId },
             ':price': { S: req.body.price },
