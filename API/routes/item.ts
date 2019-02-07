@@ -43,6 +43,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
 })
 
 router.post('/add', (req: Request, res: Response) => {
+    console.log(req.body)
     const putItemParams: aws.DynamoDB.PutItemInput = {
         TableName: 'item',
         Item: {
@@ -64,9 +65,9 @@ router.post('/add', (req: Request, res: Response) => {
     }
     ddb.putItem(putItemParams, (err, data) => {
         if (err) {
-            console.log('Error adding artisan in item/add: ', err)
+            console.log('Error adding item in item/add: ', err)
             res.status(400).send(
-                'Error adding artisan in item/add: ' + err.message
+                'Error adding item in item/add: ' + err.message
             )
         } else {
             res.send('Successfully added')
