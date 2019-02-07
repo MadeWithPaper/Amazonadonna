@@ -16,7 +16,7 @@
         completions."
     </string>
     <string name="title_activity_artisan_profile">ArtisanProfile</string>
-    <string name="order_id">Order ID: </string>
+    <string name="order_id"> </string>
     <string name="order_shipped">Shipped: </string>
     <string name="edit">Edit</string>
     <string name="placeholder_text">__placeholder__</string>
