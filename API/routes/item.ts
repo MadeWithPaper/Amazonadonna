@@ -133,36 +133,35 @@ router.post('/updateImages', (req: Request, res: Response) => {
                 })
                 Promise.all(getURLs).then(urls => {
                     picURLs = urls
+                    // update db record with new URL
+                    const params: aws.DynamoDB.UpdateItemInput = {
+                        TableName: 'item',
+                        Key: { itemId: { N: req.body.itemId } },
+                        UpdateExpression: 'set picURLs = :u',
+                        ExpressionAttributeValues: { ':u': { L: picURLs } },
+                        ReturnValues: 'UPDATED_NEW'
+                    }
+                    // check string, params
+                    ddb.updateItem(params, (err, data) => {
+                        if (err) {
+                            console.log(
+                                'Error updating item record with pic ' +
+                                    req.body.itemId +
+                                    ' : ' +
+                                    err
+                            )
+                            res.status(400).send(
+                                'Error updating item record with pic ' +
+                                    req.body.itemId +
+                                    ' : ' +
+                                    err.message
+                            )
+                        } else {
+                            res.json(picURLs)
+                        }
+                    })
                 })
             }
-            console.log(picURLs)
-            // update db record with new URL
-            const params: aws.DynamoDB.UpdateItemInput = {
-                TableName: 'item',
-                Key: { itemId: { N: req.body.itemId } },
-                UpdateExpression: 'set picURLs = :u',
-                ExpressionAttributeValues: { ':u': { L: picURLs } },
-                ReturnValues: 'UPDATED_NEW'
-            }
-            // check string, params
-            ddb.updateItem(params, (err, data) => {
-                if (err) {
-                    console.log(
-                        'Error updating item record with pic ' +
-                            req.body.itemId +
-                            ' : ' +
-                            err
-                    )
-                    res.status(400).send(
-                        'Error updating item record with pic ' +
-                            req.body.itemId +
-                            ' : ' +
-                            err.message
-                    )
-                } else {
-                    res.json(picURLs)
-                }
-            })
         }
     })
 })
