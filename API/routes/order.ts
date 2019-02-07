@@ -70,7 +70,7 @@ router.post('/getItems', (req: Request, res: Response) => {
         IndexName: 'orderId-index',
         KeyConditionExpression: 'orderId = :id',
         ExpressionAttributeValues: {
-            ':id': { S: req.body.orderId }
+            ':id': { N: req.body.orderId }
         }
     }
     ddb.query(getItemsParams, (err, data) => {
@@ -91,7 +91,7 @@ router.post('/getItems', (req: Request, res: Response) => {
                     return new Promise(resolve => {
                         const getItemParams: aws.DynamoDB.Types.GetItemInput = {
                             TableName: 'item',
-                            Key: { itemId: { S: item.itemId } }
+                            Key: { itemId: { N: item.itemId } }
                         }
                         ddb.getItem(
                             getItemParams,
