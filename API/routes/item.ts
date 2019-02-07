@@ -158,7 +158,7 @@ router.post('/editItem', (req: Request, res: Response) => {
         Key: { itemId: { N: req.body.itemId } },
         UpdateExpression: `set artisanId = :artisanId, 
                             price = :price, 
-                            description = :desciption,
+                            description = :description,
                             category = :category,
                             subCategory = :subCategory,
                             specificCategory = :specificCategory,
@@ -193,11 +193,9 @@ router.post('/editItem', (req: Request, res: Response) => {
     }
     ddb.updateItem(editItemParams, (err, data) => {
         if (err) {
-            console.log(
-                'Error updating shipped status in item/editItem: ' + err
-            )
+            console.log('Error updating item in item/editItem: ' + err)
             res.status(400).send(
-                'Error updating shipped status in item/editItem: ' + err.message
+                'Error updating item in item/editItem: ' + err.message
             )
         } else {
             res.send('Success!')
