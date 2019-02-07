@@ -14,7 +14,7 @@ import java.io.IOException
 
 class AddItemReview : AppCompatActivity() {
 
-    private val addItemURL = ""
+    private val addItemURL = "https://7bd92aed.ngrok.io/item/add"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_review)
@@ -50,6 +50,7 @@ class AddItemReview : AppCompatActivity() {
         intent.putExtra("artisan", artisan)
         startActivity(intent)
     }
+
     private fun submitToDB(product: Product, artisan: Artisan) {
         //TODO add process bar to show submitting process
         val requestBody = FormBody.Builder().add("itemId", product.itemId)
@@ -60,11 +61,12 @@ class AddItemReview : AppCompatActivity() {
                 .add("category", product.category)
                 .add("subCategory", product.subCategory)
                 .add("specificCategory", product.specificCategory)
-                .add("ShippingOption", product.ShippingOption)
+                .add("shippingOption", product.ShippingOption)
                 .add("itemQuantity", product.itemQuantity.toString())
                 .add("productionTime", product.productionTime.toString())
                 .build()
 
+        Log.d("AddItemReview", requestBody.toString())
         val client = OkHttpClient()
 
         val request = Request.Builder()
@@ -77,16 +79,16 @@ class AddItemReview : AppCompatActivity() {
                 val body = response?.body()?.string()
                 Log.i("AddItemReview", body)
 
-                Thread().run {
-                    submitPictureToDB(product)
-                }
+//                Thread().run {
+//                    submitPictureToDB(product)
+//                }
 
-                showResponseDialog(artisan, true)
+               // showResponseDialog(artisan, true)
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("AddItemReview", "failed to do POST request to database")
-                showResponseDialog(artisan, false)
+               // showResponseDialog(artisan, false)
             }
         })
     }

@@ -14,7 +14,7 @@ data class Product (
         @PrimaryKey @Json(name = "itemId") var itemId : String,
         @ColumnInfo(name = "description") @Json(name = "description") var description : String,
         @ColumnInfo(name = "artisanId") @Json(name = "artisanId") var artisanId : String,
-        @ColumnInfo(name = "pictureURL") @Json(name = "pictureURL") var pictureURL : String,
+        @ColumnInfo(name = "pictureURL") @Json(name = "pictureURL") var pictureURL : Array<String>,
         @ColumnInfo(name = "category") @Json(name = "category") var category:  String,
         @ColumnInfo(name = "subCategory") @Json(name = "subCategory") var subCategory: String,
         @ColumnInfo(name = "specificCategory") @Json(name = "specificCategory") var specificCategory : String,
@@ -26,7 +26,7 @@ data class Product (
     fun generateProductID() {
         //TODO fill in logic for generating unique ID for product
         var num = Random().nextInt()
-        itemId = itemName + artisanId + num.toString()
+        itemId = (itemName.hashCode() * 13).toString()
     }
 
 }

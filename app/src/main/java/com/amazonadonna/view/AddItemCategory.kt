@@ -89,9 +89,12 @@ class AddItemCategory : AppCompatActivity() {
     val nursingfeedingsub = arrayOf(SELECT_SPECIFICCATEGORY, "Bibs & Burp Cloths", "Drinkware")
     val pacifierssub = arrayOf(SELECT_SPECIFICCATEGORY, "Pacifier Accessories", "Pacifiers", "Teethers")
 
+    var product : Product = Product(0.0, "0", "placeholder", "placeholder", arrayOf("testingurl", "Not set"), "placeholder", "placeholder", "placeholder", "placeholder", "Placeholder", 0,  0)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_category)
+
         val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
 
         // Create an ArrayAdapter
@@ -211,6 +214,39 @@ class AddItemCategory : AppCompatActivity() {
         addItemCategory_continueButton.setOnClickListener {
             addItemCategoryContinue(mainCategory, subCategory, specificCategory, artisan)
         }
+
+        if (intent.hasExtra("product")) {
+            //edit product
+            product = intent.extras?.getSerializable("product") as Product
+            Log.i("Edit Item", product.toString())
+            //Log.i("AddItemCategoryEdit", mainArrayAdapter.getPosition(product.category).toString())
+            itemCategory_mainSpinner.setSelection(mainArrayAdapter.getPosition(product.category))
+
+            val subInt = editPosition(itemCategory_subSpinner, product.subCategory)
+
+            itemCategory_subSpinner.setSelection(subInt)
+
+
+            itemCategory_specificSpinner.setSelection(editPosition(itemCategory_specificSpinner, product.specificCategory))
+        } else {
+            //creating new product set artisanID
+            product.artisanId = artisan.artisanId
+        }
+
+    }
+
+    private fun editPosition(spinner: Spinner, value : String) : Int {
+        Log.d("edit position", "call to edit position" )
+
+        for (i in 1..spinner.count) {
+            Log.d("edit position", "inside for" + spinner.count)
+
+            if (spinner.getItemAtPosition(i).toString() == value) {
+                Log.d("edit position", i.toString())
+                return i
+            }
+        }
+        return -1
     }
 
     //spinner factory
@@ -225,7 +261,10 @@ class AddItemCategory : AppCompatActivity() {
             Log.i("AddItemCategory", "Main: " + main + " Sub: " + sub + " Specific: " + specific)
             val intent = Intent(this, AddItemInfo::class.java)
             //Create and set product detail
-            var product = Product(0.0, "placeholder", "placeholder", artisan.artisanId, "placeholder", main, sub, specific, "placeholder", "Placeholder", 0,  0)
+            product.category = main
+            product.subCategory = sub
+            product.specificCategory = specific
+            product.artisanId = artisan.artisanId
             product.generateProductID()
             intent.putExtra("product", product)
             intent.putExtra("selectedArtisan", artisan)
