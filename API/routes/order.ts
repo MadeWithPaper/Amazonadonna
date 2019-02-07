@@ -64,6 +64,7 @@ router.post('/add', (req: Request, res: Response) => {
 })
 
 router.post('/getItems', (req: Request, res: Response) => {
+    console.log(req.body.orderId)
     const getItemsParams: aws.DynamoDB.Types.QueryInput = {
         TableName: 'orderItem',
         IndexName: 'orderId-index',
@@ -74,9 +75,9 @@ router.post('/getItems', (req: Request, res: Response) => {
     }
     ddb.query(getItemsParams, (err, data) => {
         if (err) {
-            console.log('Error fetching orders in order/listAll: ' + err)
+            console.log('Error fetching orderItem in order/getItems: ' + err)
             res.status(400).send(
-                'Error fetching orders in order/listAll: ' + err.message
+                'Error fetching orderItem in order/getItems: ' + err.message
             )
         } else {
             const convert = data.Items.map(item => {
@@ -97,11 +98,11 @@ router.post('/getItems', (req: Request, res: Response) => {
                             (getItemErr, getItemData) => {
                                 if (getItemErr) {
                                     console.log(
-                                        'Error fetching orders in order/getItems/getItem: ' +
+                                        'Error fetching items in order/getItems/getItem: ' +
                                             getItemErr
                                     )
                                     res.status(400).send(
-                                        'Error fetching orders in order/getItems/getItem: ' +
+                                        'Error fetching items in order/getItems/getItem: ' +
                                             getItemErr.message
                                     )
                                 } else {
