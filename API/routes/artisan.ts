@@ -7,16 +7,16 @@ import { ddb, s3 } from '../server'
 
 const router = Router()
 
-const listAllArtisansParams: aws.DynamoDB.Types.QueryInput = {
-    TableName: 'artisan',
-    IndexName: 'cgoId-index',
-    KeyConditionExpression: 'cgoId = :id',
-    ExpressionAttributeValues: {
-        ':id': { S: '0' }
-    }
-}
-
 router.get('/listAll', (req: Request, res: Response) => {
+    const listAllArtisansParams: aws.DynamoDB.Types.QueryInput = {
+        TableName: 'artisan',
+        IndexName: 'cgoId-index',
+        KeyConditionExpression: 'cgoId = :id',
+        ExpressionAttributeValues: {
+            ':id': { S: '0' }
+        }
+    }
+
     ddb.query(listAllArtisansParams, (err, data) => {
         if (err) {
             console.log('Error fetching artisans in artisan/listAll: ' + err)
@@ -132,7 +132,33 @@ router.post('/updateImage', (req: Request, res: Response) => {
     })
 })
 
+router.post('/getById', (req: Request, res: Response) => {
+    const getArtisanParams: aws.DynamoDB.Types.GetItemInput = {
+        TableName: 'artisan',
+        Key: { itemId: { S: req.body.artisanId } }
+    }
+    ddb.getItem(getArtisanParams, (err, data) => {
+        if (err) {
+            console.log('Error getting all artisan in artisan/getById: ' + err)
+            res.status(400).send(
+                'Error getting all artisans in artisan/getById: ' + err.message
+            )
+        } else {
+            res.json(aws.DynamoDB.Converter.unmarshall(data.Item))
+        }
+    })
+})
+
 router.get('/deleteAll', (req: Request, res: Response) => {
+    const listAllArtisansParams: aws.DynamoDB.Types.QueryInput = {
+        TableName: 'artisan',
+        IndexName: 'cgoId-index',
+        KeyConditionExpression: 'cgoId = :id',
+        ExpressionAttributeValues: {
+            ':id': { S: '0' }
+        }
+    }
+
     ddb.query(listAllArtisansParams, (err, data) => {
         if (err) {
             console.log(
