@@ -9,11 +9,13 @@ import kotlinx.android.synthetic.main.activity_product_details.*
 
 class ProductDetails : AppCompatActivity() {
 
+    private lateinit var artisan : Artisan
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_details)
 
-        val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
 
         val product = intent.extras?.getSerializable("product") as Product
 
