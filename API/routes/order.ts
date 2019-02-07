@@ -97,7 +97,10 @@ router.post('/getItems', (req: Request, res: Response) => {
                         console.log(getItemParams)
                         ddb.getItem(
                             getItemParams,
-                            (getItemErr, getItemData) => {
+                            (
+                                getItemErr,
+                                getItemData: aws.DynamoDB.Types.GetItemOutput
+                            ) => {
                                 if (getItemErr) {
                                     console.log(
                                         'Error fetching items in order/getItems/getItem: ' +
@@ -115,24 +118,24 @@ router.post('/getItems', (req: Request, res: Response) => {
                         )
                     })
                 })
-                Promise.all(queryItems).then((marshallItems: any) => {
-                    const convertItems = marshallItems.map(
-                        (marshallItem: any) => {
+                Promise.all(queryItems).then(
+                    (marshallItems: aws.DynamoDB.Types.GetItemOutput[]) => {
+                        const convertItems = marshallItems.map(marshallItem => {
                             console.log(marshallItem)
                             return new Promise(resolve => {
                                 console.log(marshallItem)
                                 const unmarshedItem = aws.DynamoDB.Converter.unmarshall(
-                                    marshallItem
+                                    marshallItem.Item
                                 )
                                 console.log(unmarshedItem)
                                 resolve(unmarshedItem)
                             })
-                        }
-                    )
-                    Promise.all(convertItems).then(itemData => {
-                        res.json(itemData)
-                    })
-                })
+                        })
+                        Promise.all(convertItems).then(itemData => {
+                            res.json(itemData)
+                        })
+                    }
+                )
             })
         }
     })
