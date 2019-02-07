@@ -87,12 +87,14 @@ router.post('/getItems', (req: Request, res: Response) => {
                 })
             })
             Promise.all(convert).then((items: OrderItem[]) => {
+                console.log(items)
                 const queryItems = items.map(item => {
                     return new Promise(resolve => {
                         const getItemParams: aws.DynamoDB.Types.GetItemInput = {
                             TableName: 'item',
                             Key: { itemId: { N: item.itemId.toString() } }
                         }
+                        console.log(getItemParams)
                         ddb.getItem(
                             getItemParams,
                             (getItemErr, getItemData) => {
@@ -106,6 +108,7 @@ router.post('/getItems', (req: Request, res: Response) => {
                                             getItemErr.message
                                     )
                                 } else {
+                                    console.log(getItemData)
                                     resolve(getItemData)
                                 }
                             }
