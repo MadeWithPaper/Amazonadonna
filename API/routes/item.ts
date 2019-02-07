@@ -135,7 +135,7 @@ router.post('/updateImages', (req: Request, res: Response) => {
             // update db record with new URL
             const params: aws.DynamoDB.UpdateItemInput = {
                 TableName: 'item',
-                Key: { itemId: { S: req.body.itemId } },
+                Key: { itemId: { N: req.body.itemId } },
                 UpdateExpression: 'set picURLs = :u',
                 ExpressionAttributeValues: { ':u': { L: picURLs } },
                 ReturnValues: 'UPDATED_NEW'
