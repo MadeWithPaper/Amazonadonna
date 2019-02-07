@@ -98,6 +98,7 @@ router.post('/updateImages', (req: Request, res: Response) => {
                 cb(
                     null,
                     req.body.itemId +
+                        '-' +
                         Date.now() +
                         '.' +
                         mime.getExtension(file.mimetype)
@@ -134,7 +135,7 @@ router.post('/updateImages', (req: Request, res: Response) => {
                     picURLs = urls
                 })
             }
-
+            console.log(picURLs)
             // update db record with new URL
             const params: aws.DynamoDB.UpdateItemInput = {
                 TableName: 'item',
