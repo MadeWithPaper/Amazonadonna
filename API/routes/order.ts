@@ -116,7 +116,7 @@ router.post('/getItems', (req: Request, res: Response) => {
                     })
                 })
                 Promise.all(queryItems).then((marshallItems: any) => {
-                    console.log(marshallItems)
+                    console.log(JSON.stringify(marshallItems))
                     const convertItems = marshallItems.map(
                         (marshallItem: any) => {
                             return new Promise(resolve => {
