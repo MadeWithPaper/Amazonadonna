@@ -6,6 +6,7 @@ import * as express from 'express'
 import * as bodyParser from 'body-parser'
 import * as aws from 'aws-sdk'
 import { artisanRouter } from './routes/artisan'
+import { orderRouter } from './routes/order'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -46,5 +47,6 @@ app.get('/', (req: express.Request, res: express.Response) => {
 })
 
 app.use('/artisan', artisanRouter)
+app.use('/order', orderRouter)
 
 export { app as server, ddb, s3 }

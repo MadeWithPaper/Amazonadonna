@@ -43,9 +43,11 @@ router.post('/add', (req: Request, res: Response) => {
         Item: {
             orderId: { S: req.body.orderd },
             cgoId: { S: req.body.cgoId },
-            numItems: { S: req.body.numItems },
+            shipped: { BOOL: req.body.shipped },
+            numItems: { N: req.body.numItems },
             shippingAddress: { S: req.body.shippingAddress },
-            totalCost: { S: req.body.totalCost }
+            totalCostDollars: { N: req.body.totalCostDollars },
+            totalCostCents: { N: req.body.totalCostCents }
             /*products: {List<Product>}*/
         }
     }
