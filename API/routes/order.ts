@@ -138,7 +138,7 @@ router.post('/setShippedStatus', (req: Request, res: Response) => {
     const setShippedStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
         TableName: 'order',
         Key: { orderId: { N: req.body.orderId } },
-        UpdateExpression: 'set shipped = :u',
+        UpdateExpression: 'set shippedStatus = :u',
         ExpressionAttributeValues: {
             ':u': { BOOL: req.body.shippedStatus }
         },
