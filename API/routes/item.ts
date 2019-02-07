@@ -43,7 +43,6 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
 })
 
 router.post('/add', (req: Request, res: Response) => {
-    console.log(req.body)
     const putItemParams: aws.DynamoDB.PutItemInput = {
         TableName: 'item',
         Item: {
