@@ -179,14 +179,7 @@ router.post('/editItem', (req: Request, res: Response) => {
             ':itemQuantity': { N: req.body.itemQuantity },
             ':productionTime': { N: req.body.productionTime },
             ':picURLs': {
-                L: [
-                    { S: 'Not set' },
-                    { S: 'Not set' },
-                    { S: 'Not set' },
-                    { S: 'Not set' },
-                    { S: 'Not set' },
-                    { S: 'Not set' }
-                ]
+                L: []
             }
         },
         ReturnValues: 'UPDATED_NEW'
