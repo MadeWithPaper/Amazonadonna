@@ -115,22 +115,23 @@ router.post('/getItems', (req: Request, res: Response) => {
                         )
                     })
                 })
-
-                Promise.all(queryItems).then(
-                    (marshallItems: aws.DynamoDB.AttributeMap[]) => {
-                        const convertItems = marshallItems.map(marshallItem => {
+                console.log(queryItems)
+                Promise.all(queryItems).then((marshallItems: any) => {
+                    const convertItems = marshallItems.map(
+                        (marshallItem: any) => {
                             return new Promise(resolve => {
-                                const unmarshed = aws.DynamoDB.Converter.unmarshall(
+                                const unmarshedItem = aws.DynamoDB.Converter.unmarshall(
                                     marshallItem
                                 )
-                                resolve(unmarshed)
+                                console.log(resolve)
+                                resolve(unmarshedItem)
                             })
-                        })
-                        Promise.all(convertItems).then(itemData => {
-                            res.json(itemData)
-                        })
-                    }
-                )
+                        }
+                    )
+                    Promise.all(convertItems).then(itemData => {
+                        res.json(itemData)
+                    })
+                })
             })
         }
     })
