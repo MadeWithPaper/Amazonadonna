@@ -97,7 +97,10 @@ router.post('/updateImages', (req: Request, res: Response) => {
             key: (picReq, file, cb) => {
                 cb(
                     null,
-                    req.body.itemId + '.' + mime.getExtension(file.mimetype)
+                    req.body.itemId +
+                        Date.now() +
+                        '.' +
+                        mime.getExtension(file.mimetype)
                 )
             }
         })
