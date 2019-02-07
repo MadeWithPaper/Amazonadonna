@@ -91,7 +91,7 @@ router.post('/getItems', (req: Request, res: Response) => {
                     return new Promise(resolve => {
                         const getItemParams: aws.DynamoDB.Types.GetItemInput = {
                             TableName: 'item',
-                            Key: { itemId: { N: item.itemId } }
+                            Key: { itemId: { N: item.itemId.toString() } }
                         }
                         ddb.getItem(
                             getItemParams,
