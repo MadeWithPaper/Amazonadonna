@@ -115,15 +115,15 @@ router.post('/getItems', (req: Request, res: Response) => {
                         )
                     })
                 })
-                console.log(queryItems)
                 Promise.all(queryItems).then((marshallItems: any) => {
+                    console.log(marshallItems)
                     const convertItems = marshallItems.map(
                         (marshallItem: any) => {
                             return new Promise(resolve => {
                                 const unmarshedItem = aws.DynamoDB.Converter.unmarshall(
                                     marshallItem
                                 )
-                                console.log(resolve)
+                                console.log(unmarshedItem)
                                 resolve(unmarshedItem)
                             })
                         }
