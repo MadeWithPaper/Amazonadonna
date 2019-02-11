@@ -6,15 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import com.amazonadonna.model.Artisan
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_artisan_profile.*
-import kotlinx.android.synthetic.main.list_artisan_cell.view.*
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
-import android.util.DisplayMetrics
-import android.view.Display
 import android.text.method.ScrollingMovementMethod
+import android.R.id
+import android.net.Uri
+import android.os.Parcel
+import android.os.Parcelable
+import android.support.v4.app.FragmentActivity
+import android.support.v4.app.FragmentManager
 
 
-class ArtisanProfile : AppCompatActivity() {
+class ArtisanProfile() : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +31,12 @@ class ArtisanProfile : AppCompatActivity() {
             artisanItemList(artisan)
         }
 
-        artisanProfileOrdersButton.setOnClickListener {
+        artisanProfilePayoutButton.setOnClickListener {
             listArtisanOrders(artisan)
+        }
+
+        artisanProfile_edit.setOnClickListener {
+            editArtisan(artisan)
         }
     }
 
@@ -54,13 +59,14 @@ class ArtisanProfile : AppCompatActivity() {
     }
 
     private fun listArtisanOrders(artisan: Artisan){
-
         val intent = Intent(this, ListOrders::class.java)
         startActivity(intent)
     }
 
-    //TODO add new intent to orders
-    //TODO profile pic
+    private fun editArtisan(artisan: Artisan) {
+        val intent = Intent(this, EditArtisan::class.java)
+        intent.putExtra("artisan", artisan)
+        startActivity(intent)
+    }
     //TODO rating system
-
 }
