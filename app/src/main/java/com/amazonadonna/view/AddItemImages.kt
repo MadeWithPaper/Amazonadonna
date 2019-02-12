@@ -18,10 +18,6 @@ import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import kotlinx.android.synthetic.main.activity_add_item_images.*
 import java.io.File
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.Bitmap
-
-
 
 
 class AddItemImages : AppCompatActivity() {
@@ -32,6 +28,8 @@ class AddItemImages : AppCompatActivity() {
 
     private val imageViewMap = SparseArray<ImageView>()
     //TODO add editMode functionality
+    //TODO limit pics to 300kb size
+
     var editMode : Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

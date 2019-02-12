@@ -15,7 +15,6 @@ import android.content.Intent
 import android.provider.MediaStore
 import android.support.v4.content.FileProvider
 import android.app.Activity
-import android.widget.Button
 import android.support.v4.app.ActivityCompat
 import android.provider.DocumentsContract
 import android.content.ContentUris
@@ -36,13 +35,6 @@ class AddArtisan : AppCompatActivity() {
         setContentView(R.layout.activity_add_artisan)
         val IMAGE_UPLOADING_PERMISSION = 3
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
-//        button_addArtisan.setOnClickListener{
-//            //Toast.makeText(this@AddArtisan, "add button clicked.", Toast.LENGTH_SHORT).show()
-//            makeNewArtisan()
-//        }
-
-        //val takePhoto: Button = findViewById(R.id.takePicture)
-        //val chooseFromAlbum: Button = findViewById(R.id.selectPicture)
 
         takePicture.setOnClickListener{
             takePhoto()
@@ -51,7 +43,6 @@ class AddArtisan : AppCompatActivity() {
         selectPicture.setOnClickListener{
             selectImageInAlbum()
         }
-
     }
 
     private fun selectImageInAlbum() {
@@ -134,23 +125,23 @@ class AddArtisan : AppCompatActivity() {
             CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-                        Log.d("AFTERPHOTO", "IT WORK 34")
-                        Log.d("AFTERPHOTO", "Exists?: " + photoFile!!.exists())
+                        Log.d("Add Artisan post photo", "Success")
+                        Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
                         setImageView()
                     }
                     catch(e: Error) {
-                        Log.d("AFTERPHOTO", "AINT WORK 34")
+                        Log.d("Add Artisan post Photo", "it failed")
                     }
                 }
             CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
                     if (data != null) {
                         createImageFile(data)
-                        Log.d("AFTERGALLERY", "File:  Exists?: " + photoFile!!.exists())
+                        Log.d("Add Artisan postGallery", "File:  Exists?: " + photoFile!!.exists())
                         setImageView()
                     }
                     else {
-                        Log.d("AFTERGALLERY", "Data was null")
+                        Log.d("Add Artisan postGallery", "Data was null")
                     }
                 }
             }
@@ -169,11 +160,10 @@ class AddArtisan : AppCompatActivity() {
 
     //TODO clean up
     fun makeNewArtisan() {
-        //Log.d("INFO", "add button clicked")
         var validFields = false
         //validate fields
         validFields = validateFields()
-        Log.d("INFO", "validate fields performed, result: " + validFields.toString())
+        Log.i("AddArtisan", "validate fields performed, result: " + validFields.toString())
         val name = editText_Name.text.toString()
         val bio = editText_bio.text.toString()
         val number = editText_ContactNumber.text.toString()
@@ -185,13 +175,13 @@ class AddArtisan : AppCompatActivity() {
             newArtisan.generateArtisanID()
             //parse location info
             parseLoc(newArtisan)
-            Log.d("INFO", "created new Artisan" + newArtisan.toString())
+            Log.i("AddArtisan", "created new Artisan" + newArtisan.toString())
 
             //pop screen and add
             submitToDB(newArtisan)
+
             //clear all fields
             clearFields()
-            Toast.makeText(this@AddArtisan, "Artisan added to database.", Toast.LENGTH_SHORT).show()
             super.onBackPressed()
         }
     }
@@ -200,16 +190,9 @@ class AddArtisan : AppCompatActivity() {
         val rawLoc = editText_loc.text.toString()
 
         val ind = rawLoc.indexOf(',')
-//
-//        System.out.print(rawLoc)
-//        System.out.print(ind)
-//        System.out.print(rawLoc.substring(0, ind))
-
 
         artisan.city = rawLoc.substring(0, ind)
         artisan.country = rawLoc.substring(ind+1)
-
-//        System.out.print(artisan)
     }
 
     fun clearFields() {
@@ -218,7 +201,7 @@ class AddArtisan : AppCompatActivity() {
         editText_bio.text.clear()
         editText_loc.text.clear()
 
-        Log.d("INFO", "Clearing fields")
+        Log.i("AddArtisan", "Clearing fields")
     }
 
     //Validate all fields entered
@@ -249,59 +232,15 @@ class AddArtisan : AppCompatActivity() {
             return false
         }
 
-//        if(photoFile == null) {
-//            Toast.makeText(this@AddArtisan, "No photo selected.", Toast.LENGTH_SHORT).show()
-//            return false
-//        }
-
         return true
     }
 
     // source file does not exist
     fun submitPictureToDB(artisan: Artisan) {
-
-//        val url = "https://4585da82.ngrok.io/updateArtisanImage"
-        Log.d("hitFunction", "we here")
-//            val sourceFile = File(Environment.getExternalStorageDirectory().path+"/handmade_logo.png")
         val sourceFile = photoFile!!
-        //val sourceFile = File("file:///android_asset/handmade_logo.png")
-        Log.d("drake", "File...::::" + sourceFile + " : " + sourceFile!!.exists())
+        Log.d("AddArtisan", "submitPictureToDB file" + sourceFile + " : " + sourceFile!!.exists())
 
-//
-//
-//       // val IMGUR_CLIENT_ID = "...";
-//        val MEDIA_TYPE_PNG = MediaType.parse("image/png");
-//
-//        val client = OkHttpClient();
-//
-//            // Use the imgur image upload API as documented at https://api.imgur.com/endpoints/image
-//            val requestBody = MultipartBody.Builder()
-//                    .setType(MultipartBody.FORM)
-//                    .addFormDataPart("artisanId", artisan.artisanID)
-//                    .addFormDataPart("image", "logo-square.png",
-//                            RequestBody.create(MEDIA_TYPE_PNG, sourceFile))
-//                    .build()
-//
-//            val request = Request.Builder()
-//                    .url(url)
-//                    .post(requestBody)
-//                    .build()
-//
-//        client.newCall(request).enqueue(object: Callback {
-//            override fun onResponse(call: Call?, response: Response?) {
-//                val body = response?.body()?.string()
-//                Log.d("INFO", body)
-//            }
-//
-//            override fun onFailure(call: Call?, e: IOException?) {
-//                Log.d("ERROR", "failed to do POST request to database")
-//            }
-//        })
-
-//
-//           // val MEDIA_TYPE = sourceImageFile.endsWith("png") ?
         val MEDIA_TYPE = MediaType.parse("image/png")
-
 
         val requestBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -318,43 +257,13 @@ class AddArtisan : AppCompatActivity() {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.d("INFO", body)
+                Log.d("AddArtisan", body)
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.d("ERROR", "failed to do POST request to database")
+                Log.e("AddArtisan", "failed to do POST request to database" + artisanPicURL)
             }
         })
-
-
-
-//        Log.d("hitFunction", "we here")
-//        val file = File("@drawable/handmade_logo.png")
-//        val url = "https://4585da82.ngrok.io/updateArtisanImage"
-//        val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
-//                .addFormDataPart("artisanId", artisan.artisanID)
-//                .addFormDataPart("image","test", RequestBody.create(MediaType.parse("image/jpeg"),Environment.getExternalStorageDirectory().path+"/hsadklf.png"))
-//                .build()
-//
-//        val client = OkHttpClient()
-//
-//        val request = Request.Builder()
-//                .url(url)
-//                .post(requestBody)
-//                .build()
-//
-//        client.newCall(request).enqueue(object: Callback {
-//            override fun onResponse(call: Call?, response: Response?) {
-//                val body = response?.body()?.string()
-//                Log.d("INFO", body)
-//            }
-//
-//            override fun onFailure(call: Call?, e: IOException?) {
-//                Log.d("ERROR", "failed to do POST request to database")
-//            }
-//        })
-
-
     }
 
     fun submitToDB(artisan: Artisan) {
@@ -384,7 +293,7 @@ class AddArtisan : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("AddArtisan", "failed to do POST request to database")
+                Log.e("AddArtisan", "failed to do POST request to database" + addArtisanURL)
             }
         })
     }
