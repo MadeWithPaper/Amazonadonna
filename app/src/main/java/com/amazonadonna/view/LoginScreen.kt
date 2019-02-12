@@ -68,7 +68,7 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     private var getUserInfoListener = object : Listener<User, AuthError> {
         override fun onSuccess(p0: User?) {
-            cgaID = p0!!.userId
+            cgaID = p0!!.userId.substringAfter("amzn1.account.")
             Log.d("CGAID",cgaID)
         }
 
