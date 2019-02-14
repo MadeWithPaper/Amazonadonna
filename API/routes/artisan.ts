@@ -42,7 +42,7 @@ router.post('/add', (req: Request, res: Response) => {
             bio: { S: req.body.bio },
             city: { S: req.body.city },
             country: { S: req.body.country },
-            name: { S: req.body.name },
+            artisanName: { S: req.body.artisanName },
             lat: { N: req.body.lat },
             lon: { N: req.body.lon },
             balance: { N: req.body.balance },
@@ -159,7 +159,9 @@ router.post('/edit', (req: Request, res: Response) => {
                 country: req.body.country
                     ? req.body.country
                     : unmarshed.country,
-                name: req.body.name ? req.body.name : unmarshed.name,
+                artisanName: req.body.artisanName
+                    ? req.body.artisanName
+                    : unmarshed.artisanName,
                 lat: req.body.lat ? req.body.lat : unmarshed.lat,
                 lon: req.body.lon ? req.body.lon : unmarshed.lon,
                 balance: req.body.balance
@@ -175,7 +177,7 @@ router.post('/edit', (req: Request, res: Response) => {
                                     bio = :bio, 
                                     city = :city,
                                     country = :country,
-                                    name = :name,
+                                    artisanName = :artisanName,
                                     lat = :lat,
                                     lon = :lon,
                                     balance = :balance,
@@ -185,7 +187,7 @@ router.post('/edit', (req: Request, res: Response) => {
                     ':bio': { S: whatToUpdate.bio },
                     ':city': { S: whatToUpdate.city },
                     ':country': { S: whatToUpdate.country },
-                    ':name': { S: whatToUpdate.name },
+                    ':artisanName': { S: whatToUpdate.artisanName },
                     ':lat': { N: whatToUpdate.lat.toString() },
                     ':lon': { N: whatToUpdate.lon.toString() },
                     ':balance': { N: whatToUpdate.balance.toString() },

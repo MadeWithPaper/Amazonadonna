@@ -4,7 +4,7 @@ interface Artisan {
     bio: string
     city: string
     country: string
-    name: string
+    artisanName: string
     lat: number
     lon: number
     balance: number
