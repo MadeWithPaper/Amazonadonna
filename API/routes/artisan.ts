@@ -5,6 +5,7 @@ import * as multerS3 from 'multer-s3'
 import * as mime from 'mime'
 import { ddb, s3 } from '../server'
 import { unmarshUtil } from '../utilities/unmarshall'
+import { Artisan } from '../models/artisan'
 
 const router = Router()
 
@@ -44,6 +45,7 @@ router.post('/add', (req: Request, res: Response) => {
             name: { S: req.body.name },
             lat: { N: req.body.lat },
             lon: { N: req.body.lon },
+            balance: { N: req.body.balance },
             picURL: { S: 'Not set' }
         }
     }
@@ -130,6 +132,76 @@ router.post('/getById', (req: Request, res: Response) => {
             res.status(400).send(msg + err.message)
         } else {
             res.json(aws.DynamoDB.Converter.unmarshall(data.Item))
+        }
+    })
+})
+
+router.post('/edit', (req: Request, res: Response) => {
+    // Get current artisan data
+    const getArtisanParams: aws.DynamoDB.Types.GetItemInput = {
+        TableName: 'artisan',
+        Key: { itemId: { S: req.body.artisanId } }
+    }
+    ddb.getItem(getArtisanParams, (err, data) => {
+        if (err) {
+            const msg = 'Error getting artisan in artisan/edit/getArtisan: '
+            console.log(msg + err)
+            res.status(400).send(msg + err.message)
+        } else {
+            const unmarshed = aws.DynamoDB.Converter.unmarshall(data.Item)
+            const whatToUpdate: Artisan = {
+                artisanId: req.body.artisanId
+                    ? req.body.artisanId
+                    : unmarshed.artisanId,
+                cgoId: req.body.cgoId ? req.body.cgoId : unmarshed.cgoId,
+                bio: req.body.bio ? req.body.bio : unmarshed.bio,
+                city: req.body.city ? req.body.city : unmarshed.city,
+                country: req.body.country
+                    ? req.body.country
+                    : unmarshed.country,
+                name: req.body.name ? req.body.name : unmarshed.name,
+                lat: req.body.lat ? req.body.lat : unmarshed.lat,
+                lon: req.body.lon ? req.body.lon : unmarshed.lon,
+                balance: req.body.balance
+                    ? req.body.balance
+                    : unmarshed.balance,
+                picURL: req.body.picURL ? req.body.picURL : unmarshed.picURL
+            }
+
+            const editArtisanParam: aws.DynamoDB.Types.UpdateItemInput = {
+                TableName: 'item',
+                Key: { artisanId: { S: req.body.artisanId } },
+                UpdateExpression: `set cgoId = :cgoId, 
+                                    bio = :bio, 
+                                    city = :city,
+                                    country = :country,
+                                    name = :name,
+                                    lat = :lat,
+                                    lon = :lon,
+                                    balance = :balance,
+                                    picURL = :picURL`,
+                ExpressionAttributeValues: {
+                    ':cgoId': { S: whatToUpdate.cgoId },
+                    ':bio': { S: whatToUpdate.bio },
+                    ':city': { S: whatToUpdate.city },
+                    ':country': { S: whatToUpdate.country },
+                    ':name': { S: whatToUpdate.name },
+                    ':lat': { N: whatToUpdate.lat.toString() },
+                    ':lon': { N: whatToUpdate.lon.toString() },
+                    ':balance': { N: whatToUpdate.balance.toString() },
+                    ':picURL': { S: whatToUpdate.picURL }
+                },
+                ReturnValues: 'UPDATED_NEW'
+            }
+            ddb.updateItem(editArtisanParam, (updateErr, updateData) => {
+                if (updateErr) {
+                    const msg = 'Error updating item in item/editItem: '
+                    console.log(msg + updateErr)
+                    res.status(400).send(msg + updateErr.message)
+                } else {
+                    res.send('Success!')
+                }
+            })
         }
     })
 })
