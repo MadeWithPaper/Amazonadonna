@@ -18,9 +18,9 @@ interface ArtisanDao {
     @Query("SELECT * FROM artisan WHERE artisanId IN (:artisanIds)")
     fun loadAllByIds(artisanIds: IntArray): List<Artisan>
 
-    @Query("SELECT * FROM artisan WHERE name LIKE :name " +
+    @Query("SELECT * FROM artisan WHERE artisanName LIKE :artisanName " +
             "LIMIT 1")
-    fun findByName(name: String): Artisan
+    fun findByName(artisanName: String): Artisan
 
     @Query("SELECT * FROM artisan WHERE artisanId LIKE :id " +
             "LIMIT 1")
