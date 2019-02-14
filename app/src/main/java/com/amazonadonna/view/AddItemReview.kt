@@ -141,6 +141,7 @@ class AddItemReview : AppCompatActivity() {
         val dialog : AlertDialog = builder.create()
         dialog.show()
     }
+
     //TODO change product pic to an array of url as it can have more than one pic or have multiple fields for the images
     fun submitPictureToDB(product: Product) {
 //

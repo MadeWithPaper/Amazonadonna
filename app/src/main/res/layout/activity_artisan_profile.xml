@@ -42,16 +42,23 @@
         android:layout_marginEnd="8dp"
         android:text="Artisan Profile"
         android:textAlignment="center"
-        android:scrollbars = "vertical"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:scrollbarFadeDuration="0"
-        android:verticalScrollbarPosition="right"
-        android:scrollbarSize="2dp"
         android:textSize="25sp"
         android:textColor="#fff"
         app:layout_constraintEnd_toEndOf="@+id/artisanProfileToolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/artisanProfile_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/artisanProfileToolbar"
+        app:layout_constraintEnd_toEndOf="@+id/artisanProfileToolbar"
+        app:layout_constraintTop_toTopOf="@+id/artisanProfileToolbar" />
 
     <TextView
         android:id="@+id/artisanProfileName"
@@ -79,6 +86,11 @@
         android:textAlignment="gravity"
         android:textColor="#000"
         android:textSize="20sp"
+        android:scrollbars = "vertical"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbarFadeDuration="0"
+        android:verticalScrollbarPosition="right"
+        android:scrollbarSize="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -98,7 +110,7 @@
         app:srcCompat="@drawable/messages" />
 
     <ImageButton
-        android:id="@+id/artisanProfileOrdersButton"
+        android:id="@+id/artisanProfilePayoutButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="20dp"
@@ -110,7 +122,7 @@
         app:layout_constraintEnd_toStartOf="@+id/artisanProfileItemListButton"
         app:layout_constraintStart_toEndOf="@+id/artisanProfileMessagesButton"
         app:layout_constraintTop_toBottomOf="@+id/artisanProfileBio"
-        app:srcCompat="@drawable/orders" />
+        app:srcCompat="@drawable/money_icon" />
 
     <ImageButton
         android:id="@+id/artisanProfileItemListButton"
