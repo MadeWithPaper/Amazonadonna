@@ -171,7 +171,7 @@ router.post('/edit', (req: Request, res: Response) => {
             }
 
             const editArtisanParam: aws.DynamoDB.Types.UpdateItemInput = {
-                TableName: 'item',
+                TableName: 'artisan',
                 Key: { artisanId: { S: req.body.artisanId } },
                 UpdateExpression: `set cgoId = :cgoId, 
                                     bio = :bio, 
@@ -197,7 +197,7 @@ router.post('/edit', (req: Request, res: Response) => {
             }
             ddb.updateItem(editArtisanParam, (updateErr, updateData) => {
                 if (updateErr) {
-                    const msg = 'Error updating item in item/editItem: '
+                    const msg = 'Error updating artisan in artisan/edit: '
                     console.log(msg + updateErr)
                     res.status(400).send(msg + updateErr.message)
                 } else {
