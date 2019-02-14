@@ -8,6 +8,7 @@ import * as aws from 'aws-sdk'
 import { artisanRouter } from './routes/artisan'
 import { orderRouter } from './routes/order'
 import { itemRouter } from './routes/item'
+import { cgoRouter } from './routes/cgo'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -50,5 +51,6 @@ app.get('/', (req: express.Request, res: express.Response) => {
 app.use('/artisan', artisanRouter)
 app.use('/order', orderRouter)
 app.use('/item', itemRouter)
+app.use('/cgo', cgoRouter)
 
 export { app as server, ddb, s3 }

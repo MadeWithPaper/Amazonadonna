@@ -160,17 +160,15 @@ class AddArtisan : AppCompatActivity() {
 
     //TODO clean up
     fun makeNewArtisan() {
-        var validFields = false
         //validate fields
-        validFields = validateFields()
-        Log.i("AddArtisan", "validate fields performed, result: " + validFields.toString())
+        if (!validateFields()) {
+            return
+        }
         val name = editText_Name.text.toString()
         val bio = editText_bio.text.toString()
         val number = editText_ContactNumber.text.toString()
 
-
-        if (validFields) {
-            val newArtisan = Artisan(name, "", "", "", bio, "0",0.0,0.0, "")
+         val newArtisan = Artisan(name, "", "", "", bio, "0",0.0,0.0, "", 0.0)
             //TODO move to back end soon
             newArtisan.generateArtisanID()
             //parse location info
@@ -183,7 +181,7 @@ class AddArtisan : AppCompatActivity() {
             //clear all fields
             clearFields()
             super.onBackPressed()
-        }
+
     }
 
     fun parseLoc (artisan: Artisan) {
@@ -267,6 +265,14 @@ class AddArtisan : AppCompatActivity() {
     }
 
     fun submitToDB(artisan: Artisan) {
+
+        //TODO clean up when id generation is moved to backend
+//        if (!validateFields()) {
+//            return
+//        }
+//        val name = editText_Name.text.toString()
+//        val bio = editText_bio.text.toString()
+//        val number = editText_ContactNumber.text.toString()
 
         val requestBody = FormBody.Builder().add("artisanId",artisan.artisanId)
                 .add("cgoId", artisan.cgoId)

@@ -4,32 +4,27 @@ import * as multer from 'multer'
 import * as multerS3 from 'multer-s3'
 import * as mime from 'mime'
 import { ddb, s3 } from '../server'
+import { unmarshUtil } from '../utilities/unmarshall'
 
 const router = Router()
 
-router.get('/listAll', (req: Request, res: Response) => {
+router.post('/listAllForCgo', (req: Request, res: Response) => {
     const listAllArtisansParams: aws.DynamoDB.Types.QueryInput = {
         TableName: 'artisan',
         IndexName: 'cgoId-index',
         KeyConditionExpression: 'cgoId = :id',
         ExpressionAttributeValues: {
-            ':id': { S: '0' }
+            ':id': { S: req.body.cgoId }
         }
     }
 
     ddb.query(listAllArtisansParams, (err, data) => {
         if (err) {
-            console.log('Error fetching artisans in artisan/listAll: ' + err)
-            res.status(400).send(
-                'Error fetching artisans in artisan/listAll: ' + err.message
-            )
+            const msg = 'Error fetching artisans in artisan/listAllForCgo: '
+            console.log(msg + err)
+            res.status(400).send(msg + err.message)
         } else {
-            const convert = data.Items.map(item => {
-                return new Promise(resolve => {
-                    const unmarshed = aws.DynamoDB.Converter.unmarshall(item)
-                    resolve(unmarshed)
-                })
-            })
+            const convert = unmarshUtil(data.Items)
             Promise.all(convert).then(items => {
                 res.json(items)
             })
@@ -54,10 +49,9 @@ router.post('/add', (req: Request, res: Response) => {
     }
     ddb.putItem(putItemParams, (err, data) => {
         if (err) {
-            console.log('Error adding artisan in artisan/add: ', err)
-            res.status(400).send(
-                'Error adding artisan in artisan/add: ' + err.message
-            )
+            const msg = 'Error adding artisan in artisan/add: '
+            console.log(msg, err)
+            res.status(400).send(msg + err.message)
         } else {
             res.send('Successfully added')
         }
@@ -91,10 +85,9 @@ router.post('/updateImage', (req: Request, res: Response) => {
     // upload pic
     singleArtisanPicUpload(req, res, picErr => {
         if (picErr) {
-            console.log('Error uploading picture in artisan/update', picErr)
-            res.status(422).send(
-                'Error uploading picture in artisan/update: ' + picErr.message
-            )
+            const msg = 'Error uploading picture in artisan/update'
+            console.log(msg, picErr)
+            res.status(422).send(msg + picErr.message)
         } else {
             let picURL = 'Error: no picture attached'
             if (req.file) {
@@ -112,17 +105,10 @@ router.post('/updateImage', (req: Request, res: Response) => {
             // check string, params
             ddb.updateItem(params, (err, data) => {
                 if (err) {
-                    console.log(
-                        'Error updating artisan record ' +
-                            req.body.artisanId +
-                            ' : ' +
-                            err
-                    )
+                    const msg = 'Error updating artisan record '
+                    console.log(msg + req.body.artisanId + ' : ' + err)
                     res.status(400).send(
-                        'Error updating artisan record ' +
-                            req.body.artisanId +
-                            ' : ' +
-                            err.message
+                        msg + req.body.artisanId + ' : ' + err.message
                     )
                 } else {
                     res.json({ imageUrl: picURL })
@@ -139,10 +125,9 @@ router.post('/getById', (req: Request, res: Response) => {
     }
     ddb.getItem(getArtisanParams, (err, data) => {
         if (err) {
-            console.log('Error getting all artisan in artisan/getById: ' + err)
-            res.status(400).send(
-                'Error getting all artisans in artisan/getById: ' + err.message
-            )
+            const msg = 'Error getting all artisans in artisan/getById: '
+            console.log(msg + err)
+            res.status(400).send(msg + err.message)
         } else {
             res.json(aws.DynamoDB.Converter.unmarshall(data.Item))
         }
