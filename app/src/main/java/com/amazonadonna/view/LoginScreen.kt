@@ -40,12 +40,15 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      **/
+    private var cgaID : String? = null
     private var mAuthTask: UserLoginTask? = null
     private var context : Context = this
     private var requestContext : RequestContext = RequestContext.create(context)
+
     private var signUpListener = object  : AuthorizeListener() {
         /* Authorization was completed successfully. */
         override fun onSuccess(result: AuthorizeResult) {
+            User.fetch(context, getUserInfoListener)
             /* Your app is now authorized for the requested scopes */
             val intent = Intent(this@LoginScreen, HomeScreen::class.java)
             startActivity(intent)
@@ -62,9 +65,23 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
             /* Reset the UI to a ready-to-login state */
         }
     }
+
+    private var getUserInfoListener = object : Listener<User, AuthError> {
+        override fun onSuccess(p0: User?) {
+            cgaID = p0!!.userId.substringAfter("amzn1.account.")
+            Log.d("CGAID",cgaID)
+        }
+
+        override fun onError(ae: AuthError?) {
+            //To change body of created functions use File | Settings | File Templates.
+        }
+    }
+
     private var checkTokenListener = object  : Listener<AuthorizeResult, AuthError> {
         override fun onSuccess(ar: AuthorizeResult?) {
             if(ar?.accessToken != null) { //user already signed in to app
+                User.fetch(context, getUserInfoListener)
+
                 val intent = Intent(this@LoginScreen, HomeScreen::class.java)
                 startActivity(intent)
                 Log.d("TOKEN", ar?.accessToken)
@@ -97,7 +114,7 @@ class LoginScreen : AppCompatActivity(), LoaderCallbacks<Cursor> {
         login_with_amazon.setOnClickListener(View.OnClickListener {
             _ -> AuthorizationManager.authorize(AuthorizeRequest
                         .Builder(requestContext)
-                        .addScopes(ProfileScope.profile(), ProfileScope.postalCode())
+                        .addScopes(ProfileScope.profile(),  ProfileScope.userId())
                         .build())
         })
     }
