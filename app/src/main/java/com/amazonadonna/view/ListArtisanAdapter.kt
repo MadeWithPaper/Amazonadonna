@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Callback
 import java.net.URL
 import com.amazonadonna.database.ImageStorageProvider
+import android.support.v7.widget.SearchView
 
 
 class ListArtisanAdapter (private val context: Context, private val artisans : List<Artisan>) : RecyclerView.Adapter<ArtisanViewHolder> () {

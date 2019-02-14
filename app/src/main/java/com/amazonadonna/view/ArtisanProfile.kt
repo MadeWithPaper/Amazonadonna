@@ -32,7 +32,7 @@ class ArtisanProfile() : AppCompatActivity() {
         }
 
         artisanProfilePayoutButton.setOnClickListener {
-            listArtisanOrders(artisan)
+            artisanPayout(artisan)
         }
 
         artisanProfile_edit.setOnClickListener {
@@ -58,8 +58,9 @@ class ArtisanProfile() : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun listArtisanOrders(artisan: Artisan){
-        val intent = Intent(this, ListOrders::class.java)
+    private fun artisanPayout(artisan: Artisan){
+        val intent = Intent(this, ArtisanPayout::class.java)
+        intent.putExtra("artisan", artisan)
         startActivity(intent)
     }
 
