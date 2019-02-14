@@ -140,7 +140,7 @@ router.post('/edit', (req: Request, res: Response) => {
     // Get current artisan data
     const getArtisanParams: aws.DynamoDB.Types.GetItemInput = {
         TableName: 'artisan',
-        Key: { itemId: { S: req.body.artisanId } }
+        Key: { artisanId: { S: req.body.artisanId } }
     }
     ddb.getItem(getArtisanParams, (err, data) => {
         if (err) {
