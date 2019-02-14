@@ -47,7 +47,7 @@ class ArtisanProfile() : AppCompatActivity() {
         else
             this.artisanProfilePicture.setImageResource(R.drawable.placeholder)
 
-        artisanProfileName.text = artisan.name
+        artisanProfileName.text = artisan.artisanName
         artisanProfileBio.text = artisan.bio
 
     }

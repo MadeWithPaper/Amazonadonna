@@ -23,7 +23,7 @@ class EditArtisan : AppCompatActivity() {
         //fill in information from old artisan
         editArtisanBio.setText(oldArtisan.bio)
         editArtisan_cc.setText(oldArtisan.city + "," + oldArtisan.country)
-        editArtisan_name.setText(oldArtisan.name)
+        editArtisan_name.setText(oldArtisan.artisanName)
         editArtisan_number.setText("1234567")
         editArisan_SaveButton.setOnClickListener {
             updateArtisan(oldArtisan)

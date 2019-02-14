@@ -279,7 +279,7 @@ class AddArtisan : AppCompatActivity() {
                 .add("bio", artisan.bio)
                 .add("city",artisan.city)
                 .add("country", artisan.country)
-                .add("name", artisan.name)
+                .add("artisanName", artisan.artisanName)
                 .add("lat", artisan.lat.toString())
                 .add("lon", artisan.lon.toString())
                 .build()

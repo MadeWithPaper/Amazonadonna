@@ -36,17 +36,17 @@ class ArtisanPayout : AppCompatActivity() {
     private fun pickDate() {
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
+        val month = c.get(Calendar.MONTH)+1
         val day = c.get(Calendar.DAY_OF_MONTH)
 
-        //Log.i("ArtisanPayout", "before Date: " + month + "/" + day + "/" + year)
+        Log.i("ArtisanPayout", "before Date: " + month + "/" + day + "/" + year)
 
         val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
             // Display Selected date in textbox
             Log.i("ArtisanPayout", "new picked Date: " + monthOfYear + "/" + dayOfMonth + "/" + year)
             artisanPayout_dateTV.setText("Date: " + monthOfYear + "/" + dayOfMonth + "/" + year)
             //lblDate.setText("" + dayOfMonth + " " + MONTHS[monthOfYear] + ", " + year)
-        }, year, month+1, day)
+        }, year, month, day)
 
         //Log.i("ArtisanPayout", "Date: " + month + "/" + day + "/" + year)
 
