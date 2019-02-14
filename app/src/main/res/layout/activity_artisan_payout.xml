@@ -59,21 +59,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/artisanPayout_amountTV" />
 
-    <EditText
-        android:id="@+id/artisanPayout_date"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:ems="10"
-        android:hint="Payout Date"
-        android:inputType="date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/artisanPayout_dateTV" />
-
     <TextView
         android:id="@+id/artisanPayout_amountTV"
         android:layout_width="wrap_content"
@@ -91,11 +76,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:text="TextView:"
+        android:layout_marginTop="30dp"
+        android:text="Payout Date:"
         android:textColor="#000"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/artisanPayout_amount" />
+
+    <ImageButton
+        android:id="@+id/artisanPayout_datePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/artisanPayout_dateTV"
+        app:layout_constraintTop_toBottomOf="@+id/artisanPayout_amount"
+        app:srcCompat="@android:drawable/ic_menu_my_calendar" />
 
 </android.support.constraint.ConstraintLayout>

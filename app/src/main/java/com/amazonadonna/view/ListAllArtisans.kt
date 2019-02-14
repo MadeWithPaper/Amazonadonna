@@ -16,9 +16,12 @@ import android.support.v7.widget.DividerItemDecoration
 import android.view.Menu
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.database.ArtisanDao
+import kotlinx.android.synthetic.main.activity_edit_artisan.*
 
 
 class ListAllArtisans : AppCompatActivity() {
+
+    val listAllArtisansURL = "https://7bd92aed.ngrok.io/artisan/listAllForCgo"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,20 +63,28 @@ class ListAllArtisans : AppCompatActivity() {
     }
 
     private fun fetchJSON() {
-        val url = "https://7bd92aed.ngrok.io/artisan/listAll"
-        val request = Request.Builder().url(url).build()
+        //TODO update cgo id to real
+        val requestBody = FormBody.Builder().add("cgoId", "0")
+                .build()
+
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+                .url(listAllArtisansURL)
+                .post(requestBody)
+                .build()
+
         val db = Room.databaseBuilder(
                 applicationContext,
                 AppDatabase::class.java, "amazonadonna-main"
         ).fallbackToDestructiveMigration().build()
         val artisanDao = db.artisanDao()
 
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object: Callback {
+        client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
+                Log.i("ListAllArtisan", "response body: " + body)
 
-                println(body)
                 val gson = GsonBuilder().create()
                 //val artisans : List<com.amazonadonna.model.Artisan> =  gson.fromJson(body, mutableListOf<com.amazonadonna.model.Artisan>().javaClass)
                 //System.out.print(artisans.get(0))
@@ -88,9 +99,40 @@ class ListAllArtisans : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                println("Failed to execute request")
-                Log.d("ERROR", "Failed to execute GET request to " + url)
+                Log.e("ListAllArtisan", "failed to do POST request to database" + listAllArtisansURL)
             }
         })
+
+//        val request = Request.Builder().url(listAllArtisansURL).build()
+//        val db = Room.databaseBuilder(
+//                applicationContext,
+//                AppDatabase::class.java, "amazonadonna-main"
+//        ).fallbackToDestructiveMigration().build()
+//        val artisanDao = db.artisanDao()
+//
+//        val client = OkHttpClient()
+//        client.newCall(request).enqueue(object: Callback {
+//            override fun onResponse(call: Call?, response: Response?) {
+//                val body = response?.body()?.string()
+//
+//                println(body)
+//                val gson = GsonBuilder().create()
+//                //val artisans : List<com.amazonadonna.model.Artisan> =  gson.fromJson(body, mutableListOf<com.amazonadonna.model.Artisan>().javaClass)
+//                //System.out.print(artisans.get(0))
+//                val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
+//
+//                artisanDao.insertAll(artisans)
+//
+//                runOnUiThread {
+//                    recyclerView_listAllartisans.adapter = ListArtisanAdapter(applicationContext, artisans)
+//                }
+//
+//            }
+//
+//            override fun onFailure(call: Call?, e: IOException?) {
+//                println("Failed to execute request")
+//                Log.d("ERROR", "Failed to execute GET request to " + listAllArtisansURL)
+//            }
+//        })
     }
 }

@@ -60,7 +60,7 @@ class ArtisanProfile() : AppCompatActivity() {
 
     private fun artisanPayout(artisan: Artisan){
         val intent = Intent(this, ArtisanPayout::class.java)
-        intent.putExtra("balance", 0.0)
+        intent.putExtra("artisan", artisan)
         startActivity(intent)
     }
 
