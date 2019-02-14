@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express'
 import * as aws from 'aws-sdk'
 import { ddb } from '../server'
 import { OrderItem } from '../models/orderItem'
+import { unmarshUtil } from '../utilities/unmarshall'
 
 const router = Router()
 
@@ -21,12 +22,7 @@ router.get('/listAll', (req: Request, res: Response) => {
                 'Error fetching orders in order/listAll: ' + err.message
             )
         } else {
-            const convert = data.Items.map(item => {
-                return new Promise(resolve => {
-                    const unmarshed = aws.DynamoDB.Converter.unmarshall(item)
-                    resolve(unmarshed)
-                })
-            })
+            const convert = unmarshUtil(data.Items)
             Promise.all(convert).then(items => {
                 res.json(items)
             })
@@ -38,14 +34,13 @@ router.post('/add', (req: Request, res: Response) => {
     const params: aws.DynamoDB.PutItemInput = {
         TableName: 'order',
         Item: {
-            orderId: { S: req.body.orderd },
+            orderId: { S: req.body.orderId },
             cgoId: { S: req.body.cgoId },
             shippedStatus: { BOOL: req.body.shippedStatus },
             numItems: { N: req.body.numItems },
             shippingAddress: { S: req.body.shippingAddress },
             totalCostDollars: { N: req.body.totalCostDollars },
             totalCostCents: { N: req.body.totalCostCents }
-            /*products: {List<Product>}*/
         }
     }
     ddb.putItem(params, (err, data) => {
@@ -76,12 +71,7 @@ router.post('/getItems', (req: Request, res: Response) => {
                 'Error fetching orderItem in order/getItems: ' + err.message
             )
         } else {
-            const convert = data.Items.map(item => {
-                return new Promise(resolve => {
-                    const unmarshed = aws.DynamoDB.Converter.unmarshall(item)
-                    resolve(unmarshed)
-                })
-            })
+            const convert = unmarshUtil(data.Items)
             Promise.all(convert).then((items: OrderItem[]) => {
                 const queryItems = items.map(item => {
                     return new Promise(resolve => {
@@ -157,4 +147,4 @@ router.post('/setShippedStatus', (req: Request, res: Response) => {
     })
 })
 
-export { router as orderRouter } /*where to update orderRouter*/
+export { router as orderRouter }

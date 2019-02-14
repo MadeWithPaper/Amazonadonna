@@ -4,6 +4,7 @@ import * as multer from 'multer'
 import * as multerS3 from 'multer-s3'
 import * as mime from 'mime'
 import { ddb, s3 } from '../server'
+import { unmarshUtil } from '../utilities/unmarshall'
 
 const router = Router()
 
@@ -24,12 +25,7 @@ router.get('/listAll', (req: Request, res: Response) => {
                 'Error fetching artisans in artisan/listAll: ' + err.message
             )
         } else {
-            const convert = data.Items.map(item => {
-                return new Promise(resolve => {
-                    const unmarshed = aws.DynamoDB.Converter.unmarshall(item)
-                    resolve(unmarshed)
-                })
-            })
+            const convert = unmarshUtil(data.Items)
             Promise.all(convert).then(items => {
                 res.json(items)
             })
