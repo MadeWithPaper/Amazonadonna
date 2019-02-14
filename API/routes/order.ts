@@ -6,21 +6,20 @@ import { unmarshUtil } from '../utilities/unmarshall'
 
 const router = Router()
 
-router.get('/listAll', (req: Request, res: Response) => {
+router.post('/listAllForCgo', (req: Request, res: Response) => {
     const listAllOrdersParams: aws.DynamoDB.Types.QueryInput = {
         TableName: 'order',
         IndexName: 'cgoId-index',
         KeyConditionExpression: 'cgoId = :id',
         ExpressionAttributeValues: {
-            ':id': { S: '0' }
+            ':id': { S: req.body.cgoId }
         }
     }
     ddb.query(listAllOrdersParams, (err, data) => {
         if (err) {
-            console.log('Error fetching orders in order/listAll: ' + err)
-            res.status(400).send(
-                'Error fetching orders in order/listAll: ' + err.message
-            )
+            const msg = 'Error fetching orders in order/listAll: '
+            console.log(msg + err)
+            res.status(400).send(msg + err.message)
         } else {
             const convert = unmarshUtil(data.Items)
             Promise.all(convert).then(items => {
