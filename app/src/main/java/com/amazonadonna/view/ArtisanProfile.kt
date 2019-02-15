@@ -56,18 +56,21 @@ class ArtisanProfile() : AppCompatActivity() {
         val intent = Intent(this, ArtisanItemList::class.java)
         intent.putExtra("selectedArtisan", artisan)
         startActivity(intent)
+        finish()
     }
 
     private fun artisanPayout(artisan: Artisan){
         val intent = Intent(this, ArtisanPayout::class.java)
         intent.putExtra("artisan", artisan)
         startActivity(intent)
+        finish()
     }
 
     private fun editArtisan(artisan: Artisan) {
         val intent = Intent(this, EditArtisan::class.java)
         intent.putExtra("artisan", artisan)
         startActivity(intent)
+        finish()
     }
     //TODO rating system
 }

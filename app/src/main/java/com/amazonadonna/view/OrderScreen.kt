@@ -19,6 +19,7 @@ import java.io.IOException
 
 class OrderScreen : AppCompatActivity() {
     var orderIdString = ""
+    val getItemURL = "https://7bd92aed.ngrok.io/order/getItems"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,11 +49,10 @@ class OrderScreen : AppCompatActivity() {
 
         //TODO update "artisanDao" to be productDao
     private fun fetchJSON() {
-        val url = "https://7bd92aed.ngrok.io/order/getItems"
         val requestBody = FormBody.Builder()
                 .add("orderId", orderIdString)
                 .build()
-        val request = Request.Builder().url(url).post(requestBody).build()
+        val request = Request.Builder().url(getItemURL).post(requestBody).build()
         val db = Room.databaseBuilder(
                 applicationContext,
                 AppDatabase::class.java, "amazonadonna-main"
@@ -79,7 +79,7 @@ class OrderScreen : AppCompatActivity() {
 
             override fun onFailure(call: Call?, e: IOException?) {
                 println("Failed to execute request")
-                Log.d("ERROR", "Failed to execute GET request to " + url)
+                Log.d("ERROR", "Failed to execute GET request to " + getItemURL)
             }
         })
     }

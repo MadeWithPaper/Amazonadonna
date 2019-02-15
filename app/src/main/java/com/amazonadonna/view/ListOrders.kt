@@ -19,6 +19,7 @@ import java.io.IOException
 
 class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
+    val listOrderURL = "https://7bd92aed.ngrok.io/order/listAll"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_orders)
@@ -41,8 +42,7 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
     }
 
     private fun fetchJSON() {
-        val url = "https://7bd92aed.ngrok.io/order/listAll"
-        val request = Request.Builder().url(url).build()
+        val request = Request.Builder().url(listOrderURL).build()
         val db = Room.databaseBuilder(
                 applicationContext,
                 AppDatabase::class.java, "amazonadonna-main"
@@ -69,7 +69,7 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
             override fun onFailure(call: Call?, e: IOException?) {
                 println("Failed to execute request")
-                Log.d("ERROR", "Failed to execute GET request to " + url)
+                Log.d("ERROR", "Failed to execute GET request to " + listOrderURL)
             }
         })
     }

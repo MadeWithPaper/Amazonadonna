@@ -7,11 +7,8 @@ import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.activity_artisan_payout.*
 import java.text.SimpleDateFormat
 import java.util.*
-import android.widget.DatePicker
 import android.app.DatePickerDialog
 import android.util.Log
-import java.time.Month
-import javax.xml.datatype.DatatypeConstants.MONTHS
 
 
 class ArtisanPayout : AppCompatActivity() {
@@ -34,7 +31,7 @@ class ArtisanPayout : AppCompatActivity() {
     }
 
     private fun pickDate() {
-        var date: Calendar = Calendar.getInstance()
+        val date: Calendar = Calendar.getInstance()
         var initYear = date.get(Calendar.YEAR)
         var initMonth = date.get(Calendar.MONTH)
         var initDay = date.get(Calendar.DAY_OF_MONTH)
@@ -48,9 +45,6 @@ class ArtisanPayout : AppCompatActivity() {
             artisanPayout_dateTV.setText("Date: " + initMonth + "/" + initDay + "/" + initYear)
             //lblDate.setText("" + dayOfMonth + " " + MONTHS[monthOfYear] + ", " + year)
         }, initYear, initMonth, initDay)
-
-        //Log.i("ArtisanPayout", "Date: " + month + "/" + day + "/" + year)
-
         dpd.show()
     }
 
@@ -59,6 +53,7 @@ class ArtisanPayout : AppCompatActivity() {
         val date = Date()
         return dateFormat.format(date)
     }
+
     private fun continueToSignature() {
         val intent = Intent(this, PayoutSignature::class.java)
         startActivity(intent)
