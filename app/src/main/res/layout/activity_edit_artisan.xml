@@ -86,6 +86,24 @@
         app:layout_constraintTop_toBottomOf="@+id/editArtisanProfileToolbar"
         app:srcCompat="@drawable/placeholder" />
 
+    <Button
+        android:id="@+id/editTakePicture"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="0dp"
+        android:background="@android:drawable/ic_menu_camera"
+        app:layout_constraintBottom_toBottomOf="@+id/editArtisan_pic"
+        app:layout_constraintStart_toStartOf="@+id/editArtisan_pic" />
+
+    <Button
+        android:id="@+id/editSelectPicture"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="110dp"
+        android:background="@android:drawable/ic_menu_gallery"
+        app:layout_constraintBottom_toBottomOf="@+id/editArtisan_pic"
+        app:layout_constraintStart_toStartOf="@+id/editArtisan_pic" />
+
     <EditText
         android:id="@+id/editArtisan_number"
         android:layout_width="0dp"
