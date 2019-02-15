@@ -169,22 +169,13 @@ class EditArtisan : AppCompatActivity() {
         }
     }
 
-//    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-//        when (requestCode) {
-//            3 -> {
-//                button_EditArtisan.setOnClickListener{
-//                    //Toast.makeText(this@EditArtisan, "add button clicked.", Toast.LENGTH_SHORT).show()
-//                    makeNewArtisan()
-//                }
-//            }
-//        }
-//    }
     private fun parseLoc () : Pair<String, String> {
         val rawLoc = editArtisan_cc.text.toString()
         val ind = rawLoc.indexOf(',')
         return Pair(rawLoc.substring(0, ind), rawLoc.substring(ind+1))
     }
 
+    //TODO need to update pic on back button
     private fun updateArtisan(oldArtisan : Artisan) {
         if (!validateFields()) {
             return
