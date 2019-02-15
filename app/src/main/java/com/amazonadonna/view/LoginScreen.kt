@@ -33,7 +33,7 @@ class LoginScreen : AppCompatActivity() {
             User.fetch(this@LoginScreen, getUserInfoListener)
             /* Your app is now authorized for the requested scopes */
             val intent = Intent(this@LoginScreen, HomeScreen::class.java)
-            intent.putExtra("cgaId", cgaID!!)
+//            intent.putExtra("cgaId", cgaID!!)
             startActivity(intent)
             finish()
         }
@@ -55,7 +55,7 @@ class LoginScreen : AppCompatActivity() {
                 User.fetch(this@LoginScreen, getUserInfoListener)
 
                 val intent = Intent(this@LoginScreen, HomeScreen::class.java)
-                intent.putExtra("cgaId", cgaID!!)
+//                intent.putExtra("cgaId", cgaID!!)
                 startActivity(intent)
                 Log.d("LoginScreen", ar?.accessToken)
                 finish()
