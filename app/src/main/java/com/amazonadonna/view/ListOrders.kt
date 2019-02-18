@@ -18,20 +18,20 @@ import okhttp3.*
 import java.io.IOException
 
 class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
+    var cgaId : String = "0"
+    val listOrderURL = "https://7bd92aed.ngrok.io/order/listAllForCgo"
 
-    val listOrderURL = "https://7bd92aed.ngrok.io/order/listAll"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_orders)
 
+        cgaId = intent.extras.getString("cgaId")
 
         recyclerView_listOrders.layoutManager = LinearLayoutManager(this)
 
         //load an empty list as placeholder before GET request completes
         val emptyOrdersList : List<Order> = emptyList()
         recyclerView_listOrders.adapter = ListOrdersAdapter(this, emptyOrdersList)
-        // TODO implement a fetch of order data once backend route/database are configured
-        // TODO implement a ListOrders adapter
         recyclerView_listOrders.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
@@ -42,7 +42,9 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
     }
 
     private fun fetchJSON() {
-        val request = Request.Builder().url(listOrderURL).build()
+        val requestBody = FormBody.Builder().add("cgoId", cgaId)
+                .build()
+        val request = Request.Builder().url(listOrderURL).post(requestBody).build()
         val db = Room.databaseBuilder(
                 applicationContext,
                 AppDatabase::class.java, "amazonadonna-main"
