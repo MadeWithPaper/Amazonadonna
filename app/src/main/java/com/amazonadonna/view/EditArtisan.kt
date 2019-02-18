@@ -205,6 +205,7 @@ class EditArtisan : AppCompatActivity() {
                 .add("artisanName", oldArtisan.artisanName)
                 .add("lat", 0.0.toString())
                 .add("lon", 0.0.toString())
+                .add("balance", oldArtisan.balance.toString())
 
         if (editArtisan_pic.drawable == pic) {
             requestBody.add("picURL", oldArtisan.picURL)
