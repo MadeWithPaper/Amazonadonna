@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.activity_login_screen.*
 
 class LoginScreen : AppCompatActivity() {
 
-    private var cgaID : String? = null
     private var requestContext : RequestContext = RequestContext.create(this)
 
     private var signUpListener = object  : AuthorizeListener() {

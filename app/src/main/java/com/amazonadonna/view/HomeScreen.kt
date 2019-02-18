@@ -21,7 +21,7 @@ class HomeScreen : AppCompatActivity() {
     private var getUserInfoListener = object : Listener<User, AuthError> {
         override fun onSuccess(p0: User?) {
             cgaID = p0!!.userId.substringAfter("amzn1.account.")
-            cgaID = "0"
+//            cgaID = "0" //******** Uncomment this to go back to default for testing ****
             fetchJSONCGA()
             Log.d("HomeScreen", cgaID)
         }
