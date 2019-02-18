@@ -23,6 +23,7 @@ import java.io.*
 import android.graphics.BitmapFactory
 
 class AddArtisan : AppCompatActivity() {
+    private var cgaId : String = "0"
     private var photoFile: File? = null
     private val fileName: String = "output.png"
     private val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034
@@ -33,6 +34,9 @@ class AddArtisan : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_artisan)
+
+        cgaId = intent.extras.getString("cgaId")
+
         val IMAGE_UPLOADING_PERMISSION = 3
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
 
@@ -168,7 +172,7 @@ class AddArtisan : AppCompatActivity() {
         val bio = editText_bio.text.toString()
         val number = editText_ContactNumber.text.toString()
 
-         val newArtisan = Artisan(name, "", "", "", bio, "0",0.0,0.0, "", 0.0)
+         val newArtisan = Artisan(name, "", "", "", bio, cgaId,0.0,0.0, "", 0.0)
             //TODO move to back end soon
             newArtisan.generateArtisanID()
             //parse location info
