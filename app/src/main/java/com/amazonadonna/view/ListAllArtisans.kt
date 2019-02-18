@@ -20,14 +20,13 @@ import kotlinx.android.synthetic.main.activity_edit_artisan.*
 
 
 class ListAllArtisans : AppCompatActivity() {
-
+    var cgaId : String = "0"
     val listAllArtisansURL = "https://7bd92aed.ngrok.io/artisan/listAllForCgo"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_all_artisans)
-
-        //fetchJSON()
+        cgaId = intent.extras.getString("cgaId")
         //TODO add search bar
 
         recyclerView_listAllartisans.layoutManager = LinearLayoutManager(this)
@@ -51,20 +50,21 @@ class ListAllArtisans : AppCompatActivity() {
         runOnUiThread {
             recyclerView_listAllartisans.adapter = ListArtisanAdapter(applicationContext, dbArtisans)
         }*/
-
+        Log.d("ListAllArtisans", "fetching")
         fetchJSON()
     }
 
     private fun addArtisan() {
         //go to add artisan screen
         val intent = Intent(this, AddArtisan::class.java)
+        intent.putExtra("cgaId", cgaId)
         startActivity(intent)
 
     }
 
     private fun fetchJSON() {
         //TODO update cgo id to real
-        val requestBody = FormBody.Builder().add("cgoId", "0")
+        val requestBody = FormBody.Builder().add("cgoId", cgaId)
                 .build()
 
         val client = OkHttpClient()

@@ -47,7 +47,7 @@ class OrderScreen : AppCompatActivity() {
         fetchJSON()
     }
 
-        //TODO update "artisanDao" to be productDao
+    //TODO update "artisanDao" to be productDaogi
     private fun fetchJSON() {
         val requestBody = FormBody.Builder()
                 .add("orderId", orderIdString)
