@@ -19,7 +19,7 @@ import java.io.IOException
 
 class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
-    val listOrderURL = "https://7bd92aed.ngrok.io/order/listAll"
+    val listOrderURL = "https://7bd92aed.ngrok.io/order/listAllForCgo"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_orders)
@@ -42,7 +42,9 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
     }
 
     private fun fetchJSON() {
-        val request = Request.Builder().url(listOrderURL).build()
+        val requestBody = FormBody.Builder().add("cgoId", "0")
+                .build()
+        val request = Request.Builder().url(listOrderURL).post(requestBody).build()
         val db = Room.databaseBuilder(
                 applicationContext,
                 AppDatabase::class.java, "amazonadonna-main"
