@@ -54,7 +54,8 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-cognito:2.9.+'
     implementation 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.10.+'
     implementation files('libs/login-with-amazon-sdk.jar')
-
+    //signature pad library
+    implementation 'com.github.gcacace:signature-pad:1.2.1'
     //Room SQLite stuff
     def room_version = "1.1.1"
     implementation "android.arch.persistence.room:runtime:$room_version"
@@ -68,4 +69,5 @@ dependencies {
 
 repositories {
     jcenter()
+    mavenCentral()
 }
