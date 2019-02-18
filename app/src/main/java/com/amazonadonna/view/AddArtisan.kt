@@ -240,7 +240,7 @@ class AddArtisan : AppCompatActivity() {
     // source file does not exist
     fun submitPictureToDB(artisan: Artisan) {
         val sourceFile = photoFile!!
-        Log.d("AddArtisan", "submitPictureToDB file" + sourceFile + " : " + sourceFile!!.exists())
+        Log.d("AddArtisan", "submitPictureToDB file" + sourceFile + " : " + sourceFile.exists())
 
         val MEDIA_TYPE = MediaType.parse("image/png")
 
@@ -286,6 +286,7 @@ class AddArtisan : AppCompatActivity() {
                 .add("artisanName", artisan.artisanName)
                 .add("lat", artisan.lat.toString())
                 .add("lon", artisan.lon.toString())
+                .add("balance", artisan.balance.toString())
                 .build()
 
         val client = OkHttpClient()
@@ -298,7 +299,7 @@ class AddArtisan : AppCompatActivity() {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.i("AddArtisan", body)
+                Log.i("AddArtisan", "success" + body)
                 submitPictureToDB(artisan)
             }
 
