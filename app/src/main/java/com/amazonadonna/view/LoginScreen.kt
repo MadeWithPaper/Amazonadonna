@@ -1,5 +1,8 @@
 package com.amazonadonna.view
 
+import android.accounts.Account
+import android.accounts.AccountManager
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,10 +16,18 @@ import com.amazon.identity.auth.device.api.workflow.RequestContext
 
 import kotlinx.android.synthetic.main.activity_login_screen.*
 
+// Constants
+// The authority for the sync adapter's content provider
+const val AUTHORITY = "com.amazonadonna.datasync.provider"
+// An account type, in the form of a domain name
+const val ACCOUNT_TYPE = "com.amazonadonna.datasync"
+// The account name
+const val ACCOUNT = "dummyaccount"
 
 class LoginScreen : AppCompatActivity() {
 
     private var requestContext : RequestContext = RequestContext.create(this)
+    private lateinit var mAccount: Account
 
     private var signUpListener = object  : AuthorizeListener() {
         /* Authorization was completed successfully. */
@@ -69,6 +80,9 @@ class LoginScreen : AppCompatActivity() {
                         .addScopes(ProfileScope.profile(),  ProfileScope.userId())
                         .build())
         })
+
+        // Create the dummy account
+        mAccount = createSyncAccount()
     }
 
     override fun onStart() {
@@ -96,5 +110,31 @@ class LoginScreen : AppCompatActivity() {
     private fun isPasswordValid(password: String): Boolean {
         //TODO: Replace this with your own logic
         return password.length > 4
+    }
+
+    /**
+     * Create a new dummy account for the sync adapter
+     */
+    private fun createSyncAccount(): Account {
+        val accountManager = getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
+        return Account(ACCOUNT, ACCOUNT_TYPE).also { newAccount ->
+            /*
+             * Add the account and account type, no password or user data
+             * If successful, return the Account object, otherwise report an error.
+             */
+            if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+                /*
+                 * If you don't set android:syncable="true" in
+                 * in your <provider> element in the manifest,
+                 * then call context.setIsSyncable(account, AUTHORITY, 1)
+                 * here.
+                 */
+            } else {
+                /*
+                 * The account exists or some other error occurred. Log this, report it,
+                 * or handle it internally.
+                 */
+            }
+        }
     }
 }

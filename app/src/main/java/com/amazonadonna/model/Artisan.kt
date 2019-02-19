@@ -18,6 +18,7 @@ data class Artisan (
         @ColumnInfo(name = "lat") @Json(name = "lon") var lon : Double,
         @ColumnInfo(name = "lon") @Json(name = "lat") var lat : Double,
         @ColumnInfo(name = "picURL") @Json(name = "picURL") var picURL : String?,
+        @ColumnInfo(name = "synced") var synced : Boolean = true,
         @ColumnInfo(name = "balance") @Json(name = "balance") var balance : Double) : Serializable {
 
     fun generateArtisanID() {
