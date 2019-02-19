@@ -17,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PayoutSignature"></activity>
+        <activity android:name=".PayoutSignature" />
         <activity android:name=".ArtisanPayout" />
         <activity android:name=".EditArtisan" />
         <activity android:name=".ProductDetails" />

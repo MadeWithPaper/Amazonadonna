@@ -20,9 +20,9 @@ class ArtisanPayout : AppCompatActivity() {
         val artisan = intent.extras?.getSerializable("artisan") as Artisan
 
         artisanPayout_amount.setText(artisan.balance.toString())
-        artisanPayout_dateTV.setText("Date: " + getCurrDate())
+        artisanPayout_dateTV.text = "Date: " + getCurrDate()
         artisanPayout_continue.setOnClickListener {
-            continueToSignature()
+            continueToSignature(artisan)
         }
 
         artisanPayout_datePicker.setOnClickListener {
@@ -54,8 +54,10 @@ class ArtisanPayout : AppCompatActivity() {
         return dateFormat.format(date)
     }
 
-    private fun continueToSignature() {
+    private fun continueToSignature(artisan: Artisan) {
         val intent = Intent(this, PayoutSignature::class.java)
+        intent.putExtra("artisan", artisan)
+        intent.putExtra("payoutAmount", artisanPayout_amount.text.toString().toDouble())
         startActivity(intent)
     }
 }
