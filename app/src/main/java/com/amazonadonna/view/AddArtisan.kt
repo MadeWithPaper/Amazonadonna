@@ -163,7 +163,7 @@ class AddArtisan : AppCompatActivity() {
     }
 
     //TODO clean up
-    fun makeNewArtisan() {
+    private fun makeNewArtisan() {
         //validate fields
         if (!validateFields()) {
             return
@@ -177,7 +177,7 @@ class AddArtisan : AppCompatActivity() {
             newArtisan.generateArtisanID()
             //parse location info
             parseLoc(newArtisan)
-            Log.i("AddArtisan", "created new Artisan" + newArtisan.toString())
+            Log.i("AddArtisan", "created new Artisan $newArtisan")
 
             //pop screen and add
             submitToDB(newArtisan)
@@ -188,7 +188,7 @@ class AddArtisan : AppCompatActivity() {
 
     }
 
-    fun parseLoc (artisan: Artisan) {
+    private fun parseLoc (artisan: Artisan) {
         val rawLoc = editText_loc.text.toString()
 
         val ind = rawLoc.indexOf(',')
@@ -197,7 +197,7 @@ class AddArtisan : AppCompatActivity() {
         artisan.country = rawLoc.substring(ind+1)
     }
 
-    fun clearFields() {
+    private fun clearFields() {
         editText_Name.text.clear()
         editText_ContactNumber.text.clear()
         editText_bio.text.clear()
@@ -208,29 +208,29 @@ class AddArtisan : AppCompatActivity() {
 
     //Validate all fields entered
     //TODO add more checks
-    fun validateFields() : Boolean {
+    private fun validateFields() : Boolean {
         if (TextUtils.isEmpty(editText_Name.text.toString())){
-            editText_Name.setError("Artisan Name can not be empty")
+            editText_Name.error = "Artisan Name can not be empty"
             return false
         }
 
         if (TextUtils.isEmpty(editText_loc.text.toString())) {
-            editText_loc.setError("Location field can not be empty")
+            editText_loc.error = "Location field can not be empty"
             return false
         }
 
         if ((!editText_loc.text.toString().contains(","))) {
-            editText_loc.setError("Missing ' , ' between City and Country")
+            editText_loc.error = "Missing ' , ' between City and Country"
             return false
         }
 
         if (TextUtils.isEmpty(editText_ContactNumber.text.toString())){
-            editText_ContactNumber.setError("Contact Number can not be empty")
+            editText_ContactNumber.error = "Contact Number can not be empty"
             return false
         }
 
         if (TextUtils.isEmpty(editText_bio.text.toString())){
-            editText_bio.setError("bio is empty")
+            editText_bio.error = "bio is empty"
             return false
         }
 
@@ -263,7 +263,7 @@ class AddArtisan : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("AddArtisan", "failed to do POST request to database" + artisanPicURL)
+                Log.e("AddArtisan", "failed to do POST request to database$artisanPicURL")
             }
         })
     }
@@ -286,7 +286,7 @@ class AddArtisan : AppCompatActivity() {
                 .add("artisanName", artisan.artisanName)
                 .add("lat", artisan.lat.toString())
                 .add("lon", artisan.lon.toString())
-                .add("balance", artisan.balance.toString())
+                .add("balance", "5000.0")
                 .build()
 
         val client = OkHttpClient()
@@ -299,12 +299,12 @@ class AddArtisan : AppCompatActivity() {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.i("AddArtisan", "success" + body)
+                Log.i("AddArtisan", "success $body")
                 submitPictureToDB(artisan)
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("AddArtisan", "failed to do POST request to database" + addArtisanURL)
+                Log.e("AddArtisan", "failed to do POST request to database $addArtisanURL")
             }
         })
     }
