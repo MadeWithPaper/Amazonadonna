@@ -15,6 +15,9 @@ interface ArtisanDao {
     @Query("SELECT picURL FROM artisan")
     fun getAllImages(): List<String>
 
+    @Query("SELECT * FROM artisan WHERE synced = 0")
+    fun getAllUnsynced(): List<Artisan>
+
     @Query("SELECT * FROM artisan WHERE artisanId IN (:artisanIds)")
     fun loadAllByIds(artisanIds: IntArray): List<Artisan>
 

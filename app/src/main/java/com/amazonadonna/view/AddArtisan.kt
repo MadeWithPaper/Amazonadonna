@@ -172,7 +172,7 @@ class AddArtisan : AppCompatActivity() {
         val bio = editText_bio.text.toString()
         val number = editText_ContactNumber.text.toString()
 
-         val newArtisan = Artisan(name, "", "", "", bio, cgaId,0.0,0.0, "", 0.0)
+         val newArtisan = Artisan(name, "", "", "", bio, cgaId,0.0,0.0, "", false, 0.0)
             //TODO move to back end soon
             newArtisan.generateArtisanID()
             //parse location info

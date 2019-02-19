@@ -55,7 +55,7 @@ router.post('/add', (req: Request, res: Response) => {
 })
 
 router.post('/getItems', (req: Request, res: Response) => {
-    const getItemsParams: aws.DynamoDB.Types.QueryInput = {
+    const getParamsFromItems: aws.DynamoDB.Types.QueryInput = {
         TableName: 'orderItem',
         IndexName: 'orderId-index',
         KeyConditionExpression: 'orderId = :id',
@@ -63,7 +63,7 @@ router.post('/getItems', (req: Request, res: Response) => {
             ':id': { N: req.body.orderId }
         }
     }
-    ddb.query(getItemsParams, (err, data) => {
+    ddb.query(getParamsFromItems, (err, data) => {
         if (err) {
             console.log('Error fetching orderItem in order/getItems: ' + err)
             res.status(400).send(
