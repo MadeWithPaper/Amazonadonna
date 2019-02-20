@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_artisan_payout.*
 import java.text.SimpleDateFormat
 import java.util.*
 import android.app.DatePickerDialog
+import android.support.v7.app.AlertDialog
 import android.util.Log
 
 
@@ -55,9 +56,24 @@ class ArtisanPayout : AppCompatActivity() {
     }
 
     private fun continueToSignature(artisan: Artisan) {
+        if (validateAmount(artisan)) {
+            Log.w("ArtisanPayout", "Payout amount exceeded balance")
+            val builder = AlertDialog.Builder(this@ArtisanPayout)
+            builder.setTitle("Payout Error")
+            builder.setMessage("Payout amount exceeds Artisan's Payout balance!")
+            builder.setOnDismissListener {
+                //Do nothing
+            }
+            val dialog : AlertDialog = builder.create()
+            dialog.show()
+        }
         val intent = Intent(this, PayoutSignature::class.java)
         intent.putExtra("artisan", artisan)
         intent.putExtra("payoutAmount", artisanPayout_amount.text.toString().toDouble())
         startActivity(intent)
+    }
+
+    private fun validateAmount(artisan : Artisan) : Boolean {
+        return (artisanPayout_amount.text.toString().toDouble() > artisan.balance)
     }
 }
