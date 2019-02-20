@@ -14,14 +14,13 @@ import kotlinx.android.synthetic.main.activity_home_screen.*
 import okhttp3.*
 import java.io.IOException
 
-
 class HomeScreen : AppCompatActivity() {
     private var cgaID : String = "0" // initialize to prevent crash while testing
 
     private var getUserInfoListener = object : Listener<User, AuthError> {
         override fun onSuccess(p0: User?) {
             cgaID = p0!!.userId.substringAfter("amzn1.account.")
-//            cgaID = "0" //******** Uncomment this to go back to default for testing ****
+            cgaID = "0" //******** Uncomment this to go back to default for testing ****
             fetchJSONCGA()
             Log.d("HomeScreen", cgaID)
         }

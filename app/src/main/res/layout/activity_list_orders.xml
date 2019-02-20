@@ -5,16 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView_listOrders"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="#00a8e1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listOrders_toolbar" />
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/listOrders_toolbar"
         android:layout_width="match_parent"
@@ -41,5 +31,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/listOrders_toolbar" />
+
+    <EditText
+        android:id="@+id/listOrders_Search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Search Orders"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listOrders_toolbar" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_listOrders"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#00a8e1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listOrders_Search" />
 
 </android.support.constraint.ConstraintLayout>
