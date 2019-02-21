@@ -53,6 +53,9 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        filteredOrders.clear()
+        originalOrders.clear()
+        oldFilteredOrders.clear()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_orders)
 
@@ -82,6 +85,9 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
     }
 
     override fun onStart() {
+        filteredOrders.clear()
+        originalOrders.clear()
+        oldFilteredOrders.clear()
         super.onStart()
         filteredOrders.clear()
         fetchJSON()
