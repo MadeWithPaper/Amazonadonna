@@ -66,6 +66,7 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
         recyclerView_listAllartisans.layoutManager = LinearLayoutManager(this)
 
         //load an empty list as placeholder before GET request completes
+       // originalArtisans.clear()
         recyclerView_listAllartisans.adapter = ListArtisanAdapter(this, originalArtisans)
         recyclerView_listAllartisans.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 

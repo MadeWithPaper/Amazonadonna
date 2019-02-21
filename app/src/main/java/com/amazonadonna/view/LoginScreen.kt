@@ -1,6 +1,7 @@
 package com.amazonadonna.view
 
 import android.accounts.Account
+import android.arch.persistence.room.RoomDatabase
 import android.content.ContentResolver
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +13,7 @@ import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
 import com.amazon.identity.auth.device.api.authorization.*
 import com.amazon.identity.auth.device.api.workflow.RequestContext
+import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.sync.ArtisanSync
 
 import kotlinx.android.synthetic.main.activity_login_screen.*
@@ -81,37 +83,13 @@ class LoginScreen : AppCompatActivity() {
                         .build())
         })
 
+        //--------------------------------------------------------//
+        // UNCOMMENT THE METHOD CALL BELOW TO CLEAR SQLITE TABLES //
+        //--------------------------------------------------------//
+        //ArtisanSync.resetLocalDB(applicationContext)
+        //--------------------------------------------------------//
+
         ArtisanSync.sync(applicationContext)
-        
-        //val mySync = TimeSync.get(applicationContext, ArtisanSync::class.java!!)
-        //mySync.sync()
-        //TimeSync.start(applicationContext)
-
-       /* mAccount = createSyncAccount()
-        Log.i("LoginScreen", mAccount.type + " " + mAccount.name)
-        mResolver = contentResolver
-
-        ContentResolver.setIsSyncable(mAccount, AUTHORITY, 1)
-        Log.i("LoginScreen", "Is syncable? - " + ContentResolver.getIsSyncable(mAccount, AUTHORITY))
-
-        val settingsBundle = Bundle().apply {
-            putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)
-            putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)
-        }
-        ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle)
-        Log.i("LoginScreen", "Is sync active? " + ContentResolver.isSyncActive(mAccount, AUTHORITY).toString())
-
-        val temp = ContentResolver.getSyncAdapterTypes()
-        for (item in temp) {
-            Log.i("LoginScreen", item.accountType + " " + item.authority)
-        }*/
-
-        // Turn on periodic syncing
-        /*ContentResolver.addPeriodicSync(
-                mAccount,
-                AUTHORITY,
-                Bundle.EMPTY,
-                SYNC_INTERVAL)*/
     }
 
     override fun onStart() {
