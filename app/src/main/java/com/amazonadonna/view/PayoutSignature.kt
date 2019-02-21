@@ -1,5 +1,6 @@
 package com.amazonadonna.view
 
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.github.gcacace.signaturepad.views.SignaturePad
@@ -7,7 +8,9 @@ import android.content.pm.ActivityInfo
 import kotlinx.android.synthetic.main.activity_payout_signature.*
 import android.util.Log
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.view.R
@@ -71,24 +74,33 @@ class PayoutSignature : AppCompatActivity() {
     }
 
     private fun saveSignature(artisan: Artisan, amount : Double) {
-        val signatureFilePath = saveSignatureToCache(artisan, amount)
+        val signatureFilePath = saveSignatureToCache()
         updateArtisanBalance(artisan, amount, signatureFilePath)
         //showResponseDialog(artisan, true)
     }
 
-    private fun saveSignatureToCache(artisan: Artisan, amount: Double) : String {
-        val fileName = getUniqueFileName(artisan, amount)
-            val f = Uri.parse(fileName)?.lastPathSegment?.let { filename ->
-            File.createTempFile(filename, null, this.cacheDir)
-            }
-            Log.d("PayoutSignature", "file created: " + f!!.absolutePath + " : " + f.exists())
-        return f.absolutePath
-    }
+    private fun saveSignatureToCache() : String {
+        //file/storage/emulated/0/DCIM/Camera/IMG_20190206_201443.jpg
+        val fileName = getCurrentDate()
+        val file = File(externalCacheDir, fileName)
+        file.createNewFile()
+        //val fileProvider = FileProvider.getUriForFile(this@PayoutSignature, "com.amazonadonna.amazonhandmade.fileprovider", file)
+        //Log.d("PayoutSignature", "file created: " + file.absolutePath + " : " + file.exists())
 
-    private fun getUniqueFileName(artisan: Artisan, amount: Double) : String {
-        val dateFormat = SimpleDateFormat("yyy_mm_dd_HHmmss", Locale.getDefault())
-        val date = Date()
-        return dateFormat.format(date) + "_" + artisan.artisanId + amount
+        var fileOutputStream: FileOutputStream? = null
+        try {
+            fileOutputStream = FileOutputStream(file)
+            signature_pad.signatureBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
+            Log.d("PayoutSignature", "file created: " + fileName + " : " + file.exists())
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            fileOutputStream?.close()
+        }
+
+        return file.path
     }
 
     private fun getCurrentDate() : String {
@@ -141,7 +153,7 @@ class PayoutSignature : AppCompatActivity() {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()!!.string()
                 Log.i("PayoutSignature", "payoutid $body")
-                submitSignatureToDB(body, signatureFilePath)
+                submitSignatureToDB(artisan, body, signatureFilePath)
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
@@ -157,7 +169,7 @@ class PayoutSignature : AppCompatActivity() {
             builder.setTitle("Payout Status")
             builder.setMessage("Payout Approved!")
             builder.setOnDismissListener {
-                //submitDismiss(artisan)
+                submitDismiss(artisan)
                 val intent = Intent(this, ArtisanProfile::class.java)
                 intent.putExtra("artisan", artisan)
                 startActivity(intent)
@@ -176,9 +188,9 @@ class PayoutSignature : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun submitSignatureToDB(payoutId : String , signatureFilePath: String) {
+    private fun submitSignatureToDB(artisan: Artisan, payoutId : String , signatureFilePath: String) {
         val signatureFile = File(signatureFilePath)
-        Log.d("PayoutSignature", "submitSignatureToDB file" + signatureFile + " : " + signatureFile.exists())
+        Log.d("PayoutSignature", "submitSignatureToDB file " + signatureFile + " : " + signatureFile.exists())
 
         val MEDIA_TYPE = MediaType.parse("image/png")
 
@@ -197,15 +209,30 @@ class PayoutSignature : AppCompatActivity() {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.d("PayoutSignature", "signature pic $body")
+                Log.d("PayoutSignature", "signature pic success $body")
+                runOnUiThread{
+                    showResponseDialog(artisan, true)
+                }
+                signatureFile.delete()
+                Log.d("PayoutSignature", "signature file clean up " + signatureFile + " : " + signatureFile.exists())
+
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("PayoutSignature", "failed to do POST request to database $payoutSignatureURL")
+                runOnUiThread{
+                    showResponseDialog(artisan, false)
+                }
+                signatureFile.delete()
+                Log.d("PayoutSignature", "signature file clean up " + signatureFile + " : " + signatureFile.exists())
             }
         })
+    }
 
-        //TODO remove cache file after upload
-        this.deleteFile(signatureFilePath)
+    private fun submitDismiss(artisan: Artisan) {
+        val intent = Intent(this, ArtisanProfile::class.java)
+        intent.putExtra("artisan", artisan)
+        startActivity(intent)
+        finish()
     }
 }
