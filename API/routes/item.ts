@@ -71,7 +71,7 @@ router.post('/add', (req: Request, res: Response) => {
                 'Error adding item in item/add: ' + err.message
             )
         } else {
-            res.send(id)
+            res.json(id.toString())
         }
     })
 })

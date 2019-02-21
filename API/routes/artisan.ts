@@ -57,7 +57,7 @@ router.post('/add', (req: Request, res: Response) => {
             console.log(msg, err)
             res.status(400).send(msg + err.message)
         } else {
-            res.send(id.toString())
+            res.json(id.toString())
         }
     })
 })

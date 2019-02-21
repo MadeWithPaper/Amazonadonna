@@ -54,7 +54,7 @@ router.post('/add', (req: Request, res: Response) => {
                 'Error adding order in payout/add: ' + err.message
             )
         } else {
-            res.json(id)
+            res.json(id.toString())
         }
     })
 })
