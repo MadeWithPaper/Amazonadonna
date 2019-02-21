@@ -6,6 +6,7 @@ import * as mime from 'mime'
 import { ddb, s3 } from '../server'
 import { Item } from '../models/item'
 import { unmarshUtil } from '../utilities/unmarshall'
+import * as uuid from 'uuid'
 
 const router = Router()
 
@@ -40,10 +41,11 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
 })
 
 router.post('/add', (req: Request, res: Response) => {
+    const id = uuid.v1()
     const putItemParams: aws.DynamoDB.PutItemInput = {
         TableName: 'item',
         Item: {
-            itemId: { N: req.body.itemId },
+            itemId: { N: id },
             artisanId: { S: req.body.artisanId },
             price: { S: req.body.price },
             description: { S: req.body.description },
@@ -69,7 +71,7 @@ router.post('/add', (req: Request, res: Response) => {
                 'Error adding item in item/add: ' + err.message
             )
         } else {
-            res.send('Successfully added')
+            res.send(id)
         }
     })
 })

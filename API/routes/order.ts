@@ -3,6 +3,7 @@ import * as aws from 'aws-sdk'
 import { ddb } from '../server'
 import { OrderItem } from '../models/orderItem'
 import { unmarshUtil } from '../utilities/unmarshall'
+import * as uuid from 'uuid'
 
 const router = Router()
 
@@ -30,10 +31,11 @@ router.post('/listAllForCgo', (req: Request, res: Response) => {
 })
 
 router.post('/add', (req: Request, res: Response) => {
+    const id = uuid.v1()
     const params: aws.DynamoDB.PutItemInput = {
         TableName: 'order',
         Item: {
-            orderId: { S: req.body.orderId },
+            orderId: { S: id },
             cgoId: { S: req.body.cgoId },
             shippedStatus: { BOOL: req.body.shippedStatus },
             numItems: { N: req.body.numItems },
@@ -49,7 +51,7 @@ router.post('/add', (req: Request, res: Response) => {
                 'Error adding order in order/add: ' + err.message
             )
         } else {
-            res.send('Successfully added')
+            res.send(id)
         }
     })
 })
