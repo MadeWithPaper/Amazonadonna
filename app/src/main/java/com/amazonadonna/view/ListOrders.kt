@@ -83,7 +83,7 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     override fun onStart() {
         super.onStart()
-
+        filteredOrders.clear()
         fetchJSON()
     }
 
