@@ -112,6 +112,7 @@ class AddItemReview : AppCompatActivity() {
                     product.itemId = body!!
                 }
 //                Thread().run {
+                    submitDismiss(artisan)
                     submitPictureToDB(product)
 
 //                }
