@@ -17,6 +17,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.ImageView
 import com.amazonadonna.model.Artisan
+import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.view.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_edit_artisan.*
@@ -37,10 +38,11 @@ class EditArtisan : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_artisan)
         val IMAGE_UPLOADING_PERMISSION = 3
+        ArtisanSync.sync(this)
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
 
         val oldArtisan = intent.extras?.getSerializable("artisan") as Artisan
-
+        Log.d("HOT FIX 12", oldArtisan.toString())
         //fill in information from old artisan
         editArtisanBio.setText(oldArtisan.bio)
         editArtisan_cc.setText(oldArtisan.city + "," + oldArtisan.country)
