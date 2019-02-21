@@ -77,7 +77,7 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
     override fun onResume() {
         super.onResume()
 
-        ArtisanSync.sync(this)
+        ArtisanSync.sync(this, cgaId)
     }
 
     override fun onStart() {
@@ -140,6 +140,7 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
 
     private fun fetchJSON() {
         //TODO update cgo id to real
+        Log.d("ListAllArtisans", "getting artisans for: "+cgaId)
         val requestBody = FormBody.Builder().add("cgoId", cgaId)
                 .build()
 
@@ -155,7 +156,7 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.i("ListAllArtisan", "response body: " + body)
+                Log.d("ListAllArtisan", "response body: " + body)
 
                 val gson = GsonBuilder().create()
                 //val artisans : List<com.amazonadonna.model.Artisan> =  gson.fromJson(body, mutableListOf<com.amazonadonna.model.Artisan>().javaClass)
