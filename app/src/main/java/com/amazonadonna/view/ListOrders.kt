@@ -89,7 +89,7 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
         originalOrders.clear()
         oldFilteredOrders.clear()
         super.onStart()
-
+        filteredOrders.clear()
         fetchJSON()
     }
 

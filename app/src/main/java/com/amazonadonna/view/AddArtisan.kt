@@ -174,8 +174,6 @@ class AddArtisan : AppCompatActivity() {
         val number = editText_ContactNumber.text.toString()
 
          val newArtisan = Artisan(name, "", "", "", bio, cgaId,0.0,0.0, "Not set", Syncronizer.SYNC_NEW, 0.0)
-        //TODO move to back end soon
-        newArtisan.generateArtisanID()
         //parse location info
         parseLoc(newArtisan)
         Log.i("AddArtisan", "created new Artisan $newArtisan")

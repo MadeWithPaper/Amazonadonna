@@ -20,6 +20,7 @@ import com.amazonadonna.view.R
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 import com.amazonadonna.database.ArtisanDao
+import com.amazonadonna.sync.ArtisanSync
 import com.jakewharton.rxbinding2.widget.textChanges
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -93,6 +94,12 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
                 }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        ArtisanSync.sync(this)
+    }
+
     override fun onStart() {
         filteredArtisans.clear()
         originalArtisans.clear()
@@ -100,6 +107,7 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
 
         super.onStart()
         job = Job()
+
 
         // If offline, do this instead
         //val artisanDao = AppDatabase.getDatabase(application).artisanDao()
@@ -158,7 +166,6 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
                 originalArtisans.addAll(artisans)
                 oldFilteredArtisans.addAll(artisans)
                 filteredArtisans.addAll(artisans)
-
 
                 artisanDao.insertAll(artisans)
 
