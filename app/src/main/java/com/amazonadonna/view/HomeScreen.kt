@@ -72,11 +72,12 @@ class HomeScreen : AppCompatActivity() {
             queryAllOrder()
         }
 
-//        logoutButton.setOnClickListener{
-//            AuthorizationManager.signOut(this, signoutListener)
-//            val intent = Intent(this, LoginScreen::class.java)
-//            startActivity(intent)
-//        }
+        logoutButton.setOnClickListener{
+            AuthorizationManager.signOut(this, signoutListener)
+            val intent = Intent(this, LoginScreen::class.java)
+            finishAffinity()
+            startActivity(intent)
+        }
 
     }
 
