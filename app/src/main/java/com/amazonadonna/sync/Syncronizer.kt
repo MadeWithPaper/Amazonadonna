@@ -13,12 +13,14 @@ abstract class Syncronizer : CoroutineScope {
     }
 
     lateinit var job: Job
+    lateinit var mCgaId: String
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    open fun sync(context: Context) {
+    open fun sync(context: Context, cgaId: String) {
         job = Job()
+        mCgaId = cgaId
     }
 
     fun resetLocalDB(context: Context) {

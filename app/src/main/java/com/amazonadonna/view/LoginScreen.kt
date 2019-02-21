@@ -61,6 +61,7 @@ class LoginScreen : AppCompatActivity() {
                 Log.d("LoginScreen", ar?.accessToken)
                 finish()
             }
+            Log.d("LoginScreen", "token not found")
         }
 
         override fun onError(ae: AuthError?) {
@@ -88,8 +89,6 @@ class LoginScreen : AppCompatActivity() {
         //--------------------------------------------------------//
          //ArtisanSync.resetLocalDB(applicationContext)
         //--------------------------------------------------------//
-
-        ArtisanSync.sync(applicationContext)
     }
 
     override fun onStart() {
