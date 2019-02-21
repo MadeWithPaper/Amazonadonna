@@ -62,7 +62,7 @@ router.post('/getItems', (req: Request, res: Response) => {
         IndexName: 'orderId-index',
         KeyConditionExpression: 'orderId = :id',
         ExpressionAttributeValues: {
-            ':id': { N: req.body.orderId }
+            ':id': { S: req.body.orderId }
         }
     }
     ddb.query(getParamsFromItems, (err, data) => {
@@ -78,7 +78,7 @@ router.post('/getItems', (req: Request, res: Response) => {
                     return new Promise(resolve => {
                         const getItemParams: aws.DynamoDB.Types.GetItemInput = {
                             TableName: 'item',
-                            Key: { itemId: { N: item.itemId.toString() } }
+                            Key: { itemId: { S: item.itemId } }
                         }
                         ddb.getItem(
                             getItemParams,
@@ -125,7 +125,7 @@ router.post('/getItems', (req: Request, res: Response) => {
 router.post('/setShippedStatus', (req: Request, res: Response) => {
     const setShippedStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
         TableName: 'order',
-        Key: { orderId: { N: req.body.orderId } },
+        Key: { orderId: { S: req.body.orderId } },
         UpdateExpression: 'set shippedStatus = :u',
         ExpressionAttributeValues: {
             ':u': { BOOL: req.body.shippedStatus }
