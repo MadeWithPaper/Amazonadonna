@@ -50,6 +50,7 @@ class ArtisanItemList : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_item_list)
 

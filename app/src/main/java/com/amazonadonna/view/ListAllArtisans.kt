@@ -58,6 +58,10 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        filteredArtisans.clear()
+        originalArtisans.clear()
+        oldFilteredArtisans.clear()
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_all_artisans)
         cgaId = intent.extras.getString("cgaId")
@@ -90,6 +94,10 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
     }
 
     override fun onStart() {
+        filteredArtisans.clear()
+        originalArtisans.clear()
+        oldFilteredArtisans.clear()
+
         super.onStart()
         job = Job()
 
