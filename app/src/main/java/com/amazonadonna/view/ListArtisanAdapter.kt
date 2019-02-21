@@ -55,6 +55,7 @@ class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
             var url = artisan.picURL!!
 
             // If image is already on S3
+            //TODO creating artisan with image crahes app needs fix
             if (url.substring(0, 5) == "https") {
                 var fileName = ImageStorageProvider.ARTISAN_IMAGE_PREFIX +
                         url.substring(url.lastIndexOf('/') + 1, url?.length)
