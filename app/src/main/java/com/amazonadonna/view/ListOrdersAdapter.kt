@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.amazonadonna.model.Order
-//import kotlinx.android.synthetic.main.list_orders_cell.view.*
-import com.amazonadonna.view.R
 import kotlinx.android.synthetic.main.list_orders_cell.view.*
 
 class ListOrdersAdapter (private val context: Context, private val orders : List<Order>) : RecyclerView.Adapter<OrdersViewHolder> () {
