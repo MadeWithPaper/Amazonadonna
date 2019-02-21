@@ -62,7 +62,6 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
         filteredArtisans.clear()
         originalArtisans.clear()
         oldFilteredArtisans.clear()
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_all_artisans)
         cgaId = intent.extras.getString("cgaId")

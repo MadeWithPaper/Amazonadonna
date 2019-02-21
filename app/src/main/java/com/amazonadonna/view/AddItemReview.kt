@@ -93,24 +93,26 @@ class AddItemReview : AppCompatActivity() {
                 .add("shippingOption", product.ShippingOption)
                 .add("itemQuantity", product.itemQuantity.toString())
                 .add("productionTime", product.productionTime.toString())
-                .build()
-
+        if (editMode) {
+            requestBody.add("itemId", product.itemId)
+        }
         Log.d("AddItemReview", product.toString())
         val client = OkHttpClient()
 
         val request = Request.Builder()
                 .url(url)
-                .post(requestBody)
+                .post(requestBody.build())
                 .build()
 
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
                 Log.i("AddItemReview", "prodcut id: $body")
-                product.itemId = body!!
+                if (!editMode) {
+                    product.itemId = body!!
+                }
 //                Thread().run {
                     submitPictureToDB(product)
-                    submitDismiss(artisan)
 
 //                }
 
