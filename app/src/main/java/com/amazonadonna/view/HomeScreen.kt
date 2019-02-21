@@ -24,6 +24,11 @@ class HomeScreen : AppCompatActivity() {
         override fun onSuccess(p0: User?) {
             cgaID = p0!!.userId.substringAfter("amzn1.account.")
 //            cgaID = "0" //******** Uncomment this to go back to default for testing ****
+            //--------------------------------------------------------//
+            // UNCOMMENT THE METHOD CALL BELOW TO CLEAR SQLITE TABLES //
+            //--------------------------------------------------------//
+            //ArtisanSync.resetLocalDB(applicationContext)
+            //--------------------------------------------------------//
             ArtisanSync.sync(applicationContext, cgaID)
             fetchJSONCGA()
             Log.d("HomeScreen", cgaID)
@@ -67,11 +72,11 @@ class HomeScreen : AppCompatActivity() {
             queryAllOrder()
         }
 
-        logoutButton.setOnClickListener{
-            AuthorizationManager.signOut(this, signoutListener)
-            val intent = Intent(this, LoginScreen::class.java)
-            startActivity(intent)
-        }
+//        logoutButton.setOnClickListener{
+//            AuthorizationManager.signOut(this, signoutListener)
+//            val intent = Intent(this, LoginScreen::class.java)
+//            startActivity(intent)
+//        }
 
     }
 
@@ -110,15 +115,13 @@ class HomeScreen : AppCompatActivity() {
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.i("HomeScreen", "response body: " + body)
+                Log.d("HomeScreen", "response body from fetchCga: " + body)
 
                 val gson = GsonBuilder().create()
 
                 if (body == "{}") {
                     Log.d("HomeScreen", "artisan not in db")
                     addCGOToDB()
-                } else {
-                    Log.d("HomeScreen", "response: "+body)
                 }
 
 //                val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
@@ -149,7 +152,7 @@ class HomeScreen : AppCompatActivity() {
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.i("HomeScreen", "response body: " + body)
+                Log.d("HomeScreen", "response body from addCga: " + body)
 
                 val gson = GsonBuilder().create()
 

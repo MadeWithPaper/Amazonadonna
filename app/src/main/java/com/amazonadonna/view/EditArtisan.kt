@@ -38,7 +38,7 @@ class EditArtisan : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_artisan)
         val IMAGE_UPLOADING_PERMISSION = 3
-        ArtisanSync.sync(this)
+//        ArtisanSync.sync(this, cgaId)
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
 
         val oldArtisan = intent.extras?.getSerializable("artisan") as Artisan

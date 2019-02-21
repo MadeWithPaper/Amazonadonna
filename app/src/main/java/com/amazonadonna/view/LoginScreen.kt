@@ -1,8 +1,5 @@
 package com.amazonadonna.view
 
-import android.accounts.Account
-import android.arch.persistence.room.RoomDatabase
-import android.content.ContentResolver
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,8 +10,6 @@ import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
 import com.amazon.identity.auth.device.api.authorization.*
 import com.amazon.identity.auth.device.api.workflow.RequestContext
-import com.amazonadonna.database.AppDatabase
-import com.amazonadonna.sync.ArtisanSync
 
 import kotlinx.android.synthetic.main.activity_login_screen.*
 
@@ -28,14 +23,16 @@ const val SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE
 class LoginScreen : AppCompatActivity() {
 
     private var requestContext : RequestContext = RequestContext.create(this)
-    private lateinit var mAccount : Account
-    // A content resolver for accessing the provider
-    private lateinit var mResolver: ContentResolver
+    private val scopes : Array<Scope> = arrayOf(ProfileScope.profile(), ProfileScope.postalCode())
+//    private lateinit var mAccount : Account
+//    // A content resolver for accessing the provider
+//    private lateinit var mResolver: ContentResolver
 
     private var signUpListener = object  : AuthorizeListener() {
         /* Authorization was completed successfully. */
         override fun onSuccess(result: AuthorizeResult) {
             /* Your app is now authorized for the requested scopes */
+            Log.d("LoginScreen", "successful signup: "+result)
             val intent = Intent(this@LoginScreen, HomeScreen::class.java)
             startActivity(intent)
             finish()
@@ -56,16 +53,18 @@ class LoginScreen : AppCompatActivity() {
         override fun onSuccess(ar: AuthorizeResult?) {
             if(ar?.accessToken != null) { //user already signed in to app
                 val intent = Intent(this@LoginScreen, HomeScreen::class.java)
-//                intent.putExtra("cgaId", cgaID)
                 startActivity(intent)
                 Log.d("LoginScreen", ar?.accessToken)
                 finish()
             }
-            Log.d("LoginScreen", "token not found")
+            else {
+                Log.d("LoginScreen", "token not found: "+ar)
+            }
         }
 
         override fun onError(ae: AuthError?) {
             //To change body of created functions use File | Settings | File Templates.
+            Log.d("LoginScreen", "error geting token: "+ae)
         }
     }
 
@@ -80,20 +79,13 @@ class LoginScreen : AppCompatActivity() {
         login_with_amazon.setOnClickListener(View.OnClickListener {
             _ -> AuthorizationManager.authorize(AuthorizeRequest
                         .Builder(requestContext)
-                        .addScopes(ProfileScope.profile(),  ProfileScope.userId())
+                        .addScopes(ProfileScope.profile(),  ProfileScope.postalCode()) // if you change these, need to also change the scopes val at top to match
                         .build())
         })
-
-        //--------------------------------------------------------//
-        // UNCOMMENT THE METHOD CALL BELOW TO CLEAR SQLITE TABLES //
-        //--------------------------------------------------------//
-         //ArtisanSync.resetLocalDB(applicationContext)
-        //--------------------------------------------------------//
     }
 
     override fun onStart() {
         super.onStart()
-        val scopes : Array<Scope> = arrayOf(ProfileScope.profile(), ProfileScope.postalCode())
         AuthorizationManager.getToken(this, scopes, checkTokenListener)
     }
 

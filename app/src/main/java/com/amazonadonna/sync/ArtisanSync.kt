@@ -17,13 +17,13 @@ import android.graphics.Bitmap
 
 
 object ArtisanSync: Syncronizer(), CoroutineScope {
-    var cgaId : String = "0"
+    //var cgaId : String = "0"
     private const val listAllArtisansURL = "https://7bd92aed.ngrok.io/artisan/listAllForCgo"
     private const val addArtisanURL = "https://7bd92aed.ngrok.io/artisan/add"
     private const val artisanPicURL = "https://7bd92aed.ngrok.io/artisan/updateImage"
 
-    override fun sync(context: Context) {
-        super.sync(context)
+    override fun sync(context: Context, cgaId: String) {
+        super.sync(context, cgaId)
 
         Log.i("ArtisanSync", "Syncing now!")
         uploadNewArtisans(context)
@@ -55,7 +55,7 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
 
     private fun downloadArtisans(context : Context) {
         //TODO update cgo id to real
-        val requestBody = FormBody.Builder().add("cgoId", cgaId)
+        val requestBody = FormBody.Builder().add("cgoId", mCgaId)
                 .build()
 
         val client = OkHttpClient()
