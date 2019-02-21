@@ -83,8 +83,7 @@ class AddItemReview : AppCompatActivity() {
             url = addItemURL
         }
         //TODO add process bar to show submitting process
-        val requestBody = FormBody.Builder().add("itemId", product.itemId)
-                .add("itemName", product.itemName)
+        val requestBody = FormBody.Builder().add("itemName", product.itemName)
                 .add("price", product.price.toString())
                 .add("description", product.description)
                 .add("artisanId", product.artisanId)
@@ -107,11 +106,11 @@ class AddItemReview : AppCompatActivity() {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.i("AddItemReview", body)
-
+                Log.i("AddItemReview", "prodcut id: $body")
+                product.itemId = body!!
 //                Thread().run {
                     submitPictureToDB(product)
-                submitDismiss(artisan)
+                    submitDismiss(artisan)
 
 //                }
 

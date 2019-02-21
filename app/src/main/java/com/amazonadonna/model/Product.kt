@@ -23,10 +23,10 @@ data class Product (
         @ColumnInfo(name = "itemQuantity") @Json(name = "itemQuantity") var itemQuantity : Int,
         @ColumnInfo(name = "productionTime") @Json(name = "productionTime") var productionTime : Int) : Serializable {
 
-    fun generateProductID() {
-        //TODO fill in logic for generating unique ID for product
-        var num = Random().nextInt()
-        itemId = ((artisanId.hashCode() + itemName.hashCode()) * 13).toString()
-    }
+//    fun generateProductID() {
+//        //TODO fill in logic for generating unique ID for product
+//        var num = Random().nextInt()
+//        itemId = ((artisanId.hashCode() + itemName.hashCode()) * 13).toString()
+//    }
 
 }

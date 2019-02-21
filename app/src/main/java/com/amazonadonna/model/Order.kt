@@ -21,10 +21,10 @@ data class Order (
         //TODO change format of date
         @ColumnInfo(name = "orderDate") @Json(name = "orderDate") var orderDate : String): Serializable {
 
-    fun generateOrderID() {
-        //TODO fill in logic for generating unique ID for artisan
-        var num = Random().nextInt()
-        orderId = shippingAddress + cgaId + num.toString()
-    }
+//    fun generateOrderID() {
+//        //TODO fill in logic for generating unique ID for artisan
+//        var num = Random().nextInt()
+//        orderId = shippingAddress + cgaId + num.toString()
+//    }
 
 }
