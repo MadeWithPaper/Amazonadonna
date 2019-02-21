@@ -72,6 +72,7 @@ class ArtisanPayout : AppCompatActivity() {
         intent.putExtra("artisan", artisan)
         intent.putExtra("payoutAmount", artisanPayout_amount.text.toString().toDouble())
         startActivity(intent)
+        finish()
     }
 
     private fun validateAmount(artisan : Artisan) : Boolean {

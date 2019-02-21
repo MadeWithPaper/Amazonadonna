@@ -39,30 +39,10 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
     val filteredArtisans: MutableList<Artisan> = mutableListOf()
     val oldFilteredArtisans: MutableList<Artisan> = mutableListOf()
 
-    private fun search(query: String): Completable = Completable.create {
-        val wanted = originalArtisans.filter {
-            it.artisanId.toLowerCase().contains(query) || it.artisanName.toLowerCase().contains(query) ||
-                    it.city.toLowerCase().contains(query) || it.country.toLowerCase().contains(query) || it.bio.toLowerCase().contains(query)
-        }.toList()
-
-        if (listArtisans_Search.text.toString() == "") { // empty search bar
-            filteredArtisans.clear()
-            filteredArtisans.addAll(originalArtisans)
-        } else {
-            filteredArtisans.clear()
-            filteredArtisans.addAll(wanted)
-        }
-        Log.d("ListOrders", "editText: " + listArtisans_Search.text.toString())
-        Log.d("ListOrders", "originalOrders: " + originalArtisans.toString())
-        Log.d("ListOrders", "filteredOrders: " + filteredArtisans.toString())
-        it.onComplete()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         filteredArtisans.clear()
         originalArtisans.clear()
         oldFilteredArtisans.clear()
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_all_artisans)
         cgaId = intent.extras.getString("cgaId")
@@ -126,6 +106,24 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
         }*/
         Log.d("ListAllArtisans", "fetching")
         //fetchJSON()
+    }
+
+    private fun search(query: String): Completable = Completable.create {
+        val wanted = originalArtisans.filter {
+            it.artisanName.contains(query, true) || it.city.contains(query, true) || it.country.contains(query, true) || it.bio.contains(query, true)
+        }.toList()
+
+        if (listArtisans_Search.text.toString() == "") { // empty search bar
+            filteredArtisans.clear()
+            filteredArtisans.addAll(originalArtisans)
+        } else {
+            filteredArtisans.clear()
+            filteredArtisans.addAll(wanted)
+        }
+        Log.d("ListOrders", "editText: " + listArtisans_Search.text.toString())
+        Log.d("ListOrders", "originalOrders: " + originalArtisans.toString())
+        Log.d("ListOrders", "filteredOrders: " + filteredArtisans.toString())
+        it.onComplete()
     }
 
     private suspend fun getArtisansFromDb() = withContext(Dispatchers.IO) {

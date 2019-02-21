@@ -93,31 +93,35 @@ class AddItemReview : AppCompatActivity() {
                 .add("shippingOption", product.ShippingOption)
                 .add("itemQuantity", product.itemQuantity.toString())
                 .add("productionTime", product.productionTime.toString())
-                .build()
-
+        if (editMode) {
+            requestBody.add("itemId", product.itemId)
+        }
         Log.d("AddItemReview", product.toString())
         val client = OkHttpClient()
 
         val request = Request.Builder()
                 .url(url)
-                .post(requestBody)
+                .post(requestBody.build())
                 .build()
 
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
                 Log.i("AddItemReview", "prodcut id: $body")
-                product.itemId = body!!
-//                Thread().run {
+                if (!editMode) {
+                    product.itemId = body!!
+                }
+                runOnUiThread {
+                    showResponseDialog(artisan, true)
+                }
                     submitPictureToDB(product)
-                    submitDismiss(artisan)
-
-//                }
-
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("AddItemReview", "failed to do POST request to database: " + url)
+                runOnUiThread {
+                    showResponseDialog(artisan, false)
+                }
             }
         })
 
