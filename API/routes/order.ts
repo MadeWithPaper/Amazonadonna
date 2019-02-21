@@ -3,6 +3,7 @@ import * as aws from 'aws-sdk'
 import { ddb } from '../server'
 import { OrderItem } from '../models/orderItem'
 import { unmarshUtil } from '../utilities/unmarshall'
+import * as uuid from 'uuid'
 
 const router = Router()
 
@@ -17,7 +18,7 @@ router.post('/listAllForCgo', (req: Request, res: Response) => {
     }
     ddb.query(listAllOrdersParams, (err, data) => {
         if (err) {
-            const msg = 'Error fetching orders in order/listAll: '
+            const msg = 'Error fetching orders in order/listAllForCgo: '
             console.log(msg + err)
             res.status(400).send(msg + err.message)
         } else {
@@ -30,10 +31,11 @@ router.post('/listAllForCgo', (req: Request, res: Response) => {
 })
 
 router.post('/add', (req: Request, res: Response) => {
+    const id = uuid.v1()
     const params: aws.DynamoDB.PutItemInput = {
         TableName: 'order',
         Item: {
-            orderId: { S: req.body.orderId },
+            orderId: { S: id },
             cgoId: { S: req.body.cgoId },
             shippedStatus: { BOOL: req.body.shippedStatus },
             numItems: { N: req.body.numItems },
@@ -49,7 +51,7 @@ router.post('/add', (req: Request, res: Response) => {
                 'Error adding order in order/add: ' + err.message
             )
         } else {
-            res.send('Successfully added')
+            res.json(id.toString())
         }
     })
 })
@@ -60,7 +62,7 @@ router.post('/getItems', (req: Request, res: Response) => {
         IndexName: 'orderId-index',
         KeyConditionExpression: 'orderId = :id',
         ExpressionAttributeValues: {
-            ':id': { N: req.body.orderId }
+            ':id': { S: req.body.orderId }
         }
     }
     ddb.query(getParamsFromItems, (err, data) => {
@@ -76,7 +78,7 @@ router.post('/getItems', (req: Request, res: Response) => {
                     return new Promise(resolve => {
                         const getItemParams: aws.DynamoDB.Types.GetItemInput = {
                             TableName: 'item',
-                            Key: { itemId: { N: item.itemId.toString() } }
+                            Key: { itemId: { S: item.itemId } }
                         }
                         ddb.getItem(
                             getItemParams,
@@ -123,7 +125,7 @@ router.post('/getItems', (req: Request, res: Response) => {
 router.post('/setShippedStatus', (req: Request, res: Response) => {
     const setShippedStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
         TableName: 'order',
-        Key: { orderId: { N: req.body.orderId } },
+        Key: { orderId: { S: req.body.orderId } },
         UpdateExpression: 'set shippedStatus = :u',
         ExpressionAttributeValues: {
             ':u': { BOOL: req.body.shippedStatus }

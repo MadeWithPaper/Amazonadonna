@@ -1,5 +1,5 @@
 interface Item {
-    itemId: number
+    itemId: string
     artisanId: string
     price: string
     description: string
@@ -8,8 +8,8 @@ interface Item {
     specificCategory: string
     itemName: string
     shippingOption: string
-    itemQuantity: number
-    productionTime: number
+    itemQuantity: string
+    productionTime: string
     pic0URL: string
     pic1URL: string
     pic2URL: string

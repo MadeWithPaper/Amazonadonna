@@ -1,18 +1,17 @@
 package com.amazonadonna.view
 
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
 import com.amazonadonna.model.Artisan
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_artisan_profile.*
 import android.text.method.ScrollingMovementMethod
-import android.R.id
-import android.net.Uri
-import android.os.Parcel
-import android.os.Parcelable
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
+import com.amazonadonna.database.ImageStorageProvider
+import com.amazonadonna.sync.ArtisanSync
+import com.amazonadonna.view.R
+import kotlinx.android.synthetic.main.list_artisan_cell.view.*
 
 
 class ArtisanProfile() : AppCompatActivity() {
@@ -20,7 +19,7 @@ class ArtisanProfile() : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_profile)
-
+        //ArtisanSync.sync(this)
         val artisan = intent.extras?.getSerializable("artisan") as Artisan
 
         artisanProfileBio.setMovementMethod(ScrollingMovementMethod())
@@ -41,9 +40,45 @@ class ArtisanProfile() : AppCompatActivity() {
     }
 
     private fun populateSelectedArtisan(artisan : Artisan) {
-        if (artisan.picURL != "Not set")
+        /*if (artisan.picURL != "Not set")
             Picasso.with(this).load(artisan.picURL).into(this.artisanProfilePicture)
         //DownLoadImageTask(view.imageView_artisanProfilePic).execute(artisan.picURL)
+        else
+            this.artisanProfilePicture.setImageResource(R.drawable.placeholder)*/
+        var isp = ImageStorageProvider(applicationContext)
+
+
+        if (artisan.picURL != "Not set" && artisan.picURL != null) {
+            var url = artisan.picURL!!
+
+            // If image is already on S3
+            if (url.substring(0, 5) == "https") {
+                var fileName = ImageStorageProvider.ARTISAN_IMAGE_PREFIX +
+                        url.substring(url.lastIndexOf('/') + 1, url?.length)
+
+                if (!isp.imageExists(fileName!!)) {
+                    var draw = this.artisanProfilePicture.drawable
+                    Picasso.with(applicationContext).load(artisan.picURL).into(
+                            this.artisanProfilePicture,
+                            object : com.squareup.picasso.Callback {
+                                override fun onSuccess() {
+                                    var drawable = draw as BitmapDrawable
+                                    isp.saveBitmap(drawable.bitmap, fileName)
+                                }
+
+                                override fun onError() {
+
+                                }
+                            })
+                } else {
+                    this.artisanProfilePicture.setImageBitmap(isp.loadBitmap(fileName))
+                }
+            }
+            else {
+                var fileName = ImageStorageProvider.ARTISAN_IMAGE_PREFIX + url
+                this.artisanProfilePicture.setImageBitmap(isp.loadBitmap(fileName))
+            }
+        }
         else
             this.artisanProfilePicture.setImageResource(R.drawable.placeholder)
 

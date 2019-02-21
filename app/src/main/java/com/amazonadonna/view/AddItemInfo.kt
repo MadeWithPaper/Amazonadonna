@@ -13,8 +13,8 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
+import com.amazonadonna.view.R
 import kotlinx.android.synthetic.main.activity_add_item_info.*
-import kotlinx.android.synthetic.main.list_item_cell.*
 
 class AddItemInfo : AppCompatActivity() {
 
@@ -128,11 +128,12 @@ class AddItemInfo : AppCompatActivity() {
         product.itemQuantity = addItemInfo_ProductQuantityTF.text.toString().toInt()
         product.ShippingOption = shippmentMethod
         product.productionTime = addItemInfo_ProductionTimeTF.text.toString().toInt()
+
         if (editMode)
         {
-
+        //TODO fix
         } else {
-            product.generateProductID()
+
         }
     }
 

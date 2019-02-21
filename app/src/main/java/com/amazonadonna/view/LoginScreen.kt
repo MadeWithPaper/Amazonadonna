@@ -1,8 +1,8 @@
 package com.amazonadonna.view
 
 import android.accounts.Account
-import android.accounts.AccountManager
-import android.content.Context
+import android.arch.persistence.room.RoomDatabase
+import android.content.ContentResolver
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,21 +13,24 @@ import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
 import com.amazon.identity.auth.device.api.authorization.*
 import com.amazon.identity.auth.device.api.workflow.RequestContext
+import com.amazonadonna.database.AppDatabase
+import com.amazonadonna.sync.ArtisanSync
 
 import kotlinx.android.synthetic.main.activity_login_screen.*
 
-// Constants
-// The authority for the sync adapter's content provider
-const val AUTHORITY = "com.amazonadonna.datasync.provider"
-// An account type, in the form of a domain name
-const val ACCOUNT_TYPE = "com.amazonadonna.datasync"
-// The account name
-const val ACCOUNT = "dummyaccount"
+const val AUTHORITY = "com.amazonadonna.provider"
+const val ACCOUNT_TYPE = "amazonadonna.com"
+const val ACCOUNT = "dummyaccount3"
+const val SECONDS_PER_MINUTE = 60L
+const val SYNC_INTERVAL_IN_MINUTES = 60L
+const val SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE
 
 class LoginScreen : AppCompatActivity() {
 
     private var requestContext : RequestContext = RequestContext.create(this)
-    private lateinit var mAccount: Account
+    private lateinit var mAccount : Account
+    // A content resolver for accessing the provider
+    private lateinit var mResolver: ContentResolver
 
     private var signUpListener = object  : AuthorizeListener() {
         /* Authorization was completed successfully. */
@@ -71,7 +74,6 @@ class LoginScreen : AppCompatActivity() {
 
         requestContext.registerListener(signUpListener)
 
-
         email_sign_in_button.setOnClickListener { test()/*attemptLogin()*/ }
 
         login_with_amazon.setOnClickListener(View.OnClickListener {
@@ -81,8 +83,13 @@ class LoginScreen : AppCompatActivity() {
                         .build())
         })
 
-        // Create the dummy account
-        mAccount = createSyncAccount()
+        //--------------------------------------------------------//
+        // UNCOMMENT THE METHOD CALL BELOW TO CLEAR SQLITE TABLES //
+        //--------------------------------------------------------//
+        // ArtisanSync.resetLocalDB(applicationContext)
+        //--------------------------------------------------------//
+
+        ArtisanSync.sync(applicationContext)
     }
 
     override fun onStart() {
@@ -112,10 +119,8 @@ class LoginScreen : AppCompatActivity() {
         return password.length > 4
     }
 
-    /**
-     * Create a new dummy account for the sync adapter
-     */
-    private fun createSyncAccount(): Account {
+    // Create a new dummy account for the sync adapter
+    /*private fun createSyncAccount(): Account {
         val accountManager = getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
         return Account(ACCOUNT, ACCOUNT_TYPE).also { newAccount ->
             /*
@@ -134,7 +139,8 @@ class LoginScreen : AppCompatActivity() {
                  * The account exists or some other error occurred. Log this, report it,
                  * or handle it internally.
                  */
+                Log.e("LoginScreen", "Error creating sync account")
             }
         }
-    }
+    }*/
 }
