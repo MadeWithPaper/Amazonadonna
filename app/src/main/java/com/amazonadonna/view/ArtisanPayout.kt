@@ -10,6 +10,7 @@ import java.util.*
 import android.app.DatePickerDialog
 import android.support.v7.app.AlertDialog
 import android.util.Log
+import com.amazonadonna.view.R
 
 
 class ArtisanPayout : AppCompatActivity() {

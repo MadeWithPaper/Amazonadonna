@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
+import com.amazonadonna.view.R
 import kotlinx.android.synthetic.main.activity_product_details.*
 
 class ProductDetails : AppCompatActivity() {

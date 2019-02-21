@@ -14,6 +14,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_STATS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
 
     <application
         android:allowBackup="true"
@@ -23,33 +25,33 @@
         android:supportsRtl="true"
         android:syncable="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PayoutSignature" />
-        <activity android:name=".ArtisanPayout" />
-        <activity android:name=".EditArtisan" />
-        <activity android:name=".ProductDetails" />
+        <activity android:name="com.amazonadonna.view.PayoutSignature" />
+        <activity android:name="com.amazonadonna.view.ArtisanPayout" />
+        <activity android:name="com.amazonadonna.view.EditArtisan" />
+        <activity android:name="com.amazonadonna.view.ProductDetails" />
         <activity
-            android:name=".AddItemReview"
+            android:name="com.amazonadonna.view.AddItemReview"
             android:launchMode="singleTop" />
         <activity
-            android:name=".AddItemImages"
+            android:name="com.amazonadonna.view.AddItemImages"
             android:launchMode="singleTop" />
         <activity
-            android:name=".AddItemInfo"
+            android:name="com.amazonadonna.view.AddItemInfo"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".AddItemCategory"
+            android:name="com.amazonadonna.view.AddItemCategory"
             android:launchMode="singleTop" />
-        <activity android:name=".ArtisanItemList" />
-        <activity android:name=".OrderScreen" />
+        <activity android:name="com.amazonadonna.view.ArtisanItemList" />
+        <activity android:name="com.amazonadonna.view.OrderScreen" />
         <activity
-            android:name=".ArtisanProfile"
+            android:name="com.amazonadonna.view.ArtisanProfile"
             android:label="@string/title_activity_artisan_profile"
             android:launchMode="singleTop"
-            android:parentActivityName=".ListAllArtisans">
+            android:parentActivityName="com.amazonadonna.view.ListAllArtisans">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ListAllArtisans" />
+                android:value="com.amazonadonna.view.ListAllArtisans" />
         </activity>
         <activity
             android:name="com.amazon.identity.auth.device.workflow.WorkflowActivity"
@@ -78,9 +80,9 @@
                 android:resource="@xml/fileprovider" />
         </provider>
 
-        <activity android:name=".HomeScreen" />
+        <activity android:name="com.amazonadonna.view.HomeScreen" />
         <activity
-            android:name=".LoginScreen"
+            android:name="com.amazonadonna.view.LoginScreen"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -89,36 +91,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ListAllArtisans"
+            android:name="com.amazonadonna.view.ListAllArtisans"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
-        <activity android:name=".AddArtisan" />
-        <activity android:name=".ListOrders" />
-
-        <service
-            android:name="com.amazonadonna.syncadapter.AuthenticatorService">
-            <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
-        </service>
-        <provider
-            android:name="com.amazonadonna.syncadapter.StubProvider"
-            android:authorities="com.amazonadonna.provider"
-            android:exported="false"
-            android:syncable="true"/>
-        <service
-            android:name="com.amazonadonna.syncadapter.SyncService"
-            android:exported="true"
-            android:process=":sync">
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
-            </intent-filter>
-            <meta-data android:name="android.content.SyncAdapter"
-                android:resource="@xml/syncadapter" />
-        </service>
+        <activity android:name="com.amazonadonna.view.AddArtisan" />
+        <activity android:name="com.amazonadonna.view.ListOrders" />
     </application>
 
 </manifest>

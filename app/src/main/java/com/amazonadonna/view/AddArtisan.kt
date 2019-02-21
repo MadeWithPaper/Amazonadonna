@@ -9,7 +9,6 @@ import android.widget.ImageView
 
 import android.text.TextUtils
 import android.util.Log
-import android.widget.Toast
 import okhttp3.*
 import android.content.Intent
 import android.provider.MediaStore
@@ -21,6 +20,8 @@ import android.content.ContentUris
 import android.net.Uri
 import java.io.*
 import android.graphics.BitmapFactory
+import com.amazonadonna.sync.ArtisanSync
+import com.amazonadonna.sync.Syncronizer
 
 class AddArtisan : AppCompatActivity() {
     private var cgaId : String = "0"
@@ -172,19 +173,20 @@ class AddArtisan : AppCompatActivity() {
         val bio = editText_bio.text.toString()
         val number = editText_ContactNumber.text.toString()
 
-         val newArtisan = Artisan(name, "", "", "", bio, cgaId,0.0,0.0, "", false, 0.0)
-            //TODO move to back end soon
-            newArtisan.generateArtisanID()
-            //parse location info
-            parseLoc(newArtisan)
-            Log.i("AddArtisan", "created new Artisan $newArtisan")
+         val newArtisan = Artisan(name, "", "", "", bio, cgaId,0.0,0.0, "Not set", Syncronizer.SYNC_NEW, 0.0)
+        //TODO move to back end soon
+        newArtisan.generateArtisanID()
+        //parse location info
+        parseLoc(newArtisan)
+        Log.i("AddArtisan", "created new Artisan $newArtisan")
 
-            //pop screen and add
-            submitToDB(newArtisan)
+        //pop screen and add
+        //submitToDB(newArtisan)
+        ArtisanSync.addArtisan(applicationContext, newArtisan, photoFile)
 
-            //clear all fields
-            clearFields()
-            super.onBackPressed()
+        //clear all fields
+        clearFields()
+        super.onBackPressed()
 
     }
 

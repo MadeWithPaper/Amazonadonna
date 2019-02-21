@@ -1,7 +1,5 @@
 package com.amazonadonna.view
 
-import android.app.LauncherActivity
-import android.content.ClipData
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
+import com.amazonadonna.view.R
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_artisan_item_list.*

@@ -12,6 +12,7 @@ import android.support.v7.util.DiffUtil
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.Order
+import com.amazonadonna.view.R
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_list_orders.*

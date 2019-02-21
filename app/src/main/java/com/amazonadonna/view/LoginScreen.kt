@@ -1,8 +1,7 @@
 package com.amazonadonna.view
 
 import android.accounts.Account
-import android.accounts.AccountManager
-import android.content.Context
+import android.content.ContentResolver
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,21 +12,23 @@ import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
 import com.amazon.identity.auth.device.api.authorization.*
 import com.amazon.identity.auth.device.api.workflow.RequestContext
+import com.amazonadonna.sync.ArtisanSync
 
 import kotlinx.android.synthetic.main.activity_login_screen.*
 
-// Constants
-// The authority for the sync adapter's content provider
-const val AUTHORITY = "com.amazonadonna.datasync.provider"
-// An account type, in the form of a domain name
-const val ACCOUNT_TYPE = "com.amazonadonna.datasync"
-// The account name
-const val ACCOUNT = "dummyaccount"
+const val AUTHORITY = "com.amazonadonna.provider"
+const val ACCOUNT_TYPE = "amazonadonna.com"
+const val ACCOUNT = "dummyaccount3"
+const val SECONDS_PER_MINUTE = 60L
+const val SYNC_INTERVAL_IN_MINUTES = 60L
+const val SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE
 
 class LoginScreen : AppCompatActivity() {
 
     private var requestContext : RequestContext = RequestContext.create(this)
-    private lateinit var mAccount: Account
+    private lateinit var mAccount : Account
+    // A content resolver for accessing the provider
+    private lateinit var mResolver: ContentResolver
 
     private var signUpListener = object  : AuthorizeListener() {
         /* Authorization was completed successfully. */
@@ -71,7 +72,6 @@ class LoginScreen : AppCompatActivity() {
 
         requestContext.registerListener(signUpListener)
 
-
         email_sign_in_button.setOnClickListener { test()/*attemptLogin()*/ }
 
         login_with_amazon.setOnClickListener(View.OnClickListener {
@@ -81,8 +81,37 @@ class LoginScreen : AppCompatActivity() {
                         .build())
         })
 
-        // Create the dummy account
-        mAccount = createSyncAccount()
+        ArtisanSync.sync(applicationContext)
+
+        //val mySync = TimeSync.get(applicationContext, ArtisanSync::class.java!!)
+        //mySync.sync()
+        //TimeSync.start(applicationContext)
+
+       /* mAccount = createSyncAccount()
+        Log.i("LoginScreen", mAccount.type + " " + mAccount.name)
+        mResolver = contentResolver
+
+        ContentResolver.setIsSyncable(mAccount, AUTHORITY, 1)
+        Log.i("LoginScreen", "Is syncable? - " + ContentResolver.getIsSyncable(mAccount, AUTHORITY))
+
+        val settingsBundle = Bundle().apply {
+            putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)
+            putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)
+        }
+        ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle)
+        Log.i("LoginScreen", "Is sync active? " + ContentResolver.isSyncActive(mAccount, AUTHORITY).toString())
+
+        val temp = ContentResolver.getSyncAdapterTypes()
+        for (item in temp) {
+            Log.i("LoginScreen", item.accountType + " " + item.authority)
+        }*/
+
+        // Turn on periodic syncing
+        /*ContentResolver.addPeriodicSync(
+                mAccount,
+                AUTHORITY,
+                Bundle.EMPTY,
+                SYNC_INTERVAL)*/
     }
 
     override fun onStart() {
@@ -112,10 +141,8 @@ class LoginScreen : AppCompatActivity() {
         return password.length > 4
     }
 
-    /**
-     * Create a new dummy account for the sync adapter
-     */
-    private fun createSyncAccount(): Account {
+    // Create a new dummy account for the sync adapter
+    /*private fun createSyncAccount(): Account {
         val accountManager = getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
         return Account(ACCOUNT, ACCOUNT_TYPE).also { newAccount ->
             /*
@@ -134,7 +161,8 @@ class LoginScreen : AppCompatActivity() {
                  * The account exists or some other error occurred. Log this, report it,
                  * or handle it internally.
                  */
+                Log.e("LoginScreen", "Error creating sync account")
             }
         }
-    }
+    }*/
 }

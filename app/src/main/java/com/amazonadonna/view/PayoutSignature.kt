@@ -10,6 +10,7 @@ import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AlertDialog
 import com.amazonadonna.model.Artisan
+import com.amazonadonna.view.R
 import okhttp3.*
 import java.io.*
 import java.text.SimpleDateFormat

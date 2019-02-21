@@ -17,6 +17,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.ImageView
 import com.amazonadonna.model.Artisan
+import com.amazonadonna.view.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_edit_artisan.*
 import okhttp3.*

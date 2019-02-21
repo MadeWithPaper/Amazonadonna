@@ -15,6 +15,7 @@ import android.content.ContentUris
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import com.amazonadonna.view.R
 
 
 class AddItemReview : AppCompatActivity() {

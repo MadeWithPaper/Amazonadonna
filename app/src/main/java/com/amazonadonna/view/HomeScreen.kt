@@ -9,6 +9,7 @@ import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
 import com.amazon.identity.auth.device.api.authorization.User
 import com.amazonadonna.database.AppDatabase
+import com.amazonadonna.view.R
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_home_screen.*
 import okhttp3.*
