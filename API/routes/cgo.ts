@@ -1,8 +1,6 @@
 import { Router, Request, Response } from 'express'
 import * as aws from 'aws-sdk'
 import { ddb, s3 } from '../server'
-import { unmarshUtil } from '../utilities/unmarshall'
-import * as uuid from 'uuid'
 
 const router = Router()
 
@@ -23,11 +21,10 @@ router.post('/getByAmznId', (req: Request, res: Response) => {
 })
 
 router.post('/add', (req: Request, res: Response) => {
-    const id = uuid.v1()
     const putCgoParams: aws.DynamoDB.PutItemInput = {
         TableName: 'cgo',
         Item: {
-            cgoId: { S: id },
+            cgoId: { S: req.body.amznId },
             city: { S: req.body.city },
             country: { S: req.body.country },
             name: { S: req.body.name },
@@ -41,7 +38,7 @@ router.post('/add', (req: Request, res: Response) => {
             console.log(msg, err)
             res.status(400).send(msg + err.message)
         } else {
-            res.json(id.toString())
+            res.send('Success!')
         }
     })
 })
