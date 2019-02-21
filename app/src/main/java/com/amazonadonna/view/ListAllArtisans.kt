@@ -1,6 +1,8 @@
 package com.amazonadonna.view
 
 import android.content.Intent
+import android.database.Cursor
+import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
@@ -18,13 +20,11 @@ import com.amazonadonna.view.R
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 import com.amazonadonna.database.ArtisanDao
-import com.amazonadonna.model.Order
 import com.jakewharton.rxbinding2.widget.textChanges
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_edit_artisan.*
-import kotlinx.android.synthetic.main.activity_list_orders.*
 import java.util.concurrent.TimeUnit
 
 class ListAllArtisans : AppCompatActivity(), CoroutineScope {
@@ -39,7 +39,7 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
     val filteredArtisans: MutableList<Artisan> = mutableListOf()
     val oldFilteredArtisans: MutableList<Artisan> = mutableListOf()
 
-    fun search(query: String): Completable = Completable.create {
+    private fun search(query: String): Completable = Completable.create {
         val wanted = originalArtisans.filter {
             it.artisanId.contains(query) || it.artisanName.contains(query) ||
                     it.city.contains(query) || it.country.contains(query) || it.bio.contains(query)
@@ -62,14 +62,11 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_all_artisans)
         cgaId = intent.extras.getString("cgaId")
-        //TODO add search bar
 
         recyclerView_listAllartisans.layoutManager = LinearLayoutManager(this)
 
         //load an empty list as placeholder before GET request completes
-        val emptyArtisanList: List<Artisan> = emptyList()
         recyclerView_listAllartisans.adapter = ListArtisanAdapter(this, originalArtisans)
-
         recyclerView_listAllartisans.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
         toolbar_addartisan.setOnClickListener {
@@ -153,6 +150,7 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
                 originalArtisans.addAll(artisans)
                 oldFilteredArtisans.addAll(artisans)
                 filteredArtisans.addAll(artisans)
+
 
                 artisanDao.insertAll(artisans)
 
