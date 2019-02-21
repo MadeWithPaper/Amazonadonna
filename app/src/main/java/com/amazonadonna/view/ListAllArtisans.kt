@@ -24,7 +24,6 @@ import com.jakewharton.rxbinding2.widget.textChanges
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_edit_artisan.*
 import java.util.concurrent.TimeUnit
 
 class ListAllArtisans : AppCompatActivity(), CoroutineScope {
