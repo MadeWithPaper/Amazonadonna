@@ -45,7 +45,7 @@ router.post('/add', (req: Request, res: Response) => {
     const putItemParams: aws.DynamoDB.PutItemInput = {
         TableName: 'item',
         Item: {
-            itemId: { N: id },
+            itemId: { S: id },
             artisanId: { S: req.body.artisanId },
             price: { S: req.body.price },
             description: { S: req.body.description },
@@ -119,7 +119,7 @@ router.post('/updateImage', (req: Request, res: Response) => {
             const updateExpress = 'set pic' + req.body.picIndex + 'URL = :u'
             const params: aws.DynamoDB.UpdateItemInput = {
                 TableName: 'item',
-                Key: { itemId: { N: req.body.itemId } },
+                Key: { itemId: { S: req.body.itemId } },
                 UpdateExpression: updateExpress,
                 ExpressionAttributeValues: { ':u': { S: picURL } },
                 ReturnValues: 'UPDATED_NEW'
@@ -151,7 +151,7 @@ router.post('/editItem', (req: Request, res: Response) => {
     // Get current item data
     const getItemParams: aws.DynamoDB.Types.GetItemInput = {
         TableName: 'item',
-        Key: { itemId: { N: req.body.itemId } }
+        Key: { itemId: { S: req.body.itemId } }
     }
     ddb.getItem(getItemParams, (err, data) => {
         if (err) {
@@ -211,7 +211,7 @@ router.post('/editItem', (req: Request, res: Response) => {
 
             const editItemParams: aws.DynamoDB.Types.UpdateItemInput = {
                 TableName: 'item',
-                Key: { itemId: { N: req.body.itemId } },
+                Key: { itemId: { S: req.body.itemId } },
                 UpdateExpression: `set artisanId = :artisanId, 
                                     price = :price, 
                                     description = :description,
@@ -272,7 +272,7 @@ router.post('/editItem', (req: Request, res: Response) => {
 router.post('/delete', (req: Request, res: Response) => {
     const deleteItemParams: aws.DynamoDB.Types.DeleteItemInput = {
         TableName: 'item',
-        Key: { itemId: { N: req.body.itemId } }
+        Key: { itemId: { S: req.body.itemId } }
     }
 
     ddb.deleteItem(deleteItemParams, (err, data) => {
