@@ -27,6 +27,7 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
 
         Log.i("ArtisanSync", "Syncing now!")
         uploadNewArtisans(context)
+        Log.i("ArtisanSync", "Done uploading, now downloading")
         downloadArtisans(context)
         Log.i("ArtisanSync", "Done syncing!")
 
@@ -74,6 +75,7 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
                 val gson = GsonBuilder().create()
                 val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
                 Log.d("HOTFIX2", artisans.toString())
+                artisanDao.deleteAll()
                 artisanDao.insertAll(artisans)
                 Log.d("HOTFIX3", artisanDao.toString())
 
@@ -102,7 +104,16 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
 
     private suspend fun setSyncedState(artisan: Artisan, context : Context) = withContext(Dispatchers.IO) {
         //AppDatabase.getDatabase(context).artisanDao().setSyncedState(artisan.artisanId, SYNCED)
+        val newArts2 = AppDatabase.getDatabase(context).artisanDao().getAllBySyncState(SYNC_NEW)
+        for (artisan in newArts2) {
+            Log.i("ArtisanSync", artisan.artisanId + " Synced: " + artisan.synced)
+        }
         AppDatabase.getDatabase(context).artisanDao().delete(artisan)
+        Log.i("ArtisanSync", "Deleting artisan with id " + artisan.artisanId)
+        val newArts = AppDatabase.getDatabase(context).artisanDao().getAllBySyncState(SYNC_NEW)
+        for (artisan in newArts) {
+            Log.i("ArtisanSync", artisan.artisanId + " Synced: " + artisan.synced)
+        }
     }
 
     private fun uploadArtisanImage(context : Context, artisan: Artisan) {

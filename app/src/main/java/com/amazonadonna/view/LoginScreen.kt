@@ -86,7 +86,7 @@ class LoginScreen : AppCompatActivity() {
         //--------------------------------------------------------//
         // UNCOMMENT THE METHOD CALL BELOW TO CLEAR SQLITE TABLES //
         //--------------------------------------------------------//
-        //ArtisanSync.resetLocalDB(applicationContext)
+        // ArtisanSync.resetLocalDB(applicationContext)
         //--------------------------------------------------------//
 
         ArtisanSync.sync(applicationContext)

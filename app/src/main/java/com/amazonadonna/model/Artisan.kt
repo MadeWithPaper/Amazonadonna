@@ -11,7 +11,7 @@ import java.util.*
 @Entity(tableName = "artisan")
 data class Artisan (
         @ColumnInfo(name = "artisanName") @Json(name = "artisanName") var artisanName : String,
-        @PrimaryKey @Json(name = "artisanId") var artisanId : String,
+        @PrimaryKey @ColumnInfo(name = "artisanId") @Json(name = "artisanId") var artisanId : String,
         @ColumnInfo(name = "city") @Json(name = "city") var city : String,
         @ColumnInfo(name = "country") @Json(name = "country") var country : String,
         @ColumnInfo(name = "bio") @Json(name = "bio")var bio : String,
