@@ -286,6 +286,7 @@ class AddArtisan : AppCompatActivity() {
                 .add("artisanName", artisan.artisanName)
                 .add("lat", artisan.lat.toString())
                 .add("lon", artisan.lon.toString())
+                //TODO remove hard code balance
                 .add("balance", "5000.0")
                 .build()
 

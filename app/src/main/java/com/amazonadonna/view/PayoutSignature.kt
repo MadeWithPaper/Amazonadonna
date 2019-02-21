@@ -153,7 +153,7 @@ class PayoutSignature : AppCompatActivity() {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()!!.string()
                 Log.i("PayoutSignature", "payoutid $body")
-                submitSignatureToDB(artisan, body, signatureFilePath)
+                submitSignatureToDB(artisan, body, signatureFilePath, amount)
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
@@ -163,11 +163,11 @@ class PayoutSignature : AppCompatActivity() {
 
         //showResponseDialog(artisan, true)
     }
-    private fun showResponseDialog(artisan: Artisan, status: Boolean) {
+    private fun showResponseDialog(artisan: Artisan, status: Boolean, amount: Double) {
         val builder = AlertDialog.Builder(this@PayoutSignature)
         if (status) {
-            builder.setTitle("Payout Status")
-            builder.setMessage("Payout Approved!")
+            builder.setTitle("Payout Approved!")
+            builder.setMessage("Current Artisan Balance: $ ${artisan.balance - amount}")
             builder.setOnDismissListener {
                 submitDismiss(artisan)
                 val intent = Intent(this, ArtisanProfile::class.java)
@@ -177,10 +177,10 @@ class PayoutSignature : AppCompatActivity() {
             }
         } else
         {
-            builder.setTitle("Payout Status")
-            builder.setMessage("Payout Failed!")
+            builder.setTitle("Payout Failed!")
+            builder.setMessage("Current Artisan Balance: $ ${artisan.balance}")
             builder.setOnDismissListener {
-                //submitDismiss(artisan)
+                //do nothing
             }
         }
 
@@ -188,7 +188,7 @@ class PayoutSignature : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun submitSignatureToDB(artisan: Artisan, payoutId : String , signatureFilePath: String) {
+    private fun submitSignatureToDB(artisan: Artisan, payoutId : String , signatureFilePath: String, amount: Double) {
         val signatureFile = File(signatureFilePath)
         Log.d("PayoutSignature", "submitSignatureToDB file " + signatureFile + " : " + signatureFile.exists())
 
@@ -211,7 +211,7 @@ class PayoutSignature : AppCompatActivity() {
                 val body = response?.body()?.string()
                 Log.d("PayoutSignature", "signature pic success $body")
                 runOnUiThread{
-                    showResponseDialog(artisan, true)
+                    showResponseDialog(artisan, true, amount)
                 }
                 signatureFile.delete()
                 Log.d("PayoutSignature", "signature file clean up " + signatureFile + " : " + signatureFile.exists())
@@ -221,7 +221,7 @@ class PayoutSignature : AppCompatActivity() {
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("PayoutSignature", "failed to do POST request to database $payoutSignatureURL")
                 runOnUiThread{
-                    showResponseDialog(artisan, false)
+                    showResponseDialog(artisan, false, amount)
                 }
                 signatureFile.delete()
                 Log.d("PayoutSignature", "signature file clean up " + signatureFile + " : " + signatureFile.exists())

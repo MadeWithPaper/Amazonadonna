@@ -111,15 +111,17 @@ class AddItemReview : AppCompatActivity() {
                 if (!editMode) {
                     product.itemId = body!!
                 }
-//                Thread().run {
+                runOnUiThread {
+                    showResponseDialog(artisan, true)
+                }
                     submitPictureToDB(product)
-
-//                }
-
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("AddItemReview", "failed to do POST request to database: " + url)
+                runOnUiThread {
+                    showResponseDialog(artisan, false)
+                }
             }
         })
 
