@@ -36,8 +36,8 @@ class ListAllArtisans : AppCompatActivity() {
 
     fun search(query: String): Completable = Completable.create {
         val wanted = originalArtisans.filter {
-            it.artisanId.contains(query) || it.artisanName.contains(query) ||
-                    it.city.contains(query) || it.country.contains(query) || it.bio.contains(query)
+            it.artisanId.toLowerCase().contains(query) || it.artisanName.toLowerCase().contains(query) ||
+                    it.city.toLowerCase().contains(query) || it.country.toLowerCase().contains(query) || it.bio.toLowerCase().contains(query)
         }.toList()
 
         if (listArtisans_Search.text.toString() == "") { // empty search bar
@@ -76,7 +76,7 @@ class ListAllArtisans : AppCompatActivity() {
                 .textChanges()
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .subscribe {
-                    search(it.toString())
+                    search(it.toString().toLowerCase())
                             .subscribeOn(Schedulers.computation())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe {
