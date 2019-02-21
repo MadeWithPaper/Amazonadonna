@@ -26,12 +26,9 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 
-class ListAllArtisans : AppCompatActivity(), LoaderCallbacks<Cursor> {
+class ListAllArtisans : AppCompatActivity() {
     var cgaId : String = "0"
     val listAllArtisansURL = "https://7bd92aed.ngrok.io/artisan/listAllForCgo"
-    val originalArtisans : MutableList<Artisan> = mutableListOf()
-    val filteredArtisans: MutableList<Artisan> = mutableListOf()
-    val oldFilteredArtisans: MutableList<Artisan> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,47 +38,13 @@ class ListAllArtisans : AppCompatActivity(), LoaderCallbacks<Cursor> {
         recyclerView_listAllartisans.layoutManager = LinearLayoutManager(this)
 
         //load an empty list as placeholder before GET request completes
-        //val emptyArtisanList : List<Artisan> = emptyList()
-        recyclerView_listAllartisans.adapter = ListArtisanAdapter(this, originalArtisans)
+        val emptyArtisanList : List<Artisan> = emptyList()
+        recyclerView_listAllartisans.adapter = ListArtisanAdapter(this, emptyArtisanList)
         recyclerView_listAllartisans.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-
-        listArtisan_Search
-                .textChanges()
-                .debounce(500, TimeUnit.MILLISECONDS)
-                .subscribe {
-                    search(it.toString())
-                            .subscribeOn(Schedulers.computation())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe {
-                                val diffResult = DiffUtil.calculateDiff(PostsDiffUtilCallback(oldFilteredArtisans, filteredArtisans))
-                                oldFilteredArtisans.clear()
-                                oldFilteredArtisans.addAll(filteredArtisans)
-                                diffResult.dispatchUpdatesTo((recyclerView_listAllartisans.adapter as ListArtisanAdapter))
-                            }
-                }
 
         toolbar_addartisan.setOnClickListener{
             addArtisan()
         }
-    }
-
-    private fun search(query: String): Completable = Completable.create {
-        val wanted = originalArtisans.filter { it ->
-            it.artisanName.contains(query) || it.city.contains(query) || it.country.contains(query)
-        }.toList()
-
-        if (listArtisan_Search.text.toString() == "") { // empty search bar
-            filteredArtisans.clear()
-            filteredArtisans.addAll(originalArtisans)
-        }
-        else {
-            filteredArtisans.clear()
-            filteredArtisans.addAll(wanted)
-        }
-        Log.d("ListAllArtisan", "editText: "+listArtisan_Search.text.toString())
-        Log.d("ListAllArtisan", "originalArtisans: $originalArtisans")
-        Log.d("ListAllArtisan", "filteredArtisans: $filteredArtisans")
-        it.onComplete()
     }
 
     override fun onStart() {
@@ -131,9 +94,7 @@ class ListAllArtisans : AppCompatActivity(), LoaderCallbacks<Cursor> {
                 //val artisans : List<com.amazonadonna.model.Artisan> =  gson.fromJson(body, mutableListOf<com.amazonadonna.model.Artisan>().javaClass)
                 //System.out.print(artisans.get(0))
                 val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
-                originalArtisans.addAll(artisans)
-                oldFilteredArtisans.addAll(artisans)
-                filteredArtisans.addAll(artisans)
+
 
                 artisanDao.insertAll(artisans)
 
@@ -147,27 +108,5 @@ class ListAllArtisans : AppCompatActivity(), LoaderCallbacks<Cursor> {
                 Log.e("ListAllArtisan", "failed to do POST request to database" + listAllArtisansURL)
             }
         })
-    }
-
-    override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<Cursor> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onLoadFinished(p0: Loader<Cursor>, p1: Cursor?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onLoaderReset(p0: Loader<Cursor>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    inner class PostsDiffUtilCallback(private val oldList: List<Artisan>, private val newList: List<Artisan>) : DiffUtil.Callback() {
-        override fun getOldListSize() = oldList.size
-
-        override fun getNewListSize() = newList.size
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) = oldList[oldItemPosition].artisanId == newList[newItemPosition].artisanId
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) = true // for the sake of simplicity we return true here but it can be changed to reflect a fine-grained control over which part of our views are updated
     }
 }
