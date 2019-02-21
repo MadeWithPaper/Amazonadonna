@@ -101,7 +101,8 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
     }
 
     private suspend fun setSyncedState(artisan: Artisan, context : Context) = withContext(Dispatchers.IO) {
-        AppDatabase.getDatabase(context).artisanDao().setSyncedState(artisan.artisanId, SYNCED)
+        //AppDatabase.getDatabase(context).artisanDao().setSyncedState(artisan.artisanId, SYNCED)
+        AppDatabase.getDatabase(context).artisanDao().delete(artisan)
     }
 
     private fun uploadArtisanImage(context : Context, artisan: Artisan) {
