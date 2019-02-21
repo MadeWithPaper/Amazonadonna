@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.Order
 import com.amazonadonna.model.Product
+import com.amazonadonna.view.R
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_order_screen.*

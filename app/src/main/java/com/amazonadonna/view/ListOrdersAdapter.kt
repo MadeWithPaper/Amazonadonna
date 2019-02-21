@@ -2,17 +2,13 @@ package com.amazonadonna.view
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.provider.Settings.Global.getString
-import android.util.Log
 import com.amazonadonna.model.Order
 //import kotlinx.android.synthetic.main.list_orders_cell.view.*
-import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_order_screen.view.*
+import com.amazonadonna.view.R
 import kotlinx.android.synthetic.main.list_orders_cell.view.*
 
 class ListOrdersAdapter (private val context: Context, private val orders : List<Order>) : RecyclerView.Adapter<OrdersViewHolder> () {

@@ -7,12 +7,7 @@ import com.amazonadonna.model.Artisan
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_artisan_profile.*
 import android.text.method.ScrollingMovementMethod
-import android.R.id
-import android.net.Uri
-import android.os.Parcel
-import android.os.Parcelable
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
+import com.amazonadonna.view.R
 
 
 class ArtisanProfile() : AppCompatActivity() {

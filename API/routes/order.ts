@@ -17,7 +17,7 @@ router.post('/listAllForCgo', (req: Request, res: Response) => {
     }
     ddb.query(listAllOrdersParams, (err, data) => {
         if (err) {
-            const msg = 'Error fetching orders in order/listAll: '
+            const msg = 'Error fetching orders in order/listAllForCgo: '
             console.log(msg + err)
             res.status(400).send(msg + err.message)
         } else {
