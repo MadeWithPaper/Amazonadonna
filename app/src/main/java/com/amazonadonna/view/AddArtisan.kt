@@ -9,7 +9,6 @@ import android.widget.ImageView
 
 import android.text.TextUtils
 import android.util.Log
-import android.widget.Toast
 import okhttp3.*
 import android.content.Intent
 import android.provider.MediaStore
@@ -21,8 +20,11 @@ import android.content.ContentUris
 import android.net.Uri
 import java.io.*
 import android.graphics.BitmapFactory
+import com.amazonadonna.sync.ArtisanSync
+import com.amazonadonna.sync.Syncronizer
 
 class AddArtisan : AppCompatActivity() {
+    private var cgaId : String = "0"
     private var photoFile: File? = null
     private val fileName: String = "output.png"
     private val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034
@@ -33,6 +35,9 @@ class AddArtisan : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_artisan)
+
+        cgaId = intent.extras.getString("cgaId")
+
         val IMAGE_UPLOADING_PERMISSION = 3
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
 
@@ -159,7 +164,7 @@ class AddArtisan : AppCompatActivity() {
     }
 
     //TODO clean up
-    fun makeNewArtisan() {
+    private fun makeNewArtisan() {
         //validate fields
         if (!validateFields()) {
             return
@@ -168,23 +173,24 @@ class AddArtisan : AppCompatActivity() {
         val bio = editText_bio.text.toString()
         val number = editText_ContactNumber.text.toString()
 
-         val newArtisan = Artisan(name, "", "", "", bio, "0",0.0,0.0, "", 0.0)
-            //TODO move to back end soon
-            newArtisan.generateArtisanID()
-            //parse location info
-            parseLoc(newArtisan)
-            Log.i("AddArtisan", "created new Artisan" + newArtisan.toString())
+         val newArtisan = Artisan(name, "", "", "", bio, cgaId,0.0,0.0, "Not set", Syncronizer.SYNC_NEW, 0.0)
+        //TODO move to back end soon
+        newArtisan.generateArtisanID()
+        //parse location info
+        parseLoc(newArtisan)
+        Log.i("AddArtisan", "created new Artisan $newArtisan")
 
-            //pop screen and add
-            submitToDB(newArtisan)
+        //pop screen and add
+        //submitToDB(newArtisan)
+        ArtisanSync.addArtisan(applicationContext, newArtisan, photoFile)
 
-            //clear all fields
-            clearFields()
-            super.onBackPressed()
+        //clear all fields
+        clearFields()
+        super.onBackPressed()
 
     }
 
-    fun parseLoc (artisan: Artisan) {
+    private fun parseLoc (artisan: Artisan) {
         val rawLoc = editText_loc.text.toString()
 
         val ind = rawLoc.indexOf(',')
@@ -193,7 +199,7 @@ class AddArtisan : AppCompatActivity() {
         artisan.country = rawLoc.substring(ind+1)
     }
 
-    fun clearFields() {
+    private fun clearFields() {
         editText_Name.text.clear()
         editText_ContactNumber.text.clear()
         editText_bio.text.clear()
@@ -204,29 +210,29 @@ class AddArtisan : AppCompatActivity() {
 
     //Validate all fields entered
     //TODO add more checks
-    fun validateFields() : Boolean {
+    private fun validateFields() : Boolean {
         if (TextUtils.isEmpty(editText_Name.text.toString())){
-            editText_Name.setError("Artisan Name can not be empty")
+            editText_Name.error = "Artisan Name can not be empty"
             return false
         }
 
         if (TextUtils.isEmpty(editText_loc.text.toString())) {
-            editText_loc.setError("Location field can not be empty")
+            editText_loc.error = "Location field can not be empty"
             return false
         }
 
         if ((!editText_loc.text.toString().contains(","))) {
-            editText_loc.setError("Missing ' , ' between City and Country")
+            editText_loc.error = "Missing ' , ' between City and Country"
             return false
         }
 
         if (TextUtils.isEmpty(editText_ContactNumber.text.toString())){
-            editText_ContactNumber.setError("Contact Number can not be empty")
+            editText_ContactNumber.error = "Contact Number can not be empty"
             return false
         }
 
         if (TextUtils.isEmpty(editText_bio.text.toString())){
-            editText_bio.setError("bio is empty")
+            editText_bio.error = "bio is empty"
             return false
         }
 
@@ -236,7 +242,7 @@ class AddArtisan : AppCompatActivity() {
     // source file does not exist
     fun submitPictureToDB(artisan: Artisan) {
         val sourceFile = photoFile!!
-        Log.d("AddArtisan", "submitPictureToDB file" + sourceFile + " : " + sourceFile!!.exists())
+        Log.d("AddArtisan", "submitPictureToDB file" + sourceFile + " : " + sourceFile.exists())
 
         val MEDIA_TYPE = MediaType.parse("image/png")
 
@@ -259,7 +265,7 @@ class AddArtisan : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("AddArtisan", "failed to do POST request to database" + artisanPicURL)
+                Log.e("AddArtisan", "failed to do POST request to database$artisanPicURL")
             }
         })
     }
@@ -282,6 +288,7 @@ class AddArtisan : AppCompatActivity() {
                 .add("artisanName", artisan.artisanName)
                 .add("lat", artisan.lat.toString())
                 .add("lon", artisan.lon.toString())
+                .add("balance", "5000.0")
                 .build()
 
         val client = OkHttpClient()
@@ -294,12 +301,12 @@ class AddArtisan : AppCompatActivity() {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.i("AddArtisan", body)
+                Log.i("AddArtisan", "success $body")
                 submitPictureToDB(artisan)
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("AddArtisan", "failed to do POST request to database" + addArtisanURL)
+                Log.e("AddArtisan", "failed to do POST request to database $addArtisanURL")
             }
         })
     }

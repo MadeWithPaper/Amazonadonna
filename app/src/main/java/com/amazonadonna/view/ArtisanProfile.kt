@@ -7,12 +7,7 @@ import com.amazonadonna.model.Artisan
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_artisan_profile.*
 import android.text.method.ScrollingMovementMethod
-import android.R.id
-import android.net.Uri
-import android.os.Parcel
-import android.os.Parcelable
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
+import com.amazonadonna.view.R
 
 
 class ArtisanProfile() : AppCompatActivity() {
@@ -56,18 +51,21 @@ class ArtisanProfile() : AppCompatActivity() {
         val intent = Intent(this, ArtisanItemList::class.java)
         intent.putExtra("selectedArtisan", artisan)
         startActivity(intent)
+        finish()
     }
 
     private fun artisanPayout(artisan: Artisan){
         val intent = Intent(this, ArtisanPayout::class.java)
         intent.putExtra("artisan", artisan)
         startActivity(intent)
+        finish()
     }
 
     private fun editArtisan(artisan: Artisan) {
         val intent = Intent(this, EditArtisan::class.java)
         intent.putExtra("artisan", artisan)
         startActivity(intent)
+        finish()
     }
     //TODO rating system
 }

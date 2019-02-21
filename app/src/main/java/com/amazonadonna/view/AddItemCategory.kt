@@ -11,6 +11,7 @@ import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.activity_add_item_category.*
 import android.widget.Spinner
 import com.amazonadonna.model.Product
+import com.amazonadonna.view.R
 
 
 class AddItemCategory : AppCompatActivity() {

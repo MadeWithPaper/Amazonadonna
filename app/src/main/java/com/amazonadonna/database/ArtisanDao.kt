@@ -1,11 +1,7 @@
 package com.amazonadonna.database
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Query
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Delete
+import android.arch.persistence.room.*
 import com.amazonadonna.model.Artisan
-import android.arch.persistence.room.OnConflictStrategy
 
 @Dao
 interface ArtisanDao {
@@ -15,8 +11,14 @@ interface ArtisanDao {
     @Query("SELECT picURL FROM artisan")
     fun getAllImages(): List<String>
 
+    @Query("SELECT * FROM artisan WHERE synced = (:syncState)")
+    fun getAllBySyncState(syncState: Int): List<Artisan>
+
     @Query("SELECT * FROM artisan WHERE artisanId IN (:artisanIds)")
     fun loadAllByIds(artisanIds: IntArray): List<Artisan>
+
+    @Query("UPDATE artisan SET synced = (:syncState) WHERE artisanId = (:artisanId)")
+    fun setSyncedState(artisanId: String, syncState: Int)
 
     @Query("SELECT * FROM artisan WHERE artisanName LIKE :artisanName " +
             "LIMIT 1")
@@ -34,4 +36,7 @@ interface ArtisanDao {
 
     @Delete
     fun delete(artisan: Artisan)
+
+    @Query("DELETE FROM artisan")
+    fun deleteAll()
 }

@@ -17,7 +17,7 @@ router.post('/listAllForCgo', (req: Request, res: Response) => {
     }
     ddb.query(listAllOrdersParams, (err, data) => {
         if (err) {
-            const msg = 'Error fetching orders in order/listAll: '
+            const msg = 'Error fetching orders in order/listAllForCgo: '
             console.log(msg + err)
             res.status(400).send(msg + err.message)
         } else {
@@ -55,7 +55,7 @@ router.post('/add', (req: Request, res: Response) => {
 })
 
 router.post('/getItems', (req: Request, res: Response) => {
-    const getItemsParams: aws.DynamoDB.Types.QueryInput = {
+    const getParamsFromItems: aws.DynamoDB.Types.QueryInput = {
         TableName: 'orderItem',
         IndexName: 'orderId-index',
         KeyConditionExpression: 'orderId = :id',
@@ -63,7 +63,7 @@ router.post('/getItems', (req: Request, res: Response) => {
             ':id': { N: req.body.orderId }
         }
     }
-    ddb.query(getItemsParams, (err, data) => {
+    ddb.query(getParamsFromItems, (err, data) => {
         if (err) {
             console.log('Error fetching orderItem in order/getItems: ' + err)
             res.status(400).send(

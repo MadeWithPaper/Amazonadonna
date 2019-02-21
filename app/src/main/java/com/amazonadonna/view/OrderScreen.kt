@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.Order
 import com.amazonadonna.model.Product
+import com.amazonadonna.view.R
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_order_screen.*
@@ -19,6 +20,7 @@ import java.io.IOException
 
 class OrderScreen : AppCompatActivity() {
     var orderIdString = ""
+    val getItemURL = "https://7bd92aed.ngrok.io/order/getItems"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,13 +48,12 @@ class OrderScreen : AppCompatActivity() {
         fetchJSON()
     }
 
-        //TODO update "artisanDao" to be productDao
+    //TODO update "artisanDao" to be productDaogi
     private fun fetchJSON() {
-        val url = "https://7bd92aed.ngrok.io/order/getItems"
         val requestBody = FormBody.Builder()
                 .add("orderId", orderIdString)
                 .build()
-        val request = Request.Builder().url(url).post(requestBody).build()
+        val request = Request.Builder().url(getItemURL).post(requestBody).build()
         val db = Room.databaseBuilder(
                 applicationContext,
                 AppDatabase::class.java, "amazonadonna-main"
@@ -79,7 +80,7 @@ class OrderScreen : AppCompatActivity() {
 
             override fun onFailure(call: Call?, e: IOException?) {
                 println("Failed to execute request")
-                Log.d("ERROR", "Failed to execute GET request to " + url)
+                Log.d("ERROR", "Failed to execute GET request to " + getItemURL)
             }
         })
     }
