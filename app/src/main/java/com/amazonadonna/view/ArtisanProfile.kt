@@ -7,6 +7,7 @@ import com.amazonadonna.model.Artisan
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_artisan_profile.*
 import android.text.method.ScrollingMovementMethod
+import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.view.R
 
 
@@ -15,7 +16,7 @@ class ArtisanProfile() : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_profile)
-
+        //ArtisanSync.sync(this)
         val artisan = intent.extras?.getSerializable("artisan") as Artisan
 
         artisanProfileBio.setMovementMethod(ScrollingMovementMethod())

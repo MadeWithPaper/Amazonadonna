@@ -82,7 +82,7 @@ class LoginScreen : AppCompatActivity() {
         })
 
         ArtisanSync.sync(applicationContext)
-
+        
         //val mySync = TimeSync.get(applicationContext, ArtisanSync::class.java!!)
         //mySync.sync()
         //TimeSync.start(applicationContext)

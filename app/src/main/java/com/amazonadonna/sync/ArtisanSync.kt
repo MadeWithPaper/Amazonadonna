@@ -74,8 +74,9 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
 
                 val gson = GsonBuilder().create()
                 val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
-
+                Log.d("HOTFIX2", artisans.toString())
                 artisanDao.insertAll(artisans)
+                Log.d("HOTFIX3", artisanDao.toString())
 
                 Log.i("ArtisanSync", "Successfully synced Artisan data")
             }
@@ -139,8 +140,7 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
 
     private fun uploadSingleArtisan(context: Context, artisan: Artisan) {
 
-        val requestBody = FormBody.Builder().add("artisanId",artisan.artisanId)
-                .add("cgoId", artisan.cgoId)
+        val requestBody = FormBody.Builder().add("cgoId", artisan.cgoId)
                 .add("bio", artisan.bio)
                 .add("city",artisan.city)
                 .add("country", artisan.country)
@@ -160,6 +160,7 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
+                artisan.artisanId = body!!
                 Log.i("AddArtisan", "success $body")
                 if (artisan.picURL != "Not set") {
                     uploadArtisanImage(context, artisan)

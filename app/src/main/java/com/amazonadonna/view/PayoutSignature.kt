@@ -11,6 +11,7 @@ import android.net.Uri
 import android.support.v7.app.AlertDialog
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.view.R
+import kotlinx.android.synthetic.main.activity_artisan_item_list.*
 import okhttp3.*
 import java.io.*
 import java.text.SimpleDateFormat
@@ -21,7 +22,8 @@ class PayoutSignature : AppCompatActivity() {
 
     private val REQUEST_EXTERNAL_STORAGE = 3
     private val updateURL = "https://7bd92aed.ngrok.io/artisan/edit"
-    private val payoutSignatureURL = ""
+    private val payoutHistory = "https://7bd92aed.ngrok.io/payout/add"
+    private val payoutSignatureURL = "https://7bd92aed.ngrok.io/payout/updateImage"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,10 +91,15 @@ class PayoutSignature : AppCompatActivity() {
         return dateFormat.format(date) + "_" + artisan.artisanId + amount
     }
 
+    private fun getCurrentDate() : String {
+        val dateFormat = SimpleDateFormat("yyy_mm_dd_HHmmss", Locale.getDefault())
+        val date = Date()
+        return dateFormat.format(date)
+    }
+
     private fun updateArtisanBalance(artisan: Artisan, amount: Double, signatureFilePath : String) {
         Log.i("PayoutSignature", "updating Artisan with new balance of: " + (artisan.balance - amount).toString())
         val requestBody = FormBody.Builder().add("artisanId", artisan.artisanId)
-                //.add("cgoId", artisan.cgoId)
                 .add("balance", (artisan.balance - amount).toString())
 
         val client = OkHttpClient()
@@ -104,9 +111,10 @@ class PayoutSignature : AppCompatActivity() {
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.i("PayoutSignature", body)
+                Log.i("PayoutSignature", "artisan update $body")
                 //balance updated now send signature
-                submitSignatureToDB(artisan, signatureFilePath)
+                submitPayoutToDB(artisan, amount, signatureFilePath)
+                //submitSignatureToDB(artisan, signatureFilePath)
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
@@ -114,9 +122,35 @@ class PayoutSignature : AppCompatActivity() {
             }
         })
 
-        showResponseDialog(artisan, true)
+        //showResponseDialog(artisan, true)
     }
 
+    private fun submitPayoutToDB(artisan: Artisan, amount: Double, signatureFilePath: String) {
+        val requestBody = FormBody.Builder().add("artisanId", artisan.artisanId)
+                .add("cgoId", artisan.cgoId)
+                .add("amount", amount.toString())
+                .add("date", getCurrentDate())
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+                .url(payoutHistory)
+                .post(requestBody.build())
+                .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()!!.string()
+                Log.i("PayoutSignature", "payoutid $body")
+                submitSignatureToDB(body, signatureFilePath)
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.e("PayoutSignature", "failed to do POST request to database $payoutHistory")
+            }
+        })
+
+        //showResponseDialog(artisan, true)
+    }
     private fun showResponseDialog(artisan: Artisan, status: Boolean) {
         val builder = AlertDialog.Builder(this@PayoutSignature)
         if (status) {
@@ -142,27 +176,7 @@ class PayoutSignature : AppCompatActivity() {
         dialog.show()
     }
 
-//    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-//        when (requestCode) {
-//            REQUEST_EXTERNAL_STORAGE -> {
-//                if (grantResults.isEmpty()
-//                        || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-//                    Toast.makeText(this, "Cannot write images to external storage", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
-//    }
-//
-//    private fun getAlbumStorageDir(albumName: String): File {
-//        // Get the directory for the user's public pictures directory.
-//        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), albumName)
-//        if (!file.mkdirs()) {
-//            Log.e("SignaturePad", "Directory not created")
-//        }
-//        return file
-//    }
-
-    private fun submitSignatureToDB(artisan: Artisan, signatureFilePath: String) {
+    private fun submitSignatureToDB(payoutId : String , signatureFilePath: String) {
         val signatureFile = File(signatureFilePath)
         Log.d("PayoutSignature", "submitSignatureToDB file" + signatureFile + " : " + signatureFile.exists())
 
@@ -170,7 +184,7 @@ class PayoutSignature : AppCompatActivity() {
 
         val requestBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("artisanId", artisan.artisanId)
+                .addFormDataPart("payoutId", payoutId)
                 .addFormDataPart("image", "payout.png", RequestBody.create(MEDIA_TYPE, signatureFile))
                 .build()
 
@@ -183,7 +197,7 @@ class PayoutSignature : AppCompatActivity() {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.d("PayoutSignature", body)
+                Log.d("PayoutSignature", "signature pic $body")
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
