@@ -39,7 +39,7 @@ router.post('/add', (req: Request, res: Response) => {
             payoutId: { S: req.body.payoutId },
             artisanId: { S: req.body.artisanId },
             cgoId: { S: req.body.cgoId },
-            amount: { N: req.body.numItems },
+            amount: { N: req.body.amount },
             /*Date values are stored as ISO-8601 formatted strings*/
             date: { S: req.body.date },
             signaturePicURL: { S: 'Not set' }

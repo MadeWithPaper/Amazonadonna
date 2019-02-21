@@ -236,10 +236,10 @@ router.post('/editItem', (req: Request, res: Response) => {
                     ':itemName': { S: whatToUpdate.itemName },
                     ':shippingOption': { S: whatToUpdate.shippingOption },
                     ':itemQuantity': {
-                        N: whatToUpdate.itemQuantity.toString()
+                        N: whatToUpdate.itemQuantity
                     },
                     ':productionTime': {
-                        N: whatToUpdate.productionTime.toString()
+                        N: whatToUpdate.productionTime
                     },
                     ':pic0URL': { S: whatToUpdate.pic0URL },
                     ':pic1URL': { S: whatToUpdate.pic1URL },

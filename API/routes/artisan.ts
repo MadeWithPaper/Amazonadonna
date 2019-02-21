@@ -188,9 +188,9 @@ router.post('/edit', (req: Request, res: Response) => {
                     ':city': { S: whatToUpdate.city },
                     ':country': { S: whatToUpdate.country },
                     ':artisanName': { S: whatToUpdate.artisanName },
-                    ':lat': { N: whatToUpdate.lat.toString() },
-                    ':lon': { N: whatToUpdate.lon.toString() },
-                    ':balance': { N: whatToUpdate.balance.toString() },
+                    ':lat': { N: whatToUpdate.lat },
+                    ':lon': { N: whatToUpdate.lon },
+                    ':balance': { N: whatToUpdate.balance },
                     ':picURL': { S: whatToUpdate.picURL }
                 },
                 ReturnValues: 'UPDATED_NEW'
