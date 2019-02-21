@@ -1,15 +1,20 @@
-package com.amazonadonna.syncadapter
+package com.amazonadonna.sync
 
 import android.content.Context
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
+import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.Artisan
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.*
 import okhttp3.*
+import java.io.File
 import java.io.IOException
-import kotlin.coroutines.CoroutineContext
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+
+
 
 object ArtisanSync: Syncronizer(), CoroutineScope {
     var cgaId : String = "0"
@@ -22,20 +27,30 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
         super.sync(context)
 
         Log.i("ArtisanSync", "Syncing now!")
-        downloadArtisans(context)
         uploadNewArtisans(context)
+        downloadArtisans(context)
         Log.i("ArtisanSync", "Done syncing!")
 
     }
 
-    fun addArtisan(context : Context, artisan : Artisan) {
+    fun addArtisan(context : Context, artisan : Artisan, photoFile: File? = null) {
+        if (photoFile != null) {
+            val sourceFile = photoFile!!
+            var fileName = artisan.artisanId + ".png"
+            val bitmap = BitmapFactory.decodeFile(sourceFile.absolutePath)
+            var isp = ImageStorageProvider(context)
+            isp.saveBitmap(bitmap, ImageStorageProvider.ARTISAN_IMAGE_PREFIX + fileName)
+            artisan.picURL = fileName
+        }
+
         launch {
             addArtisanHelper(context, artisan)
         }
+
     }
 
     private suspend fun addArtisanHelper(context : Context, artisan : Artisan) = withContext(Dispatchers.IO) {
-        val artisanDao = AppDatabase.getDatabase(context).artisanDao().insert(artisan)
+        AppDatabase.getDatabase(context).artisanDao().insert(artisan)
     }
 
     private fun downloadArtisans(context : Context) {
@@ -61,7 +76,6 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
                 val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
 
                 artisanDao.insertAll(artisans)
-                //artisanDao.deleteAll()
 
                 Log.i("ArtisanSync", "Successfully synced Artisan data")
             }
@@ -76,16 +90,54 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
         launch {
             val newArtisans = getNewArtisans(context)
             for (artisan in newArtisans) {
-                uploadSingleArtisan(artisan)
+                Log.i("ArtisanSync", artisan.synced.toString())
+                uploadSingleArtisan(context, artisan)
             }
         }
     }
 
     private suspend fun getNewArtisans(context : Context) = withContext(Dispatchers.IO) {
-        AppDatabase.getDatabase(context).artisanDao().getAllBySyncState(SYNC_NEW) as List<Artisan>
+        AppDatabase.getDatabase(context).artisanDao().getAllBySyncState(SYNC_NEW)
     }
 
-    private fun uploadSingleArtisan(artisan: Artisan) {
+    private suspend fun setSyncedState(artisan: Artisan, context : Context) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).artisanDao().setSyncedState(artisan.artisanId, SYNCED)
+    }
+
+    private fun uploadArtisanImage(context : Context, artisan: Artisan) {
+        val sourceFile: File = context.getFileStreamPath(ImageStorageProvider.ARTISAN_IMAGE_PREFIX + artisan.picURL)
+
+        val MEDIA_TYPE = MediaType.parse("image/png")
+
+        val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("artisanId", artisan.artisanId)
+                .addFormDataPart("image", "profile.png", RequestBody.create(MEDIA_TYPE, sourceFile))
+                .build()
+
+        val request = Request.Builder()
+                .url(artisanPicURL)
+                .post(requestBody)
+                .build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object: Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()?.string()
+                Log.d("AddArtisan", body)
+                launch {
+                    setSyncedState(artisan, context)
+                }
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.e("AddArtisan", "failed to do POST request to database$artisanPicURL")
+                Log.e("AddArtisan", e!!.message)
+            }
+        })
+    }
+
+    private fun uploadSingleArtisan(context: Context, artisan: Artisan) {
 
         val requestBody = FormBody.Builder().add("artisanId",artisan.artisanId)
                 .add("cgoId", artisan.cgoId)
@@ -109,7 +161,14 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
                 Log.i("AddArtisan", "success $body")
-                //submitPictureToDB(artisan)
+                if (artisan.picURL != "Not set") {
+                    uploadArtisanImage(context, artisan)
+                }
+                else {
+                    launch {
+                        setSyncedState(artisan, context)
+                    }
+                }
             }
 
             override fun onFailure(call: Call?, e: IOException?) {

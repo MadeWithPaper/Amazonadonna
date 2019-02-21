@@ -1,4 +1,4 @@
-package com.amazonadonna.syncadapter
+package com.amazonadonna.sync
 
 import android.content.Context
 import kotlinx.coroutines.CoroutineScope
@@ -8,9 +8,9 @@ import kotlin.coroutines.CoroutineContext
 
 abstract class Syncronizer : CoroutineScope {
     companion object {
-        const val SYNC_NEW = 0
+        const val SYNC_NEW = 1
         const val SYNC_EDIT = 2
-        const val SYNCED = 1
+        const val SYNCED = 0
     }
 
     lateinit var job: Job
