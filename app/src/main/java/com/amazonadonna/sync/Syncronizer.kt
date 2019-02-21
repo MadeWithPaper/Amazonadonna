@@ -1,9 +1,11 @@
 package com.amazonadonna.sync
 
 import android.content.Context
+import com.amazonadonna.database.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 abstract class Syncronizer : CoroutineScope {
@@ -20,5 +22,11 @@ abstract class Syncronizer : CoroutineScope {
 
     open fun sync(context: Context) {
         job = Job()
+    }
+
+    fun resetLocalDB(context: Context) {
+        launch {
+            AppDatabase.getDatabase(context).clearAllTables()
+        }
     }
 }

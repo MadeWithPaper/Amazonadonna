@@ -23,7 +23,6 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
     private const val artisanPicURL = "https://7bd92aed.ngrok.io/artisan/updateImage"
 
     override fun sync(context: Context) {
-        //job = Job()
         super.sync(context)
 
         Log.i("ArtisanSync", "Syncing now!")
