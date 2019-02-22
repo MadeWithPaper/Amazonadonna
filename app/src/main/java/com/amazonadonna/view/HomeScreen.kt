@@ -32,6 +32,11 @@ class HomeScreen : AppCompatActivity() {
             ArtisanSync.sync(applicationContext, cgaID)
             fetchJSONCGA()
             Log.d("HomeScreen", cgaID)
+
+            var list = applicationContext.fileList()
+            for (file in list) {
+                Log.d("HomeScreen", file)
+            }
         }
 
         override fun onError(ae: AuthError?) {

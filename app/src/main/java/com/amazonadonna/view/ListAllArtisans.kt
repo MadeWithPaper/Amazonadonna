@@ -77,7 +77,7 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
     override fun onResume() {
         super.onResume()
 
-        ArtisanSync.sync(this, cgaId)
+        //ArtisanSync.sync(this, cgaId)
     }
 
     override fun onStart() {

@@ -30,7 +30,7 @@ class ListArtisanAdapter (private val context: Context, private val artisans : L
 
     override fun onBindViewHolder(holder: ArtisanViewHolder, position: Int) {
         val artisan = artisans.get(position)
-        holder.bindArtisian(artisan)
+        holder.bindArtisian(artisan, context)
 
         holder.view.setOnClickListener{
             val intent = Intent(context, ArtisanProfile::class.java)
@@ -45,13 +45,13 @@ class ListArtisanAdapter (private val context: Context, private val artisans : L
 
 class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
 
-    fun bindArtisian(artisan: Artisan) {
+    fun bindArtisian(artisan: Artisan, context: Context) {
         Log.d("URL:::::", artisan.picURL)
        // view.imageView_artisanProfilePic.setImageResource(R.drawable.placeholder)
 
 
-        var isp = ImageStorageProvider(view.context)
-        isp.loadImageIntoUI(artisan.picURL, view.imageView_artisanProfilePic, ImageStorageProvider.ARTISAN_IMAGE_PREFIX)
+        var isp = ImageStorageProvider(context)
+        isp.loadImageIntoUI(artisan.picURL, view.imageView_artisanProfilePic, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, view.context)
 
         /*if (artisan.picURL != "Not set" && artisan.picURL != null) {
             var url = artisan.picURL!!

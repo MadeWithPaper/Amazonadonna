@@ -47,7 +47,7 @@ class ArtisanProfile() : AppCompatActivity() {
             this.artisanProfilePicture.setImageResource(R.drawable.placeholder)*/
 
         var isp = ImageStorageProvider(applicationContext)
-        isp.loadImageIntoUI(artisan.picURL, this.artisanProfilePicture, ImageStorageProvider.ARTISAN_IMAGE_PREFIX)
+        isp.loadImageIntoUI(artisan.picURL, this.artisanProfilePicture, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
 
         artisanProfileName.text = artisan.artisanName
         artisanProfileBio.text = artisan.bio

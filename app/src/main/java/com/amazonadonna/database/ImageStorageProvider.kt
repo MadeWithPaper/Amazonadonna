@@ -13,7 +13,7 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import android.graphics.drawable.Drawable
-
+import android.util.Log
 
 
 class ImageStorageProvider(var context: Context) {
@@ -65,12 +65,27 @@ class ImageStorageProvider(var context: Context) {
         return bitmap
     }
 
+    fun deleteBitmap(picName: String): Bitmap? {
+        var bitmap: Bitmap? = null
+        var fileInputStream: FileInputStream? = null
+
+        try {
+            context.deleteFile(picName)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            fileInputStream?.close()
+        }
+
+        return bitmap
+    }
+
     // Load the given picture into the given ImageView using logic:
     //      If image is available locally, then use local image
     //      Else load the image from the server and store it locally
-    fun loadImageIntoUI(picURL: String?, iv: ImageView, prefix: String) {
-        var isp = ImageStorageProvider(context)
-
+    fun loadImageIntoUI(picURL: String?, iv: ImageView, prefix: String, viewContext: Context) {
         if (picURL != "Not set" && picURL != null) {
             var url = picURL
 
@@ -79,28 +94,26 @@ class ImageStorageProvider(var context: Context) {
                 var fileName = prefix +
                         url.substring(url.lastIndexOf('/') + 1, url.length)
 
-                if (!isp.imageExists(fileName!!)) {
-                    val target = object : com.squareup.picasso.Target {
+                if (!imageExists(fileName!!)) {
+                    Log.d("ISP", "Retrieving image from S3")
+                    Picasso.with(viewContext).load(url).into(
+                            iv,
+                            object: com.squareup.picasso.Callback {
+                                override fun onSuccess() {
+                                    var drawable = iv.drawable as BitmapDrawable
+                                    saveBitmap(drawable.bitmap, fileName)
+                                }
+                                override fun onError() {
 
-                        override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
-                            iv.setImageBitmap(bitmap)
-                            isp.saveBitmap(bitmap, fileName)
-                        }
-                        override fun onBitmapFailed(errorDrawable: Drawable?) {
-
-                        }
-                        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-
-                        }
-                    }
-                    Picasso.with(context).load(picURL).into(target)
+                                }
+                            })
                 } else {
-                    iv.setImageBitmap(isp.loadBitmap(fileName))
+                    iv.setImageBitmap(loadBitmap(fileName))
                 }
             }
             else {
                 var fileName = prefix + url
-                iv.setImageBitmap(isp.loadBitmap(fileName))
+                iv.setImageBitmap(loadBitmap(fileName))
             }
         }
         else

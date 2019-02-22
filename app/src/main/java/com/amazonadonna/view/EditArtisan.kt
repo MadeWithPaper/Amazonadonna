@@ -57,7 +57,7 @@ class EditArtisan : AppCompatActivity() {
             this.editArtisan_pic.setImageResource(R.drawable.placeholder)
         }*/
         var isp = ImageStorageProvider(applicationContext)
-        isp.loadImageIntoUI(oldArtisan.picURL, this.editArtisan_pic, ImageStorageProvider.ARTISAN_IMAGE_PREFIX)
+        isp.loadImageIntoUI(oldArtisan.picURL, this.editArtisan_pic, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
 
         pic = editArtisan_pic.drawable
 

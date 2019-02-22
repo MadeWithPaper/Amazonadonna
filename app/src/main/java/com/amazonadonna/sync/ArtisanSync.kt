@@ -36,14 +36,6 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
     }
 
     fun addArtisan(context : Context, artisan : Artisan, photoFile: File? = null) {
-        /*if (photoFile != null) {
-            val sourceFile = photoFile!!
-            var fileName = artisan.artisanId + ".png"
-            val bitmap = BitmapFactory.decodeFile(sourceFile.absolutePath)
-            var isp = ImageStorageProvider(context)
-            isp.saveBitmap(bitmap, ImageStorageProvider.ARTISAN_IMAGE_PREFIX + fileName)
-            artisan.picURL = fileName
-        }*/
         stageImageUpdate(context, artisan, photoFile)
 
         launch {
@@ -53,14 +45,6 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
     }
 
     fun updateArtisan(context : Context, artisan : Artisan, newPhoto: File? = null) {
-        /*if (newPhoto != null) {
-            val sourceFile = newPhoto!!
-            var fileName = artisan.artisanId + ".png"
-            val bitmap = BitmapFactory.decodeFile(sourceFile.absolutePath)
-            var isp = ImageStorageProvider(context)
-            isp.saveBitmap(bitmap, ImageStorageProvider.ARTISAN_IMAGE_PREFIX + fileName)
-            artisan.picURL = fileName
-        }*/
         stageImageUpdate(context, artisan, newPhoto)
         artisan.synced = SYNC_EDIT
 
@@ -76,6 +60,7 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
             var fileName = artisan.artisanId + ".png"
             val bitmap = BitmapFactory.decodeFile(sourceFile.absolutePath)
             var isp = ImageStorageProvider(context)
+            //isp.deleteBitmap(fileName)
             isp.saveBitmap(bitmap, ImageStorageProvider.ARTISAN_IMAGE_PREFIX + fileName)
             artisan.picURL = fileName
         }
@@ -236,7 +221,7 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                artisan.artisanId = body!!
+                artisan.artisanId = body!!.substring(1, body!!.length - 1)
                 Log.i("AddArtisan", "success $body")
                 if (artisan.picURL != "Not set") {
                     uploadArtisanImage(context, artisan)
