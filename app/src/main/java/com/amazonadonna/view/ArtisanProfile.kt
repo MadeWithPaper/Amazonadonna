@@ -45,42 +45,9 @@ class ArtisanProfile() : AppCompatActivity() {
         //DownLoadImageTask(view.imageView_artisanProfilePic).execute(artisan.picURL)
         else
             this.artisanProfilePicture.setImageResource(R.drawable.placeholder)*/
+
         var isp = ImageStorageProvider(applicationContext)
-
-
-        if (artisan.picURL != "Not set" && artisan.picURL != null) {
-            var url = artisan.picURL!!
-
-            // If image is already on S3
-            if (url.substring(0, 5) == "https") {
-                var fileName = ImageStorageProvider.ARTISAN_IMAGE_PREFIX +
-                        url.substring(url.lastIndexOf('/') + 1, url?.length)
-
-                if (!isp.imageExists(fileName!!)) {
-                    var draw = this.artisanProfilePicture.drawable
-                    Picasso.with(applicationContext).load(artisan.picURL).into(
-                            this.artisanProfilePicture,
-                            object : com.squareup.picasso.Callback {
-                                override fun onSuccess() {
-                                    var drawable = draw as BitmapDrawable
-                                    isp.saveBitmap(drawable.bitmap, fileName)
-                                }
-
-                                override fun onError() {
-
-                                }
-                            })
-                } else {
-                    this.artisanProfilePicture.setImageBitmap(isp.loadBitmap(fileName))
-                }
-            }
-            else {
-                var fileName = ImageStorageProvider.ARTISAN_IMAGE_PREFIX + url
-                this.artisanProfilePicture.setImageBitmap(isp.loadBitmap(fileName))
-            }
-        }
-        else
-            this.artisanProfilePicture.setImageResource(R.drawable.placeholder)
+        isp.loadImageIntoUI(artisan.picURL, this.artisanProfilePicture, ImageStorageProvider.ARTISAN_IMAGE_PREFIX)
 
         artisanProfileName.text = artisan.artisanName
         artisanProfileBio.text = artisan.bio

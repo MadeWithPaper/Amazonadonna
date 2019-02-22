@@ -48,10 +48,12 @@ class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
     fun bindArtisian(artisan: Artisan) {
         Log.d("URL:::::", artisan.picURL)
        // view.imageView_artisanProfilePic.setImageResource(R.drawable.placeholder)
+
+
         var isp = ImageStorageProvider(view.context)
+        isp.loadImageIntoUI(artisan.picURL, view.imageView_artisanProfilePic, ImageStorageProvider.ARTISAN_IMAGE_PREFIX)
 
-
-        if (artisan.picURL != "Not set" && artisan.picURL != null) {
+        /*if (artisan.picURL != "Not set" && artisan.picURL != null) {
             var url = artisan.picURL!!
 
             // If image is already on S3
@@ -87,7 +89,7 @@ class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
             //DownLoadImageTask(view.imageView_artisanProfilePic).execute(artisan.picURL)
         }
         else
-            view.imageView_artisanProfilePic.setImageResource(R.drawable.placeholder)
+            view.imageView_artisanProfilePic.setImageResource(R.drawable.placeholder)*/
 
         view.textView_artisanName.text = artisan.artisanName
         //view.textView_bio.text = artisan.bio

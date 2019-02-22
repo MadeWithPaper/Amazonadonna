@@ -16,10 +16,12 @@ import android.support.v4.content.FileProvider
 import android.text.TextUtils
 import android.util.Log
 import android.widget.ImageView
+import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.view.R
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_artisan_profile.*
 import kotlinx.android.synthetic.main.activity_edit_artisan.*
 import okhttp3.*
 import java.io.File
@@ -49,11 +51,13 @@ class EditArtisan : AppCompatActivity() {
         editArtisan_name.setText(oldArtisan.artisanName)
         editArtisan_number.setText("1234567")
 
-        if (oldArtisan.picURL != "Not set") {
+        /*if (oldArtisan.picURL != "Not set") {
             Picasso.with(this).load(oldArtisan.picURL).into(this.editArtisan_pic)
         } else {
             this.editArtisan_pic.setImageResource(R.drawable.placeholder)
-        }
+        }*/
+        var isp = ImageStorageProvider(applicationContext)
+        isp.loadImageIntoUI(oldArtisan.picURL, this.editArtisan_pic, ImageStorageProvider.ARTISAN_IMAGE_PREFIX)
 
         pic = editArtisan_pic.drawable
 
@@ -189,7 +193,15 @@ class EditArtisan : AppCompatActivity() {
             oldArtisan.city = parseLoc().first
             oldArtisan.country = parseLoc().second
 
-            submitToDB(oldArtisan)
+
+            var newPhoto: File? = null
+            if (editArtisan_pic.drawable != pic) {
+                newPhoto = photoFile
+            }
+
+            ArtisanSync.updateArtisan(applicationContext, oldArtisan, newPhoto)
+
+            //submitToDB(oldArtisan)
             val intent = Intent(this, ArtisanProfile::class.java)
             intent.putExtra("artisan", oldArtisan)
             startActivity(intent)
