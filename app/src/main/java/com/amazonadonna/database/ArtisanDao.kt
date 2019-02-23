@@ -34,6 +34,9 @@ interface ArtisanDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(artisan: Artisan)
 
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun update(artisan: Artisan)
+
     @Delete
     fun delete(artisan: Artisan)
 

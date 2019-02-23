@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.util.Log
 import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
+import com.amazon.identity.auth.device.api.authorization.AuthorizationManager
 import com.amazon.identity.auth.device.api.authorization.User
 import com.amazonadonna.database.AppDatabase
+import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.view.R
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_home_screen.*
@@ -21,9 +23,20 @@ class HomeScreen : AppCompatActivity() {
     private var getUserInfoListener = object : Listener<User, AuthError> {
         override fun onSuccess(p0: User?) {
             cgaID = p0!!.userId.substringAfter("amzn1.account.")
-            cgaID = "0" //******** Uncomment this to go back to default for testing ****
+//            cgaID = "0" //******** Uncomment this to go back to default for testing ****
+            //--------------------------------------------------------//
+            // UNCOMMENT THE METHOD CALL BELOW TO CLEAR SQLITE TABLES //
+            //--------------------------------------------------------//
+            //ArtisanSync.resetLocalDB(applicationContext)
+            //--------------------------------------------------------//
+            ArtisanSync.sync(applicationContext, cgaID)
             fetchJSONCGA()
             Log.d("HomeScreen", cgaID)
+
+            var list = applicationContext.fileList()
+            for (file in list) {
+                Log.d("HomeScreen", file)
+            }
         }
 
         override fun onError(ae: AuthError?) {
@@ -32,13 +45,23 @@ class HomeScreen : AppCompatActivity() {
         }
     }
 
+    private var signoutListener = object : Listener<Void, AuthError> {
+        override fun onSuccess(p0: Void?) {
+            Log.d("HomeScreen", "Logout worked")
+        }
+
+        override fun onError(ae: AuthError?) {
+            Log.d("HomeScreen", "Logout failed :(")
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_screen)
+
         val extras = intent.extras
 
         if (extras != null) {
-//            Log.d("HomeScreen", cgaID)
             cgaID = extras.getString("cgaId")
         } else {
             User.fetch(this, getUserInfoListener)
@@ -56,6 +79,13 @@ class HomeScreen : AppCompatActivity() {
 
         setting.setOnClickListener {
             openSettings()
+        }
+      
+        logoutButton.setOnClickListener{
+            AuthorizationManager.signOut(this, signoutListener)
+            val intent = Intent(this, LoginScreen::class.java)
+            finishAffinity()
+            startActivity(intent)
         }
 
     }
@@ -95,16 +125,16 @@ class HomeScreen : AppCompatActivity() {
                 .url(url)
                 .post(requestBody)
                 .build()
-
+        Log.d("HomeScreen", "In fetchCGA")
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.i("LoginScreen", "response body: " + body)
+                Log.d("HomeScreen", "response body from fetchCga: " + body)
 
                 val gson = GsonBuilder().create()
 
                 if (body == "{}") {
-                    Log.d("LoginScreen", "artisan not in db")
+                    Log.d("HomeScreen", "artisan not in db")
                     addCGOToDB()
                 }
 
@@ -113,17 +143,16 @@ class HomeScreen : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("LoginScreen", "failed to do POST request to database" + url)
+                Log.e("HomeScreen", "failed to do POST request to database" + url)
             }
         })
     }
 
     private fun addCGOToDB() {
         val url = "https://7bd92aed.ngrok.io/cgo/add"
-
-        val requestBody = FormBody.Builder().add("cgoId", cgaID!!)
+        val requestBody = FormBody.Builder().add("amznId", cgaID!!)
                 .add("city", "San Francisco").add("country","USA")
-                .add("name", "Dean").add("lat", "32.19").add("lon", "77.398").build()
+                .add("name", "Victor").add("lat", "32.19").add("lon", "77.398").build()
         val db = Room.databaseBuilder(
                 applicationContext,
                 AppDatabase::class.java, "amazonadonna-main"
@@ -137,7 +166,7 @@ class HomeScreen : AppCompatActivity() {
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.i("LoginScreen", "response body: " + body)
+                Log.d("HomeScreen", "response body from addCga: " + body)
 
                 val gson = GsonBuilder().create()
 
@@ -146,7 +175,7 @@ class HomeScreen : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("LoginScreen", "failed to do POST request to database" + url)
+                Log.e("HomeScreen", "failed to do POST request to database" + url)
             }
         })
     }
