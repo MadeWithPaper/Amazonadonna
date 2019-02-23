@@ -12,9 +12,9 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
-    <uses-permission android:name="android.permission.READ_SYNC_STATS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
 
     <application
         android:allowBackup="true"
@@ -24,30 +24,31 @@
         android:supportsRtl="true"
         android:syncable="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.amazonadonna.view.PayoutSignature" />
-        <activity android:name="com.amazonadonna.view.ArtisanPayout" />
-        <activity android:name="com.amazonadonna.view.EditArtisan" />
-        <activity android:name="com.amazonadonna.view.ProductDetails" />
+        <activity android:name=".Settings"></activity>
+        <activity android:name=".PayoutSignature" />
+        <activity android:name=".ArtisanPayout" />
+        <activity android:name=".EditArtisan" />
+        <activity android:name=".ProductDetails" />
         <activity
-            android:name="com.amazonadonna.view.AddItemReview"
+            android:name=".AddItemReview"
             android:launchMode="singleTop" />
         <activity
-            android:name="com.amazonadonna.view.AddItemImages"
+            android:name=".AddItemImages"
             android:launchMode="singleTop" />
         <activity
-            android:name="com.amazonadonna.view.AddItemInfo"
+            android:name=".AddItemInfo"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.amazonadonna.view.AddItemCategory"
+            android:name=".AddItemCategory"
             android:launchMode="singleTop" />
-        <activity android:name="com.amazonadonna.view.ArtisanItemList" />
-        <activity android:name="com.amazonadonna.view.OrderScreen" />
+        <activity android:name=".ArtisanItemList" />
+        <activity android:name=".OrderScreen" />
         <activity
-            android:name="com.amazonadonna.view.ArtisanProfile"
+            android:name=".ArtisanProfile"
             android:label="@string/title_activity_artisan_profile"
             android:launchMode="singleTop"
-            android:parentActivityName="com.amazonadonna.view.ListAllArtisans">
+            android:parentActivityName=".ListAllArtisans">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.amazonadonna.view.ListAllArtisans" />
@@ -79,9 +80,9 @@
                 android:resource="@xml/fileprovider" />
         </provider>
 
-        <activity android:name="com.amazonadonna.view.HomeScreen" />
+        <activity android:name=".HomeScreen" />
         <activity
-            android:name="com.amazonadonna.view.LoginScreen"
+            android:name=".LoginScreen"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -90,11 +91,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.amazonadonna.view.ListAllArtisans"
+            android:name=".ListAllArtisans"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
-        <activity android:name="com.amazonadonna.view.AddArtisan" />
-        <activity android:name="com.amazonadonna.view.ListOrders" />
+        <activity android:name=".AddArtisan" />
+        <activity android:name=".ListOrders" />
     </application>
 
 </manifest>

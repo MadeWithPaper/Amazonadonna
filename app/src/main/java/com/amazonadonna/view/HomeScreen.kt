@@ -77,6 +77,10 @@ class HomeScreen : AppCompatActivity() {
             queryAllOrder()
         }
 
+        setting.setOnClickListener {
+            openSettings()
+        }
+      
         logoutButton.setOnClickListener{
             AuthorizationManager.signOut(this, signoutListener)
             val intent = Intent(this, LoginScreen::class.java)
@@ -86,6 +90,10 @@ class HomeScreen : AppCompatActivity() {
 
     }
 
+    private fun openSettings() {
+        val intent = Intent(this, Settings::class.java)
+        startActivity(intent)
+    }
 
     private fun queryAllArtisan() {
         //go to list all artisan screen
