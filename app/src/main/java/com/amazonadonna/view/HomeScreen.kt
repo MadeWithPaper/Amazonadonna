@@ -54,8 +54,16 @@ class HomeScreen : AppCompatActivity() {
             queryAllOrder()
         }
 
+        setting.setOnClickListener {
+            openSettings()
+        }
+
     }
 
+    private fun openSettings() {
+        val intent = Intent(this, Settings::class.java)
+        startActivity(intent)
+    }
 
     private fun queryAllArtisan() {
         //go to list all artisan screen
