@@ -211,27 +211,27 @@ class AddArtisan : AppCompatActivity() {
     //TODO add more checks
     private fun validateFields() : Boolean {
         if (TextUtils.isEmpty(editText_Name.text.toString())){
-            editText_Name.error = "Artisan Name can not be empty"
+            editText_Name.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
         if (TextUtils.isEmpty(editText_loc.text.toString())) {
-            editText_loc.error = "Location field can not be empty"
+            editText_loc.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
         if ((!editText_loc.text.toString().contains(","))) {
-            editText_loc.error = "Missing ' , ' between City and Country"
+            editText_loc.error = this.resources.getString(R.string.loc_missing_comma)
             return false
         }
 
         if (TextUtils.isEmpty(editText_ContactNumber.text.toString())){
-            editText_ContactNumber.error = "Contact Number can not be empty"
+            editText_ContactNumber.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
         if (TextUtils.isEmpty(editText_bio.text.toString())){
-            editText_bio.error = "bio is empty"
+            editText_bio.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 

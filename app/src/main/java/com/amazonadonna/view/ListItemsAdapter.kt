@@ -11,8 +11,7 @@ import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.list_item_cell.view.*
 import com.amazonadonna.sync.Syncronizer
 
-class ListItemsAdapter (private val context: Context, private val products : List<Product>, private val artisan : Artisan? =
-        Artisan("artisanName", "id", "city", "country", "bio", "cogid", 0.0, 0.0, "url", Syncronizer.SYNCED,0.0) ) : RecyclerView.Adapter<ItemsViewHolder> () {
+class ListItemsAdapter (private val context: Context, private val products : List<Product>, private val artisan : Artisan? = Artisan("artisanName", "id", "city", "country", "bio", "cogid", 0.0, 0.0, "url", Syncronizer.SYNCED,0.0) ) : RecyclerView.Adapter<ItemsViewHolder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

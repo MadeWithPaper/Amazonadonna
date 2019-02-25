@@ -91,7 +91,8 @@ class AddItemCategory : AppCompatActivity() {
     val pacifierssub = arrayOf(SELECT_SPECIFICCATEGORY, "Pacifier Accessories", "Pacifiers", "Teethers")
 
     var product : Product = Product(0.0, "0", "placeholder", "placeholder", arrayOf("testingurl", "Not set"), "placeholder", "placeholder", "placeholder", "placeholder", "Placeholder", 0,  0)
-    var editMode : Boolean = false
+    private var editMode : Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_category)
