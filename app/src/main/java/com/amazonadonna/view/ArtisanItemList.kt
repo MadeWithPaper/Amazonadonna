@@ -26,10 +26,10 @@ import java.util.concurrent.TimeUnit
 class ArtisanItemList : AppCompatActivity() {
 
     lateinit var artisan : Artisan
-    val listAllItemsURL = "https://7bd92aed.ngrok.io/item/listAllForArtisan"
-    val originalItems: MutableList<Product> = mutableListOf()
-    val filteredItems: MutableList<Product> = mutableListOf()
-    val oldFilteredItems: MutableList<Product> = mutableListOf()
+    private val listAllItemsURL = "https://7bd92aed.ngrok.io/item/listAllForArtisan"
+    private val originalItems: MutableList<Product> = mutableListOf()
+    private val filteredItems: MutableList<Product> = mutableListOf()
+    private val oldFilteredItems: MutableList<Product> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         filteredItems.clear()

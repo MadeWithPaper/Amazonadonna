@@ -252,27 +252,27 @@ class EditArtisan : AppCompatActivity() {
 
     private fun validateFields() : Boolean {
         if (TextUtils.isEmpty(editArtisan_name.text.toString())){
-            editArtisan_name.error = "Artisan Name can not be empty"
+            editArtisan_name.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
         if (TextUtils.isEmpty(editArtisan_cc.text.toString())) {
-            editArtisan_cc.error = "Location field can not be empty"
+            editArtisan_cc.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
         if ((!editArtisan_cc.text.toString().contains(","))) {
-            editArtisan_cc.error = "Missing ' , ' between City and Country"
+            editArtisan_cc.error = this.resources.getString(R.string.loc_missing_comma)
             return false
         }
 
         if (TextUtils.isEmpty(editArtisan_number.text.toString())){
-            editArtisan_number.error = "Contact Number can not be empty"
+            editArtisan_number.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
         if (TextUtils.isEmpty(editArtisanBio.text.toString())){
-            editArtisanBio.error = "bio is empty"
+            editArtisanBio.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 

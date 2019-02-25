@@ -84,27 +84,27 @@ class AddItemInfo : AppCompatActivity() {
     //TODO add more checks
     fun validateFields() : Boolean {
         if (TextUtils.isEmpty(addItemInfo_ProductNameTF.text.toString())){
-            addItemInfo_ProductNameTF.setError("Product Name can not be empty")
+            addItemInfo_ProductNameTF.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
         if (TextUtils.isEmpty(addItemInfo_ProductDescriptionTF.text.toString())) {
-            addItemInfo_ProductDescriptionTF.setError("Product Description can not be empty")
+            addItemInfo_ProductDescriptionTF.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
         if (TextUtils.isEmpty(addItemInfo_ProductionTimeTF.text.toString())){
-            addItemInfo_ProductionTimeTF.setError("Production time can not be empty")
+            addItemInfo_ProductionTimeTF.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
         if (TextUtils.isEmpty(addItemInfo_ProductPriceTF.text.toString())){
-            addItemInfo_ProductPriceTF.setError("Price can not be empty.")
+            addItemInfo_ProductPriceTF.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
         if (shippmentMethod == SELECT_SHIPPING_METHOD) {
-            Toast.makeText(this@AddItemInfo, "Please Select a Shipping Method.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@AddItemInfo, this.resources.getString(R.string.add_item_info_shipping_warning), Toast.LENGTH_LONG).show()
             return false
         }
 
