@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">AmazonHandmade</string>
-    <string name="title_activity_show_all_artisans">ShowAllArtisans</string>
-    <string name="title_activity_login_screen">Login</string>
 
     <!-- Login -->
     <string name="prompt_email">Email</string>
