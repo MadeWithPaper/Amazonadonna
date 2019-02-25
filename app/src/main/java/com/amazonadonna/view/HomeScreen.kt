@@ -2,6 +2,7 @@ package com.amazonadonna.view
 
 import android.arch.persistence.room.Room
 import android.content.Intent
+import android.content.res.Configuration
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_home_screen.*
 import okhttp3.*
 import java.io.IOException
+import java.util.*
 
 class HomeScreen : AppCompatActivity() {
     private var cgaID : String = "0" // initialize to prevent crash while testing
@@ -67,6 +69,15 @@ class HomeScreen : AppCompatActivity() {
             User.fetch(this, getUserInfoListener)
         }
 
+        if (intent.hasExtra("languageSelected")){
+            //Got New Language
+            val newLanguage = intent.extras!!.getString("languageSelected")
+            Log.d("HomeScreen","got new language" + newLanguage )
+            // Create a new Locale object
+            val locale = Locale(newLanguage)
+            Locale.setDefault(locale)
+            resources.configuration.setLocale(Locale(newLanguage))
+        }
         //actionBar.set
         //List All com.amazonadonna.model.Artisan button
         listAllArtisan.setOnClickListener{
@@ -92,6 +103,7 @@ class HomeScreen : AppCompatActivity() {
 
     private fun openSettings() {
         val intent = Intent(this, Settings::class.java)
+        intent.putExtra("cgaID", cgaID)
         startActivity(intent)
     }
 
