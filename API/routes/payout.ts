@@ -137,8 +137,7 @@ function sendText(phoneNumber: string, payoutId: string) {
         MessageStructure: 'STRING_VALUE',
         PhoneNumber: phoneNumber,
         Subject: 'STRING_VALUE',
-        TargetArn: 'STRING_VALUE',
-        TopicArn: 'STRING_VALUE'
+        TargetArn: 'STRING_VALUE'
     }
     sns.publish(params, (err, data) => {
         if (err) {
