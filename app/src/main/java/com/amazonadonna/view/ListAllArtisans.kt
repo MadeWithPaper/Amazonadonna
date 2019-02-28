@@ -34,7 +34,7 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
         get() = Dispatchers.Main + job
 
     var cgaId: String = "0"
-    val listAllArtisansURL = "https://7bd92aed.ngrok.io/artisan/listAllForCgo"
+    val listAllArtisansURL = "https://99956e2a.ngrok.io/artisan/listAllForCgo"
     val originalArtisans: MutableList<Artisan> = mutableListOf()
     val filteredArtisans: MutableList<Artisan> = mutableListOf()
     val oldFilteredArtisans: MutableList<Artisan> = mutableListOf()

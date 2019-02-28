@@ -20,7 +20,7 @@ import java.io.IOException
 
 class OrderScreen : AppCompatActivity() {
     var orderIdString = ""
-    val getItemURL = "https://7bd92aed.ngrok.io/order/getItems"
+    val getItemURL = "https://99956e2a.ngrok.io/order/getItems"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

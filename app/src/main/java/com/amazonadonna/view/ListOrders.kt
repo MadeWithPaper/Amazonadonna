@@ -25,7 +25,7 @@ import com.jakewharton.rxbinding2.widget.textChanges
 
 class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
     var cgaId : String = "0"
-    val listOrderURL = "https://7bd92aed.ngrok.io/order/listAllForCgo"
+    val listOrderURL = "https://99956e2a.ngrok.io/order/listAllForCgo"
     val originalOrders : MutableList<Order> = mutableListOf()
     val filteredOrders: MutableList<Order> = mutableListOf()
     val oldFilteredOrders: MutableList<Order> = mutableListOf()

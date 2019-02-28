@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 class ArtisanItemList : AppCompatActivity() {
 
     lateinit var artisan : Artisan
-    private val listAllItemsURL = "https://7bd92aed.ngrok.io/item/listAllForArtisan"
+    private val listAllItemsURL = "https://99956e2a.ngrok.io/item/listAllForArtisan"
     private val originalItems: MutableList<Product> = mutableListOf()
     private val filteredItems: MutableList<Product> = mutableListOf()
     private val oldFilteredItems: MutableList<Product> = mutableListOf()

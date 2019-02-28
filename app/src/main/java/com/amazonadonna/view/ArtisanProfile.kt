@@ -46,7 +46,7 @@ class ArtisanProfile() : AppCompatActivity() {
     }
 
     private fun artisanMessage(artisan: Artisan) {
-        //TODO put in real artisan number 
+        //TODO put in real artisan number
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
         intent.putExtra("address", "1234567")
