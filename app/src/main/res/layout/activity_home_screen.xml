@@ -6,17 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.amazonadonna.view.HomeScreen">
 
-    <!--<Button-->
-        <!--android:id="@+id/logoutButton"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/logout"-->
-        <!--app:layout_constraintStart_toStartOf="@id/toolbar"-->
-        <!--app:layout_constraintTop_toTopOf="@id/toolbar"-->
-        <!--/>-->
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/logout"
+        app:layout_constraintStart_toStartOf="@id/logo_image"
+        app:layout_constraintTop_toTopOf="@id/logo_image"
+        />
   
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/logo_image"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -89,7 +89,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView">
+        app:layout_constraintTop_toBottomOf="@+id/logo_image">
 
         <TextView
             android:id="@+id/welcomeTV"
