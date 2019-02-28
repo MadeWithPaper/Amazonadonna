@@ -1,8 +1,8 @@
 package com.amazonadonna.view
 
 import android.arch.persistence.room.Room
+import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,15 +12,16 @@ import com.amazon.identity.auth.device.api.authorization.AuthorizationManager
 import com.amazon.identity.auth.device.api.authorization.User
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.sync.ArtisanSync
-import com.amazonadonna.view.R
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_home_screen.*
 import okhttp3.*
 import java.io.IOException
 import java.util.*
 
+
 class HomeScreen : AppCompatActivity() {
     private var cgaID : String = "0" // initialize to prevent crash while testing
+    private var newLang : String = "en_US"
 
     private var getUserInfoListener = object : Listener<User, AuthError> {
         override fun onSuccess(p0: User?) {
@@ -69,15 +70,25 @@ class HomeScreen : AppCompatActivity() {
             User.fetch(this, getUserInfoListener)
         }
 
-        if (intent.hasExtra("languageSelected")){
-            //Got New Language
-            val newLanguage = intent.extras!!.getString("languageSelected")
-            Log.d("HomeScreen","got new language" + newLanguage )
-            // Create a new Locale object
-            val locale = Locale(newLanguage)
-            Locale.setDefault(locale)
-            resources.configuration.setLocale(Locale(newLanguage))
-        }
+
+//       if (intent.hasExtra("languageSelected")){
+////            //Got New Language
+//           newLang = intent.extras!!.getString("languageSelected")
+//            Log.d("HomeScreen","got new language: " + newLanguage )
+//            // Create a new Locale object
+//            Log.d("HomeScreen", "old locale ${Locale.getDefault()}")
+//            val locale = Locale(newLanguage)
+//            Locale.setDefault(locale)
+            Log.d("HomeScreen", "locale ${Locale.getDefault()}")
+//
+//            val res = this.resources
+//            val config = Configuration(res.configuration)
+//            config.setLocale(locale)
+//            this.createConfigurationContext(config)
+            //recreate()
+
+//            Log.d("HomeScreen", "locale post recreate ${Locale.getDefault()}")
+       //}
         //actionBar.set
         //List All com.amazonadonna.model.Artisan button
         listAllArtisan.setOnClickListener{

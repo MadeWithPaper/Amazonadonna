@@ -126,5 +126,6 @@
     <string name="continue_button_text">Continuar</string>
     <string name="edit">Editar</string>
     <string name="cancel">Cancelar</string>
+    <string name="chooser_title">Elija una aplicación de mensajería</string>
 
 </resources>
