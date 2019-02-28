@@ -122,20 +122,9 @@ router.post('/updateImage', (req: Request, res: Response) => {
 
 function sendText(phoneNumber: string, payoutId: string) {
     const sns = new aws.SNS()
-    const params = {
+    const params: aws.SNS.PublishInput = {
         Message: 'Payout Made',
-        MessageAttributes: {
-            paramsPayoutId: {
-                DataType: 'STRING_VALUE' /* required */,
-                BinaryValue:
-                    new Buffer('...') ||
-                    'STRING_VALUE' /* Strings will be Base-64 encoded on your behalf */
-            }
-            /* '<String>': ... */
-        },
-        MessageStructure: 'STRING_VALUE',
-        PhoneNumber: phoneNumber,
-        Subject: 'STRING_VALUE'
+        PhoneNumber: phoneNumber
     }
     sns.publish(params, (err, data) => {
         if (err) {
