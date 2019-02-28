@@ -21,9 +21,9 @@ import com.amazonadonna.view.R
 class AddItemReview : AppCompatActivity() {
 
     //private var photoFile: File? = null
-    private val addItemURL = "https://7bd92aed.ngrok.io/item/add"
-    private val addItemImageURL = "https://7bd92aed.ngrok.io/item/updateImages"
-    private val editItemURL = "https://7bd92aed.ngrok.io/item/editItem"
+    private val addItemURL = "https://99956e2a.ngrok.io/item/add"
+    private val addItemImageURL = "https://99956e2a.ngrok.io/item/updateImages"
+    private val editItemURL = "https://99956e2a.ngrok.io/item/editItem"
     var editMode : Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

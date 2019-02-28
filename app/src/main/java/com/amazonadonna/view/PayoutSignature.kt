@@ -24,9 +24,9 @@ import java.util.*
 class PayoutSignature : AppCompatActivity() {
 
     private val REQUEST_EXTERNAL_STORAGE = 3
-    private val updateURL = "https://7bd92aed.ngrok.io/artisan/edit"
-    private val payoutHistory = "https://7bd92aed.ngrok.io/payout/add"
-    private val payoutSignatureURL = "https://7bd92aed.ngrok.io/payout/updateImage"
+    private val updateURL = "https://99956e2a.ngrok.io/artisan/edit"
+    private val payoutHistory = "https://99956e2a.ngrok.io/payout/add"
+    private val payoutSignatureURL = "https://99956e2a.ngrok.io/payout/updateImage"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
