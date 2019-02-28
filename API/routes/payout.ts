@@ -129,8 +129,7 @@ function sendText(phoneNumber: string, payoutId: string) {
                 DataType: 'STRING_VALUE' /* required */,
                 BinaryValue:
                     new Buffer('...') ||
-                    'STRING_VALUE' /* Strings will be Base-64 encoded on your behalf */,
-                StringValue: payoutId
+                    'STRING_VALUE' /* Strings will be Base-64 encoded on your behalf */
             }
             /* '<String>': ... */
         },
