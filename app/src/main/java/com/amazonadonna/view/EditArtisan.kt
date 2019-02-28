@@ -30,8 +30,8 @@ import java.io.IOException
 class EditArtisan : AppCompatActivity() {
     private var photoFile: File? = null
     private val fileName: String = "editProfilePic.png"
-    private val editArtisanURL = "https://7bd92aed.ngrok.io/artisan/edit"
-    private val updateArtisanURL = "https://7bd92aed.ngrok.io/artisan/updateImage"
+    private val editArtisanURL = "https://99956e2a.ngrok.io/artisan/edit"
+    private val updateArtisanURL = "https://99956e2a.ngrok.io/artisan/updateImage"
     private val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
     private lateinit var pic : Drawable

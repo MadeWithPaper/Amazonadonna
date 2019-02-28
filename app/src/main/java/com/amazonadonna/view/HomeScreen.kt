@@ -3,6 +3,7 @@ package com.amazonadonna.view
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -71,24 +72,24 @@ class HomeScreen : AppCompatActivity() {
         }
 
 
-//       if (intent.hasExtra("languageSelected")){
+       if (intent.hasExtra("languageSelected")){
 ////            //Got New Language
-//           newLang = intent.extras!!.getString("languageSelected")
+           newLang = intent.extras!!.getString("languageSelected")
 //            Log.d("HomeScreen","got new language: " + newLanguage )
 //            // Create a new Locale object
 //            Log.d("HomeScreen", "old locale ${Locale.getDefault()}")
-//            val locale = Locale(newLanguage)
-//            Locale.setDefault(locale)
+            val locale = Locale(newLang)
+            Locale.setDefault(locale)
             Log.d("HomeScreen", "locale ${Locale.getDefault()}")
 //
-//            val res = this.resources
-//            val config = Configuration(res.configuration)
-//            config.setLocale(locale)
-//            this.createConfigurationContext(config)
-            //recreate()
+            val res = this.resources
+            val config = Configuration(res.configuration)
+            config.setLocale(locale)
+            this.createConfigurationContext(config)
+           // recreate()
 
 //            Log.d("HomeScreen", "locale post recreate ${Locale.getDefault()}")
-       //}
+       }
         //actionBar.set
         //List All com.amazonadonna.model.Artisan button
         listAllArtisan.setOnClickListener{
