@@ -55,6 +55,7 @@ router.post('/add', (req: Request, res: Response) => {
             )
         } else {
             res.json(id.toString())
+            sendText('19169903748', req.body.payoutId)
         }
     })
 })
@@ -118,5 +119,42 @@ router.post('/updateImage', (req: Request, res: Response) => {
         }
     })
 })
+
+function sendText(phoneNumber: string, payoutId: string) {
+    const sns = new aws.SNS()
+    const params = {
+        Message: 'Payout Made',
+        MessageAttributes: {
+            paramsPayoutId: {
+                DataType: 'STRING_VALUE' /* required */,
+                BinaryValue:
+                    new Buffer('...') ||
+                    'STRING_VALUE' /* Strings will be Base-64 encoded on your behalf */,
+                StringValue: payoutId
+            }
+            /* '<String>': ... */
+        },
+        MessageStructure: 'STRING_VALUE',
+        PhoneNumber: phoneNumber,
+        Subject: 'STRING_VALUE',
+        TargetArn: 'STRING_VALUE',
+        TopicArn: 'STRING_VALUE'
+    }
+    sns.publish(params, (err, data) => {
+        if (err) {
+            console.log(
+                'Error sending text to ' +
+                    params.PhoneNumber +
+                    'for payoutId' +
+                    payoutId
+            )
+            console.log(err, err.stack)
+        }
+        // an error occurred
+        else {
+            console.log('Sent text message') // successful response
+        }
+    })
+}
 
 export { router as payoutRouter }
