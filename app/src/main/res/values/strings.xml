@@ -1,12 +1,9 @@
 <resources>
     <string name="app_name">AmazonHandmade</string>
-    <string name="title_activity_show_all_artisans">ShowAllArtisans</string>
-    <string name="title_activity_login_screen">Login</string>
 
-    <!-- Strings related to login -->
+    <!-- Login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="prompt_password">Password</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -16,15 +13,119 @@
         completions."
     </string>
     <string name="title_activity_artisan_profile">ArtisanProfile</string>
-    <string name="order_id"> </string>
-    <string name="order_shipped">Shipped: </string>
-    <string name="edit">Edit</string>
-    <string name="placeholder_text">__placeholder__</string>
-    <string name="items_listed">Items listed: </string>
+    <string name="logout">Logout</string>
+
+    <!-- Add Artisan -->
+    <string name="loc_missing_comma">Missing \',\' between City and Country.</string>
+    <string name="add_artisan_contact_number_tv_hint">Artisan Contact Number</string>
+    <string name="add_artisan_loc_tv_hint">Artisan City, Country</string>
+    <string name="add_artisan_loc_tv">City, Country: </string>
+    <string name="add_artisan_name_tv_hint">Artisan Name</string>
+    <string name="add_artisan_name_tv">Artisan Name: </string>
+    <string name="add_artisan_add_button">Add Artisan</string>
+    <string name="add_artisan_contact_number_tv">Contact :</string>
+    <string name="add_artisan_bio_tv_hint">Artisan Biography</string>
+    <string name="add_artisan_bio_tv">Biography: </string>
+    <string name="add_artisan_toolbar_text">Add Artisan</string>
+
+    <!-- Add Item Category -->
+    <string name="item_category_toolbar_text">Add Item</string>
+    <string name="item_category_category_tv">Category</string>
+    <string name="item_category_sub_category_tv">Sub-Category</string>
+    <string name="item_category_specific_category_tv">Specific Category</string>
+
+    <!-- Add Item Images -->
+    <string name="item_images_tv">Item Image</string>
+    <string name="item_images_main">Main Image</string>
+    <string name="item_images_alt1">Alternative Image 1</string>
+    <string name="item_images_alt2">Alternative Image 2</string>
+    <string name="item_images_alt3">Alternative Image 3</string>
+    <string name="item_images_alt4">Alternative Image 4</string>
+    <string name="item_images_alt5">Alternative Image 5</string>
+
+    <!-- Add Item Info -->
+    <string name="item_info_product_name_tv_hint">Product Name</string>
+    <string name="item_info_product_desc_tv_hint">Product Description</string>
+    <string name="item_info_product_price_tv_hint">Product Price in Dollars ($)</string>
+    <string name="item_info_product_quantity_tv_hint">Product Quantity</string>
+    <string name="item_info_product_production_tv_hint">Product Production Time in Days</string>
+    <string name="item_info_product_toolbar_text">Item Info</string>
+    
+    <!-- Add Item Review --> 
+    <string name="item_review_confirm_listing">Confirm Listing</string>
+    <string name="item_review_toolbar_text">Review Item</string>
+
+    <!-- Artisan Item List -->
+    <string name="artisan_item_list_toolbar_text">Item List</string>
+    <string name="artisan_item_search_tv_hint">Search Items</string>
+
+    <!-- Artisan Payout -->
+    <string name="artisan_payout_toolbar_text">Payout</string>
+    <string name="artisan_payout_continue_to_signature_button">Continue to Signature</string>
+    <string name="artisan_payout_amount_tv_hint">Payout Amount</string>
+    <string name="artisan_payout_amount_tv">Payout Amount: </string>
+    <string name="artisan_payout_date_tv">Payout Date: </string>
+
+    <!-- Artisan Profile -->
+    <string name="artisan_profile_toolbar_text">Artisan Profile</string>
+
+    <!-- Edit Artisan -->
+    <string name="edit_artisan_toolbar_text">Edit Artisan Profile</string>
+    <string name="edit_artisan_update_button">Update Artisan</string>
+
+    <!-- Home Screen Strings -->
+    <string name="homeScreenWelcome">Welcome</string>
+    <string name="homeScreenPlaceHoldercgo">CGO 0</string>
+
+    <!-- Add Item Info -->
+    <string name="add_item_info_shipping_warning">Please Select a Shipping Method.</string>
+
+    <!-- Add Item review -->
+    <string name="item_review_usually_ships">Usually shipped within </string>
+    <string name="number_in_stock"> in Stock</string>
+    <string name="item_review_response_dialog_title">Item Listing …</string>
+    <string name="item_review_listing_failed">Your item was NOT submitted!</string>
+    <string name="item_review_listing_success">Your item have been successfully submitted!</string>
+
+    <!-- Artisan Payout -->
+    <string name="payout_date">Date : </string>
+    <string name="payout_error_title">Payout Error</string>
+    <string name="payout_error_message">Payout amount exceeds Artisan\'s Payout balance!</string>
+
+    <!-- Product Detail --> 
+    <string name="product_detail_usually_ships_in">Usually shipped within </string>
+
+    <!-- Order List -->
     <string name="order_date">Order Date: </string>
     <string name="order_cost">Total Cost: </string>
     <string name="title_list_orders">Orders</string>
+    <string name="order_list_search_order_hint">Search Orders</string>
+    <string name="placeholder_text">__placeholder__</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Order Screen -->
+    <string name="order_id"> </string>
+    <string name="order_shipped">Shipped: </string>
+    <string name="items_listed">Items listed: </string>
+
+    <!-- Payout Signature -->
+    <string name="signature_clear_button">Clear</string>
+    <string name="signature_done_button">Done</string>
+
+    <!-- Setting -->
+    <string name="settings_toolbar_text">Settings</string>
+    <string name="settings_language_preference">Language Preference</string>
+    <string name="settings_update_setting">Update Settings</string>
+
+    <!-- List All Artisan -->
+    <string name="list_artisan_toolbar_text">Artisans</string>
+    <string name="list_artisan_search_hint">Search Artisans</string>
+
+    <!-- Utility Strings -->
+    <string name="requiredFieldError">Required!</string>
+    <string name="utility_days"> Days.</string>
+    <string name="continue_button_text">Continue</string>
+    <string name="edit">Edit</string>
+    <string name="cancel">Cancel</string>
+    <string name="chooser_title">Choose a Messaging Application</string>
+
 </resources>

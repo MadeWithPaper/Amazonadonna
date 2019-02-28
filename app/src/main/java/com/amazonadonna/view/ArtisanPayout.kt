@@ -22,7 +22,7 @@ class ArtisanPayout : AppCompatActivity() {
         val artisan = intent.extras?.getSerializable("artisan") as Artisan
 
         artisanPayout_amount.setText(artisan.balance.toString())
-        artisanPayout_dateTV.text = "Date: " + getCurrDate()
+        artisanPayout_dateTV.text = this.resources.getString(R.string.payout_date) + getCurrDate()
         artisanPayout_continue.setOnClickListener {
             continueToSignature(artisan)
         }
@@ -44,7 +44,7 @@ class ArtisanPayout : AppCompatActivity() {
             initYear = year
 
             Log.i("ArtisanPayout", "new picked Date: " + initMonth + "/" + initDay + "/" + initYear)
-            artisanPayout_dateTV.setText("Date: " + initMonth + "/" + initDay + "/" + initYear)
+            artisanPayout_dateTV.setText(this.resources.getString(R.string.payout_date) + initMonth + "/" + initDay + "/" + initYear)
             //lblDate.setText("" + dayOfMonth + " " + MONTHS[monthOfYear] + ", " + year)
         }, initYear, initMonth, initDay)
         dpd.show()
@@ -60,8 +60,8 @@ class ArtisanPayout : AppCompatActivity() {
         if (validateAmount(artisan)) {
             Log.w("ArtisanPayout", "Payout amount exceeded balance")
             val builder = AlertDialog.Builder(this@ArtisanPayout)
-            builder.setTitle("Payout Error")
-            builder.setMessage("Payout amount exceeds Artisan's Payout balance!")
+            builder.setTitle(this.resources.getString(R.string.payout_error_title))
+            builder.setMessage(this.resources.getString(R.string.payout_error_message))
             builder.setOnDismissListener {
                 //Do nothing
             }
@@ -72,6 +72,7 @@ class ArtisanPayout : AppCompatActivity() {
         intent.putExtra("artisan", artisan)
         intent.putExtra("payoutAmount", artisanPayout_amount.text.toString().toDouble())
         startActivity(intent)
+        finish()
     }
 
     private fun validateAmount(artisan : Artisan) : Boolean {

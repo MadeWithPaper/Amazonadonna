@@ -30,7 +30,7 @@ class ListArtisanAdapter (private val context: Context, private val artisans : L
 
     override fun onBindViewHolder(holder: ArtisanViewHolder, position: Int) {
         val artisan = artisans.get(position)
-        holder.bindArtisian(artisan)
+        holder.bindArtisian(artisan, context)
 
         holder.view.setOnClickListener{
             val intent = Intent(context, ArtisanProfile::class.java)
@@ -45,16 +45,19 @@ class ListArtisanAdapter (private val context: Context, private val artisans : L
 
 class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
 
-    fun bindArtisian(artisan: Artisan) {
+    fun bindArtisian(artisan: Artisan, context: Context) {
         Log.d("URL:::::", artisan.picURL)
        // view.imageView_artisanProfilePic.setImageResource(R.drawable.placeholder)
-        var isp = ImageStorageProvider(view.context)
 
 
-        if (artisan.picURL != "Not set" && artisan.picURL != null) {
+        var isp = ImageStorageProvider(context)
+        isp.loadImageIntoUI(artisan.picURL, view.imageView_artisanProfilePic, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, view.context)
+
+        /*if (artisan.picURL != "Not set" && artisan.picURL != null) {
             var url = artisan.picURL!!
 
             // If image is already on S3
+            //TODO creating artisan with image crahes app needs fix
             if (url.substring(0, 5) == "https") {
                 var fileName = ImageStorageProvider.ARTISAN_IMAGE_PREFIX +
                         url.substring(url.lastIndexOf('/') + 1, url?.length)
@@ -86,7 +89,7 @@ class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
             //DownLoadImageTask(view.imageView_artisanProfilePic).execute(artisan.picURL)
         }
         else
-            view.imageView_artisanProfilePic.setImageResource(R.drawable.placeholder)
+            view.imageView_artisanProfilePic.setImageResource(R.drawable.placeholder)*/
 
         view.textView_artisanName.text = artisan.artisanName
         //view.textView_bio.text = artisan.bio

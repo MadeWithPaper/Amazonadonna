@@ -12,7 +12,6 @@ import android.support.v7.util.DiffUtil
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.Order
-import com.amazonadonna.view.R
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_list_orders.*
@@ -33,8 +32,8 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     fun search(query: String): Completable = Completable.create {
         val wanted = originalOrders.filter {
-            it.orderId.contains(query) || it.shippingAddress.contains(query) ||
-                    it.shippedStatus.toString().contains(query)
+            it.orderId.contains(query, true) || it.shippingAddress.contains(query, true) ||
+                    it.shippedStatus.toString().contains(query, true)
         }.toList()
 
         if (listOrders_Search.text.toString() == "") { // empty search bar
@@ -51,11 +50,7 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
         it.onComplete()
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        filteredOrders.clear()
-        originalOrders.clear()
-        oldFilteredOrders.clear()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_orders)
 
@@ -89,7 +84,6 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
         originalOrders.clear()
         oldFilteredOrders.clear()
         super.onStart()
-        filteredOrders.clear()
         fetchJSON()
     }
 

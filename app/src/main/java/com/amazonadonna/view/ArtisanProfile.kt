@@ -1,6 +1,9 @@
 package com.amazonadonna.view
 
 import android.content.Intent
+import android.content.pm.LabeledIntent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +33,9 @@ class ArtisanProfile() : AppCompatActivity() {
             artisanItemList(artisan)
         }
 
+        artisanProfileMessagesButton.setOnClickListener {
+            artisanMessage(artisan)
+        }
         artisanProfilePayoutButton.setOnClickListener {
             artisanPayout(artisan)
         }
@@ -39,48 +45,24 @@ class ArtisanProfile() : AppCompatActivity() {
         }
     }
 
+    private fun artisanMessage(artisan: Artisan) {
+        //TODO put in real artisan number 
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/plain"
+        intent.putExtra("address", "1234567")
+
+        startActivity(intent)
+    }
+
     private fun populateSelectedArtisan(artisan : Artisan) {
         /*if (artisan.picURL != "Not set")
             Picasso.with(this).load(artisan.picURL).into(this.artisanProfilePicture)
         //DownLoadImageTask(view.imageView_artisanProfilePic).execute(artisan.picURL)
         else
             this.artisanProfilePicture.setImageResource(R.drawable.placeholder)*/
+
         var isp = ImageStorageProvider(applicationContext)
-
-
-        if (artisan.picURL != "Not set" && artisan.picURL != null) {
-            var url = artisan.picURL!!
-
-            // If image is already on S3
-            if (url.substring(0, 5) == "https") {
-                var fileName = ImageStorageProvider.ARTISAN_IMAGE_PREFIX +
-                        url.substring(url.lastIndexOf('/') + 1, url?.length)
-
-                if (!isp.imageExists(fileName!!)) {
-                    var draw = this.artisanProfilePicture.drawable
-                    Picasso.with(applicationContext).load(artisan.picURL).into(
-                            this.artisanProfilePicture,
-                            object : com.squareup.picasso.Callback {
-                                override fun onSuccess() {
-                                    var drawable = draw as BitmapDrawable
-                                    isp.saveBitmap(drawable.bitmap, fileName)
-                                }
-
-                                override fun onError() {
-
-                                }
-                            })
-                } else {
-                    this.artisanProfilePicture.setImageBitmap(isp.loadBitmap(fileName))
-                }
-            }
-            else {
-                var fileName = ImageStorageProvider.ARTISAN_IMAGE_PREFIX + url
-                this.artisanProfilePicture.setImageBitmap(isp.loadBitmap(fileName))
-            }
-        }
-        else
-            this.artisanProfilePicture.setImageResource(R.drawable.placeholder)
+        isp.loadImageIntoUI(artisan.picURL, this.artisanProfilePicture, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
 
         artisanProfileName.text = artisan.artisanName
         artisanProfileBio.text = artisan.bio
@@ -98,7 +80,6 @@ class ArtisanProfile() : AppCompatActivity() {
         val intent = Intent(this, ArtisanPayout::class.java)
         intent.putExtra("artisan", artisan)
         startActivity(intent)
-        finish()
     }
 
     private fun editArtisan(artisan: Artisan) {

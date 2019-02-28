@@ -45,8 +45,8 @@ class AddItemReview : AppCompatActivity() {
             categoryString = product.category + " > " + product.subCategory + " > " + product.specificCategory
         }
         val priceString = "$ " + product.price.toString()
-        val productionTimeString = "Usuall shipped within " + product.productionTime
-        val productQuantityString =product.itemQuantity.toString() + " In Stock"
+        val productionTimeString = this.resources.getString(R.string.item_review_usually_ships) + product.productionTime
+        val productQuantityString = product.itemQuantity.toString() + this.resources.getString(R.string.number_in_stock)
         addItemReview_categories.text = categoryString
         addIemReview_ProductNameTF.text = product.itemName
         addItemReview_itemPrice.text = priceString
@@ -93,31 +93,35 @@ class AddItemReview : AppCompatActivity() {
                 .add("shippingOption", product.ShippingOption)
                 .add("itemQuantity", product.itemQuantity.toString())
                 .add("productionTime", product.productionTime.toString())
-                .build()
-
+        if (editMode) {
+            requestBody.add("itemId", product.itemId)
+        }
         Log.d("AddItemReview", product.toString())
         val client = OkHttpClient()
 
         val request = Request.Builder()
                 .url(url)
-                .post(requestBody)
+                .post(requestBody.build())
                 .build()
 
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
                 Log.i("AddItemReview", "prodcut id: $body")
-                product.itemId = body!!
-//                Thread().run {
+                if (!editMode) {
+                    product.itemId = body!!
+                }
+                runOnUiThread {
+                    showResponseDialog(artisan, true)
+                }
                     submitPictureToDB(product)
-                    submitDismiss(artisan)
-
-//                }
-
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("AddItemReview", "failed to do POST request to database: " + url)
+                runOnUiThread {
+                    showResponseDialog(artisan, false)
+                }
             }
         })
 
@@ -127,15 +131,15 @@ class AddItemReview : AppCompatActivity() {
     private fun showResponseDialog(artisan: Artisan, status: Boolean) {
         val builder = AlertDialog.Builder(this@AddItemReview)
         if (status) {
-            builder.setTitle("Item Listing ...")
-            builder.setMessage("Your item have been successfully submitted!")
+            builder.setTitle(this.resources.getString(R.string.item_review_response_dialog_title))
+            builder.setMessage(this.resources.getString(R.string.item_review_listing_success))
             builder.setOnDismissListener {
                 submitDismiss(artisan)
             }
         } else
         {
-            builder.setTitle("Item Listing ...")
-            builder.setMessage("Your item was NOT submitted!")
+            builder.setTitle(this.resources.getString(R.string.item_review_response_dialog_title))
+            builder.setMessage(this.resources.getString(R.string.item_review_listing_failed))
         }
 
         val dialog : AlertDialog = builder.create()

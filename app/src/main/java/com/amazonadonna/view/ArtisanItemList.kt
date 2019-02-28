@@ -26,30 +26,15 @@ import java.util.concurrent.TimeUnit
 class ArtisanItemList : AppCompatActivity() {
 
     lateinit var artisan : Artisan
-    val listAllItemsURL = "https://7bd92aed.ngrok.io/item/listAllForArtisan"
-    val originalItems: MutableList<Product> = mutableListOf()
-    val filteredItems: MutableList<Product> = mutableListOf()
-    val oldFilteredItems: MutableList<Product> = mutableListOf()
-
-    private fun search(query: String): Completable = Completable.create {
-        val wanted = originalItems.filter {
-            it.itemId.toLowerCase().contains(query) || it.itemName.toLowerCase().contains(query)
-        }.toList()
-
-        if (listItems_Search.text.toString() == "") { // empty search bar
-            filteredItems.clear()
-            filteredItems.addAll(originalItems)
-        } else {
-            filteredItems.clear()
-            filteredItems.addAll(wanted)
-        }
-        Log.d("ListItems", "editText: " + listItems_Search.text.toString())
-        Log.d("ListItems", "originalOrders: " + originalItems.toString())
-        Log.d("ListItems", "filteredOrders: " + filteredItems.toString())
-        it.onComplete()
-    }
+    private val listAllItemsURL = "https://7bd92aed.ngrok.io/item/listAllForArtisan"
+    private val originalItems: MutableList<Product> = mutableListOf()
+    private val filteredItems: MutableList<Product> = mutableListOf()
+    private val oldFilteredItems: MutableList<Product> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        filteredItems.clear()
+        originalItems.clear()
+        oldFilteredItems.clear()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_item_list)
@@ -62,10 +47,10 @@ class ArtisanItemList : AppCompatActivity() {
 
         //TODO remove testing
         //val testItem = Product(1.0, "id", "des", "aid", "url", "Jewelry", "Earrings", "Hoop Earrings", "item name", "shipping", 1, 2)
-        val emptyProductList : List<Product> = emptyList()
+//        val emptyProductList : List<Product> = emptyList()
         artisanItemList_recyclerView.adapter = ListItemsAdapter(this, originalItems)
-
         artisanItemList_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
         listItems_Search
                 .textChanges()
                 .debounce(500, TimeUnit.MILLISECONDS)
@@ -87,8 +72,30 @@ class ArtisanItemList : AppCompatActivity() {
     }
 
     override fun onStart() {
+        filteredItems.clear()
+        originalItems.clear()
+        oldFilteredItems.clear()
+
         super.onStart()
         fetchJSON()
+    }
+
+    private fun search(query: String): Completable = Completable.create {
+        val wanted = originalItems.filter {
+            it.itemName.contains(query, true) || it.category.contains(query, true) || it.subCategory.contains(query, true) || it.specificCategory.contains(query, true)
+        }.toList()
+
+        if (listItems_Search.text.toString() == "") { // empty search bar
+            filteredItems.clear()
+            filteredItems.addAll(originalItems)
+        } else {
+            filteredItems.clear()
+            filteredItems.addAll(wanted)
+        }
+        Log.d("ListItems", "editText: " + listItems_Search.text.toString())
+        Log.d("ListItems", "originalOrders: " + originalItems.toString())
+        Log.d("ListItems", "filteredOrders: " + filteredItems.toString())
+        it.onComplete()
     }
 
     private fun addItem(artisan: Artisan) {
@@ -126,7 +133,7 @@ class ArtisanItemList : AppCompatActivity() {
                 filteredItems.addAll(products)
 
                 runOnUiThread {
-                    artisanItemList_recyclerView.adapter = ListItemsAdapter(applicationContext, products, artisan)
+                    artisanItemList_recyclerView.adapter = ListItemsAdapter(applicationContext, oldFilteredItems, artisan)
                 }
             }
 
@@ -141,7 +148,7 @@ class ArtisanItemList : AppCompatActivity() {
 
         override fun getNewListSize() = newList.size
 
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) = oldList[oldItemPosition].artisanId == newList[newItemPosition].artisanId
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) = oldList[oldItemPosition].itemId == newList[newItemPosition].itemId
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) = true // for the sake of simplicity we return true here but it can be changed to reflect a fine-grained control over which part of our views are updated
 

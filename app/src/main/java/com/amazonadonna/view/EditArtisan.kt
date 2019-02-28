@@ -16,10 +16,12 @@ import android.support.v4.content.FileProvider
 import android.text.TextUtils
 import android.util.Log
 import android.widget.ImageView
+import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.view.R
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_artisan_profile.*
 import kotlinx.android.synthetic.main.activity_edit_artisan.*
 import okhttp3.*
 import java.io.File
@@ -38,7 +40,7 @@ class EditArtisan : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_artisan)
         val IMAGE_UPLOADING_PERMISSION = 3
-        ArtisanSync.sync(this)
+//        ArtisanSync.sync(this, cgaId)
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
 
         val oldArtisan = intent.extras?.getSerializable("artisan") as Artisan
@@ -49,11 +51,13 @@ class EditArtisan : AppCompatActivity() {
         editArtisan_name.setText(oldArtisan.artisanName)
         editArtisan_number.setText("1234567")
 
-        if (oldArtisan.picURL != "Not set") {
+        /*if (oldArtisan.picURL != "Not set") {
             Picasso.with(this).load(oldArtisan.picURL).into(this.editArtisan_pic)
         } else {
             this.editArtisan_pic.setImageResource(R.drawable.placeholder)
-        }
+        }*/
+        var isp = ImageStorageProvider(applicationContext)
+        isp.loadImageIntoUI(oldArtisan.picURL, this.editArtisan_pic, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
 
         pic = editArtisan_pic.drawable
 
@@ -189,7 +193,15 @@ class EditArtisan : AppCompatActivity() {
             oldArtisan.city = parseLoc().first
             oldArtisan.country = parseLoc().second
 
-            submitToDB(oldArtisan)
+
+            var newPhoto: File? = null
+            if (editArtisan_pic.drawable != pic) {
+                newPhoto = photoFile
+            }
+
+            ArtisanSync.updateArtisan(applicationContext, oldArtisan, newPhoto)
+
+            //submitToDB(oldArtisan)
             val intent = Intent(this, ArtisanProfile::class.java)
             intent.putExtra("artisan", oldArtisan)
             startActivity(intent)
@@ -240,27 +252,27 @@ class EditArtisan : AppCompatActivity() {
 
     private fun validateFields() : Boolean {
         if (TextUtils.isEmpty(editArtisan_name.text.toString())){
-            editArtisan_name.error = "Artisan Name can not be empty"
+            editArtisan_name.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
         if (TextUtils.isEmpty(editArtisan_cc.text.toString())) {
-            editArtisan_cc.error = "Location field can not be empty"
+            editArtisan_cc.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
         if ((!editArtisan_cc.text.toString().contains(","))) {
-            editArtisan_cc.error = "Missing ' , ' between City and Country"
+            editArtisan_cc.error = this.resources.getString(R.string.loc_missing_comma)
             return false
         }
 
         if (TextUtils.isEmpty(editArtisan_number.text.toString())){
-            editArtisan_number.error = "Contact Number can not be empty"
+            editArtisan_number.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
         if (TextUtils.isEmpty(editArtisanBio.text.toString())){
-            editArtisanBio.error = "bio is empty"
+            editArtisanBio.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 

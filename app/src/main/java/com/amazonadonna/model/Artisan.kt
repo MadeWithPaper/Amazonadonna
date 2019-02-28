@@ -22,11 +22,11 @@ data class Artisan (
         @ColumnInfo(name = "synced") var synced : Int = Syncronizer.SYNCED,
         @ColumnInfo(name = "balance") @Json(name = "balance") var balance : Double) : Serializable {
 
-//    fun generateArtisanID() {
-//        //TODO fill in logic for generating unique ID for artisan
-//        var num = Random().nextInt()
-//        artisanId = artisanName + cgoId + num.toString()
-//    }
+    fun generateTempID() {
+       //TODO fill in logic for generating unique ID for artisan
+        var num = Random().nextInt()
+        artisanId = artisanName + cgoId + num.toString()
+    }
 
 
     //TODO need to add maps functionality
