@@ -49,7 +49,7 @@ class ArtisanProfile() : AppCompatActivity() {
         //TODO put in real artisan number
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
-        intent.putExtra("address", "1234567")
+        intent.putExtra("address", artisan.contactNumber)
 
         startActivity(intent)
     }
