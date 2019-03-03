@@ -173,7 +173,7 @@ class AddArtisan : AppCompatActivity() {
         val bio = editText_bio.text.toString()
         val number = editText_ContactNumber.text.toString()
 
-         val newArtisan = Artisan(name, "", "", "", bio, cgaId,0.0,0.0, "Not set", Syncronizer.SYNC_NEW, 0.0)
+         val newArtisan = Artisan(name, "", number, "","", bio, cgaId,0.0,0.0, "Not set", Syncronizer.SYNC_NEW, 0.0)
         newArtisan.generateTempID()
         //parse location info
         parseLoc(newArtisan)
@@ -285,6 +285,7 @@ class AddArtisan : AppCompatActivity() {
                 .add("city",artisan.city)
                 .add("country", artisan.country)
                 .add("artisanName", artisan.artisanName)
+                .add("contactNumber", artisan.contactNumber)
                 .add("lat", artisan.lat.toString())
                 .add("lon", artisan.lon.toString())
                 //TODO remove hard code balance

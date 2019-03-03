@@ -49,7 +49,7 @@ class EditArtisan : AppCompatActivity() {
         editArtisanBio.setText(oldArtisan.bio)
         editArtisan_cc.setText(oldArtisan.city + "," + oldArtisan.country)
         editArtisan_name.setText(oldArtisan.artisanName)
-        editArtisan_number.setText("1234567")
+        editArtisan_number.setText(oldArtisan.contactNumber)
 
         /*if (oldArtisan.picURL != "Not set") {
             Picasso.with(this).load(oldArtisan.picURL).into(this.editArtisan_pic)
@@ -192,6 +192,7 @@ class EditArtisan : AppCompatActivity() {
             oldArtisan.bio = editArtisanBio.text.toString()
             oldArtisan.city = parseLoc().first
             oldArtisan.country = parseLoc().second
+            oldArtisan.contactNumber = editArtisan_number.text.toString()
 
 
             var newPhoto: File? = null
@@ -218,6 +219,7 @@ class EditArtisan : AppCompatActivity() {
                 .add("city", oldArtisan.city)
                 .add("country", oldArtisan.country)
                 .add("artisanName", oldArtisan.artisanName)
+                .add("contactNumber", oldArtisan.contactNumber)
                 .add("lat", 0.0.toString())
                 .add("lon", 0.0.toString())
                 .add("balance", oldArtisan.balance.toString())

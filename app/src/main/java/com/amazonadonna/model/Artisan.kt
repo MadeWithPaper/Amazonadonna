@@ -12,6 +12,7 @@ import java.util.*
 data class Artisan (
         @ColumnInfo(name = "artisanName") @Json(name = "artisanName") var artisanName : String,
         @PrimaryKey @ColumnInfo(name = "artisanId") @Json(name = "artisanId") var artisanId : String,
+        @ColumnInfo(name = "contactNumber") @Json (name = "contactNumber") var contactNumber : String,
         @ColumnInfo(name = "city") @Json(name = "city") var city : String,
         @ColumnInfo(name = "country") @Json(name = "country") var country : String,
         @ColumnInfo(name = "bio") @Json(name = "bio")var bio : String,
