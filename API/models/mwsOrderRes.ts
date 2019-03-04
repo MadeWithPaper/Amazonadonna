@@ -34,4 +34,4 @@ interface MwsAddress {
     AddressType: string
 }
 
-export { MwsOrderRes }
+export { MwsOrderRes, MwsMoney }

@@ -33,6 +33,7 @@ router.post('/add', (req: Request, res: Response) => {
             mwsKey: { S: req.body.mwsKey },
             mwsSecret: { S: req.body.mwsSecret },
             mwsAuthToken: { S: req.body.mwsAuthToken },
+            mwsSellerId: { S: req.body.mwsSellerId },
             lastUpdateOrders: { N: '1' }
         }
     }

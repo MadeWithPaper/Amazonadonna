@@ -148,6 +148,7 @@ router.post('/tryUpdate', (req: Request, res: Response) => {
                 const mwsOrdersParams = {
                     Version: '2013-09-01',
                     Action: 'ListOrders',
+                    SellerId: cgo.mwsSellerId,
                     MWSAuthToken: cgo.mwsAuthToken, // TODO
                     'MarketplaceId.Id.1': 'MARKET_PLACE_ID_1', // TODO
                     CreatedAfter: lastUpdate.toISOString
@@ -203,7 +204,42 @@ router.post('/tryUpdate', (req: Request, res: Response) => {
                                                 msg + err.message
                                             )
                                         } else {
-                                            // resolve()
+                                            // get items for order
+                                            const mwsOrderItemParams = {
+                                                Version: '2013-09-01',
+                                                Action: 'ListOrderItems',
+                                                SellerId: cgo.mwsSellerId,
+                                                MWSAuthToken: cgo.mwsAuthToken,
+                                                AmazonOrderId:
+                                                    order.AmazonOrderId
+                                            }
+
+                                            amazonMws.orders
+                                                .search(mwsOrderItemParams)
+                                                .then(
+                                                    items => {
+                                                        // items
+                                                        // go through each and
+                                                        // search our items via
+                                                        // the new indexer for
+                                                        // amazon item id. Then
+                                                        // add an entry in order
+                                                        // item table. Thats it
+                                                        // resolve()
+                                                    },
+                                                    mwsOrderItemErr => {
+                                                        const msg =
+                                                            'Error getting order items from mws in order/tryUpdate: '
+                                                        console.log(
+                                                            msg +
+                                                                mwsOrderItemErr
+                                                        )
+                                                        res.status(400).send(
+                                                            msg +
+                                                                mwsOrderItemErr
+                                                        )
+                                                    }
+                                                )
                                         }
                                     }
                                 )

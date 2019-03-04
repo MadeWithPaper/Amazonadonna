@@ -41,6 +41,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
 })
 
 router.post('/add', (req: Request, res: Response) => {
+    // submit feed per item, somehow grab amazon's item ID and add to our database
     const id = uuid.v1()
     const putItemParams: aws.DynamoDB.PutItemInput = {
         TableName: 'item',

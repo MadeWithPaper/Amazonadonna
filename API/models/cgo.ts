@@ -9,6 +9,7 @@ interface Cgo {
     mwsSecret: string
     lastUpdateOrders: number
     mwsAuthToken: string
+    mwsSellerId: string
 }
 
 export { Cgo }
