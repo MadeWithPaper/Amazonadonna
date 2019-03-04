@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.util.DiffUtil
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
+import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Order
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -22,8 +23,16 @@ import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import com.jakewharton.rxbinding2.widget.textChanges
+import kotlinx.android.synthetic.main.list_all_artisans.*
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
+class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor>, CoroutineScope {
+    lateinit var job: Job
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
     var cgaId : String = "0"
     val listOrderURL = "https://99956e2a.ngrok.io/order/listAllForCgo"
     val originalOrders : MutableList<Order> = mutableListOf()
@@ -84,7 +93,22 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor> {
         originalOrders.clear()
         oldFilteredOrders.clear()
         super.onStart()
-        fetchJSON()
+        //fetchJSON()
+        job = Job()
+
+        launch {
+            val dbOrders: List<Order> = getOrdersFromDb()
+            originalOrders.addAll(dbOrders)
+            oldFilteredOrders.addAll(dbOrders)
+            filteredOrders.addAll(dbOrders)
+            runOnUiThread {
+                recyclerView_listOrders.adapter = ListOrdersAdapter(applicationContext, oldFilteredOrders)
+            }
+        }
+    }
+
+    private suspend fun getOrdersFromDb() = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(application).orderDao().getAll() as List<Order>
     }
 
     private fun fetchJSON() {

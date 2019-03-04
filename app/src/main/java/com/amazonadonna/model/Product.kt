@@ -3,10 +3,9 @@ package com.amazonadonna.model
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.ColumnInfo
-import android.support.annotation.ColorLong
+import com.amazonadonna.sync.Synchronizer
 import com.beust.klaxon.Json
 import java.io.Serializable
-import java.util.*
 
 @Entity(tableName = "product")
 data class Product (
@@ -21,6 +20,7 @@ data class Product (
         @ColumnInfo(name = "itemName") @Json(name = "itemName") var itemName : String,
         @ColumnInfo(name = "ShippingOption") @Json(name = "ShippingOption") var ShippingOption : String,
         @ColumnInfo(name = "itemQuantity") @Json(name = "itemQuantity") var itemQuantity : Int,
+        @ColumnInfo(name = "synced") var synced : Int = Synchronizer.SYNCED,
         @ColumnInfo(name = "productionTime") @Json(name = "productionTime") var productionTime : Int) : Serializable {
 
 //    fun generateProductID() {

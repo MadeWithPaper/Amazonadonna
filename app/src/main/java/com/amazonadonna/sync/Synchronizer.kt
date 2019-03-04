@@ -5,7 +5,7 @@ import com.amazonadonna.database.AppDatabase
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-abstract class Syncronizer : CoroutineScope {
+abstract class Synchronizer : CoroutineScope {
     companion object {
         const val SYNC_NEW = 1
         const val SYNC_EDIT = 2
