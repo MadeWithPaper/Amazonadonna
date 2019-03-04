@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     tools:context="com.amazonadonna.view.HomeScreen">
 
-    <Button
-        android:id="@+id/logoutButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/logout"
-        app:layout_constraintStart_toStartOf="@id/logo_image"
-        app:layout_constraintTop_toTopOf="@id/logo_image" />
+    <!--<Button-->
+        <!--android:id="@+id/logoutButton"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/logout"-->
+        <!--app:layout_constraintStart_toStartOf="@id/logo_image"-->
+        <!--app:layout_constraintTop_toTopOf="@id/logo_image" />-->
   
     <ImageView
         android:id="@+id/logo_image"
@@ -72,10 +72,10 @@
             android:id="@+id/setting"
             android:layout_width="205dp"
             android:layout_height="200dp"
-            android:background="#fff"
             app:layout_column="1"
             app:layout_row="1"
-            app:srcCompat="@android:color/white" />
+            android:background="#8BC34A"
+            app:srcCompat="@drawable/settingwithtext" />
 
     </android.support.v7.widget.GridLayout>
 

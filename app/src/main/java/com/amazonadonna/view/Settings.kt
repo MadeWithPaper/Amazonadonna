@@ -1,5 +1,6 @@
 package com.amazonadonna.view
 
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -11,41 +12,26 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_settings.*
 import java.util.*
-import android.util.DisplayMetrics
-
-
-
-
+import android.content.ComponentName
+import com.amazon.identity.auth.device.AuthError
+import com.amazon.identity.auth.device.api.Listener
+import com.amazon.identity.auth.device.api.authorization.AuthorizationManager
 
 class Settings : AppCompatActivity() {
 
     val languageList = arrayOf("English", "Spanish", "French")
+    private val SETTING_INTENT = 13
     private var languageSelected = "en_US"
     private lateinit var cgaID : String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         cgaID = intent.extras!!.getString("cgaID")!!
-        // Create an ArrayAdapter
-        val mainArrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, languageList)
-        // Set layout to use when the list of choices appear
-        mainArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        // Set Adapter to Spinner
-        languageSpinner.adapter = mainArrayAdapter
 
-        languageSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onNothingSelected(parent: AdapterView<*>?) {
+        settingCurrentLanguageTV.text = Locale.getDefault().displayLanguage
 
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val spinnerValue = languageSpinner.getSelectedItem().toString()
-                when (spinnerValue) {
-                   "English" -> languageSelected = "en_US"
-                    "Spanish" -> languageSelected = "es_US"
-                    "French" -> languageSelected = ""
-                }
-            }
+        settingLanguageButton.setOnClickListener {
+            toChangeLanguage()
         }
 
         saveSettingsButton.setOnClickListener {
@@ -55,24 +41,57 @@ class Settings : AppCompatActivity() {
         cancelSettingButton.setOnClickListener {
             cancelSetting()
         }
+
+        settingLogOut.setOnClickListener {
+            logout()
+        }
     }
 
     private fun updateSetting(){
         //change language
         Log.d("HomeScreen", "old locale ${Locale.getDefault()}")
-        val locale = Locale(languageSelected)
-        Locale.setDefault(locale)
+        //val locale = Locale(languageSelected)
+       // Locale.setDefault(locale)
         Log.d("HomeScreen", "new locale ${Locale.getDefault()}")
         //back to home screen
         val intent = Intent(this, HomeScreen::class.java)
         Log.d("Settings", "new language picked: " + languageSelected)
         intent.putExtra("languageSelected", languageSelected)
         intent.putExtra("cgaId", cgaID)
-        val res = this.resources
-        res.configuration.setLocale(locale)
+       // val res = this.resources
+       // res.configuration.setLocale(locale)
 
-        recreate()
-        //startActivity(intent)
+       // recreate()
+        startActivity(intent)
+    }
+
+    private var signoutListener = object : Listener<Void, AuthError> {
+        override fun onSuccess(p0: Void?) {
+            Log.d("Setting", "Logout worked")
+        }
+
+        override fun onError(ae: AuthError?) {
+            Log.d("Setting", "Logout failed :(")
+        }
+    }
+
+    private fun logout() {
+        AuthorizationManager.signOut(this, signoutListener)
+        val intent = Intent(this, LoginScreen::class.java)
+        finishAffinity()
+        startActivity(intent)
+    }
+
+    private fun toChangeLanguage() {
+        val intent = Intent()
+        intent.component = ComponentName("com.android.settings", "com.android.settings.LanguageSettings")
+        startActivityForResult(intent, SETTING_INTENT)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == SETTING_INTENT) {
+           recreate()
+        }
     }
 
     private fun cancelSetting() {

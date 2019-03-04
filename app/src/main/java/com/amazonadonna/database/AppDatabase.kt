@@ -6,7 +6,7 @@ import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import com.amazonadonna.model.Artisan
 
-@Database(entities = arrayOf(Artisan::class), version = 13, exportSchema = false)
+@Database(entities = arrayOf(Artisan::class), version = 14, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun artisanDao(): ArtisanDao

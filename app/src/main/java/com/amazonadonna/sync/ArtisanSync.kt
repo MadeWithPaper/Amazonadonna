@@ -18,11 +18,11 @@ import kotlinx.android.synthetic.main.activity_edit_artisan.*
 
 object ArtisanSync: Syncronizer(), CoroutineScope {
     //var cgaId : String = "0"
-    private const val listAllArtisansURL = "https://7bd92aed.ngrok.io/artisan/listAllForCgo"
-    private const val addArtisanURL = "https://7bd92aed.ngrok.io/artisan/add"
-    private const val artisanPicURL = "https://7bd92aed.ngrok.io/artisan/updateImage"
-    private val editArtisanURL = "https://7bd92aed.ngrok.io/artisan/edit"
-    private val updateArtisanURL = "https://7bd92aed.ngrok.io/artisan/updateImage"
+    private const val listAllArtisansURL = "https://99956e2a.ngrok.io/artisan/listAllForCgo"
+    private const val addArtisanURL = "https://99956e2a.ngrok.io/artisan/add"
+    private const val artisanPicURL = "https://99956e2a.ngrok.io/artisan/updateImage"
+    private val editArtisanURL = "https://99956e2a.ngrok.io/artisan/edit"
+    private val updateArtisanURL = "https://99956e2a.ngrok.io/artisan/updateImage"
 
     override fun sync(context: Context, cgaId: String) {
         super.sync(context, cgaId)

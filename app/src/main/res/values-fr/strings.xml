@@ -125,5 +125,8 @@
     <string name="edit">Modifier</string>
     <string name="cancel">Annuler</string>
     <string name="chooser_title">Choisissez une application de messagerie</string>
+    <string name="setting_current_language_TV">Langue courante:</string>
+    <string name="setting_change_language_button">Changer de langue</string>
+    <string name="setting_log_out_button">Connectez - Out</string>
 
 </resources>
