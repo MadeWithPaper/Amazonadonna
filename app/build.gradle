@@ -30,6 +30,12 @@ android {
         }
     }
     buildToolsVersion '28.0.3'
+
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
 }
 
 dependencies {

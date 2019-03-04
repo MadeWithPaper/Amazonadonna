@@ -9,9 +9,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="title_activity_artisan_profile">ArtisanProfile</string>
     <string name="logout">Logout</string>
 
@@ -115,6 +113,9 @@
     <string name="settings_toolbar_text">Settings</string>
     <string name="settings_language_preference">Language Preference</string>
     <string name="settings_update_setting">Update Settings</string>
+    <string name="setting_current_language_TV">Current Language: </string>
+    <string name="setting_change_language_button">Change Language</string>
+    <string name="setting_log_out_button">Log Out</string>
 
     <!-- List All Artisan -->
     <string name="list_artisan_toolbar_text">Artisans</string>
