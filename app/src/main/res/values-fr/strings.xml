@@ -1,0 +1,129 @@
+<resources>
+    <string name="app_name">AmazonHandmade</string>
+
+    <!-- Login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="action_sign_in_short">Se Connecter</string>
+    <string name="error_invalid_email">Cette adresse email est invalide</string>
+    <string name="error_invalid_password">Ce mot de passe est trop court</string>
+    <string name="error_incorrect_password">Ce mot de passe est incorrect</string>
+    <string name="error_field_required">Ce champ est requis</string>
+    <string name="permission_rationale">Les autorisations de contacts sont nécessaires pour fournir des compléments de courrier électronique.</string>
+    <string name="title_activity_artisan_profile">Profil d\'artisan</string>
+    <string name="logout">Connectez - Out</string>
+
+    <!-- Add Artisan -->
+    <string name="loc_missing_comma">Manquant \',\' entre Ville et Pays.</string>
+    <string name="add_artisan_contact_number_tv_hint">Numéro de contact de l\'artisan</string>
+    <string name="add_artisan_loc_tv_hint">Artisan Ville, Pays</string>
+    <string name="add_artisan_loc_tv">Ville ,Pays:</string>
+    <string name="add_artisan_name_tv_hint">Nom d\'artisan</string>
+    <string name="add_artisan_name_tv">Nom de l\'artisan:</string>
+    <string name="add_artisan_add_button">Ajouter Artisan</string>
+    <string name="add_artisan_contact_number_tv">Contact :</string>
+    <string name="add_artisan_bio_tv_hint">Biographie artisanale</string>
+    <string name="add_artisan_bio_tv">La biographie:</string>
+    <string name="add_artisan_toolbar_text">Ajouter Artisan</string>
+
+    <!-- Add Item Category -->
+    <string name="item_category_toolbar_text">Ajouter un item</string>
+    <string name="item_category_category_tv">Catégorie</string>
+    <string name="item_category_sub_category_tv">Sous catégorie</string>
+    <string name="item_category_specific_category_tv">Catégorie spécifique</string>
+
+    <!-- Add Item Images -->
+    <string name="item_images_tv">Image de l\'article</string>
+    <string name="item_images_main">Image principale</string>
+    <string name="item_images_alt1">Image alternative 1</string>
+    <string name="item_images_alt2">Image alternative 2</string>
+    <string name="item_images_alt3">Image alternative 3</string>
+    <string name="item_images_alt4">Image alternative 4</string>
+    <string name="item_images_alt5">Image alternative 5</string>
+
+    <!-- Add Item Info -->
+    <string name="item_info_product_name_tv_hint">Nom du produit</string>
+    <string name="item_info_product_desc_tv_hint">Description du produit</string>
+    <string name="item_info_product_price_tv_hint">Prix du produit en dollars ($)</string>
+    <string name="item_info_product_quantity_tv_hint">La quantité de produit</string>
+    <string name="item_info_product_production_tv_hint">Temps de production du produit en jours</string>
+    <string name="item_info_product_toolbar_text">Informations sur l\'article</string>
+
+    <!-- Add Item Review -->
+    <string name="item_review_confirm_listing">Confirmer la liste</string>
+    <string name="item_review_toolbar_text">Article de revue</string>
+
+    <!-- Artisan Item List -->
+    <string name="artisan_item_list_toolbar_text">Liste des articles</string>
+    <string name="artisan_item_search_tv_hint">Rechercher des articles</string>
+
+    <!-- Artisan Payout -->
+    <string name="artisan_payout_toolbar_text">Paiement</string>
+    <string name="artisan_payout_continue_to_signature_button">Continuer jusqu\'à la signature</string>
+    <string name="artisan_payout_amount_tv_hint">Montant du paiement</string>
+    <string name="artisan_payout_amount_tv">Montant du paiement:</string>
+    <string name="artisan_payout_date_tv">Date de paiement:</string>
+
+    <!-- Artisan Profile -->
+    <string name="artisan_profile_toolbar_text">Profil d\'artisan</string>
+
+    <!-- Edit Artisan -->
+    <string name="edit_artisan_toolbar_text">Modifier le profil d\'artisan</string>
+    <string name="edit_artisan_update_button">Mise à jour d\'artisan</string>
+
+    <!-- Home Screen Strings -->
+    <string name="homeScreenWelcome">Accueillir</string>
+    <string name="homeScreenPlaceHoldercgo">CGO 0</string>
+
+    <!-- Add Item Info -->
+    <string name="add_item_info_shipping_warning">Veuillez choisir un mode de livraison.</string>
+
+    <!-- Add Item review -->
+    <string name="item_review_usually_ships">Habituellement expédié dans</string>
+    <string name="number_in_stock">en stock</string>
+    <string name="item_review_response_dialog_title">Liste d\'articles…</string>
+    <string name="item_review_listing_failed">Votre article n\'a pas été soumis!</string>
+    <string name="item_review_listing_success">Votre article a été soumis avec succès!</string>
+
+    <!-- Artisan Payout -->
+    <string name="payout_date">Rendez-vous amoureux :</string>
+    <string name="payout_error_title">Erreur de paiement</string>
+    <string name="payout_error_message">Le montant du paiement dépasse le solde du paiement Artisan!</string>
+
+    <!-- Product Detail -->
+    <string name="product_detail_usually_ships_in">Habituellement expédié dans</string>
+
+    <!-- Order List -->
+    <string name="order_date">Date de commande:</string>
+    <string name="order_cost">Coût total:</string>
+    <string name="title_list_orders">Ordres</string>
+    <string name="order_list_search_order_hint">Ordres de Recherche</string>
+    <string name="placeholder_text">__placeholder__</string>
+
+    <!-- Order Screen -->
+    <string name="order_id"> </string>
+    <string name="order_shipped">Expédié:</string>
+    <string name="items_listed">Articles listés:</string>
+
+    <!-- Payout Signature -->
+    <string name="signature_clear_button">Nettoyer</string>
+    <string name="signature_done_button">Terminé</string>
+
+    <!-- Setting -->
+    <string name="settings_toolbar_text">Réglages</string>
+    <string name="settings_language_preference">Préférence de langue</string>
+    <string name="settings_update_setting">Mettre à jour les paramètres</string>
+
+    <!-- List All Artisan -->
+    <string name="list_artisan_toolbar_text">Artisans</string>
+    <string name="list_artisan_search_hint">Recherche d\'artisans</string>
+
+    <!-- Utility Strings -->
+    <string name="requiredFieldError">Champs obligatoires!</string>
+    <string name="utility_days">Journées.</string>
+    <string name="continue_button_text">Continuer</string>
+    <string name="edit">Modifier</string>
+    <string name="cancel">Annuler</string>
+    <string name="chooser_title">Choisissez une application de messagerie</string>
+
+</resources>

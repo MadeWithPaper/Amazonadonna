@@ -11,12 +11,15 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_settings.*
 import java.util.*
+import android.util.DisplayMetrics
+
+
 
 
 
 class Settings : AppCompatActivity() {
 
-    val languageList = arrayOf("English", "Spanish")
+    val languageList = arrayOf("English", "Spanish", "French")
     private var languageSelected = "en_US"
     private lateinit var cgaID : String
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +43,7 @@ class Settings : AppCompatActivity() {
                 when (spinnerValue) {
                    "English" -> languageSelected = "en_US"
                     "Spanish" -> languageSelected = "es_US"
+                    "French" -> languageSelected = ""
                 }
             }
         }
@@ -65,9 +69,8 @@ class Settings : AppCompatActivity() {
         intent.putExtra("languageSelected", languageSelected)
         intent.putExtra("cgaId", cgaID)
         val res = this.resources
-        val config = Configuration(res.configuration)
-        config.setLocale(locale)
-        this.createConfigurationContext(config)
+        res.configuration.setLocale(locale)
+
         recreate()
         //startActivity(intent)
     }

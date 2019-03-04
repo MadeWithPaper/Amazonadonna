@@ -73,7 +73,7 @@ class HomeScreen : AppCompatActivity() {
 
 
        if (intent.hasExtra("languageSelected")){
-////            //Got New Language
+            //Got New Language
            newLang = intent.extras!!.getString("languageSelected")
 //            Log.d("HomeScreen","got new language: " + newLanguage )
 //            // Create a new Locale object
