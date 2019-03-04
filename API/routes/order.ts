@@ -4,6 +4,9 @@ import { ddb } from '../server'
 import { OrderItem } from '../models/orderItem'
 import { unmarshUtil } from '../utilities/unmarshall'
 import * as uuid from 'uuid'
+import { Cgo } from '../models/cgo'
+import * as MwsApi from 'amazon-mws'
+import { MwsOrderRes } from '../models/mwsOrderRes'
 
 const router = Router()
 
@@ -26,32 +29,6 @@ router.post('/listAllForCgo', (req: Request, res: Response) => {
             Promise.all(convert).then(items => {
                 res.json(items)
             })
-        }
-    })
-})
-
-router.post('/add', (req: Request, res: Response) => {
-    const id = uuid.v1()
-    const params: aws.DynamoDB.PutItemInput = {
-        TableName: 'order',
-        Item: {
-            orderId: { S: id },
-            cgoId: { S: req.body.cgoId },
-            shippedStatus: { BOOL: req.body.shippedStatus },
-            numItems: { N: req.body.numItems },
-            shippingAddress: { S: req.body.shippingAddress },
-            totalCostDollars: { N: req.body.totalCostDollars },
-            totalCostCents: { N: req.body.totalCostCents }
-        }
-    }
-    ddb.putItem(params, (err, data) => {
-        if (err) {
-            console.log('Error adding order in order/add: ', err)
-            res.status(400).send(
-                'Error adding order in order/add: ' + err.message
-            )
-        } else {
-            res.json(id.toString())
         }
     })
 })
@@ -144,6 +121,132 @@ router.post('/setShippedStatus', (req: Request, res: Response) => {
             )
         } else {
             res.send('Success!')
+        }
+    })
+})
+
+router.post('/tryUpdate', (req: Request, res: Response) => {
+    const getCgoParams: aws.DynamoDB.Types.GetItemInput = {
+        TableName: 'cgo',
+        Key: { cgoId: { S: req.body.amznId } }
+    }
+
+    ddb.getItem(getCgoParams, (err, data) => {
+        if (err) {
+            const msg = 'Error getting cgo in order/tryUpdate: '
+            console.log(msg + err)
+            res.status(400).send(msg + err.message)
+        } else {
+            const cgo: Cgo = aws.DynamoDB.Converter.unmarshall(data.Item) as Cgo
+            if (Date.now() - cgo.lastUpdateOrders > 15000) {
+                // test
+                const amazonMws = new MwsApi()
+                amazonMws.setApiKey(cgo.mwsKey, cgo.mwsSecret)
+                const lastUpdate = new Date(0)
+                lastUpdate.setUTCMilliseconds(cgo.lastUpdateOrders)
+
+                const mwsOrdersParams = {
+                    Version: '2013-09-01',
+                    Action: 'ListOrders',
+                    MWSAuthToken: cgo.mwsAuthToken, // TODO
+                    'MarketplaceId.Id.1': 'MARKET_PLACE_ID_1', // TODO
+                    CreatedAfter: lastUpdate.toISOString
+                }
+
+                amazonMws.orders.search(mwsOrdersParams).then(
+                    (orders: MwsOrderRes) => {
+                        const ordersToAdd = orders.Orders.map(order => {
+                            return new Promise(resolve => {
+                                const id = uuid.v1()
+                                const params: aws.DynamoDB.PutItemInput = {
+                                    TableName: 'order',
+                                    Item: {
+                                        orderId: { S: id },
+                                        amazonOrderId: {
+                                            S: order.AmazonOrderId
+                                        },
+                                        cgoId: { S: req.body.amznId },
+                                        shippedStatus: {
+                                            BOOL: false
+                                        },
+                                        numItems: {
+                                            N: (
+                                                order.NumberOfItemsShipped +
+                                                order.NumberOfItemsUnshipped
+                                            ).toString()
+                                        },
+                                        shippingAddress: {
+                                            S:
+                                                order.ShippingAddress
+                                                    .AddressLine1
+                                        },
+                                        totalCostDollars: {
+                                            N: order.OrderTotal.Amount.split(
+                                                '.'
+                                            )[0].toString()
+                                        },
+                                        totalCostCents: {
+                                            N: order.OrderTotal.Amount.split(
+                                                '.'
+                                            )[1].toString()
+                                        }
+                                    }
+                                }
+                                ddb.putItem(
+                                    params,
+                                    (addOrderErr, addOrderData) => {
+                                        if (addOrderErr) {
+                                            const msg =
+                                                'Error adding order in order/tryUpdate: '
+                                            console.log(msg + err)
+                                            res.status(400).send(
+                                                msg + err.message
+                                            )
+                                        } else {
+                                            // resolve()
+                                        }
+                                    }
+                                )
+                            })
+                        })
+                        Promise.all(ordersToAdd).then(() => {
+                            const updateLastUpdateParam: aws.DynamoDB.Types.UpdateItemInput = {
+                                TableName: 'cgo',
+                                Key: { cgoId: { S: req.body.amznId } },
+                                UpdateExpression:
+                                    'set lastUpdateOrders = :time',
+                                ExpressionAttributeValues: {
+                                    ':time': { S: Date.now().toString() }
+                                },
+                                ReturnValues: 'UPDATED_NEW'
+                            }
+                            ddb.updateItem(
+                                updateLastUpdateParam,
+                                (updateErr, updateData) => {
+                                    if (updateErr) {
+                                        const msg =
+                                            'Error updating cgo lastUpdateOrder in order/tryUpdate: '
+                                        console.log(msg + updateErr)
+                                        res.status(400).send(
+                                            msg + updateErr.message
+                                        )
+                                    } else {
+                                        res.send('Updated!')
+                                    }
+                                }
+                            )
+                        })
+                    },
+                    mwsErr => {
+                        const msg =
+                            'Error getting orders from mws in order/tryUpdate: '
+                        console.log(msg + mwsErr)
+                        res.status(400).send(msg + mwsErr)
+                    }
+                )
+            } else {
+                res.send('Too soon')
+            }
         }
     })
 })

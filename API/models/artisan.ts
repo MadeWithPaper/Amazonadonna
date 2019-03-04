@@ -5,8 +5,8 @@ interface Artisan {
     city: string
     country: string
     artisanName: string
-    lat: string
-    lon: string
+    lat: number
+    lon: number
     balance: string
     picURL: string
 }

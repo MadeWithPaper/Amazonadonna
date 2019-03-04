@@ -29,7 +29,11 @@ router.post('/add', (req: Request, res: Response) => {
             country: { S: req.body.country },
             name: { S: req.body.name },
             lat: { N: req.body.lat },
-            lon: { N: req.body.lon }
+            lon: { N: req.body.lon },
+            mwsKey: { S: req.body.mwsKey },
+            mwsSecret: { S: req.body.mwsSecret },
+            mwsAuthToken: { S: req.body.mwsAuthToken },
+            lastUpdateOrders: { N: '1' }
         }
     }
     ddb.putItem(putCgoParams, (err, data) => {
