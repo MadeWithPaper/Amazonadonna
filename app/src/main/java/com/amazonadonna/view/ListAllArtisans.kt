@@ -88,10 +88,6 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
         super.onStart()
         job = Job()
 
-
-        // If offline, do this instead
-        //val artisanDao = AppDatabase.getDatabase(application).artisanDao()
-        //val dbArtisans : List<Artisan> = artisanDao.getAll()
         launch {
             val dbArtisans: List<Artisan> = getArtisansFromDb()
             originalArtisans.addAll(dbArtisans)
@@ -101,11 +97,8 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
                 recyclerView_listAllartisans.adapter = ListArtisanAdapter(applicationContext, oldFilteredArtisans)
             }
         }
-        /*runOnUiThread {
-            recyclerView_listAllartisans.adapter = ListArtisanAdapter(applicationContext, pullFromDb())
-        }*/
+
         Log.d("ListAllArtisans", "fetching")
-        //fetchJSON()
     }
 
     private fun search(query: String): Completable = Completable.create {

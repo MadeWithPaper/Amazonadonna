@@ -3,7 +3,7 @@ package com.amazonadonna.model
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.ColumnInfo
-import com.amazonadonna.sync.Syncronizer
+import com.amazonadonna.sync.Synchronizer
 import com.beust.klaxon.Json
 import java.io.Serializable
 import java.util.*
@@ -20,7 +20,7 @@ data class Artisan (
         @ColumnInfo(name = "lat") @Json(name = "lon") var lon : Double,
         @ColumnInfo(name = "lon") @Json(name = "lat") var lat : Double,
         @ColumnInfo(name = "picURL") @Json(name = "picURL") var picURL : String?,
-        @ColumnInfo(name = "synced") var synced : Int = Syncronizer.SYNCED,
+        @ColumnInfo(name = "synced") var synced : Int = Synchronizer.SYNCED,
         @ColumnInfo(name = "balance") @Json(name = "balance") var balance : Double) : Serializable {
 
     fun generateTempID() {

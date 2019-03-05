@@ -3,13 +3,19 @@ package com.amazonadonna.database
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
+import android.arch.persistence.room.TypeConverters
 import android.content.Context
 import com.amazonadonna.model.Artisan
+import com.amazonadonna.model.Order
+import com.amazonadonna.model.Product
 
-@Database(entities = arrayOf(Artisan::class), version = 14, exportSchema = false)
+@Database(entities = arrayOf(Artisan::class, Order::class, Product::class), version = 18, exportSchema = false)
+@TypeConverters(ProductListTypeConverter::class, PictureListTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun artisanDao(): ArtisanDao
+    abstract fun orderDao(): OrderDao
+    abstract fun productDao(): ProductDao
 
     companion object {
         @Volatile

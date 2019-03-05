@@ -12,26 +12,27 @@ import okhttp3.*
 import java.io.File
 import java.io.IOException
 import android.graphics.BitmapFactory
-import android.graphics.Bitmap
-import kotlinx.android.synthetic.main.activity_edit_artisan.*
 
 
-object ArtisanSync: Syncronizer(), CoroutineScope {
+object ArtisanSync: Synchronizer(), CoroutineScope {
     //var cgaId : String = "0"
     private const val listAllArtisansURL = "https://99956e2a.ngrok.io/artisan/listAllForCgo"
     private const val addArtisanURL = "https://99956e2a.ngrok.io/artisan/add"
     private const val artisanPicURL = "https://99956e2a.ngrok.io/artisan/updateImage"
-    private val editArtisanURL = "https://99956e2a.ngrok.io/artisan/edit"
-    private val updateArtisanURL = "https://99956e2a.ngrok.io/artisan/updateImage"
+    private const val editArtisanURL = "https://99956e2a.ngrok.io/artisan/edit"
+    private const val updateArtisanURL = "https://99956e2a.ngrok.io/artisan/updateImage"
 
     override fun sync(context: Context, cgaId: String) {
         super.sync(context, cgaId)
 
-        Log.i("ArtisanSync", "Syncing now!")
-        uploadNewArtisans(context)
-        Log.i("ArtisanSync", "Done uploading, now downloading")
-        downloadArtisans(context)
-        Log.i("ArtisanSync", "Done syncing!")
+            Log.i("ArtisanSync", "Syncing now!")
+            uploadNewArtisans(context)
+            Log.i("ArtisanSync", "Done uploading, now downloading")
+            downloadArtisans(context)
+            Log.i("ArtisanSync", "Done syncing!")
+
+            ProductSync.sync(context, cgaId)
+            OrderSync.sync(context, cgaId)
 
     }
 
@@ -94,6 +95,11 @@ object ArtisanSync: Syncronizer(), CoroutineScope {
 
                 val gson = GsonBuilder().create()
                 val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
+                for (artisan in artisans) {
+                    if(artisan.contactNumber == null)
+                        artisan.contactNumber = "1234567890"
+                }
+
                 Log.d("HOTFIX2", artisans.toString())
                 artisanDao.deleteAll()
                 artisanDao.insertAll(artisans)
