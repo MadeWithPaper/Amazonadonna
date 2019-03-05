@@ -149,8 +149,8 @@ router.post('/tryUpdate', (req: Request, res: Response) => {
                     Version: '2013-09-01',
                     Action: 'ListOrders',
                     SellerId: cgo.mwsSellerId,
-                    MWSAuthToken: cgo.mwsAuthToken, // TODO
-                    'MarketplaceId.Id.1': 'MARKET_PLACE_ID_1', // TODO
+                    MWSAuthToken: cgo.mwsAuthToken,
+                    'MarketplaceId.Id.1': 'A1AM78C64UM0Y8', // Amazon.com.mx
                     CreatedAfter: lastUpdate.toISOString
                 }
 
