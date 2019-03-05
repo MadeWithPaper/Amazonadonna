@@ -4,6 +4,7 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.content.ContentUris
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -21,10 +22,12 @@ import com.amazonadonna.model.Artisan
 import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.view.R
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_add_artisan.*
 import kotlinx.android.synthetic.main.activity_artisan_profile.*
 import kotlinx.android.synthetic.main.activity_edit_artisan.*
 import okhttp3.*
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.IOException
 
 class EditArtisan : AppCompatActivity() {
@@ -153,27 +156,118 @@ class EditArtisan : AppCompatActivity() {
         when(requestCode){
             CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
+                    val w = 331
+                    val h = 273
+                    val dataURI = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
                     try {
-                        Log.d("EditArtisan post photo", "Success")
-                        Log.d("EditArtisan post photo", "Exists?: " + photoFile!!.exists())
-                        setImageView()
+                        Log.d("Add Artisan post photo", "Success")
+                        Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
+                        val bm = loadScaledBitmap(dataURI, w, h)
+                        val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
+                        ivPreview.setImageBitmap(bm)
+                        //setImageView()
+                    } catch (e: Error) {
+                        Log.d("Add Artisan post Photo", "it failed")
                     }
-                    catch(e: Error) {
-                        Log.d("EditArtisan post Photo", "it failed")
-                    }
+//                    try {
+//                        Log.d("EditArtisan post photo", "Success")
+//                        Log.d("EditArtisan post photo", "Exists?: " + photoFile!!.exists())
+//                        setImageView()
+//                    }
+//                    catch(e: Error) {
+//                        Log.d("EditArtisan post Photo", "it failed")
+//                    }
                 }
             CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
                     if (data != null) {
+                        val w = 331
+                        val h = 273
+                        val dataURI = data.data
+                        Log.d("HEIGHT", h.toString())
+                        Log.d("WIDTH", w.toString())
+                        Log.d("dataURI", dataURI.toString())
                         createImageFile(data)
-                        Log.d("EditArtisan postGallery", "File:  Exists?: " + photoFile!!.exists())
-                        setImageView()
+
+
+                        try {
+                            Log.d("Add Artisan post photo", "Success")
+                            Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
+                            val bm = loadScaledBitmap(dataURI, w, h)
+                            val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
+                            ivPreview.setImageBitmap(bm)
+                            //setImageView()
+                        }
+                        catch(e: Error) {
+                            Log.d("Add Artisan post Photo", "it failed")
+                        }
+//                        createImageFile(data)
+//                        Log.d("Add Artisan postGallery", "File:  Exists?: " + photoFile!!.exists())
+//                        setImageView()
                     }
                     else {
-                        Log.d("EditArtisan postGallery", "Data was null")
+                        Log.d("Add Artisan postGallery", "Data was null")
                     }
+//                    if (data != null) {
+//                        createImageFile(data)
+//                        Log.d("EditArtisan postGallery", "File:  Exists?: " + photoFile!!.exists())
+//                        setImageView()
+//                    }
+//                    else {
+//                        Log.d("EditArtisan postGallery", "Data was null")
+//                    }
                 }
         }
+    }
+
+
+    @Throws(FileNotFoundException::class)
+    private fun loadScaledBitmap(src: Uri, req_w: Int, req_h: Int): Bitmap? {
+
+        var bm: Bitmap? = null
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeStream(baseContext.contentResolver.openInputStream(src), null, options)
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, req_w, req_h)
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false
+        bm = BitmapFactory.decodeStream(
+                baseContext.contentResolver.openInputStream(src), null, options)
+
+        return bm
+    }
+
+    public fun calculateInSampleSize(options : BitmapFactory.Options,
+                                     reqWidth : Int, reqHeight : Int): Int {
+        // Raw height and width of image
+        val height = options.outHeight;
+        val width = options.outWidth;
+        var inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            // Calculate ratios of height and width to requested height and
+            // width
+            val heightRatio = Math.round((height.toFloat()) / Math.round(reqHeight.toFloat()))
+            val widthRatio = Math.round(width.toFloat() / reqHeight.toFloat())
+
+            // Choose the smallest ratio as inSampleSize value, this will
+            // guarantee
+            // a final image with both dimensions larger than or equal to the
+            // requested height and width.
+            if (heightRatio < widthRatio)
+                inSampleSize = heightRatio
+            else
+                inSampleSize = widthRatio
+            // inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio
+        }
+
+        return inSampleSize
     }
 
     private fun parseLoc () : Pair<String, String> {

@@ -84,6 +84,7 @@ class AddArtisan : AppCompatActivity() {
 
     private fun setImageView() {
         val takenImage = BitmapFactory.decodeFile(photoFile!!.absolutePath)
+        //Log.d("PLLLLLZZZZZZ",takenImage)
         // RESIZE BITMAP, see section below
         // Load the taken image into a preview
         val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
@@ -133,10 +134,16 @@ class AddArtisan : AppCompatActivity() {
         when(requestCode){
             CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
+                    val w = imageView_artisanProfilePic.width
+                    val h = imageView_artisanProfilePic.height
+                    val dataURI = FileProvider.getUriForFile(this@AddArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
                         try {
                             Log.d("Add Artisan post photo", "Success")
                             Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
-                            setImageView()
+                            val bm = loadScaledBitmap(dataURI, w, h)
+                            val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
+                            ivPreview.setImageBitmap(bm)
+                            //setImageView()
                         } catch (e: Error) {
                             Log.d("Add Artisan post Photo", "it failed")
                         }
