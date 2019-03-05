@@ -52,6 +52,7 @@ router.post('/add', (req: Request, res: Response) => {
             )
         } else {
             res.json(id.toString())
+            /*sendText('19169903748', req.body.orderId) commenting this out for testing*/
         }
     })
 })
@@ -147,5 +148,28 @@ router.post('/setShippedStatus', (req: Request, res: Response) => {
         }
     })
 })
+
+function sendText(phoneNumber: string, orderId: string) {
+    const sns = new aws.SNS()
+    const params: aws.SNS.PublishInput = {
+        Message: 'Order Number' + orderId + 'Received',
+        PhoneNumber: phoneNumber
+    }
+    sns.publish(params, (err, data) => {
+        if (err) {
+            console.log(
+                'Error sending text to ' +
+                    params.PhoneNumber +
+                    'for orderId' +
+                    orderId
+            )
+            console.log(err, err.stack)
+        }
+        // an error occurred
+        else {
+            console.log('Sent text message') // successful response
+        }
+    })
+}
 
 export { router as orderRouter }
