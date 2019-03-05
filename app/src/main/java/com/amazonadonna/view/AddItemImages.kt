@@ -19,6 +19,7 @@ import com.amazonadonna.model.Product
 import com.amazonadonna.view.R
 import kotlinx.android.synthetic.main.activity_add_item_images.*
 import java.io.File
+import java.util.*
 
 
 class AddItemImages : AppCompatActivity() {
@@ -26,6 +27,7 @@ class AddItemImages : AppCompatActivity() {
     private var photoFile: File? = null
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
     private var imageNum : Int = 0
+    private var photoFilesArr : ArrayList<File?> = ArrayList(6)
 
     private val imageViewMap = SparseArray<ImageView>()
     //TODO add editMode functionality
@@ -94,8 +96,10 @@ class AddItemImages : AppCompatActivity() {
 
     private fun addItemImageContinue(product: Product, artisan: Artisan) {
         val intent = Intent(this, AddItemReview::class.java)
+
         intent.putExtra("product", product)
         intent.putExtra("selectedArtisan", artisan)
+        intent.putExtra("photoFiles", photoFilesArr)
 //        val bitmap = (addItemImage0.drawable as BitmapDrawable).bitmap
 //        val pic = Bitmap.createScaledBitmap(bitmap, 300, 300, true)
 //
@@ -117,6 +121,7 @@ class AddItemImages : AppCompatActivity() {
 
     private fun setImageView() {
         val takenImage = BitmapFactory.decodeFile(photoFile!!.absolutePath)
+        photoFilesArr.add(imageNum, photoFile!!)
         // RESIZE BITMAP, see section below
         // Load the taken image into a preview
         imageViewMap.get(imageNum).setImageBitmap(takenImage)
