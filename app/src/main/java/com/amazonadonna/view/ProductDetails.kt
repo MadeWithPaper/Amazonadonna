@@ -3,6 +3,7 @@ package com.amazonadonna.view
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import com.amazonadonna.view.R
@@ -17,6 +18,7 @@ class ProductDetails : AppCompatActivity() {
         setContentView(R.layout.activity_product_details)
 
         artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        Log.d("Productdetails", artisan.artisanId)
 
         val product = intent.extras?.getSerializable("product") as Product
 
