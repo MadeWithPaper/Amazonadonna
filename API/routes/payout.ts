@@ -62,7 +62,7 @@ router.post('/add', (req: Request, res: Response) => {
                 '19169903748',
                 req.body.artisanId,
                 req.body.payoutId,
-                req.body.d.toString(),
+                d.toString(),
                 req.body.amount
             )
         }
