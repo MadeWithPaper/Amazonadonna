@@ -22,6 +22,10 @@ import java.io.*
 import android.graphics.BitmapFactory
 import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.sync.Synchronizer
+import android.graphics.Bitmap
+
+
+
 
 class AddArtisan : AppCompatActivity() {
     private var cgaId : String = "0"
@@ -129,21 +133,40 @@ class AddArtisan : AppCompatActivity() {
         when(requestCode){
             CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
-                    try {
-                        Log.d("Add Artisan post photo", "Success")
-                        Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
-                        setImageView()
+                        try {
+                            Log.d("Add Artisan post photo", "Success")
+                            Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
+                            setImageView()
+                        } catch (e: Error) {
+                            Log.d("Add Artisan post Photo", "it failed")
+                        }
                     }
-                    catch(e: Error) {
-                        Log.d("Add Artisan post Photo", "it failed")
-                    }
-                }
             CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
                     if (data != null) {
+                        val w = imageView_artisanProfilePic.width
+                        val h = imageView_artisanProfilePic.height
+                        val dataURI = data.data
+                        Log.d("HEIGHT", h.toString())
+                        Log.d("WIDTH", w.toString())
+                        Log.d("dataURI", dataURI.toString())
                         createImageFile(data)
-                        Log.d("Add Artisan postGallery", "File:  Exists?: " + photoFile!!.exists())
-                        setImageView()
+
+
+                        try {
+                            Log.d("Add Artisan post photo", "Success")
+                           Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
+                            val bm = loadScaledBitmap(dataURI, w, h)
+                            val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
+                            ivPreview.setImageBitmap(bm)
+                            //setImageView()
+                        }
+                        catch(e: Error) {
+                            Log.d("Add Artisan post Photo", "it failed")
+                        }
+//                        createImageFile(data)
+//                        Log.d("Add Artisan postGallery", "File:  Exists?: " + photoFile!!.exists())
+//                        setImageView()
                     }
                     else {
                         Log.d("Add Artisan postGallery", "Data was null")
@@ -152,7 +175,58 @@ class AddArtisan : AppCompatActivity() {
             }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    @Throws(FileNotFoundException::class)
+    private fun loadScaledBitmap(src: Uri, req_w: Int, req_h: Int): Bitmap? {
+
+        var bm: Bitmap? = null
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeStream(baseContext.contentResolver.openInputStream(src), null, options)
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, req_w, req_h)
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false
+        bm = BitmapFactory.decodeStream(
+                baseContext.contentResolver.openInputStream(src), null, options)
+
+        return bm
+    }
+
+    public fun calculateInSampleSize(options : BitmapFactory.Options,
+                                      reqWidth : Int, reqHeight : Int): Int {
+        // Raw height and width of image
+        val height = options.outHeight;
+        val width = options.outWidth;
+        var inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            // Calculate ratios of height and width to requested height and
+            // width
+            val heightRatio = Math.round((height.toFloat()) / Math.round(reqHeight.toFloat()))
+            val widthRatio = Math.round(width.toFloat() / reqHeight.toFloat())
+
+            // Choose the smallest ratio as inSampleSize value, this will
+            // guarantee
+            // a final image with both dimensions larger than or equal to the
+            // requested height and width.
+            if (heightRatio < widthRatio)
+                inSampleSize = heightRatio
+            else
+                inSampleSize = widthRatio
+           // inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio
+        }
+
+        return inSampleSize
+    }
+
+
+
+override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             3 -> {
                 button_addArtisan.setOnClickListener{
