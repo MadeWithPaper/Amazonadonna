@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
+import com.amazonadonna.database.PictureListTypeConverter
 import com.amazonadonna.model.Order
 import com.amazonadonna.model.Product
 import com.amazonadonna.view.ListItemsAdapter
@@ -78,6 +79,15 @@ object OrderSync: Synchronizer(), CoroutineScope {
                 //Log.d("ITEMS", body)
                 val gson = GsonBuilder().create()
                 val products : List<Product> = gson.fromJson(body,  object : TypeToken<List<Product>>() {}.type)
+                for (product in products) {
+                    product.pictureURLs = Array(PictureListTypeConverter.NUM_PICS, { i -> "undefined"})
+                    product.pictureURLs[0] = product.pic0URL
+                    product.pictureURLs[1] = product.pic1URL
+                    product.pictureURLs[2] = product.pic2URL
+                    product.pictureURLs[3] = product.pic3URL
+                    product.pictureURLs[4] = product.pic4URL
+                    product.pictureURLs[5] = product.pic5URL
+                }
                 order.products = products
                 orderDao.insert(order)
             }

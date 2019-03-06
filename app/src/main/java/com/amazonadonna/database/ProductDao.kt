@@ -23,6 +23,9 @@ interface ProductDao {
     @Query("UPDATE product SET synced = (:syncState) WHERE itemId = (:productId)")
     fun setSyncedState(productId: String, syncState: Int)
 
+    @Query("DELETE FROM product WHERE itemId=:id")
+    fun deleteById(id: String)
+
     @Query("SELECT * FROM product WHERE itemName LIKE :productName " +
             "LIMIT 1")
     fun findByName(productName: String): Product

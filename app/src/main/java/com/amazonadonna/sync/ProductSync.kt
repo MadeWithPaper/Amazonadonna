@@ -54,6 +54,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
         launch {
             var artisans = getAllArtisans(context)
 
+            deleteAllProducts(context)
             for (artisan in artisans) {
                 downloadProductsForArtisan(context, artisan)
             }
@@ -91,7 +92,6 @@ object ProductSync: Synchronizer(), CoroutineScope {
                     product.pictureURLs[5] = product.pic5URL
                     Log.i(TAG, product.itemId + " " + product.pictureURLs[0])
                 }
-                //productDao.deleteAll()
                 productDao.insertAll(products)
             }
 
@@ -103,6 +103,10 @@ object ProductSync: Synchronizer(), CoroutineScope {
 
     private suspend fun getAllArtisans(context : Context) = withContext(Dispatchers.IO) {
         AppDatabase.getDatabase(context).artisanDao().getAll()
+    }
+
+    private suspend fun deleteAllProducts(context : Context) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).productDao().deleteAll()
     }
 
     private suspend fun getNewProducts(context : Context) = withContext(Dispatchers.IO) {
@@ -154,23 +158,18 @@ object ProductSync: Synchronizer(), CoroutineScope {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
                 product.itemId = body!!.substring(1, body!!.length - 1)
-                Log.i("AddArtisan", "success $body")
-                /*if (artisan.picURL != "Not set") {
-                    ArtisanSync.uploadArtisanImage(context, artisan)
-                }
-                else {
-                    launch {
-                        ArtisanSync.setSyncedState(artisan, context)
-                    }
-                }*/
+                Log.i(TAG, "success $body")
+
                 var i = 0
                 for (picURL in product.pictureURLs) {
-                    uploadProductImage(context, product, i++)
+                    if (picURL != "Not set" && picURL != "undefined") {
+                        uploadProductImage(context, product, i++)
+                    }
                 }
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("AddProduct", "failed to do POST request to database ${addItemURL}")
+                Log.e(TAG, "failed to do POST request to database ${addItemURL}")
             }
         })
     }
@@ -196,25 +195,28 @@ object ProductSync: Synchronizer(), CoroutineScope {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                Log.d("AddArtisan", body)
+                Log.d(TAG, body)
 
                 // Done uploading last image, so now get rid of the temp product
-                if (index == product.pictureURLs.size - 1 || product.pictureURLs[index + 1] == "undefined") {
+                Log.i(TAG, "Am I done uploading images? " + product.pictureURLs[index + 1])
+                if (index == product.pictureURLs.size - 1 || product.pictureURLs[index + 1] == "undefined" || product.pictureURLs[index + 1] == "Not set") {
                     launch {
+                        Log.i(TAG, "Deleting temp product")
                         setSyncedState(product, context)
+                        downloadProducts(context)
                     }
                 }
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("AddArtisan", "failed to do POST request to database${addItemImageURL}")
-                Log.e("AddArtisan", e!!.message)
+                Log.e(TAG, "failed to do POST request to database${addItemImageURL}")
+                Log.e(TAG, e!!.message)
             }
         })
     }
 
     private suspend fun setSyncedState(product : Product, context : Context) = withContext(Dispatchers.IO) {
-        AppDatabase.getDatabase(context).productDao().delete(product)
+        AppDatabase.getDatabase(context).productDao().deleteById(product.itemId)
     }
 
     private fun stageImageUpdate(context : Context, product : Product, photoFile: File? = null, index : Int) {

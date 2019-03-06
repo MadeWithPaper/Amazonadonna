@@ -12,6 +12,8 @@ import okhttp3.*
 import java.io.IOException
 import android.annotation.TargetApi
 import android.content.ContentUris
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.MediaStore
@@ -57,6 +59,9 @@ class AddItemReview : AppCompatActivity() {
         addItemReview_shippingOption.text = product.shippingOption
         addItemReview_ItemQuantity.text = productQuantityString
         addItemReview_itemTime.text = productionTimeString
+
+        val bitmap = BitmapFactory.decodeFile(photoFilesArr[0]!!.path)
+        addItemReview_Image.setImageBitmap(bitmap)
 
         addItemReview_continueButton.setOnClickListener {
             reviewDone(artisan, product, photoFilesArr)
