@@ -15,7 +15,7 @@ import android.content.ContentUris
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import com.amazonadonna.view.R
+import com.amazonadonna.sync.ProductSync
 import java.io.File
 import java.util.*
 
@@ -54,7 +54,7 @@ class AddItemReview : AppCompatActivity() {
         addIemReview_ProductNameTF.text = product.itemName
         addItemReview_itemPrice.text = priceString
         addItemReview_itemDescription.text = product.description
-        addItemReview_shippingOption.text = product.ShippingOption
+        addItemReview_shippingOption.text = product.shippingOption
         addItemReview_ItemQuantity.text = productQuantityString
         addItemReview_itemTime.text = productionTimeString
 
@@ -65,8 +65,19 @@ class AddItemReview : AppCompatActivity() {
 
     //TODO user horizontal scroll bar to make a nicer item pic gallery
     private fun reviewDone (artisan: Artisan, product: Product, photos: ArrayList<File?>) {
-        submitToDB(product, artisan, photos)
-        // TODO add to local storage
+        //submitToDB(product, artisan, photos)
+        product.generateTempID()
+
+        if (editMode) {
+            //ProductSync.editProduct(applicationContext, product, artisan, photos)
+            submitToDB(product, artisan, photos)
+        }
+        else {
+            ProductSync.addProduct(applicationContext, product, artisan, photos)
+            runOnUiThread {
+                showResponseDialog(artisan, true)
+            }
+        }
     }
 
     private fun submitDismiss(artisan: Artisan) {
@@ -94,7 +105,7 @@ class AddItemReview : AppCompatActivity() {
                 .add("category", product.category)
                 .add("subCategory", product.subCategory)
                 .add("specificCategory", product.specificCategory)
-                .add("shippingOption", product.ShippingOption)
+                .add("shippingOption", product.shippingOption)
                 .add("itemQuantity", product.itemQuantity.toString())
                 .add("productionTime", product.productionTime.toString())
         if (editMode) {

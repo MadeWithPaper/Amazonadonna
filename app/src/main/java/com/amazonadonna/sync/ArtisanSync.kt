@@ -27,13 +27,69 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
             Log.i("ArtisanSync", "Syncing now!")
             uploadNewArtisans(context)
+           /* Log.i("ArtisanSync", "Done uploading, now downloading")
+            downloadArtisans(context)
+            Log.i("ArtisanSync", "Done syncing!")*/
+
+            /*ProductSync.sync(context, cgaId)
+            OrderSync.sync(context, cgaId)*/
+    }
+
+    private fun uploadNewArtisans(context : Context) {
+        launch {
+            val newArtisans = getNewArtisans(context)
+            for (artisan in newArtisans) {
+                uploadSingleArtisan(context, artisan)
+            }
+            val updateArtisans = getUpdateArtisans(context)
+            for (artisan in updateArtisans) {
+                updateSingleArtisan(context, artisan)
+            }
             Log.i("ArtisanSync", "Done uploading, now downloading")
             downloadArtisans(context)
             Log.i("ArtisanSync", "Done syncing!")
+        }
+    }
 
-            ProductSync.sync(context, cgaId)
-            OrderSync.sync(context, cgaId)
+    private fun downloadArtisans(context : Context) {
+        val requestBody = FormBody.Builder().add("cgoId", mCgaId)
+                .build()
 
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+                .url(listAllArtisansURL)
+                .post(requestBody)
+                .build()
+
+        val artisanDao = AppDatabase.getDatabase(context).artisanDao()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()?.string()
+                Log.i("ListAllArtisan", "response body: " + body)
+
+                val gson = GsonBuilder().create()
+                val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
+                for (artisan in artisans) {
+                    if(artisan.contactNumber == null)
+                        artisan.contactNumber = "1234567890"
+                }
+
+                Log.d("HOTFIX2", artisans.toString())
+                artisanDao.deleteAll()
+                artisanDao.insertAll(artisans)
+                Log.d("HOTFIX3", artisanDao.toString())
+
+                Log.i("ArtisanSync", "Successfully synced Artisan data")
+
+                ProductSync.sync(context, mCgaId)
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.e("ListAllArtisan", "failed to do POST request to database" + listAllArtisansURL)
+            }
+        })
     }
 
     fun addArtisan(context : Context, artisan : Artisan, photoFile: File? = null) {
@@ -73,58 +129,6 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
     private suspend fun updateArtisanHelper(context : Context, artisan : Artisan) = withContext(Dispatchers.IO) {
         AppDatabase.getDatabase(context).artisanDao().update(artisan)
-    }
-
-    private fun downloadArtisans(context : Context) {
-        val requestBody = FormBody.Builder().add("cgoId", mCgaId)
-                .build()
-
-        val client = OkHttpClient()
-
-        val request = Request.Builder()
-                .url(listAllArtisansURL)
-                .post(requestBody)
-                .build()
-
-        val artisanDao = AppDatabase.getDatabase(context).artisanDao()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                Log.i("ListAllArtisan", "response body: " + body)
-
-                val gson = GsonBuilder().create()
-                val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
-                for (artisan in artisans) {
-                    if(artisan.contactNumber == null)
-                        artisan.contactNumber = "1234567890"
-                }
-
-                Log.d("HOTFIX2", artisans.toString())
-                artisanDao.deleteAll()
-                artisanDao.insertAll(artisans)
-                Log.d("HOTFIX3", artisanDao.toString())
-
-                Log.i("ArtisanSync", "Successfully synced Artisan data")
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("ListAllArtisan", "failed to do POST request to database" + listAllArtisansURL)
-            }
-        })
-    }
-
-    private fun uploadNewArtisans(context : Context) {
-        launch {
-            val newArtisans = getNewArtisans(context)
-            for (artisan in newArtisans) {
-                uploadSingleArtisan(context, artisan)
-            }
-            val updateArtisans = getUpdateArtisans(context)
-            for (artisan in updateArtisans) {
-                updateSingleArtisan(context, artisan)
-            }
-        }
     }
 
     private suspend fun getNewArtisans(context : Context) = withContext(Dispatchers.IO) {

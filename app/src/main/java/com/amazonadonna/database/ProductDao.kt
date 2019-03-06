@@ -8,7 +8,7 @@ interface ProductDao {
     @Query("SELECT * FROM product")
     fun getAll(): List<Product>
 
-    @Query("SELECT pictureURL FROM product")
+    @Query("SELECT pictureURLs FROM product")
     fun getAllImages(): List<String>
 
     @Query("SELECT * FROM product WHERE synced = (:syncState)")
@@ -16,6 +16,9 @@ interface ProductDao {
 
     @Query("SELECT * FROM product WHERE itemId IN (:productIds)")
     fun loadAllByIds(productIds: IntArray): List<Product>
+
+    @Query("SELECT * FROM product WHERE artisanId = (:artisanId)")
+    fun getAllByArtisanId(artisanId: String): List<Product>
 
     @Query("UPDATE product SET synced = (:syncState) WHERE itemId = (:productId)")
     fun setSyncedState(productId: String, syncState: Int)

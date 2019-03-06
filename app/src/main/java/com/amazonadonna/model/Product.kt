@@ -3,9 +3,11 @@ package com.amazonadonna.model
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Ignore
 import com.amazonadonna.sync.Synchronizer
 import com.beust.klaxon.Json
 import java.io.Serializable
+import java.util.*
 
 @Entity(tableName = "product")
 data class Product (
@@ -13,20 +15,25 @@ data class Product (
         @PrimaryKey @Json(name = "itemId") var itemId : String,
         @ColumnInfo(name = "description") @Json(name = "description") var description : String,
         @ColumnInfo(name = "artisanId") @Json(name = "artisanId") var artisanId : String,
-        @ColumnInfo(name = "pictureURL") @Json(name = "pictureURL") var pictureURL : Array<String>,
+        @ColumnInfo(name = "pictureURLs") @Json(name = "pictureURLs") var pictureURLs : Array<String>,
+        @Json(name = "pic0URL") var pic0URL : String,
+        @Json(name = "pic1URL") var pic1URL : String,
+        @Json(name = "pic2URL") var pic2URL : String,
+        @Json(name = "pic3URL") var pic3URL : String,
+        @Json(name = "pic4URL") var pic4URL : String,
+        @Json(name = "pic5URL") var pic5URL : String,
         @ColumnInfo(name = "category") @Json(name = "category") var category:  String,
         @ColumnInfo(name = "subCategory") @Json(name = "subCategory") var subCategory: String,
         @ColumnInfo(name = "specificCategory") @Json(name = "specificCategory") var specificCategory : String,
         @ColumnInfo(name = "itemName") @Json(name = "itemName") var itemName : String,
-        @ColumnInfo(name = "ShippingOption") @Json(name = "ShippingOption") var ShippingOption : String,
+        @ColumnInfo(name = "shippingOption") @Json(name = "shippingOption") var shippingOption : String,
         @ColumnInfo(name = "itemQuantity") @Json(name = "itemQuantity") var itemQuantity : Int,
         @ColumnInfo(name = "synced") var synced : Int = Synchronizer.SYNCED,
         @ColumnInfo(name = "productionTime") @Json(name = "productionTime") var productionTime : Int) : Serializable {
 
-//    fun generateProductID() {
-//        //TODO fill in logic for generating unique ID for product
-//        var num = Random().nextInt()
-//        itemId = ((artisanId.hashCode() + itemName.hashCode()) * 13).toString()
-//    }
+    fun generateTempID() {
+        var num = Random().nextInt()
+        itemId = ((artisanId.hashCode() + itemName.hashCode()) * 13).toString()
+    }
 
 }
