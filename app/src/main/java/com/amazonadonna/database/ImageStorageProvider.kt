@@ -86,7 +86,7 @@ class ImageStorageProvider(var context: Context) {
     //      If image is available locally, then use local image
     //      Else load the image from the server and store it locally
     fun loadImageIntoUI(picURL: String?, iv: ImageView, prefix: String, viewContext: Context) {
-        if (picURL != "Not set" && picURL != null) {
+        if (picURL != "Not set" && picURL != "undefined" && picURL != null) {
             var url = picURL
 
             // If image is already on S3

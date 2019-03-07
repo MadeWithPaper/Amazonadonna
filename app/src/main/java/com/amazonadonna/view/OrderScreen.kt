@@ -21,12 +21,13 @@ import java.io.IOException
 class OrderScreen : AppCompatActivity() {
     var orderIdString = ""
     val getItemURL = "https://99956e2a.ngrok.io/order/getItems"
+    lateinit var order : Order
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order_screen)
 
-        val order = intent.extras?.getSerializable("order") as Order
+        order = intent.extras?.getSerializable("order") as Order
         orderIdString = order.orderId
         populateSelectedOrder(order)
 
@@ -45,7 +46,10 @@ class OrderScreen : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        fetchJSON()
+        runOnUiThread {
+            orderScreen_recyclerView.adapter = ListItemsAdapter(applicationContext, order.products)
+        }
+        //fetchJSON()
     }
 
     //TODO update "artisanDao" to be productDaogi

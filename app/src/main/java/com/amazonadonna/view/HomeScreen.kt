@@ -26,17 +26,19 @@ class HomeScreen : AppCompatActivity() {
         override fun onSuccess(p0: User?) {
             cgaID = p0!!.userId.substringAfter("amzn1.account.")
 
-            try {
-                cgoNameTV.text = p0.userName
-            } catch (e : Exception){
-
-            }
             cgaID = "0" //******** Uncomment this to go back to default for testing ****
             //--------------------------------------------------------//
             // UNCOMMENT THE METHOD CALL BELOW TO CLEAR SQLITE TABLES //
             //--------------------------------------------------------//
             //ArtisanSync.resetLocalDB(applicationContext)
             //--------------------------------------------------------//
+
+            try {
+                cgoNameTV.text = p0.userName
+            } catch (e : Exception){
+                //do nothing use placeholder text
+            }
+
             ArtisanSync.sync(applicationContext, cgaID)
             fetchJSONCGA()
             Log.d("HomeScreen", cgaID)

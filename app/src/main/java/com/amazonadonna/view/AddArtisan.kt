@@ -251,7 +251,7 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
         val bio = editText_bio.text.toString()
         val number = editText_ContactNumber.text.toString()
 
-         val newArtisan = Artisan(name, "", number, "","", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 0.0)
+        val newArtisan = Artisan(name, "", number, "","", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 0.0)
         newArtisan.generateTempID()
         //parse location info
         parseLoc(newArtisan)

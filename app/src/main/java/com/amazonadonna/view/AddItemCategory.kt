@@ -90,7 +90,7 @@ class AddItemCategory : AppCompatActivity() {
     val nursingfeedingsub = arrayOf(SELECT_SPECIFICCATEGORY, "Bibs & Burp Cloths", "Drinkware")
     val pacifierssub = arrayOf(SELECT_SPECIFICCATEGORY, "Pacifier Accessories", "Pacifiers", "Teethers")
 
-    var product : Product = Product(0.0, "0", "placeholder", "placeholder", arrayOf("testingurl", "Not set"), "placeholder", "placeholder", "placeholder", "placeholder", "Placeholder", 0,  SYNC_NEW, 0)
+    var product : Product = Product(0.0, "0", "placeholder", "placeholder", arrayOf("undefined", "undefined", "undefined", "undefined", "undefined", "undefined"), "undefined", "undefined", "undefined", "undefined", "undefined", "undefined", "placeholder", "placeholder", "placeholder", "placeholder", "Placeholder", 0,  SYNC_NEW, 0)
     private var editMode : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
