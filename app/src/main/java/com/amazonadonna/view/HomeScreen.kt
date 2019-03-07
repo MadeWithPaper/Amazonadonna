@@ -52,6 +52,7 @@ class HomeScreen : AppCompatActivity() {
         override fun onError(ae: AuthError?) {
             //To change body of created functions use File | Settings | File Templates.
             Log.d("HomeScreen", "no work")
+            ArtisanSync.sync(applicationContext, cgaID)
         }
     }
 

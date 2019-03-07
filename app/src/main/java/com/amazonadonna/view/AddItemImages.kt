@@ -104,19 +104,19 @@ class AddItemImages : AppCompatActivity() {
 
             }
             if (product.pictureURLs[2] != "Not set" && product.pictureURLs[2] != "undefined") {
-                isp.loadImageIntoUI(product.pictureURLs[2], addItemImage1, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+                isp.loadImageIntoUI(product.pictureURLs[2], addItemImage2, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
 
             }
             if (product.pictureURLs[3] != "Not set" && product.pictureURLs[3] != "undefined") {
-                isp.loadImageIntoUI(product.pictureURLs[3], addItemImage1, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+                isp.loadImageIntoUI(product.pictureURLs[3], addItemImage3, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
 
             }
             if (product.pictureURLs[4] != "Not set" && product.pictureURLs[4] != "undefined") {
-                isp.loadImageIntoUI(product.pictureURLs[4], addItemImage1, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+                isp.loadImageIntoUI(product.pictureURLs[4], addItemImage4, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
 
             }
             if (product.pictureURLs[5] != "Not set" && product.pictureURLs[5] != "undefined") {
-                isp.loadImageIntoUI(product.pictureURLs[5], addItemImage1, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+                isp.loadImageIntoUI(product.pictureURLs[5], addItemImage5, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
 
             }
         }
