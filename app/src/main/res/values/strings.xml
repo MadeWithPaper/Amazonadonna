@@ -48,8 +48,8 @@
     <string name="item_info_product_quantity_tv_hint">Product Quantity</string>
     <string name="item_info_product_production_tv_hint">Product Production Time in Days</string>
     <string name="item_info_product_toolbar_text">Item Info</string>
-    
-    <!-- Add Item Review --> 
+
+    <!-- Add Item Review -->
     <string name="item_review_confirm_listing">Confirm Listing</string>
     <string name="item_review_toolbar_text">Review Item</string>
 
@@ -66,7 +66,7 @@
 
     <!-- Artisan Profile -->
     <string name="artisan_profile_toolbar_text">Artisan Profile</string>
-
+    <string name="intent_chooser_title">Choose Application to send message with</string>
     <!-- Edit Artisan -->
     <string name="edit_artisan_toolbar_text">Edit Artisan Profile</string>
     <string name="edit_artisan_update_button">Update Artisan</string>
@@ -90,7 +90,7 @@
     <string name="payout_error_title">Payout Error</string>
     <string name="payout_error_message">Payout amount exceeds Artisan\'s Payout balance!</string>
 
-    <!-- Product Detail --> 
+    <!-- Product Detail -->
     <string name="product_detail_usually_ships_in">Usually shipped within </string>
 
     <!-- Order List -->

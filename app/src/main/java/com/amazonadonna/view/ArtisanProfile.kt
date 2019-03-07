@@ -1,6 +1,7 @@
 package com.amazonadonna.view
 
 import android.content.Intent
+import android.content.Intent.createChooser
 import android.content.pm.LabeledIntent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
@@ -50,8 +51,8 @@ class ArtisanProfile() : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
         intent.putExtra("address", artisan.contactNumber)
-
-        startActivity(intent)
+        val messagechooser = createChooser(intent, R.string.chooser_title.toString())
+        startActivity(messagechooser)
     }
 
     private fun populateSelectedArtisan(artisan : Artisan) {
