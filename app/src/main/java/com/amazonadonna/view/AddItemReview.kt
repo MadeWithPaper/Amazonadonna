@@ -17,6 +17,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.sync.ProductSync
 import java.io.File
 import java.util.*
@@ -39,7 +40,7 @@ class AddItemReview : AppCompatActivity() {
 
         val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
         val product = intent.extras?.getSerializable("product") as Product
-        var photoFilesArr = intent.extras?.getSerializable("photoFiles") as ArrayList<File?>
+        var photoFilesArr = intent.extras?.getSerializable("photoFiles") as HashMap<Int, File?>
         editMode = intent.extras?.get("editMode") as Boolean
 
 
@@ -60,8 +61,14 @@ class AddItemReview : AppCompatActivity() {
         addItemReview_ItemQuantity.text = productQuantityString
         addItemReview_itemTime.text = productionTimeString
 
-        val bitmap = BitmapFactory.decodeFile(photoFilesArr[0]!!.path)
-        addItemReview_Image.setImageBitmap(bitmap)
+        if (editMode && (photoFilesArr.size == 0 || photoFilesArr[0] == null)) {
+            var isp = ImageStorageProvider(applicationContext)
+            isp.loadImageIntoUI(product.pic0URL, addItemReview_Image, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+        }
+        else {
+            val bitmap = BitmapFactory.decodeFile(photoFilesArr[0]!!.path)
+            addItemReview_Image.setImageBitmap(bitmap)
+        }
 
         addItemReview_continueButton.setOnClickListener {
             reviewDone(artisan, product, photoFilesArr)
@@ -69,15 +76,23 @@ class AddItemReview : AppCompatActivity() {
     }
 
     //TODO user horizontal scroll bar to make a nicer item pic gallery
-    private fun reviewDone (artisan: Artisan, product: Product, photos: ArrayList<File?>) {
+    private fun reviewDone (artisan: Artisan, product: Product, photosMap: HashMap<Int, File?>) {
         //submitToDB(product, artisan, photos)
-        product.generateTempID()
+        var photos = ArrayList<File?>(6)
+
+        for (i in 0..5) {
+            photos.add(i, photosMap[i])
+        }
 
         if (editMode) {
-            //ProductSync.editProduct(applicationContext, product, artisan, photos)
-            submitToDB(product, artisan, photos)
+            ProductSync.updateProduct(applicationContext, product, artisan, photos)
+            //submitToDB(product, artisan, photos)
+            runOnUiThread {
+                showResponseDialog(artisan, true)
+            }
         }
         else {
+            product.generateTempID()
             ProductSync.addProduct(applicationContext, product, artisan, photos)
             runOnUiThread {
                 showResponseDialog(artisan, true)
