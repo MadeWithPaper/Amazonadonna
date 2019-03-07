@@ -15,22 +15,30 @@ import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_home_screen.*
 import okhttp3.*
 import java.io.IOException
+import java.lang.Exception
 
 
 class HomeScreen : AppCompatActivity() {
     private var cgaID : String = "0" // initialize to prevent crash while testing
     private var newLang : String = "en_US"
-
+    private val amaznIdURL = "https://99956e2a.ngrok.io/cgo/getByAmznId"
     private var getUserInfoListener = object : Listener<User, AuthError> {
         override fun onSuccess(p0: User?) {
             cgaID = p0!!.userId.substringAfter("amzn1.account.")
-            //cgoNameTV.text = p0.userName
+
             cgaID = "0" //******** Uncomment this to go back to default for testing ****
             //--------------------------------------------------------//
             // UNCOMMENT THE METHOD CALL BELOW TO CLEAR SQLITE TABLES //
             //--------------------------------------------------------//
             //ArtisanSync.resetLocalDB(applicationContext)
             //--------------------------------------------------------//
+
+            try {
+                cgoNameTV.text = p0.userName
+            } catch (e : Exception){
+                //do nothing use placeholder text
+            }
+
             ArtisanSync.sync(applicationContext, cgaID)
             fetchJSONCGA()
             Log.d("HomeScreen", cgaID)
@@ -137,7 +145,6 @@ class HomeScreen : AppCompatActivity() {
     }
 
     private fun fetchJSONCGA() {
-        val url = "https://7bd92aed.ngrok.io/cgo/getByAmznId"
         val requestBody = FormBody.Builder().add("amznId", cgaID!!)
                 .build()
         val db = Room.databaseBuilder(
@@ -146,7 +153,7 @@ class HomeScreen : AppCompatActivity() {
         ).fallbackToDestructiveMigration().build()
         val client = OkHttpClient()
         val request = Request.Builder()
-                .url(url)
+                .url(amaznIdURL)
                 .post(requestBody)
                 .build()
         Log.d("HomeScreen", "In fetchCGA")
@@ -167,7 +174,7 @@ class HomeScreen : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("HomeScreen", "failed to do POST request to database" + url)
+                Log.e("HomeScreen", "failed to do POST request to database" + amaznIdURL)
             }
         })
     }

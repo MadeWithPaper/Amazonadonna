@@ -141,7 +141,7 @@ class PayoutSignature : AppCompatActivity() {
         val requestBody = FormBody.Builder().add("artisanId", artisan.artisanId)
                 .add("cgoId", artisan.cgoId)
                 .add("amount", amount.toString())
-                .add("date", getCurrentDate())
+                .add("date", System.currentTimeMillis().toString())
 
         val client = OkHttpClient()
         val request = Request.Builder()
@@ -172,11 +172,12 @@ class PayoutSignature : AppCompatActivity() {
                 submitDismiss(artisan)
                 val intent = Intent(this, ArtisanProfile::class.java)
                 intent.putExtra("artisan", artisan)
+                finishAffinity()
                 startActivity(intent)
-                finish()
+               // finishAffinity()
+               // finish()
             }
-        } else
-        {
+        } else {
             builder.setTitle("Payout Failed!")
             builder.setMessage("Current Artisan Balance: $ ${artisan.balance}")
             builder.setOnDismissListener {
@@ -232,7 +233,8 @@ class PayoutSignature : AppCompatActivity() {
     private fun submitDismiss(artisan: Artisan) {
         val intent = Intent(this, ArtisanProfile::class.java)
         intent.putExtra("artisan", artisan)
+        finishAffinity()
         startActivity(intent)
-        finish()
+        //finish()
     }
 }
