@@ -10,14 +10,12 @@ import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import okhttp3.*
 import java.io.File
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 object ProductSync: Synchronizer(), CoroutineScope {
     private const val TAG = "ProductSync"
@@ -35,23 +33,25 @@ object ProductSync: Synchronizer(), CoroutineScope {
     }
 
     private fun uploadProducts(context: Context) {
-        launch {
+        runBlocking {
             val newProducts = getNewProducts(context)
             for (product in newProducts) {
                 uploadSingleProduct(context, product)
             }
             val updateProducts = getUpdateProducts(context)
             for (product in updateProducts) {
-                //updateSingleProduct(context, product)
+                updateSingleProduct(context, product)
             }
-            Log.i(TAG, "Done uploading, now downloading")
-            downloadProducts(context)
-            Log.i(TAG, "Done syncing!")
         }
+        Log.i(TAG, "Done uploading, now downloading")
+        runBlocking {
+            downloadProducts(context)
+        }
+        Log.i(TAG, "Done syncing!")
     }
 
     private fun downloadProducts(context: Context) {
-        launch {
+        runBlocking {
             var artisans = getAllArtisans(context)
 
             deleteAllProducts(context)
@@ -61,6 +61,24 @@ object ProductSync: Synchronizer(), CoroutineScope {
 
             OrderSync.sync(context, ArtisanSync.mCgaId)
         }
+    }
+
+    fun updateProduct(context : Context, product: Product, artisan: Artisan, photos: ArrayList<File?>) {
+        var i = 0
+        for (photo in photos) {
+            stageImageUpdate(context, product, photo, i)
+            i++
+        }
+        product.synced = SYNC_EDIT
+
+        launch {
+            updateProductHelper(context, product)
+        }
+
+    }
+
+    private suspend fun updateProductHelper(context : Context, product: Product) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).productDao().update(product)
     }
 
     private fun downloadProductsForArtisan(context: Context, artisan : Artisan) {
@@ -134,6 +152,53 @@ object ProductSync: Synchronizer(), CoroutineScope {
         AppDatabase.getDatabase(context).productDao().insert(product)
     }
 
+    private fun updateSingleProduct(context: Context, product: Product) {
+
+        val requestBody = FormBody.Builder().add("itemName", product.itemName)
+                .add("price", product.price.toString())
+                .add("description", product.description)
+                .add("artisanId", product.artisanId)
+                .add("category", product.category)
+                .add("subCategory", product.subCategory)
+                .add("specificCategory", product.specificCategory)
+                .add("shippingOption", product.shippingOption)
+                .add("itemQuantity", product.itemQuantity.toString())
+                .add("productionTime", product.productionTime.toString())
+                .add("itemId", product.itemId)
+
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+                .url(editItemURL)
+                .post(requestBody.build())
+                .build()
+
+        client.newCall(request).enqueue(object: Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()?.string()
+                //product.itemId = body!!.substring(1, body!!.length - 1)
+                Log.i(TAG, "success $body")
+
+                /*var i = 0
+                for (picURL in product.pictureURLs) {
+                    if (picURL != "Not set" && picURL != "undefined" && picURL.substring(0, 5) != "https") {
+                        uploadProductImage(context, product, i)
+                        i++
+                    }
+                }*/
+                for (i in 0..5) {
+                    if (product.pictureURLs[i] != "Not set" && product.pictureURLs[i] != "undefined" && product.pictureURLs[i].substring(0, 5) != "https") {
+                        uploadProductImage(context, product, i)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.e(TAG, "failed to do POST request to database ${addItemURL}")
+            }
+        })
+    }
+
     private fun uploadSingleProduct(context: Context, product: Product) {
 
         val requestBody = FormBody.Builder().add("itemName", product.itemName)
@@ -175,6 +240,13 @@ object ProductSync: Synchronizer(), CoroutineScope {
     }
 
     private fun uploadProductImage(context : Context, product : Product, index : Int) {
+        var i = 0
+        Log.i(TAG, "Uploading image with index " + index)
+        product.pictureURLs.forEach { Log.i(TAG, (i++).toString() + " " + it) }
+
+        //if (product.pictureURLs[index].substring(0, 5) == "https")
+            //return
+
         val sourceFile: File = context.getFileStreamPath(ImageStorageProvider.ITEM_IMAGE_PREFIX + product.pictureURLs[index])
 
         val MEDIA_TYPE = MediaType.parse("image/png")
@@ -191,7 +263,12 @@ object ProductSync: Synchronizer(), CoroutineScope {
                 .post(requestBody)
                 .build()
 
-        val client = OkHttpClient()
+        val client = OkHttpClient().newBuilder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build()
+
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()

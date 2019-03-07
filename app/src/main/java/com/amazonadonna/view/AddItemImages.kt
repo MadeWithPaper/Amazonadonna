@@ -5,15 +5,18 @@ import android.app.Activity
 import android.content.ContentUris
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.media.Image
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
+import android.util.ArrayMap
 import android.util.Log
 import android.util.SparseArray
 import android.widget.ImageView
+import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import com.amazonadonna.view.R
@@ -27,7 +30,7 @@ class AddItemImages : AppCompatActivity() {
     private var photoFile: File? = null
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
     private var imageNum : Int = 0
-    private var photoFilesArr : ArrayList<File?> = ArrayList(6)
+    private var photoFilesArr : HashMap<Int, File?> = HashMap(6)
 
     private val imageViewMap = SparseArray<ImageView>()
     //TODO add editMode functionality
@@ -92,6 +95,32 @@ class AddItemImages : AppCompatActivity() {
             selectImageInAlbum()
         }
 
+        if (editMode) {
+            var isp = ImageStorageProvider(applicationContext)
+            isp.loadImageIntoUI(product.pictureURLs[0], addItemImage0, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+
+            if (product.pictureURLs[1] != "Not set" && product.pictureURLs[1] != "undefined") {
+                isp.loadImageIntoUI(product.pictureURLs[1], addItemImage1, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+
+            }
+            if (product.pictureURLs[2] != "Not set" && product.pictureURLs[2] != "undefined") {
+                isp.loadImageIntoUI(product.pictureURLs[2], addItemImage1, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+
+            }
+            if (product.pictureURLs[3] != "Not set" && product.pictureURLs[3] != "undefined") {
+                isp.loadImageIntoUI(product.pictureURLs[3], addItemImage1, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+
+            }
+            if (product.pictureURLs[4] != "Not set" && product.pictureURLs[4] != "undefined") {
+                isp.loadImageIntoUI(product.pictureURLs[4], addItemImage1, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+
+            }
+            if (product.pictureURLs[5] != "Not set" && product.pictureURLs[5] != "undefined") {
+                isp.loadImageIntoUI(product.pictureURLs[5], addItemImage1, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+
+            }
+        }
+
     }
 
     private fun addItemImageContinue(product: Product, artisan: Artisan) {
@@ -121,7 +150,7 @@ class AddItemImages : AppCompatActivity() {
 
     private fun setImageView() {
         val takenImage = BitmapFactory.decodeFile(photoFile!!.absolutePath)
-        photoFilesArr.add(imageNum, photoFile!!)
+        photoFilesArr[imageNum] = photoFile!!
         // RESIZE BITMAP, see section below
         // Load the taken image into a preview
         imageViewMap.get(imageNum).setImageBitmap(takenImage)
