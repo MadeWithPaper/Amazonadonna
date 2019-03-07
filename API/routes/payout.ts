@@ -7,6 +7,8 @@ import { ddb, s3 } from '../server'
 import { Payout } from '../models/payout'
 import { unmarshUtil } from '../utilities/unmarshall'
 import * as uuid from 'uuid'
+import { Artisan } from '../models/artisan'
+import { ArtifactStoreLocation } from 'aws-sdk/clients/codepipeline'
 
 const router = Router()
 
@@ -55,7 +57,15 @@ router.post('/add', (req: Request, res: Response) => {
             )
         } else {
             res.json(id.toString())
-            sendText('19169903748', req.body.payoutId)
+            const d = new Date(0)
+            d.setUTCMilliseconds(req.body.date)
+            sendText(
+                '19169903748',
+                req.body.artisanId,
+                req.body.payoutId,
+                d.toLocaleDateString(),
+                req.body.amount
+            )
         }
     })
 })
@@ -120,25 +130,55 @@ router.post('/updateImage', (req: Request, res: Response) => {
     })
 })
 
-function sendText(phoneNumber: string, payoutId: string) {
+/*date, amount, ArtisanName*/
+const sendText = (
+    phoneNumber: string,
+    artisanId: string,
+    payoutId: string,
+    date: string,
+    amount: string
+) => {
     const sns = new aws.SNS()
-    const params: aws.SNS.PublishInput = {
-        Message: 'Payout Made',
-        PhoneNumber: phoneNumber
+
+    // Get current artisan data
+    const getArtisanParams: aws.DynamoDB.Types.GetItemInput = {
+        TableName: 'artisan',
+        Key: { artisanId: { S: artisanId } }
     }
-    sns.publish(params, (err, data) => {
+    ddb.getItem(getArtisanParams, (err, data) => {
         if (err) {
-            console.log(
-                'Error sending text to ' +
-                    params.PhoneNumber +
-                    'for payoutId' +
-                    payoutId
-            )
-            console.log(err, err.stack)
-        }
-        // an error occurred
-        else {
-            console.log('Sent text message') // successful response
+            const msg = 'Error getting artisan in artisan/edit/getArtisan: '
+            console.log(msg + err)
+        } else {
+            const unmarshed: Artisan = aws.DynamoDB.Converter.unmarshall(
+                data.Item
+            ) as Artisan
+            const params: aws.SNS.PublishInput = {
+                Message:
+                    '$' +
+                    amount +
+                    " payout made to artisan '" +
+                    unmarshed.artisanName +
+                    "' on " +
+                    date +
+                    '.',
+                PhoneNumber: phoneNumber
+            }
+            sns.publish(params, (snserr, snsdata) => {
+                if (err) {
+                    console.log(
+                        'Error sending text to ' +
+                            params.PhoneNumber +
+                            'for payoutId' +
+                            payoutId
+                    )
+                    console.log(snserr, snserr.stack)
+                }
+                // an error occurred
+                else {
+                    console.log('Sent text message') // successful response
+                }
+            })
         }
     })
 }

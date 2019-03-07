@@ -24,7 +24,7 @@ class HomeScreen : AppCompatActivity() {
     private var getUserInfoListener = object : Listener<User, AuthError> {
         override fun onSuccess(p0: User?) {
             cgaID = p0!!.userId.substringAfter("amzn1.account.")
-            cgoNameTV.text = p0.userName
+            //cgoNameTV.text = p0.userName
             cgaID = "0" //******** Uncomment this to go back to default for testing ****
             //--------------------------------------------------------//
             // UNCOMMENT THE METHOD CALL BELOW TO CLEAR SQLITE TABLES //
