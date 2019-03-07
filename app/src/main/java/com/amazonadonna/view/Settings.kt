@@ -68,6 +68,9 @@ class Settings : AppCompatActivity() {
     private var signoutListener = object : Listener<Void, AuthError> {
         override fun onSuccess(p0: Void?) {
             Log.d("Setting", "Logout worked")
+            val intent = Intent(this@Settings, LoginScreen::class.java)
+            finishAffinity()
+            startActivity(intent)
         }
 
         override fun onError(ae: AuthError?) {
@@ -77,9 +80,6 @@ class Settings : AppCompatActivity() {
 
     private fun logout() {
         AuthorizationManager.signOut(this, signoutListener)
-        val intent = Intent(this, LoginScreen::class.java)
-        finishAffinity()
-        startActivity(intent)
     }
 
     private fun toChangeLanguage() {

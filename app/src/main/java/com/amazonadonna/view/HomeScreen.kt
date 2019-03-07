@@ -78,27 +78,6 @@ class HomeScreen : AppCompatActivity() {
             User.fetch(this, getUserInfoListener)
         }
 
-
-//       if (intent.hasExtra("languageSelected")){
-//            //Got New Language
-//           newLang = intent.extras!!.getString("languageSelected")
-//           updateViews(newLang)
-//           Log.d("HomeScreen","got new language: " + newLang )
-////            // Create a new Locale object
-////            Log.d("HomeScreen", "old locale ${Locale.getDefault()}")
-//            val locale = Locale(newLang)
-//            Locale.setDefault(locale)
-//            Log.d("HomeScreen", "locale ${Locale.getDefault()}")
-////
-//            val res = this.resources
-//            val config = Configuration(res.configuration)
-//            config.setLocale(locale)
-//            this.createConfigurationContext(config)
-//           // recreate()
-//
-////            Log.d("HomeScreen", "locale post recreate ${Locale.getDefault()}")
-       //}
-        //actionBar.set
         //List All com.amazonadonna.model.Artisan button
         listAllArtisan.setOnClickListener{
             queryAllArtisan()
@@ -111,14 +90,16 @@ class HomeScreen : AppCompatActivity() {
         setting.setOnClickListener {
             openSettings()
         }
-      
-//        logoutButton.setOnClickListener{
-//            AuthorizationManager.signOut(this, signoutListener)
-//            val intent = Intent(this, LoginScreen::class.java)
-//            finishAffinity()
-//            startActivity(intent)
-//        }
 
+        reports.setOnClickListener {
+            openReports()
+        }
+
+    }
+
+    private fun openReports() {
+        val intent = Intent(this, ReportType::class.java)
+        startActivity(intent)
     }
 
     private fun openSettings() {

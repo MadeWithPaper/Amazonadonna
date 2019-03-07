@@ -130,5 +130,6 @@
     <string name="setting_current_language_TV">Idioma actual:</string>
     <string name="setting_change_language_button">Cambiar idioma</string>
     <string name="setting_log_out_button">Cerrar sesión</string>
+    <string name="intent_chooser_title">Elija la aplicación para enviar mensaje con</string>
 
 </resources>

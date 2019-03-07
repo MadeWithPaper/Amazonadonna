@@ -128,5 +128,6 @@
     <string name="setting_current_language_TV">Langue courante:</string>
     <string name="setting_change_language_button">Changer de langue</string>
     <string name="setting_log_out_button">Connectez - Out</string>
+    <string name="intent_chooser_title">Choisissez une application pour envoyer un message avec</string>
 
 </resources>
