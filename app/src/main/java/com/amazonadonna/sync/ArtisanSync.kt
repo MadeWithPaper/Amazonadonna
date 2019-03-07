@@ -93,6 +93,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
     }
 
     fun addArtisan(context : Context, artisan : Artisan, photoFile: File? = null) {
+        job = Job()
         stageImageUpdate(context, artisan, photoFile)
 
         launch {
@@ -102,6 +103,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
     }
 
     fun updateArtisan(context : Context, artisan : Artisan, newPhoto: File? = null) {
+        job = Job()
         stageImageUpdate(context, artisan, newPhoto)
         artisan.synced = SYNC_EDIT
 

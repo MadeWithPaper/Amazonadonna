@@ -64,6 +64,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
     }
 
     fun updateProduct(context : Context, product: Product, artisan: Artisan, photos: ArrayList<File?>) {
+        job = Job()
         var i = 0
         for (photo in photos) {
             stageImageUpdate(context, product, photo, i)
@@ -136,6 +137,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
     }
 
     fun addProduct(context : Context, product: Product, artisan: Artisan, photos: ArrayList<File?>) {
+        job = Job()
         var i = 0
         for (photo in photos) {
             stageImageUpdate(context, product, photo, i)
