@@ -13,6 +13,9 @@ import android.net.Uri
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import com.amazonadonna.model.Artisan
+import com.amazonadonna.model.Payout
+import com.amazonadonna.sync.PayoutSync
+import com.amazonadonna.sync.Synchronizer.Companion.SYNC_NEW
 import com.amazonadonna.view.R
 import kotlinx.android.synthetic.main.activity_artisan_item_list.*
 import okhttp3.*
@@ -75,7 +78,12 @@ class PayoutSignature : AppCompatActivity() {
 
     private fun saveSignature(artisan: Artisan, amount : Double) {
         val signatureFilePath = saveSignatureToCache()
-        updateArtisanBalance(artisan, amount, signatureFilePath)
+        var payout = Payout("", amount, System.currentTimeMillis(), artisan.artisanId, SYNC_NEW, "Not set", artisan.cgoId)
+        PayoutSync.addPayout(applicationContext, payout, artisan, File(signatureFilePath))
+        runOnUiThread{
+            showResponseDialog(artisan, true, amount)
+        }
+        //updateArtisanBalance(artisan, amount, signatureFilePath)
         //showResponseDialog(artisan, true)
     }
 
@@ -167,7 +175,7 @@ class PayoutSignature : AppCompatActivity() {
         val builder = AlertDialog.Builder(this@PayoutSignature)
         if (status) {
             builder.setTitle("Payout Approved!")
-            builder.setMessage("Current Artisan Balance: $ ${artisan.balance - amount}")
+            builder.setMessage("Current Artisan Balance: $ ${artisan.balance}")
             builder.setOnDismissListener {
                 submitDismiss(artisan)
                 val intent = Intent(this, ArtisanProfile::class.java)

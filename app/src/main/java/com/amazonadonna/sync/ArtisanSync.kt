@@ -25,14 +25,19 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
     override fun sync(context: Context, cgaId: String) {
         super.sync(context, cgaId)
 
-            Log.i("ArtisanSync", "Syncing now!")
-            uploadNewArtisans(context)
-           /* Log.i("ArtisanSync", "Done uploading, now downloading")
-            downloadArtisans(context)
-            Log.i("ArtisanSync", "Done syncing!")*/
+        Log.i("ArtisanSync", "Syncing now!")
 
-            /*ProductSync.sync(context, cgaId)
-            OrderSync.sync(context, cgaId)*/
+        runBlocking {
+            PayoutSync.sync(context, cgaId)
+        }
+
+        uploadNewArtisans(context)
+       /* Log.i("ArtisanSync", "Done uploading, now downloading")
+        downloadArtisans(context)
+        Log.i("ArtisanSync", "Done syncing!")*/
+
+        /*ProductSync.sync(context, cgaId)
+        OrderSync.sync(context, cgaId)*/
     }
 
     private fun uploadNewArtisans(context : Context) {

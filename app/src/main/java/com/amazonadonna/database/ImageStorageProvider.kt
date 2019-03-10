@@ -20,6 +20,7 @@ class ImageStorageProvider(var context: Context) {
     companion object {
         const val ARTISAN_IMAGE_PREFIX = "artisanimg"
         const val ITEM_IMAGE_PREFIX = "itemimg"
+        const val PAYOUT_IMAGE_PREFIX = "payoutimg"
     }
 
     fun saveBitmap(bitmap: Bitmap, imageName: String) {
