@@ -51,7 +51,7 @@ class ArtisanProfile() : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
         intent.putExtra("address", artisan.contactNumber)
-        val messagechooser = createChooser(intent, R.string.chooser_title.toString())
+        val messagechooser = createChooser(intent, "Please Choose an Application to Send Messages...")
         startActivity(messagechooser)
     }
 

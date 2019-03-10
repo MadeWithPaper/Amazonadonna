@@ -16,12 +16,15 @@ import kotlinx.android.synthetic.main.activity_home_screen.*
 import okhttp3.*
 import java.io.IOException
 import java.lang.Exception
+import android.support.v7.app.AlertDialog
 
 
 class HomeScreen : AppCompatActivity() {
     private var cgaID : String = "0" // initialize to prevent crash while testing
     private var newLang : String = "en_US"
     private val amaznIdURL = "https://99956e2a.ngrok.io/cgo/getByAmznId"
+    private lateinit var alertDialog : AlertDialog
+
     private var getUserInfoListener = object : Listener<User, AuthError> {
         override fun onSuccess(p0: User?) {
             cgaID = p0!!.userId.substringAfter("amzn1.account.")
@@ -38,6 +41,14 @@ class HomeScreen : AppCompatActivity() {
             } catch (e : Exception){
                 //do nothing use placeholder text
             }
+            runOnUiThread {
+                //TODO to optimize wrap in async task with dialog fragment
+                alertDialog = AlertDialog.Builder(this@HomeScreen).create()
+                alertDialog.setTitle("Loading...")
+                alertDialog.setMessage("Please wait as we are fetching updates...")
+                alertDialog.show()
+                Log.i("HomeScreen", "loading start, show dialog")
+            }
 
             ArtisanSync.sync(applicationContext, cgaID)
             fetchJSONCGA()
@@ -47,11 +58,17 @@ class HomeScreen : AppCompatActivity() {
             for (file in list) {
                 Log.d("HomeScreen", file)
             }
+
+            runOnUiThread {
+                Log.i("HomeScreen", "end of loading alert dialog dismiss")
+                alertDialog.dismiss()
+            }
         }
 
         override fun onError(ae: AuthError?) {
             //To change body of created functions use File | Settings | File Templates.
             Log.d("HomeScreen", "no work")
+            //TODO remove after testing if error it should not fetch
             ArtisanSync.sync(applicationContext, cgaID)
         }
     }
