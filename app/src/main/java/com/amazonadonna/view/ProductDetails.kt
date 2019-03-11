@@ -27,7 +27,7 @@ class ProductDetails : AppCompatActivity() {
         val categoryString = product.category + " > " + product.subCategory + " > " + product.specificCategory
         val priceString = "$ " + product.price.toString()
         val productionTimeString = this.resources.getString(R.string.product_detail_usually_ships_in) + product.productionTime + this.resources.getString(R.string.utility_days)
-        val productQuantityString =product.itemQuantity.toString() + this.resources.getString(R.string.number_in_stock)
+        val productQuantityString = product.itemQuantity.toString() + this.resources.getString(R.string.number_in_stock)
         itemDetail_categories.text = categoryString
         itemDetail_ProductNameTF.text = product.itemName
         itemDetail_itemPrice.text = priceString

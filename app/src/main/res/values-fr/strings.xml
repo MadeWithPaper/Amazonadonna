@@ -91,7 +91,7 @@
     <string name="payout_error_message">Le montant du paiement dépasse le solde du paiement Artisan!</string>
 
     <!-- Product Detail -->
-    <string name="product_detail_usually_ships_in">Habituellement expédié dans</string>
+    <string name="product_detail_usually_ships_in">"Habituellement expédié dans  "</string>
 
     <!-- Order List -->
     <string name="order_date">Date de commande:</string>
@@ -120,7 +120,7 @@
 
     <!-- Utility Strings -->
     <string name="requiredFieldError">Champs obligatoires!</string>
-    <string name="utility_days">Journées.</string>
+    <string name="utility_days">" Journées."</string>
     <string name="continue_button_text">Continuer</string>
     <string name="edit">Modifier</string>
     <string name="cancel">Annuler</string>
@@ -136,5 +136,12 @@
     <string name="report_generate_button">Générer un rapport</string>
     <string name="report_select_all">Tout sélectionner</string>
     <string name="report_select_none">Ne rien sélectionner</string>
+    <string name="item_info_product_name_tv">Nom du produit:</string>
+    <string name="item_info_product_desc_tv">Description du produit:</string>
+    <string name="item_info_product_price_tv">Prix ​​du produit ($):</string>
+    <string name="item_info_product_quantity_tv">La quantité de produit:</string>
+    <string name="item_info_product_production_tv">Temps de production du produit:</string>
+    <string name="item_info_shipping_method">Sélectionnez la méthode d\'expédition ci-dessous:</string>
+    <string name="payout_balance">Solde actuel:</string>
 
 </resources>

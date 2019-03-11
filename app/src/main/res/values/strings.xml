@@ -46,8 +46,14 @@
     <string name="item_info_product_desc_tv_hint">Product Description</string>
     <string name="item_info_product_price_tv_hint">Product Price in Dollars ($)</string>
     <string name="item_info_product_quantity_tv_hint">Product Quantity</string>
-    <string name="item_info_product_production_tv_hint">Product Production Time in Days</string>
+    <string name="item_info_product_production_tv_hint">Days</string>
     <string name="item_info_product_toolbar_text">Item Info</string>
+    <string name="item_info_product_name_tv">Product Name: </string>
+    <string name="item_info_product_desc_tv">Product Description: </string>
+    <string name="item_info_product_price_tv">Product Price ($): </string>
+    <string name="item_info_product_quantity_tv">Product Quantity: </string>
+    <string name="item_info_product_production_tv">Product Production Time: </string>
+    <string name="item_info_shipping_method">Select Shipping Method Below: </string>
 
     <!-- Add Item Review -->
     <string name="item_review_confirm_listing">Confirm Listing</string>
@@ -89,9 +95,10 @@
     <string name="payout_date">Date : </string>
     <string name="payout_error_title">Payout Error</string>
     <string name="payout_error_message">Payout amount exceeds Artisan\'s Payout balance!</string>
+    <string name="payout_balance">Current Balance: </string>
 
     <!-- Product Detail -->
-    <string name="product_detail_usually_ships_in">Usually shipped within </string>
+    <string name="product_detail_usually_ships_in">"Usually shipped within  "</string>
 
     <!-- Order List -->
     <string name="order_date">Order Date: </string>
@@ -132,7 +139,7 @@
 
     <!-- Utility Strings -->
     <string name="requiredFieldError">Required!</string>
-    <string name="utility_days"> Days.</string>
+    <string name="utility_days">"  Days."</string>
     <string name="continue_button_text">Continue</string>
     <string name="edit">Edit</string>
     <string name="cancel">Cancel</string>

@@ -49,7 +49,7 @@ class ItemsViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
         isp.loadImageIntoUI(product.pictureURLs[0], view.itemCellPicture, ImageStorageProvider.ITEM_IMAGE_PREFIX, view.context)
 
         view.itemCellName.text = product.itemName
-        view.itemCellPrice.text = product.price.toString()
+        view.itemCellPrice.text = "$ ${product.price}"
         view.itemCellQuantity.text = product.itemQuantity.toString()
     }
 }
