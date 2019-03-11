@@ -91,7 +91,7 @@
     <string name="payout_error_message">Le montant du paiement dépasse le solde du paiement Artisan!</string>
 
     <!-- Product Detail -->
-    <string name="product_detail_usually_ships_in">Habituellement expédié dans</string>
+    <string name="product_detail_usually_ships_in">"Habituellement expédié dans  "</string>
 
     <!-- Order List -->
     <string name="order_date">Date de commande:</string>
@@ -120,7 +120,7 @@
 
     <!-- Utility Strings -->
     <string name="requiredFieldError">Champs obligatoires!</string>
-    <string name="utility_days">Journées.</string>
+    <string name="utility_days">" Journées."</string>
     <string name="continue_button_text">Continuer</string>
     <string name="edit">Modifier</string>
     <string name="cancel">Annuler</string>

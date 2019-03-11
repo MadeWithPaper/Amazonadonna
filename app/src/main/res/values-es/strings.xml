@@ -93,7 +93,7 @@
     <string name="payout_error_message">El monto del pago excede el saldo de pago de Artisan!</string>
 
     <!-- Product Detail -->
-    <string name="product_detail_usually_ships_in">Enviado generalmente dentro de</string>
+    <string name="product_detail_usually_ships_in">"Enviado generalmente dentro de  "</string>
 
     <!-- Order List -->
     <string name="order_date">Fecha de orden:</string>
@@ -122,7 +122,7 @@
 
     <!-- Utility Strings -->
     <string name="requiredFieldError">Obligatorio!</string>
-    <string name="utility_days">Dias.</string>
+    <string name="utility_days">" Dias."</string>
     <string name="continue_button_text">Continuar</string>
     <string name="edit">Editar</string>
     <string name="cancel">Cancelar</string>

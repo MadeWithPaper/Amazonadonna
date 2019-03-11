@@ -21,6 +21,7 @@ class ArtisanPayout : AppCompatActivity() {
 
         val artisan = intent.extras?.getSerializable("artisan") as Artisan
 
+        artisanPayout_balance.text = "$ ${artisan.balance}"
         artisanPayout_amount.setText(artisan.balance.toString())
         artisanPayout_dateTV.text = this.resources.getString(R.string.payout_date) + getCurrDate()
         artisanPayout_continue.setOnClickListener {
