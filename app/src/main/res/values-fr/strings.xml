@@ -129,5 +129,12 @@
     <string name="setting_change_language_button">Changer de langue</string>
     <string name="setting_log_out_button">Connectez - Out</string>
     <string name="intent_chooser_title">Choisissez une application pour envoyer un message avec</string>
+    <string name="report_toolbar_text">Générer des rapports</string>
+    <string name="report_type_tv">Type de rapport</string>
+    <string name="report_target_tv">Sélectionnez Artisan (s) cible (s)</string>
+    <string name="report_target_all">Ciblez tous les artisans</string>
+    <string name="report_generate_button">Générer un rapport</string>
+    <string name="report_select_all">Tout sélectionner</string>
+    <string name="report_select_none">Ne rien sélectionner</string>
 
 </resources>
