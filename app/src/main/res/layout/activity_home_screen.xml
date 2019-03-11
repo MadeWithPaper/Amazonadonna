@@ -63,10 +63,10 @@
             android:id="@+id/reports"
             android:layout_width="205dp"
             android:layout_height="200dp"
-            android:background="#fff"
+            android:background="#2196F3"
             app:layout_column="0"
             app:layout_row="1"
-            app:srcCompat="@android:color/white" />
+            app:srcCompat="@drawable/reportswithtext" />
 
         <ImageButton
             android:id="@+id/setting"
