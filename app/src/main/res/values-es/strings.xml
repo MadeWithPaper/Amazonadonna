@@ -131,5 +131,12 @@
     <string name="setting_change_language_button">Cambiar idioma</string>
     <string name="setting_log_out_button">Cerrar sesión</string>
     <string name="intent_chooser_title">Elija la aplicación para enviar mensaje con</string>
+    <string name="report_toolbar_text">Generar informes</string>
+    <string name="report_type_tv">Tipo de informe</string>
+    <string name="report_target_tv">Sélectionnez Artisan (s) cible (s)</string>
+    <string name="report_target_all">Apunta a todos los artesanos</string>
+    <string name="report_generate_button">Generar informe</string>
+    <string name="report_select_all">Seleccionar todo</string>
+    <string name="report_select_none">Seleccione Ninguno</string>
 
 </resources>
