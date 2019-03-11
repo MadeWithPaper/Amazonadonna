@@ -84,35 +84,46 @@ class Settings : AppCompatActivity(), CoroutineScope {
     private fun syncData() {
         job = Job()
 
-        runOnUiThread {
-            alertDialog = AlertDialog.Builder(this@Settings).create()
-            alertDialog.setTitle("Synchronizing Account")
-            alertDialog.setMessage("Please wait while your account data is synchronzied...")
-            alertDialog.show()
-        }
-
-        launch {
-            val task = async {
-                ArtisanSync.sync(applicationContext, cgaID)
-                Log.d("Settings", cgaID)
-
-                // Wait for sync to finish
-                do {
-                    Thread.sleep(1000)
-                } while (ArtisanSync.inProgress())
-
-                Log.d("Settings", "First sync done, now one more to verify data integrity")
-
-                // Perform one more data fetch to ensure data integrity is goodandroid button do asynch
-                ArtisanSync.sync(applicationContext, cgaID)
-                do {
-                    Thread.sleep(500)
-                } while (ArtisanSync.inProgress())
-            }
-            val result = task.await()
+        if (ArtisanSync.hasInternet(applicationContext)) {
 
             runOnUiThread {
-                alertDialog.dismiss()
+                alertDialog = AlertDialog.Builder(this@Settings).create()
+                alertDialog.setTitle("Synchronizing Account")
+                alertDialog.setMessage("Please wait while your account data is synchronized...")
+                alertDialog.show()
+            }
+
+            launch {
+                val task = async {
+                    ArtisanSync.sync(applicationContext, cgaID)
+                    Log.d("Settings", cgaID)
+
+                    // Wait for sync to finish
+                    do {
+                        Thread.sleep(1000)
+                    } while (ArtisanSync.inProgress())
+
+                    Log.d("Settings", "First sync done, now one more to verify data integrity")
+
+                    // Perform one more data fetch to ensure data integrity is goodandroid button do asynch
+                    ArtisanSync.sync(applicationContext, cgaID)
+                    do {
+                        Thread.sleep(500)
+                    } while (ArtisanSync.inProgress())
+                }
+                val result = task.await()
+
+                runOnUiThread {
+                    alertDialog.dismiss()
+                }
+            }
+        }
+        else {
+            runOnUiThread {
+                alertDialog = AlertDialog.Builder(this@Settings).create()
+                alertDialog.setTitle("Error Synchronizing Account")
+                alertDialog.setMessage("No internet connection active. You may attempt to resync your account on the Settings page when internet is available.")
+                alertDialog.show()
             }
         }
     }

@@ -17,6 +17,7 @@ import okhttp3.*
 import java.io.IOException
 import java.lang.Exception
 import android.support.v7.app.AlertDialog
+import com.amazonadonna.sync.Synchronizer
 import java.lang.Thread.sleep
 
 
@@ -42,35 +43,45 @@ class HomeScreen : AppCompatActivity() {
             } catch (e : Exception){
                 //do nothing use placeholder text
             }
-            runOnUiThread {
-                //TODO to optimize wrap in async task with dialog fragment
-                alertDialog = AlertDialog.Builder(this@HomeScreen).create()
-                alertDialog.setTitle("Synchronizing Account")
-                alertDialog.setMessage("Please wait while your account data is synchronzied...")
-                alertDialog.show()
-                Log.i("HomeScreen", "loading start, show dialog")
+
+            if (ArtisanSync.hasInternet(applicationContext)) {
+                runOnUiThread {
+                    alertDialog = AlertDialog.Builder(this@HomeScreen).create()
+                    alertDialog.setTitle("Synchronizing Account")
+                    alertDialog.setMessage("Please wait while your account data is synchronized...")
+                    alertDialog.show()
+                    Log.i("HomeScreen", "loading start, show dialog")
+                }
+
+                ArtisanSync.sync(applicationContext, cgaID)
+                fetchJSONCGA()
+                Log.d("HomeScreen", cgaID)
+
+                // Wait for sync to finish
+                do {
+                    sleep(1000)
+                } while (ArtisanSync.inProgress())
+
+                Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
+
+                // Perform one more data fetch to ensure data integrity is good
+                ArtisanSync.sync(applicationContext, cgaID)
+                do {
+                    sleep(500)
+                } while (ArtisanSync.inProgress())
+
+                runOnUiThread {
+                    Log.i("HomeScreen", "end of loading alert dialog dismiss")
+                    alertDialog.dismiss()
+                }
             }
-
-            ArtisanSync.sync(applicationContext, cgaID)
-            fetchJSONCGA()
-            Log.d("HomeScreen", cgaID)
-
-            // Wait for sync to finish
-            do {
-                sleep(1000)
-            } while (ArtisanSync.inProgress())
-
-            Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
-
-            // Perform one more data fetch to ensure data integrity is good
-            ArtisanSync.sync(applicationContext, cgaID)
-            do {
-                sleep(500)
-            } while (ArtisanSync.inProgress())
-
-            runOnUiThread {
-                Log.i("HomeScreen", "end of loading alert dialog dismiss")
-                alertDialog.dismiss()
+            else {
+                runOnUiThread {
+                    alertDialog = AlertDialog.Builder(this@HomeScreen).create()
+                    alertDialog.setTitle("Error Synchronizing Account")
+                    alertDialog.setMessage("No internet connection active. You may attempt to resync your account on the Settings page when internet is aavilable.")
+                    alertDialog.show()
+                }
             }
         }
 
