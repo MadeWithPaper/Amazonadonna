@@ -67,6 +67,7 @@ class ArtisanProfile() : AppCompatActivity() {
 
         artisanProfileName.text = artisan.artisanName
         artisanProfileBio.text = artisan.bio
+        artisanProfileBalance.text = "Balance: $ ${artisan.balance}"
 
     }
 

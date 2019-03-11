@@ -93,7 +93,7 @@
     <string name="payout_error_message">El monto del pago excede el saldo de pago de Artisan!</string>
 
     <!-- Product Detail -->
-    <string name="product_detail_usually_ships_in">Enviado generalmente dentro de</string>
+    <string name="product_detail_usually_ships_in">"Enviado generalmente dentro de  "</string>
 
     <!-- Order List -->
     <string name="order_date">Fecha de orden:</string>
@@ -123,7 +123,7 @@
 
     <!-- Utility Strings -->
     <string name="requiredFieldError">Obligatorio!</string>
-    <string name="utility_days">Dias.</string>
+    <string name="utility_days">" Dias."</string>
     <string name="continue_button_text">Continuar</string>
     <string name="edit">Editar</string>
     <string name="cancel">Cancelar</string>
@@ -139,5 +139,12 @@
     <string name="report_generate_button">Generar informe</string>
     <string name="report_select_all">Seleccionar todo</string>
     <string name="report_select_none">Seleccione Ninguno</string>
+    <string name="item_info_product_name_tv">Nombre del producto:</string>
+    <string name="item_info_product_desc_tv">Descripción del producto:</string>
+    <string name="item_info_product_price_tv">Precio del producto ($):</string>
+    <string name="item_info_product_quantity_tv">La cantidad de producto:</string>
+    <string name="item_info_product_production_tv">Tiempo de producción del producto:</string>
+    <string name="item_info_shipping_method">Seleccione el método de envío a continuación:</string>
+    <string name="payout_balance">Saldo actual:</string>
 
 </resources>
