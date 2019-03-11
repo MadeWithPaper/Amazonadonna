@@ -17,6 +17,7 @@ import okhttp3.*
 import java.io.IOException
 import java.lang.Exception
 import android.support.v7.app.AlertDialog
+import java.lang.Thread.sleep
 
 
 class HomeScreen : AppCompatActivity() {
@@ -44,8 +45,8 @@ class HomeScreen : AppCompatActivity() {
             runOnUiThread {
                 //TODO to optimize wrap in async task with dialog fragment
                 alertDialog = AlertDialog.Builder(this@HomeScreen).create()
-                alertDialog.setTitle("Loading...")
-                alertDialog.setMessage("Please wait as we are fetching updates...")
+                alertDialog.setTitle("Synchronizing Account")
+                alertDialog.setMessage("Please wait while your account data is synchronzied...")
                 alertDialog.show()
                 Log.i("HomeScreen", "loading start, show dialog")
             }
@@ -54,10 +55,18 @@ class HomeScreen : AppCompatActivity() {
             fetchJSONCGA()
             Log.d("HomeScreen", cgaID)
 
-            var list = applicationContext.fileList()
-            for (file in list) {
-                Log.d("HomeScreen", file)
-            }
+            // Wait for sync to finish
+            do {
+                sleep(1000)
+            } while (ArtisanSync.inProgress())
+
+            Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
+
+            // Perform one more data fetch to ensure data integrity is good
+            ArtisanSync.sync(applicationContext, cgaID)
+            do {
+                sleep(500)
+            } while (ArtisanSync.inProgress())
 
             runOnUiThread {
                 Log.i("HomeScreen", "end of loading alert dialog dismiss")

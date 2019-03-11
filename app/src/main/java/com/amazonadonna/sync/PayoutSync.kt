@@ -73,6 +73,7 @@ object PayoutSync : Synchronizer(), CoroutineScope {
     }
 
     private fun uploadSinglePayout(context : Context, payout : Payout) {
+        numInProgress++
         Log.i(TAG, payout.artisanId)
         val requestBody = FormBody.Builder().add("artisanId", payout.artisanId)
                 .add("cgoId", payout.cgoId)
@@ -128,6 +129,7 @@ object PayoutSync : Synchronizer(), CoroutineScope {
                 Log.d("PayoutSignature", "signature pic success $body")
                 //signatureFile.delete()
                 Log.d("PayoutSignature", "signature file clean up " + signatureFile + " : " + signatureFile.exists())
+                numInProgress--
 
             }
 
@@ -135,6 +137,7 @@ object PayoutSync : Synchronizer(), CoroutineScope {
                 Log.e("PayoutSignature", "failed to do POST request to database $payoutSignatureURL")
                 //signatureFile.delete()
                 Log.d("PayoutSignature", "signature file clean up " + signatureFile + " : " + signatureFile.exists())
+                numInProgress--
             }
         })
     }

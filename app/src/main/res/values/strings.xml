@@ -113,6 +113,7 @@
     <string name="settings_toolbar_text">Settings</string>
     <string name="settings_language_preference">Language Preference</string>
     <string name="settings_update_setting">Update Settings</string>
+    <string name="settings_sync_account">Sync Account Data</string>
     <string name="setting_current_language_TV">Current Language: </string>
     <string name="setting_change_language_button">Change Language</string>
     <string name="setting_log_out_button">Log Out</string>

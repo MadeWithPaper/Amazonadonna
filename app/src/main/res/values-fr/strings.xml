@@ -113,6 +113,7 @@
     <string name="settings_toolbar_text">Réglages</string>
     <string name="settings_language_preference">Préférence de langue</string>
     <string name="settings_update_setting">Mettre à jour les paramètres</string>
+    <string name="settings_sync_account">Synchroniser les données du compte</string>
 
     <!-- List All Artisan -->
     <string name="list_artisan_toolbar_text">Artisans</string>

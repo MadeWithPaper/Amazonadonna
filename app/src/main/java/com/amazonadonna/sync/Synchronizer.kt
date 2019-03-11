@@ -14,6 +14,7 @@ abstract class Synchronizer : CoroutineScope {
 
     lateinit var job: Job
     lateinit var mCgaId: String
+    var numInProgress: Int = 0
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -21,6 +22,10 @@ abstract class Synchronizer : CoroutineScope {
     open fun sync(context: Context, cgaId: String) {
         job = Job()
         mCgaId = cgaId
+    }
+
+    fun inProgress() : Boolean {
+        return numInProgress != 0
     }
 
     fun resetLocalDB(context: Context) {

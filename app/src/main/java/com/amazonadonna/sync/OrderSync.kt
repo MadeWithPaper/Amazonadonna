@@ -11,9 +11,7 @@ import com.amazonadonna.view.ListItemsAdapter
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_order_screen.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import okhttp3.*
 import java.io.IOException
 
@@ -21,12 +19,13 @@ object OrderSync: Synchronizer(), CoroutineScope {
     private const val TAG = "OrderSync"
     private const val listOrderURL = "https://99956e2a.ngrok.io/order/listAllForCgo"
     private const val getItemURL = "https://99956e2a.ngrok.io/order/getItems"
+    private const val editOrderURL = "https://99956e2a.ngrok.io/order/edit"
 
     override fun sync(context: Context, cgaId: String) {
         super.sync(context, cgaId)
 
         Log.i(TAG, "Syncing now!")
-        updateOrders(context)
+        //updateOrders(context)
         Log.i(TAG, "Done uploading, now downloading")
         downloadOrders(context)
         Log.i(TAG, "Done syncing!")
@@ -34,10 +33,48 @@ object OrderSync: Synchronizer(), CoroutineScope {
     }
 
     private fun updateOrders(context: Context) {
+        launch {
+            val updateOrders = getUpdateOrders(context)
+            for (order in updateOrders) {
+                updateSingleOrder(context, order)
+            }
+        }
+    }
+
+    private fun updateSingleOrder(context: Context, order: Order) {
+        numInProgress++
+
+        val requestBody = FormBody.Builder().add("orderId", order.orderId)
+                .add("shippedStatus", order.shippedStatus.toString())
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+                .url(editOrderURL)
+                .post(requestBody.build())
+                .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()?.string()
+                Log.i("EditOrder", body)
+
+                numInProgress--
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.e("EditOrder", "failed to do POST request to database" + editOrderURL)
+                numInProgress--
+            }
+        })
 
     }
 
+    private suspend fun getUpdateOrders(context : Context) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).orderDao().getAllBySyncState(SYNC_EDIT)
+    }
+
     private fun downloadOrders(context: Context) {
+        numInProgress++
         val requestBody = FormBody.Builder().add("cgoId", mCgaId)
                 .build()
         val request = Request.Builder().url(listOrderURL).post(requestBody).build()
@@ -54,16 +91,33 @@ object OrderSync: Synchronizer(), CoroutineScope {
                 for (order in orders) {
                     getItemsForOrder(order, context)
                 }
+                numInProgress--
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 println("Failed to execute request")
                 Log.e(TAG, "Failed to execute GET request to " + listOrderURL)
+                numInProgress--
             }
         })
     }
 
+    fun updateOrder(context : Context, order: Order) {
+        job = Job()
+        order.synced = SYNC_EDIT
+
+        launch {
+            updateOrderHelper(context, order)
+        }
+
+    }
+
+    private suspend fun updateOrderHelper(context : Context, order : Order) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).orderDao().update(order)
+    }
+
     private fun getItemsForOrder(order : Order, context: Context) {
+        numInProgress++
         val requestBody = FormBody.Builder()
                 .add("orderId",order.orderId)
                 .build()
@@ -90,11 +144,13 @@ object OrderSync: Synchronizer(), CoroutineScope {
                 }
                 order.products = products
                 orderDao.insert(order)
+                numInProgress--
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 //println("Failed to execute request")
                 Log.d("ERROR", "Failed to execute GET request to " + getItemURL)
+                numInProgress--
             }
         })
     }

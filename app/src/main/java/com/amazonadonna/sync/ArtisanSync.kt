@@ -26,6 +26,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
         super.sync(context, cgaId)
 
         Log.i("ArtisanSync", "Syncing now!")
+        numInProgress++
 
         runBlocking {
             PayoutSync.sync(context, cgaId)
@@ -38,6 +39,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
         /*ProductSync.sync(context, cgaId)
         OrderSync.sync(context, cgaId)*/
+        numInProgress--
     }
 
     private fun uploadNewArtisans(context : Context) {
@@ -57,6 +59,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
     }
 
     private fun downloadArtisans(context : Context) {
+        numInProgress++
         val requestBody = FormBody.Builder().add("cgoId", mCgaId)
                 .build()
 
@@ -89,15 +92,18 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 Log.i("ArtisanSync", "Successfully synced Artisan data")
 
                 ProductSync.sync(context, mCgaId)
+                numInProgress--
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("ListAllArtisan", "failed to do POST request to database" + listAllArtisansURL)
+                numInProgress--
             }
         })
     }
 
     private fun uploadSingleArtisan(context: Context, artisan: Artisan) {
+        numInProgress++
 
         val requestBody = FormBody.Builder().add("cgoId", artisan.cgoId)
                 .add("bio", artisan.bio)
@@ -128,17 +134,20 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 else {
                     launch {
                         setSyncedState(artisan, context)
+                        numInProgress--
                     }
                 }
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("AddArtisan", "failed to do POST request to database $addArtisanURL")
+                numInProgress--
             }
         })
     }
 
     private fun updateSingleArtisan(context: Context, artisan: Artisan) {
+        numInProgress++
         var updatePic = false
 
         val requestBody = FormBody.Builder().add("artisanId", artisan.artisanId)
@@ -171,11 +180,14 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
                 if (updatePic) {
                     updateArtisanImage(context, artisan)
+                } else {
+                    numInProgress--
                 }
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("EditArtisan", "failed to do POST request to database" + editArtisanURL)
+                numInProgress--
             }
         })
 
@@ -204,10 +216,12 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
                 Log.d("EditArtisan", body)
+                numInProgress--
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("EditArtisan", "failed to do POST request to database" + updateArtisanURL)
+                numInProgress--
             }
         })
     }
@@ -235,6 +249,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 Log.d("AddArtisan", body)
                 launch {
                     setSyncedState(artisan, context)
+                    numInProgress--
                 }
             }
 

@@ -51,6 +51,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
     }
 
     private fun downloadProducts(context: Context) {
+        numInProgress++
         runBlocking {
             var artisans = getAllArtisans(context)
 
@@ -60,6 +61,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
             }
 
             OrderSync.sync(context, ArtisanSync.mCgaId)
+            numInProgress--
         }
     }
 
@@ -83,6 +85,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
     }
 
     private fun downloadProductsForArtisan(context: Context, artisan : Artisan) {
+        numInProgress++
         val client = OkHttpClient()
 
         val requestBody = FormBody.Builder().add("artisanId",artisan.artisanId).build()
@@ -112,10 +115,12 @@ object ProductSync: Synchronizer(), CoroutineScope {
                     Log.i(TAG, product.itemId + " " + product.pictureURLs[0])
                 }
                 productDao.insertAll(products)
+                numInProgress--
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("ArtisanItemList", "failed to do POST request to database")
+                numInProgress--
             }
         })
     }
@@ -155,6 +160,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
     }
 
     private fun updateSingleProduct(context: Context, product: Product) {
+        numInProgress++
 
         val requestBody = FormBody.Builder().add("itemName", product.itemName)
                 .add("price", product.price.toString())
@@ -197,11 +203,13 @@ object ProductSync: Synchronizer(), CoroutineScope {
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e(TAG, "failed to do POST request to database ${addItemURL}")
+                numInProgress--
             }
         })
     }
 
     private fun uploadSingleProduct(context: Context, product: Product) {
+        numInProgress++
 
         val requestBody = FormBody.Builder().add("itemName", product.itemName)
                 .add("price", product.price.toString())
@@ -233,15 +241,18 @@ object ProductSync: Synchronizer(), CoroutineScope {
                         uploadProductImage(context, product, i++)
                     }
                 }
+                numInProgress--
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e(TAG, "failed to do POST request to database ${addItemURL}")
+                numInProgress--
             }
         })
     }
 
     private fun uploadProductImage(context : Context, product : Product, index : Int) {
+        numInProgress++
         var i = 0
         Log.i(TAG, "Uploading image with index " + index)
         product.pictureURLs.forEach { Log.i(TAG, (i++).toString() + " " + it) }
@@ -285,11 +296,13 @@ object ProductSync: Synchronizer(), CoroutineScope {
                         downloadProducts(context)
                     }
                 }
+                numInProgress--
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e(TAG, "failed to do POST request to database${addItemImageURL}")
                 Log.e(TAG, e!!.message)
+                numInProgress--
             }
         })
     }
