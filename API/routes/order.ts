@@ -52,7 +52,7 @@ router.post('/add', (req: Request, res: Response) => {
             )
         } else {
             res.json(id.toString())
-            sendText('19169903748', req.body.orderId)
+            /*sendText('19169903748', req.body.orderId)*/
         }
     })
 })
