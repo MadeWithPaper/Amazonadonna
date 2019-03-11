@@ -88,7 +88,7 @@
     <string name="item_review_listing_success">Su artículo ha sido enviado con éxito!</string>
 
     <!-- Artisan Payout -->
-    <string name="payout_date">Fecha :</string>
+    <string name="payout_date">Fecha: </string>
     <string name="payout_error_title">Error de pago</string>
     <string name="payout_error_message">El monto del pago excede el saldo de pago de Artisan!</string>
 

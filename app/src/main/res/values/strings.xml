@@ -92,7 +92,7 @@
     <string name="item_review_listing_success">Your item have been successfully submitted!</string>
 
     <!-- Artisan Payout -->
-    <string name="payout_date">Date : </string>
+    <string name="payout_date">Date: </string>
     <string name="payout_error_title">Payout Error</string>
     <string name="payout_error_message">Payout amount exceeds Artisan\'s Payout balance!</string>
     <string name="payout_balance">Current Balance: </string>

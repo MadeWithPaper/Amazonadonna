@@ -86,7 +86,7 @@
     <string name="item_review_listing_success">Votre article a été soumis avec succès!</string>
 
     <!-- Artisan Payout -->
-    <string name="payout_date">Rendez-vous amoureux :</string>
+    <string name="payout_date">Rendez-vous amoureux: </string>
     <string name="payout_error_title">Erreur de paiement</string>
     <string name="payout_error_message">Le montant du paiement dépasse le solde du paiement Artisan!</string>
 

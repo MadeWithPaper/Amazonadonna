@@ -19,13 +19,13 @@ object OrderSync: Synchronizer(), CoroutineScope {
     private const val TAG = "OrderSync"
     private const val listOrderURL = "https://99956e2a.ngrok.io/order/listAllForCgo"
     private const val getItemURL = "https://99956e2a.ngrok.io/order/getItems"
-    private const val editOrderURL = "https://99956e2a.ngrok.io/order/edit"
+    private const val editOrderURL = "https://99956e2a.ngrok.io/order/setShippedStatus"
 
     override fun sync(context: Context, cgaId: String) {
         super.sync(context, cgaId)
 
         Log.i(TAG, "Syncing now!")
-        //updateOrders(context)
+        updateOrders(context)
         Log.i(TAG, "Done uploading, now downloading")
         downloadOrders(context)
         Log.i(TAG, "Done syncing!")

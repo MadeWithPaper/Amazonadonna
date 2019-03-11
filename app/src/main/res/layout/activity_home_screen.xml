@@ -31,43 +31,74 @@
         app:layout_constraintStart_toStartOf="parent"
         app:rowCount="2">
 
-        <ImageButton
-            android:id="@+id/listAllArtisan"
-            android:layout_width="205dp"
-            android:layout_height="200dp"
-            android:layout_margin="0.5dp"
-            android:background="#4CAF50"
-            app:layout_column="0"
-            app:layout_row="0"
-            app:srcCompat="@drawable/communitywithtext" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/listOrders"
-            android:layout_width="205dp"
-            android:layout_height="200dp"
-            android:layout_margin="0.5dp"
-            android:background="#2196F3"
-            app:layout_column="1"
-            app:layout_row="0"
-            app:srcCompat="@drawable/orderwithtext" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-        <ImageButton
-            android:id="@+id/reports"
-            android:layout_width="205dp"
-            android:layout_height="200dp"
-            android:background="#2196F3"
-            app:layout_column="0"
-            app:layout_row="1"
-            app:srcCompat="@drawable/reportswithtext" />
+                <ImageButton
+                    android:id="@+id/listAllArtisan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="0.5dp"
+                    android:layout_weight="1"
+                    android:background="#232f3e"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/communitywithtext" />
 
-        <ImageButton
-            android:id="@+id/setting"
-            android:layout_width="205dp"
-            android:layout_height="200dp"
-            app:layout_column="1"
-            app:layout_row="1"
-            android:background="#8BC34A"
-            app:srcCompat="@drawable/settingwithtext" />
+                <ImageButton
+                    android:id="@+id/listOrders"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="0.5dp"
+                    android:layout_weight="1"
+                    android:background="?attr/colorPrimary"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/orderwithtext" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <ImageButton
+                    android:id="@+id/reports"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="0.5dp"
+                    android:layout_weight="1"
+                    android:background="?attr/colorPrimary"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/reportswithtext" />
+
+                <ImageButton
+                    android:id="@+id/setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="0.5dp"
+                    android:layout_weight="1"
+                    android:background="#232f3e"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/settingwithtext" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </android.support.v7.widget.GridLayout>
 
