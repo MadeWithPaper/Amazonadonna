@@ -24,8 +24,9 @@
         android:supportsRtl="true"
         android:syncable="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".report_target_cell"></activity>
-        <activity android:name=".ReportType" />
+        <activity android:name=".ViewReport"></activity>
+        <activity android:name=".report_target_cell" />
+        <activity android:name=".Reports" />
         <activity
             android:name=".Settings"
             android:configChanges="layoutDirection|locale" />

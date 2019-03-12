@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
-import com.amazon.identity.auth.device.api.authorization.AuthorizationManager
 import com.amazon.identity.auth.device.api.authorization.User
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.sync.ArtisanSync
@@ -17,7 +16,6 @@ import okhttp3.*
 import java.io.IOException
 import java.lang.Exception
 import android.support.v7.app.AlertDialog
-import com.amazonadonna.sync.Synchronizer
 import java.lang.Thread.sleep
 
 
@@ -44,45 +42,7 @@ class HomeScreen : AppCompatActivity() {
                 //do nothing use placeholder text
             }
 
-            if (ArtisanSync.hasInternet(applicationContext)) {
-                runOnUiThread {
-                    alertDialog = AlertDialog.Builder(this@HomeScreen).create()
-                    alertDialog.setTitle("Synchronizing Account")
-                    alertDialog.setMessage("Please wait while your account data is synchronized...")
-                    alertDialog.show()
-                    Log.i("HomeScreen", "loading start, show dialog")
-                }
-
-                ArtisanSync.sync(applicationContext, cgaID)
-                fetchJSONCGA()
-                Log.d("HomeScreen", cgaID)
-
-                // Wait for sync to finish
-                do {
-                    sleep(1000)
-                } while (ArtisanSync.inProgress())
-
-                Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
-
-                // Perform one more data fetch to ensure data integrity is good
-                ArtisanSync.sync(applicationContext, cgaID)
-                do {
-                    sleep(500)
-                } while (ArtisanSync.inProgress())
-
-                runOnUiThread {
-                    Log.i("HomeScreen", "end of loading alert dialog dismiss")
-                    alertDialog.dismiss()
-                }
-            }
-            else {
-                runOnUiThread {
-                    alertDialog = AlertDialog.Builder(this@HomeScreen).create()
-                    alertDialog.setTitle("Error Synchronizing Account")
-                    alertDialog.setMessage("No internet connection active. You may attempt to resync your account on the Settings page when internet is aavilable.")
-                    alertDialog.show()
-                }
-            }
+            syncData()
         }
 
         override fun onError(ae: AuthError?) {
@@ -90,6 +50,48 @@ class HomeScreen : AppCompatActivity() {
             Log.d("HomeScreen", "no work")
             //TODO remove after testing if error it should not fetch
             ArtisanSync.sync(applicationContext, cgaID)
+        }
+    }
+
+    fun syncData() {
+        if (ArtisanSync.hasInternet(applicationContext)) {
+            runOnUiThread {
+                alertDialog = AlertDialog.Builder(this@HomeScreen).create()
+                alertDialog.setTitle("Synchronizing Account")
+                alertDialog.setMessage("Please wait while your account data is synchronized...")
+                alertDialog.show()
+                Log.i("HomeScreen", "loading start, show dialog")
+            }
+
+            ArtisanSync.sync(applicationContext, cgaID)
+            fetchJSONCGA()
+            Log.d("HomeScreen", cgaID)
+
+            // Wait for sync to finish
+            do {
+                sleep(1000)
+            } while (ArtisanSync.inProgress())
+
+            Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
+
+            // Perform one more data fetch to ensure data integrity is good
+            ArtisanSync.sync(applicationContext, cgaID)
+            do {
+                sleep(500)
+            } while (ArtisanSync.inProgress())
+
+            runOnUiThread {
+                Log.i("HomeScreen", "end of loading alert dialog dismiss")
+                alertDialog.dismiss()
+            }
+        }
+        else {
+            runOnUiThread {
+                alertDialog = AlertDialog.Builder(this@HomeScreen).create()
+                alertDialog.setTitle("Error Synchronizing Account")
+                alertDialog.setMessage("No internet connection active. You may attempt to resync your account on the Settings page when internet is aavilable.")
+                alertDialog.show()
+            }
         }
     }
 
@@ -136,7 +138,7 @@ class HomeScreen : AppCompatActivity() {
     }
 
     private fun openReports() {
-        val intent = Intent(this, ReportType::class.java)
+        val intent = Intent(this, Reports::class.java)
         startActivity(intent)
     }
 

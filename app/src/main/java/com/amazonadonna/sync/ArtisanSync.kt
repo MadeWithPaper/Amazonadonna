@@ -26,7 +26,8 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
         super.sync(context, cgaId)
 
         Log.i("ArtisanSync", "Syncing now!")
-        numInProgress++
+        numInProgress = 1
+        Log.i("ArtisanSync", numInProgress.toString())
 
         runBlocking {
             PayoutSync.sync(context, cgaId)
@@ -39,11 +40,12 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
         /*ProductSync.sync(context, cgaId)
         OrderSync.sync(context, cgaId)*/
+        Log.i("ArtisanSync", numInProgress.toString())
         numInProgress--
     }
 
     private fun uploadNewArtisans(context : Context) {
-        launch {
+        runBlocking {
             val newArtisans = getNewArtisans(context)
             for (artisan in newArtisans) {
                 uploadSingleArtisan(context, artisan)
@@ -91,7 +93,9 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
                 Log.i("ArtisanSync", "Successfully synced Artisan data")
 
-                ProductSync.sync(context, mCgaId)
+                runBlocking {
+                    ProductSync.sync(context, mCgaId)
+                }
                 numInProgress--
             }
 
@@ -126,16 +130,15 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
+                launch {
+                    setSyncedState(artisan, context)
+                }
                 artisan.artisanId = body!!.substring(1, body!!.length - 1)
                 Log.i("AddArtisan", "success $body")
                 if (artisan.picURL != "Not set") {
                     uploadArtisanImage(context, artisan)
-                }
-                else {
-                    launch {
-                        setSyncedState(artisan, context)
-                        numInProgress--
-                    }
+                } else {
+                    numInProgress--
                 }
             }
 
@@ -247,15 +250,13 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
                 Log.d("AddArtisan", body)
-                launch {
-                    setSyncedState(artisan, context)
-                    numInProgress--
-                }
+                numInProgress--
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("AddArtisan", "failed to do POST request to database$artisanPicURL")
                 Log.e("AddArtisan", e!!.message)
+                numInProgress--
             }
         })
     }
