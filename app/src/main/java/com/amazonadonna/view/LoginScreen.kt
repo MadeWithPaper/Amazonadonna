@@ -24,9 +24,6 @@ class LoginScreen : AppCompatActivity() {
 
     private var requestContext : RequestContext = RequestContext.create(this)
     private val scopes : Array<Scope> = arrayOf(ProfileScope.profile(), ProfileScope.postalCode())
-//    private lateinit var mAccount : Account
-//    // A content resolver for accessing the provider
-//    private lateinit var mResolver: ContentResolver
 
     private var signUpListener = object  : AuthorizeListener() {
         /* Authorization was completed successfully. */
@@ -109,29 +106,4 @@ class LoginScreen : AppCompatActivity() {
         //TODO: Replace this with your own logic
         return password.length > 4
     }
-
-    // Create a new dummy account for the sync adapter
-    /*private fun createSyncAccount(): Account {
-        val accountManager = getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
-        return Account(ACCOUNT, ACCOUNT_TYPE).also { newAccount ->
-            /*
-             * Add the account and account type, no password or user data
-             * If successful, return the Account object, otherwise report an error.
-             */
-            if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-                /*
-                 * If you don't set android:syncable="true" in
-                 * in your <provider> element in the manifest,
-                 * then call context.setIsSyncable(account, AUTHORITY, 1)
-                 * here.
-                 */
-            } else {
-                /*
-                 * The account exists or some other error occurred. Log this, report it,
-                 * or handle it internally.
-                 */
-                Log.e("LoginScreen", "Error creating sync account")
-            }
-        }
-    }*/
 }

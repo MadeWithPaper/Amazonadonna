@@ -88,7 +88,7 @@
     <string name="item_review_listing_success">Su artículo ha sido enviado con éxito!</string>
 
     <!-- Artisan Payout -->
-    <string name="payout_date">Fecha :</string>
+    <string name="payout_date">Fecha: </string>
     <string name="payout_error_title">Error de pago</string>
     <string name="payout_error_message">El monto del pago excede el saldo de pago de Artisan!</string>
 
@@ -115,6 +115,7 @@
     <string name="settings_toolbar_text">Ajustes</string>
     <string name="settings_language_preference">Preferencia de idioma</string>
     <string name="settings_update_setting">Ajustes de actualización</string>
+    <string name="settings_sync_account">Sincronizar datos de la cuenta</string>
 
     <!-- List All Artisan -->
     <string name="list_artisan_toolbar_text">El Artesano</string>

@@ -86,7 +86,7 @@
     <string name="item_review_listing_success">Votre article a été soumis avec succès!</string>
 
     <!-- Artisan Payout -->
-    <string name="payout_date">Rendez-vous amoureux :</string>
+    <string name="payout_date">Rendez-vous amoureux: </string>
     <string name="payout_error_title">Erreur de paiement</string>
     <string name="payout_error_message">Le montant du paiement dépasse le solde du paiement Artisan!</string>
 
@@ -113,6 +113,7 @@
     <string name="settings_toolbar_text">Réglages</string>
     <string name="settings_language_preference">Préférence de langue</string>
     <string name="settings_update_setting">Mettre à jour les paramètres</string>
+    <string name="settings_sync_account">Synchroniser les données du compte</string>
 
     <!-- List All Artisan -->
     <string name="list_artisan_toolbar_text">Artisans</string>
