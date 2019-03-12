@@ -3,6 +3,7 @@ package com.amazonadonna.sync
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.util.Log
 import com.amazonadonna.database.AppDatabase
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
@@ -27,7 +28,8 @@ abstract class Synchronizer : CoroutineScope {
     }
 
     fun inProgress() : Boolean {
-        return numInProgress != 0
+        Log.i("Synchronizer", numInProgress.toString())
+        return numInProgress > 0
     }
 
     fun resetLocalDB(context: Context) {

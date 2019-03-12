@@ -232,6 +232,9 @@ object ProductSync: Synchronizer(), CoroutineScope {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
+                launch {
+                    setSyncedState(product, context)
+                }
                 product.itemId = body!!.substring(1, body!!.length - 1)
                 Log.i(TAG, "success $body")
 
@@ -291,8 +294,8 @@ object ProductSync: Synchronizer(), CoroutineScope {
                 Log.i(TAG, "Am I done uploading images? " + product.pictureURLs[index + 1])
                 if (index == product.pictureURLs.size - 1 || product.pictureURLs[index + 1] == "undefined" || product.pictureURLs[index + 1] == "Not set") {
                     launch {
-                        Log.i(TAG, "Deleting temp product")
-                        setSyncedState(product, context)
+                       // Log.i(TAG, "Deleting temp product")
+                        //setSyncedState(product, context)
                         downloadProducts(context)
                     }
                 }

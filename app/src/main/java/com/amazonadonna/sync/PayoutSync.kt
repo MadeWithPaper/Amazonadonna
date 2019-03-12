@@ -20,7 +20,7 @@ object PayoutSync : Synchronizer(), CoroutineScope {
     override fun sync(context: Context, cgaId: String) {
         super.sync(context, cgaId)
 
-        Log.i("ArtisanSync", "Syncing now!")
+        Log.i(TAG, "Syncing now!")
         uploadNewPayouts(context)
     }
 
