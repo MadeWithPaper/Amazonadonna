@@ -176,5 +176,6 @@ class Reports : AppCompatActivity(), CoroutineScope {
         val intent = Intent(this, ViewReport::class.java)
         intent.putExtra("reportName", pdfName)
         startActivity(intent)
+        finish()
     }
 }

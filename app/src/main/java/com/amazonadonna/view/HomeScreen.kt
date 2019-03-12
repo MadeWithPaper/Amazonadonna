@@ -24,7 +24,7 @@ class HomeScreen : AppCompatActivity() {
     private var newLang : String = "en_US"
     private val amaznIdURL = "https://99956e2a.ngrok.io/cgo/getByAmznId"
     private lateinit var alertDialog : AlertDialog
-
+    private var currUser : User? = null
     private var getUserInfoListener = object : Listener<User, AuthError> {
         override fun onSuccess(p0: User?) {
             cgaID = p0!!.userId.substringAfter("amzn1.account.")
@@ -37,6 +37,7 @@ class HomeScreen : AppCompatActivity() {
             //--------------------------------------------------------//
 
             try {
+                currUser = p0
                 cgoNameTV.text = p0.userName
             } catch (e : Exception){
                 //do nothing use placeholder text
@@ -44,7 +45,6 @@ class HomeScreen : AppCompatActivity() {
 
             syncData()
         }
-
         override fun onError(ae: AuthError?) {
             //To change body of created functions use File | Settings | File Templates.
             Log.d("HomeScreen", "no work")
@@ -53,6 +53,12 @@ class HomeScreen : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (currUser != null){
+            cgoNameTV.text = currUser!!.userName
+        }
+    }
     fun syncData() {
         if (ArtisanSync.hasInternet(applicationContext)) {
             runOnUiThread {

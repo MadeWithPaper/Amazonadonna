@@ -68,12 +68,13 @@ class ArtisanPayout : AppCompatActivity() {
             }
             val dialog : AlertDialog = builder.create()
             dialog.show()
+        } else {
+            val intent = Intent(this, PayoutSignature::class.java)
+            intent.putExtra("artisan", artisan)
+            intent.putExtra("payoutAmount", artisanPayout_amount.text.toString().toDouble())
+            startActivity(intent)
+            finish()
         }
-        val intent = Intent(this, PayoutSignature::class.java)
-        intent.putExtra("artisan", artisan)
-        intent.putExtra("payoutAmount", artisanPayout_amount.text.toString().toDouble())
-        startActivity(intent)
-        finish()
     }
 
     private fun validateAmount(artisan : Artisan) : Boolean {
