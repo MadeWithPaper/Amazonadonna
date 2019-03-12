@@ -1,5 +1,6 @@
 package com.amazonadonna.view
 
+
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_add_artisan.*
@@ -23,6 +24,16 @@ import android.graphics.BitmapFactory
 import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.sync.Synchronizer
 import android.graphics.Bitmap
+import android.view.View
+import java.io.File
+import java.io.IOException
+import com.amazonaws.util.IOUtils.toByteArray
+
+
+
+
+
+
 
 class AddArtisan : AppCompatActivity() {
     private var cgaId : String = "0"
@@ -87,11 +98,25 @@ class AddArtisan : AppCompatActivity() {
         val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
         ivPreview.setImageBitmap(takenImage)
     }
+    fun customCompressImage(view: View) {
+            // Compress image in main thread using custom Compressor
+//            compressedImage = CompressorKt.create(this) {
+//                maxWidth { 640f }
+//                maxHeight { 480f }
+//                quality { 75 }
+//                compressFormat { WEBP }
+//            }.compressToFile(actualImage)
+//
+//            Compressor.Builder(this).setMaxWidth(640f).build().compressToFile(actualImage)
+
+    }
 
     @TargetApi(19)
     private fun createImageFile(data: Intent?) {
         var imagePath: String? = null
         val uri = data!!.data
+        val w = 331
+        val h = 273
         if (DocumentsContract.isDocumentUri(this, uri)){
             val docId = DocumentsContract.getDocumentId(uri)
             if ("com.android.providers.media.documents" == uri.authority){
@@ -112,6 +137,29 @@ class AddArtisan : AppCompatActivity() {
         }
 
         photoFile = File(imagePath)
+
+        //pre-scaling bits
+        val uri_test = FileProvider.getUriForFile(this@AddArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
+        val bm = loadScaledBitmap(uri_test, w, h)
+        val stream = ByteArrayOutputStream()
+        bm!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        var byteArray = stream.toByteArray()
+        //byteArray = ByteArray(photoFile!!.length().toInt())
+
+        try {
+
+
+            //convert array of bytes into file
+            val fileOuputStream = FileOutputStream(photoFile)
+            fileOuputStream.write(byteArray)
+            fileOuputStream.close()
+
+            println("Done")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+
     }
 
     private fun imagePath(uri: Uri?, selection: String?): String {
