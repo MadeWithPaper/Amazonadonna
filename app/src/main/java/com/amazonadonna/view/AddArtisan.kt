@@ -78,6 +78,8 @@ class AddArtisan : AppCompatActivity() {
 
     private fun takePhoto() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val w = 331
+        val h = 273
 
         photoFile = File(externalCacheDir, fileName)
 
@@ -85,6 +87,7 @@ class AddArtisan : AppCompatActivity() {
             photoFile!!.delete()
         }
         photoFile!!.createNewFile()
+
 
         val fileProvider = FileProvider.getUriForFile(this@AddArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
 
