@@ -21,6 +21,7 @@ import com.amazon.identity.auth.device.api.Listener
 import com.amazon.identity.auth.device.api.authorization.AuthorizationManager
 import com.amazonadonna.sync.ArtisanSync
 import kotlinx.coroutines.*
+import java.lang.Thread.sleep
 import kotlin.coroutines.CoroutineContext
 
 class Settings : AppCompatActivity(), CoroutineScope {
@@ -60,6 +61,9 @@ class Settings : AppCompatActivity(), CoroutineScope {
 
         syncDataButton.setOnClickListener {
             syncData()
+           // val intent = Intent(this, HomeScreen::class.java)
+           // startActivity(intent)
+           // finish()
         }
     }
 
@@ -100,18 +104,22 @@ class Settings : AppCompatActivity(), CoroutineScope {
 
                     // Wait for sync to finish
                     do {
-                        Thread.sleep(1000)
+                        Log.i("Settings", ArtisanSync.inProgress().toString())
+                        sleep(1000)
                     } while (ArtisanSync.inProgress())
+                }
+                task.await()
 
+                val task2 = async {
                     Log.d("Settings", "First sync done, now one more to verify data integrity")
 
                     // Perform one more data fetch to ensure data integrity is goodandroid button do asynch
                     ArtisanSync.sync(applicationContext, cgaID)
                     do {
-                        Thread.sleep(500)
+                        sleep(500)
                     } while (ArtisanSync.inProgress())
                 }
-                val result = task.await()
+                task2.await()
 
                 runOnUiThread {
                     alertDialog.dismiss()
