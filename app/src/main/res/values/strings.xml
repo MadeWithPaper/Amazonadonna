@@ -137,6 +137,8 @@
     <string name="report_generate_button">Generate Report</string>
     <string name="report_select_all">Select All</string>
     <string name="report_select_none">Select None</string>
+    <string name="view_report_save_report_button">Save Report</string>
+    <string name="view_report_toolbar_text">View Generated Report</string>
 
     <!-- Utility Strings -->
     <string name="requiredFieldError">Required!</string>

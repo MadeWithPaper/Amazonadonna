@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
-import com.amazon.identity.auth.device.api.authorization.AuthorizationManager
 import com.amazon.identity.auth.device.api.authorization.User
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.sync.ArtisanSync
@@ -17,7 +16,6 @@ import okhttp3.*
 import java.io.IOException
 import java.lang.Exception
 import android.support.v7.app.AlertDialog
-import com.amazonadonna.sync.Synchronizer
 import java.lang.Thread.sleep
 
 
@@ -140,7 +138,7 @@ class HomeScreen : AppCompatActivity() {
     }
 
     private fun openReports() {
-        val intent = Intent(this, ReportType::class.java)
+        val intent = Intent(this, Reports::class.java)
         startActivity(intent)
     }
 

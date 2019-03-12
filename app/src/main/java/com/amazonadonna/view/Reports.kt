@@ -1,5 +1,10 @@
 package com.amazonadonna.view
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Point
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
@@ -11,13 +16,17 @@ import android.widget.ArrayAdapter
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.ReportTarget
-import kotlinx.android.synthetic.main.activity_report_type.*
+import kotlinx.android.synthetic.main.activity_reports.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
+import android.graphics.pdf.PdfDocument
+import kotlinx.android.synthetic.main.activity_view_report.*
+import java.io.*
 
-class ReportType : AppCompatActivity(), CoroutineScope {
+
+class Reports : AppCompatActivity(), CoroutineScope {
 
     lateinit var job: Job
 
@@ -25,13 +34,13 @@ class ReportType : AppCompatActivity(), CoroutineScope {
         get() = Dispatchers.Main + job
 
     private val SELECT_REPORT_TYPE = "--Select Report Type--"
-    private val reportTypeSpinnerValues = arrayOf(SELECT_REPORT_TYPE, "Fiance", "Performance", "Account Summary", "Account Payables")
+    private val reportTypeSpinnerValues = arrayOf(SELECT_REPORT_TYPE, "Performance", "Account Summary", "Account Payables")
     private var reportType = SELECT_REPORT_TYPE
     private var reportTargetList : MutableList<ReportTarget> = mutableListOf()
-    private val TAG = "ReportType.kt"
+    private val TAG = "Reports.kt"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_report_type)
+        setContentView(R.layout.activity_reports)
 
         //report target recycler view setup
         reportTargetRV.layoutManager = LinearLayoutManager(this)
@@ -113,6 +122,13 @@ class ReportType : AppCompatActivity(), CoroutineScope {
             }
         }
 
+        when (reportType) {
+            "Performance" -> generatePerformanceReport()
+        }
+        //Performance report
+        //Account Summary report
+        //Account Payables report
+
         Log.i(TAG, "selected list: $selectedTargets")
     }
 
@@ -123,5 +139,42 @@ class ReportType : AppCompatActivity(), CoroutineScope {
 
         //TODO add more checks if necessary
         return true
+    }
+
+    //TODO optimization pdf scaling
+    private fun generatePerformanceReport() {
+        // create a new document
+        val document = PdfDocument()
+        // crate a page description
+        val pageInfo = PdfDocument.PageInfo.Builder(300, 400, 0).create()
+        // start a page
+        val page = document.startPage(pageInfo)
+        val canvas = page.canvas
+        val paint = Paint()
+        paint.color = Color.BLACK
+        //title
+        canvas.drawText("Performance Report", 100f, 10f, paint)
+       // canvas.drawText("test3", 260f, 400f, paint)
+
+        // finish the page
+        document.finishPage(page)
+        //save pdf file
+        val pdfName = "test.pdf"
+        var fileOutputStream: FileOutputStream? = null
+        try {
+            fileOutputStream = openFileOutput(pdfName, Context.MODE_PRIVATE)
+            document.writeTo(fileOutputStream)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            fileOutputStream?.close()
+            document.close()
+        }
+
+        val intent = Intent(this, ViewReport::class.java)
+        intent.putExtra("reportName", pdfName)
+        startActivity(intent)
     }
 }
