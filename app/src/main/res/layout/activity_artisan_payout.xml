@@ -64,12 +64,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:text="@string/artisan_payout_amount_tv"
         android:textColor="#000"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/artisanPayoutToolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/artisanPayout_balanceTV" />
 
     <TextView
         android:id="@+id/artisanPayout_dateTV"
@@ -95,5 +95,28 @@
         app:layout_constraintStart_toEndOf="@+id/artisanPayout_dateTV"
         app:layout_constraintTop_toBottomOf="@+id/artisanPayout_amount"
         app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+
+    <TextView
+        android:id="@+id/artisanPayout_balanceTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/payout_balance"
+        android:textSize="25sp"
+        android:textColor="#000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/artisanPayoutToolbar" />
+
+    <TextView
+        android:id="@+id/artisanPayout_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text=""
+        android:textSize="25sp"
+        android:textColor="#000"
+        app:layout_constraintStart_toEndOf="@+id/artisanPayout_balanceTV"
+        app:layout_constraintTop_toBottomOf="@+id/artisanPayoutToolbar" />
 
 </android.support.constraint.ConstraintLayout>

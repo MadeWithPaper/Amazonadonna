@@ -1,6 +1,9 @@
 package com.amazonadonna.sync
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.util.Log
 import com.amazonadonna.database.AppDatabase
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
@@ -10,6 +13,7 @@ abstract class Synchronizer : CoroutineScope {
         const val SYNC_NEW = 1
         const val SYNC_EDIT = 2
         const val SYNCED = 0
+        var numInProgress: Int = 0
     }
 
     lateinit var job: Job
@@ -23,11 +27,22 @@ abstract class Synchronizer : CoroutineScope {
         mCgaId = cgaId
     }
 
+    fun inProgress() : Boolean {
+        Log.i("Synchronizer", numInProgress.toString())
+        return numInProgress > 0
+    }
+
     fun resetLocalDB(context: Context) {
         job = Job()
         launch {
             resetLocalDBHelper(context)
         }
+    }
+
+    fun hasInternet(context: Context) : Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        return activeNetwork?.isConnected == true
     }
 
     private suspend fun resetLocalDBHelper(context: Context) = withContext(Dispatchers.IO) {

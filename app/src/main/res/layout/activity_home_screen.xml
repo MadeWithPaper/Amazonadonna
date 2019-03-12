@@ -6,18 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.amazonadonna.view.HomeScreen">
 
-    <!--<Button-->
-        <!--android:id="@+id/logoutButton"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/logout"-->
-        <!--app:layout_constraintStart_toStartOf="@id/logo_image"-->
-        <!--app:layout_constraintTop_toTopOf="@id/logo_image" />-->
-  
     <ImageView
         android:id="@+id/logo_image"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
@@ -39,43 +31,74 @@
         app:layout_constraintStart_toStartOf="parent"
         app:rowCount="2">
 
-        <ImageButton
-            android:id="@+id/listAllArtisan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="0.5dp"
-            android:background="#4CAF50"
-            app:layout_column="0"
-            app:layout_row="0"
-            app:srcCompat="@drawable/communitywithtext" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/listOrders"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="0.5dp"
-            android:background="#2196F3"
-            app:layout_column="1"
-            app:layout_row="0"
-            app:srcCompat="@drawable/orderwithtext" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-        <ImageButton
-            android:id="@+id/reports"
-            android:layout_width="205dp"
-            android:layout_height="200dp"
-            android:background="#fff"
-            app:layout_column="0"
-            app:layout_row="1"
-            app:srcCompat="@android:color/white" />
+                <ImageButton
+                    android:id="@+id/listAllArtisan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="0.5dp"
+                    android:layout_weight="1"
+                    android:background="#232f3e"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/communitywithtext" />
 
-        <ImageButton
-            android:id="@+id/setting"
-            android:layout_width="205dp"
-            android:layout_height="200dp"
-            app:layout_column="1"
-            app:layout_row="1"
-            android:background="#8BC34A"
-            app:srcCompat="@drawable/settingwithtext" />
+                <ImageButton
+                    android:id="@+id/listOrders"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="0.5dp"
+                    android:layout_weight="1"
+                    android:background="?attr/colorPrimary"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/orderwithtext" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <ImageButton
+                    android:id="@+id/reports"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="0.5dp"
+                    android:layout_weight="1"
+                    android:background="?attr/colorPrimary"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/reportswithtext" />
+
+                <ImageButton
+                    android:id="@+id/setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="0.5dp"
+                    android:layout_weight="1"
+                    android:background="#232f3e"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/settingwithtext" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </android.support.v7.widget.GridLayout>
 
@@ -88,7 +111,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo_image">
+        app:layout_constraintTop_toBottomOf="@+id/logo_image"
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:id="@+id/welcomeTV"
@@ -106,16 +130,22 @@
 
         <TextView
             android:id="@+id/cgoNameTV"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="30dp"
+            android:layout_marginBottom="20dp"
             android:text="@string/homeScreenPlaceHoldercgo"
+            android:textAlignment="center"
             android:textColor="#000"
             android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/welcomeTV" />
+            app:layout_constraintTop_toBottomOf="@+id/welcomeTV"
+            app:layout_constraintVertical_bias="0.062" />
+
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

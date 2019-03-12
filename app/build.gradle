@@ -10,7 +10,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.amazonadonna.amazonhandmade"
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -83,6 +83,8 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"
+    //file compressor
+    implementation 'id.zelory:compressor:2.1.0'
 }
 
 repositories {

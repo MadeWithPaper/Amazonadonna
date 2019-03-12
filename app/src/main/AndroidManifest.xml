@@ -24,42 +24,52 @@
         android:supportsRtl="true"
         android:syncable="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Settings"
-            android:configChanges="layoutDirection|locale"></activity>
-        <activity android:name=".PayoutSignature"
-            android:configChanges="layoutDirection|locale"/>
-        <activity android:name=".ArtisanPayout"
-            android:configChanges="layoutDirection|locale"/>
-        <activity android:name=".EditArtisan"
-            android:configChanges="layoutDirection|locale"/>
-        <activity android:name=".ProductDetails"
-            android:configChanges="layoutDirection|locale"/>
+        <activity android:name=".ViewReport"></activity>
+        <activity android:name=".report_target_cell" />
+        <activity android:name=".Reports" />
+        <activity
+            android:name=".Settings"
+            android:configChanges="layoutDirection|locale" />
+        <activity
+            android:name=".PayoutSignature"
+            android:configChanges="layoutDirection|locale" />
+        <activity
+            android:name=".ArtisanPayout"
+            android:configChanges="layoutDirection|locale" />
+        <activity
+            android:name=".EditArtisan"
+            android:configChanges="layoutDirection|locale" />
+        <activity
+            android:name=".ProductDetails"
+            android:configChanges="layoutDirection|locale" />
         <activity
             android:name=".AddItemReview"
-            android:launchMode="singleTop"
-            android:configChanges="layoutDirection|locale"/>
+            android:configChanges="layoutDirection|locale"
+            android:launchMode="singleTop" />
         <activity
             android:name=".AddItemImages"
-            android:launchMode="singleTop"
-            android:configChanges="layoutDirection|locale"/>
+            android:configChanges="layoutDirection|locale"
+            android:launchMode="singleTop" />
         <activity
             android:name=".AddItemInfo"
+            android:configChanges="layoutDirection|locale"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustResize"
-            android:configChanges="layoutDirection|locale"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".AddItemCategory"
-            android:launchMode="singleTop"
-            android:configChanges="layoutDirection|locale"/>
-        <activity android:name=".ArtisanItemList"
-            android:configChanges="layoutDirection|locale"/>
-        <activity android:name=".OrderScreen"
-            android:configChanges="layoutDirection|locale"/>
+            android:configChanges="layoutDirection|locale"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ArtisanItemList"
+            android:configChanges="layoutDirection|locale" />
+        <activity
+            android:name=".OrderScreen"
+            android:configChanges="layoutDirection|locale" />
         <activity
             android:name=".ArtisanProfile"
+            android:configChanges="layoutDirection|locale"
             android:label="@string/title_activity_artisan_profile"
             android:launchMode="singleTop"
-            android:configChanges="layoutDirection|locale"
             android:parentActivityName=".ListAllArtisans">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -68,8 +78,8 @@
         <activity
             android:name="com.amazon.identity.auth.device.workflow.WorkflowActivity"
             android:allowTaskReparenting="true"
-            android:launchMode="singleTask"
             android:configChanges="layoutDirection|locale"
+            android:launchMode="singleTask"
             android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -93,8 +103,9 @@
                 android:resource="@xml/fileprovider" />
         </provider>
 
-        <activity android:name=".HomeScreen"
-            android:configChanges="layoutDirection|locale"/>
+        <activity
+            android:name=".HomeScreen"
+            android:configChanges="layoutDirection|locale" />
         <activity
             android:name=".LoginScreen"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|layoutDirection|locale">
@@ -106,15 +117,15 @@
         </activity>
         <activity
             android:name=".ListAllArtisans"
+            android:configChanges="layoutDirection|locale"
             android:launchMode="singleTop"
-            android:configChanges="layoutDirection|locale"
             android:theme="@style/AppTheme" />
-        <activity android:name=".AddArtisan"
-            android:configChanges="layoutDirection|locale"
-            />
-        <activity android:name=".ListOrders"
-            android:configChanges="layoutDirection|locale"
-            />
+        <activity
+            android:name=".AddArtisan"
+            android:configChanges="layoutDirection|locale" />
+        <activity
+            android:name=".ListOrders"
+            android:configChanges="layoutDirection|locale" />
     </application>
 
 </manifest>

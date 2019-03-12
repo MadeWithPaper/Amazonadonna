@@ -1,5 +1,6 @@
 package com.amazonadonna.view
 
+
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_add_artisan.*
@@ -17,12 +18,21 @@ import android.app.Activity
 import android.support.v4.app.ActivityCompat
 import android.provider.DocumentsContract
 import android.content.ContentUris
+import android.content.pm.PackageManager
 import android.net.Uri
 import java.io.*
 import android.graphics.BitmapFactory
 import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.sync.Synchronizer
 import android.graphics.Bitmap
+import android.support.v4.app.ActivityCompat.startActivityForResult
+import android.view.View
+import java.io.File
+import java.io.IOException
+import com.amazonaws.util.IOUtils.toByteArray
+
+
+
 
 
 
@@ -41,9 +51,12 @@ class AddArtisan : AppCompatActivity() {
         setContentView(R.layout.activity_add_artisan)
 
         cgaId = intent.extras.getString("cgaId")
+        val PERMISSIONS = arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
         val IMAGE_UPLOADING_PERMISSION = 3
-        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
+        ActivityCompat.requestPermissions(this, PERMISSIONS, IMAGE_UPLOADING_PERMISSION)
+//        val IMAGE_WRTING_PERMISSION = 4
+//        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), IMAGE_WRTING_PERMISSION)
 
         takePicture.setOnClickListener{
             takePhoto()
@@ -65,6 +78,8 @@ class AddArtisan : AppCompatActivity() {
 
     private fun takePhoto() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val w = 331
+        val h = 273
 
         photoFile = File(externalCacheDir, fileName)
 
@@ -72,6 +87,7 @@ class AddArtisan : AppCompatActivity() {
             photoFile!!.delete()
         }
         photoFile!!.createNewFile()
+
 
         val fileProvider = FileProvider.getUriForFile(this@AddArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
 
@@ -90,11 +106,25 @@ class AddArtisan : AppCompatActivity() {
         val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
         ivPreview.setImageBitmap(takenImage)
     }
+    fun customCompressImage(view: View) {
+            // Compress image in main thread using custom Compressor
+//            compressedImage = CompressorKt.create(this) {
+//                maxWidth { 640f }
+//                maxHeight { 480f }
+//                quality { 75 }
+//                compressFormat { WEBP }
+//            }.compressToFile(actualImage)
+//
+//            Compressor.Builder(this).setMaxWidth(640f).build().compressToFile(actualImage)
+
+    }
 
     @TargetApi(19)
     private fun createImageFile(data: Intent?) {
         var imagePath: String? = null
         val uri = data!!.data
+        val w = 331
+        val h = 273
         if (DocumentsContract.isDocumentUri(this, uri)){
             val docId = DocumentsContract.getDocumentId(uri)
             if ("com.android.providers.media.documents" == uri.authority){
@@ -115,6 +145,30 @@ class AddArtisan : AppCompatActivity() {
         }
 
         photoFile = File(imagePath)
+
+        //pre-scaling bits
+        val uri_test = FileProvider.getUriForFile(this@AddArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
+        val bm = loadScaledBitmap(uri_test, w, h)
+        val stream = ByteArrayOutputStream()
+        bm!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        var byteArray = stream.toByteArray()
+        //byteArray = ByteArray(photoFile!!.length().toInt())
+
+        try {
+
+
+            //convert array of bytes into file
+            val fileOuputStream = FileOutputStream(photoFile)
+            fileOuputStream.write(byteArray)
+            fileOuputStream.close()
+            Log.d("SKETIT", "lol")
+
+            println("Done")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+
     }
 
     private fun imagePath(uri: Uri?, selection: String?): String {
@@ -238,9 +292,12 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
             3 -> {
                 button_addArtisan.setOnClickListener{
                     //Toast.makeText(this@AddArtisan, "add button clicked.", Toast.LENGTH_SHORT).show()
+                    Log.d("testing_4",grantResults.isNotEmpty().toString())
+                    Log.d("testing_5", PackageManager.PERMISSION_GRANTED.toString())
                     makeNewArtisan()
                 }
             }
+
         }
     }
 
@@ -254,7 +311,7 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
         val bio = editText_bio.text.toString()
         val number = editText_ContactNumber.text.toString()
 
-         val newArtisan = Artisan(name, "", number, "","", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 0.0)
+        val newArtisan = Artisan(name, "", number, "","", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 0.0)
         newArtisan.generateTempID()
         //parse location info
         parseLoc(newArtisan)

@@ -25,57 +25,43 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
     override fun sync(context: Context, cgaId: String) {
         super.sync(context, cgaId)
 
-            Log.i("ArtisanSync", "Syncing now!")
-            uploadNewArtisans(context)
+        Log.i("ArtisanSync", "Syncing now!")
+        numInProgress = 1
+        Log.i("ArtisanSync", numInProgress.toString())
+
+        runBlocking {
+            PayoutSync.sync(context, cgaId)
+        }
+
+        uploadNewArtisans(context)
+       /* Log.i("ArtisanSync", "Done uploading, now downloading")
+        downloadArtisans(context)
+        Log.i("ArtisanSync", "Done syncing!")*/
+
+        /*ProductSync.sync(context, cgaId)
+        OrderSync.sync(context, cgaId)*/
+        Log.i("ArtisanSync", numInProgress.toString())
+        numInProgress--
+    }
+
+    private fun uploadNewArtisans(context : Context) {
+        runBlocking {
+            val newArtisans = getNewArtisans(context)
+            for (artisan in newArtisans) {
+                uploadSingleArtisan(context, artisan)
+            }
+            val updateArtisans = getUpdateArtisans(context)
+            for (artisan in updateArtisans) {
+                updateSingleArtisan(context, artisan)
+            }
             Log.i("ArtisanSync", "Done uploading, now downloading")
             downloadArtisans(context)
             Log.i("ArtisanSync", "Done syncing!")
-
-            ProductSync.sync(context, cgaId)
-            OrderSync.sync(context, cgaId)
-
-    }
-
-    fun addArtisan(context : Context, artisan : Artisan, photoFile: File? = null) {
-        stageImageUpdate(context, artisan, photoFile)
-
-        launch {
-            addArtisanHelper(context, artisan)
         }
-
-    }
-
-    fun updateArtisan(context : Context, artisan : Artisan, newPhoto: File? = null) {
-        stageImageUpdate(context, artisan, newPhoto)
-        artisan.synced = SYNC_EDIT
-
-        launch {
-            updateArtisanHelper(context, artisan)
-        }
-
-    }
-
-    private fun stageImageUpdate(context : Context, artisan : Artisan, photoFile: File? = null) {
-        if (photoFile != null) {
-            val sourceFile = photoFile!!
-            var fileName = artisan.artisanId + ".png"
-            val bitmap = BitmapFactory.decodeFile(sourceFile.absolutePath)
-            var isp = ImageStorageProvider(context)
-            //isp.deleteBitmap(fileName)
-            isp.saveBitmap(bitmap, ImageStorageProvider.ARTISAN_IMAGE_PREFIX + fileName)
-            artisan.picURL = fileName
-        }
-    }
-
-    private suspend fun addArtisanHelper(context : Context, artisan : Artisan) = withContext(Dispatchers.IO) {
-        AppDatabase.getDatabase(context).artisanDao().insert(artisan)
-    }
-
-    private suspend fun updateArtisanHelper(context : Context, artisan : Artisan) = withContext(Dispatchers.IO) {
-        AppDatabase.getDatabase(context).artisanDao().update(artisan)
     }
 
     private fun downloadArtisans(context : Context) {
+        numInProgress++
         val requestBody = FormBody.Builder().add("cgoId", mCgaId)
                 .build()
 
@@ -106,106 +92,22 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 Log.d("HOTFIX3", artisanDao.toString())
 
                 Log.i("ArtisanSync", "Successfully synced Artisan data")
+
+                runBlocking {
+                    ProductSync.sync(context, mCgaId)
+                }
+                numInProgress--
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("ListAllArtisan", "failed to do POST request to database" + listAllArtisansURL)
-            }
-        })
-    }
-
-    private fun uploadNewArtisans(context : Context) {
-        launch {
-            val newArtisans = getNewArtisans(context)
-            for (artisan in newArtisans) {
-                uploadSingleArtisan(context, artisan)
-            }
-            val updateArtisans = getUpdateArtisans(context)
-            for (artisan in updateArtisans) {
-                updateSingleArtisan(context, artisan)
-            }
-        }
-    }
-
-    private suspend fun getNewArtisans(context : Context) = withContext(Dispatchers.IO) {
-        AppDatabase.getDatabase(context).artisanDao().getAllBySyncState(SYNC_NEW)
-    }
-
-    private suspend fun getUpdateArtisans(context : Context) = withContext(Dispatchers.IO) {
-        AppDatabase.getDatabase(context).artisanDao().getAllBySyncState(SYNC_EDIT)
-    }
-
-
-    private suspend fun setSyncedState(artisan: Artisan, context : Context) = withContext(Dispatchers.IO) {
-        //AppDatabase.getDatabase(context).artisanDao().setSyncedState(artisan.artisanId, SYNCED)
-        AppDatabase.getDatabase(context).artisanDao().delete(artisan)
-    }
-
-    fun updateArtisanImage(context : Context, artisan: Artisan) {
-        val sourceFile: File = context.getFileStreamPath(ImageStorageProvider.ARTISAN_IMAGE_PREFIX + artisan.picURL)
-        //val sourceFile = photoFile!!
-        Log.d("EditArtisan", "submitPictureToDB file" + sourceFile + " : " + sourceFile!!.exists())
-
-        val MEDIA_TYPE = MediaType.parse("image/png")
-
-        val requestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("artisanId", artisan.artisanId)
-                .addFormDataPart("image", "editProfilePic.png", RequestBody.create(MEDIA_TYPE, sourceFile))
-                .build()
-
-        val request = Request.Builder()
-                .url(updateArtisanURL)
-                .post(requestBody)
-                .build()
-
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object: Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                Log.d("EditArtisan", body)
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("EditArtisan", "failed to do POST request to database" + updateArtisanURL)
-            }
-        })
-    }
-
-    private fun uploadArtisanImage(context : Context, artisan: Artisan) {
-        val sourceFile: File = context.getFileStreamPath(ImageStorageProvider.ARTISAN_IMAGE_PREFIX + artisan.picURL)
-
-        val MEDIA_TYPE = MediaType.parse("image/png")
-
-        val requestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("artisanId", artisan.artisanId)
-                .addFormDataPart("image", "profile.png", RequestBody.create(MEDIA_TYPE, sourceFile))
-                .build()
-
-        val request = Request.Builder()
-                .url(artisanPicURL)
-                .post(requestBody)
-                .build()
-
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object: Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                Log.d("AddArtisan", body)
-                launch {
-                    setSyncedState(artisan, context)
-                }
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("AddArtisan", "failed to do POST request to database$artisanPicURL")
-                Log.e("AddArtisan", e!!.message)
+                numInProgress--
             }
         })
     }
 
     private fun uploadSingleArtisan(context: Context, artisan: Artisan) {
+        numInProgress++
 
         val requestBody = FormBody.Builder().add("cgoId", artisan.cgoId)
                 .add("bio", artisan.bio)
@@ -228,25 +130,27 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
+                launch {
+                    setSyncedState(artisan, context)
+                }
                 artisan.artisanId = body!!.substring(1, body!!.length - 1)
                 Log.i("AddArtisan", "success $body")
                 if (artisan.picURL != "Not set") {
                     uploadArtisanImage(context, artisan)
-                }
-                else {
-                    launch {
-                        setSyncedState(artisan, context)
-                    }
+                } else {
+                    numInProgress--
                 }
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("AddArtisan", "failed to do POST request to database $addArtisanURL")
+                numInProgress--
             }
         })
     }
 
     private fun updateSingleArtisan(context: Context, artisan: Artisan) {
+        numInProgress++
         var updatePic = false
 
         val requestBody = FormBody.Builder().add("artisanId", artisan.artisanId)
@@ -279,14 +183,142 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
                 if (updatePic) {
                     updateArtisanImage(context, artisan)
+                } else {
+                    numInProgress--
                 }
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("EditArtisan", "failed to do POST request to database" + editArtisanURL)
+                numInProgress--
             }
         })
 
+    }
+
+    fun updateArtisanImage(context : Context, artisan: Artisan) {
+        val sourceFile: File = context.getFileStreamPath(ImageStorageProvider.ARTISAN_IMAGE_PREFIX + artisan.picURL)
+        //val sourceFile = photoFile!!
+        Log.d("EditArtisan", "submitPictureToDB file" + sourceFile + " : " + sourceFile!!.exists())
+
+        val MEDIA_TYPE = MediaType.parse("image/png")
+
+        val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("artisanId", artisan.artisanId)
+                .addFormDataPart("image", "editProfilePic.png", RequestBody.create(MEDIA_TYPE, sourceFile))
+                .build()
+
+        val request = Request.Builder()
+                .url(updateArtisanURL)
+                .post(requestBody)
+                .build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object: Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()?.string()
+                Log.d("EditArtisan", body)
+                numInProgress--
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.e("EditArtisan", "failed to do POST request to database" + updateArtisanURL)
+                numInProgress--
+            }
+        })
+    }
+
+    private fun uploadArtisanImage(context : Context, artisan: Artisan) {
+        val sourceFile: File = context.getFileStreamPath(ImageStorageProvider.ARTISAN_IMAGE_PREFIX + artisan.picURL)
+
+        val MEDIA_TYPE = MediaType.parse("image/png")
+
+        val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("artisanId", artisan.artisanId)
+                .addFormDataPart("image", "profile.png", RequestBody.create(MEDIA_TYPE, sourceFile))
+                .build()
+
+        val request = Request.Builder()
+                .url(artisanPicURL)
+                .post(requestBody)
+                .build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object: Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()?.string()
+                Log.d("AddArtisan", body)
+                numInProgress--
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.e("AddArtisan", "failed to do POST request to database$artisanPicURL")
+                Log.e("AddArtisan", e!!.message)
+                numInProgress--
+            }
+        })
+    }
+
+    fun addArtisan(context : Context, artisan : Artisan, photoFile: File? = null) {
+        job = Job()
+        stageImageUpdate(context, artisan, photoFile)
+
+        launch {
+            addArtisanHelper(context, artisan)
+        }
+
+    }
+
+    fun updateArtisan(context : Context, artisan : Artisan, newPhoto: File? = null) {
+        job = Job()
+        stageImageUpdate(context, artisan, newPhoto)
+        artisan.synced = SYNC_EDIT
+
+        launch {
+            updateArtisanHelper(context, artisan)
+        }
+
+    }
+
+
+    private fun stageImageUpdate(context : Context, artisan : Artisan, photoFile: File? = null) {
+        if (photoFile != null) {
+            val sourceFile = photoFile!!
+            var fileName = artisan.artisanId + ".png"
+            val bitmap = BitmapFactory.decodeFile(sourceFile.absolutePath)
+            var isp = ImageStorageProvider(context)
+            //isp.deleteBitmap(fileName)
+            isp.saveBitmap(bitmap, ImageStorageProvider.ARTISAN_IMAGE_PREFIX + fileName)
+            artisan.picURL = fileName
+        }
+    }
+
+
+    // --------------------------------------
+    // DATABASE HELPERS
+    // --------------------------------------
+    private suspend fun addArtisanHelper(context : Context, artisan : Artisan) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).artisanDao().insert(artisan)
+    }
+
+    private suspend fun updateArtisanHelper(context : Context, artisan : Artisan) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).artisanDao().update(artisan)
+    }
+
+    private suspend fun getNewArtisans(context : Context) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).artisanDao().getAllBySyncState(SYNC_NEW)
+    }
+
+    private suspend fun getUpdateArtisans(context : Context) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).artisanDao().getAllBySyncState(SYNC_EDIT)
+    }
+
+
+    private suspend fun setSyncedState(artisan: Artisan, context : Context) = withContext(Dispatchers.IO) {
+        //AppDatabase.getDatabase(context).artisanDao().setSyncedState(artisan.artisanId, SYNCED)
+        AppDatabase.getDatabase(context).artisanDao().delete(artisan)
     }
 
 }

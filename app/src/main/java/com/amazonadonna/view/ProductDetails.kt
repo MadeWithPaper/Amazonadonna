@@ -3,9 +3,10 @@ package com.amazonadonna.view
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
-import com.amazonadonna.view.R
 import kotlinx.android.synthetic.main.activity_product_details.*
 
 class ProductDetails : AppCompatActivity() {
@@ -17,6 +18,7 @@ class ProductDetails : AppCompatActivity() {
         setContentView(R.layout.activity_product_details)
 
         artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        Log.d("Productdetails", artisan.artisanId)
 
         val product = intent.extras?.getSerializable("product") as Product
 
@@ -25,14 +27,17 @@ class ProductDetails : AppCompatActivity() {
         val categoryString = product.category + " > " + product.subCategory + " > " + product.specificCategory
         val priceString = "$ " + product.price.toString()
         val productionTimeString = this.resources.getString(R.string.product_detail_usually_ships_in) + product.productionTime + this.resources.getString(R.string.utility_days)
-        val productQuantityString =product.itemQuantity.toString() + this.resources.getString(R.string.number_in_stock)
+        val productQuantityString = product.itemQuantity.toString() + this.resources.getString(R.string.number_in_stock)
         itemDetail_categories.text = categoryString
         itemDetail_ProductNameTF.text = product.itemName
         itemDetail_itemPrice.text = priceString
         itemDetail_itemDescription.text = product.description
-        itemDetail_shippingOption.text = product.ShippingOption
+        itemDetail_shippingOption.text = product.shippingOption
         itemDetail_ItemQuantity.text = productQuantityString
         itemDetail_itemTime.text = productionTimeString
+
+        var isp = ImageStorageProvider(applicationContext)
+        isp.loadImageIntoUI(product.pictureURLs[0], itemDetail_Image, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
 
         //TODO edit items
         itemDetail_edit.setOnClickListener {

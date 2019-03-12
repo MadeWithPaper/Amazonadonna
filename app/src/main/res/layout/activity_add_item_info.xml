@@ -34,85 +34,86 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="50dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="30dp"
         android:text="@string/continue_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductShippingSpinner" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/addItemInfo_ProductNameTF"
-        android:layout_width="0dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:ems="10"
+        android:textSize="20sp"
+        android:textColor="#000"
         android:hint="@string/item_info_product_name_tv_hint"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addItemProgress_2" />
 
     <EditText
         android:id="@+id/addItemInfo_ProductDescriptionTF"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="20dp"
         android:ems="10"
         android:hint="@string/item_info_product_desc_tv_hint"
         android:imeOptions="actionNext"
         android:inputType="textCapSentences|textMultiLine"
+        android:textColor="#000"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductNameTF" />
+        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductionTimeTF" />
 
     <EditText
         android:id="@+id/addItemInfo_ProductPriceTF"
-        android:layout_width="0dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:ems="10"
         android:hint="@string/item_info_product_price_tv_hint"
         android:inputType="numberDecimal"
+        android:textColor="#000"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductDescriptionTF" />
+        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductNameTF" />
 
     <EditText
         android:id="@+id/addItemInfo_ProductQuantityTF"
-        android:layout_width="0dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:ems="10"
         android:hint="@string/item_info_product_quantity_tv_hint"
         android:inputType="number"
+        android:textColor="#000"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductPriceTF" />
 
     <EditText
         android:id="@+id/addItemInfo_ProductionTimeTF"
-        android:layout_width="0dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/item_info_product_production_tv_hint"
         android:imeOptions="actionDone"
         android:inputType="time"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="#000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/addItemInfo_ProductProductionTimeTV"
         app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductQuantityTF" />
 
     <Spinner
@@ -120,11 +121,14 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/addItemInfo_continueButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductionTimeTF" />
+        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_shippingTV"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/addItemInfo_ToolBarText"
@@ -139,5 +143,92 @@
         app:layout_constraintEnd_toEndOf="@+id/addItemInfo_toolBar"
         app:layout_constraintStart_toStartOf="@+id/addItemInfo_toolBar"
         app:layout_constraintTop_toTopOf="@+id/addItemInfo_toolBar" />
+
+    <TextView
+        android:id="@+id/addItemInfo_ProductNameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:text="@string/item_info_product_name_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addItemProgress_2" />
+
+    <TextView
+        android:id="@+id/addItemInfo_ProductDescriptionTV"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/item_info_product_desc_tv"
+        android:textColor="#000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductProductionTimeTV" />
+
+    <TextView
+        android:id="@+id/addItemInfo_ProductPriceTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/item_info_product_price_tv"
+        android:textColor="#000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductNameTV" />
+
+    <TextView
+        android:id="@+id/addItemInfo_ProductQuantityTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/item_info_product_quantity_tv"
+        android:textColor="#000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductPriceTV" />
+
+    <TextView
+        android:id="@+id/addItemInfo_ProductProductionTimeTV"
+        android:layout_width="177dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/item_info_product_production_tv"
+        android:textColor="#000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductQuantityTV" />
+
+    <TextView
+        android:id="@+id/addItemInfo_shippingTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/item_info_shipping_method"
+        android:textColor="#000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductDescriptionTF" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/utility_days"
+        android:textColor="#000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/addItemInfo_ProductionTimeTF"
+        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductQuantityTF" />
 
 </android.support.constraint.ConstraintLayout>

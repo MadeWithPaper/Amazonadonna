@@ -8,6 +8,7 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import com.amazonadonna.view.R
@@ -19,11 +20,17 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_artisan_item_list.*
 import kotlinx.android.synthetic.main.list_all_artisans.*
+import kotlinx.coroutines.*
 import okhttp3.*
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.CoroutineContext
 
-class ArtisanItemList : AppCompatActivity() {
+class ArtisanItemList : AppCompatActivity() , CoroutineScope {
+    lateinit var job: Job
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     lateinit var artisan : Artisan
     private val listAllItemsURL = "https://99956e2a.ngrok.io/item/listAllForArtisan"
@@ -77,7 +84,23 @@ class ArtisanItemList : AppCompatActivity() {
         oldFilteredItems.clear()
 
         super.onStart()
-        fetchJSON()
+
+        job = Job()
+
+        launch {
+            val dbProducts: List<Product> = getProductsFromDb()
+            originalItems.addAll(dbProducts)
+            oldFilteredItems.addAll(dbProducts)
+            filteredItems.addAll(dbProducts)
+            runOnUiThread {
+                artisanItemList_recyclerView.adapter = ListItemsAdapter(applicationContext, oldFilteredItems, artisan)
+            }
+        }
+        //fetchJSON()
+    }
+
+    private suspend fun getProductsFromDb() = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(application).productDao().getAllByArtisanId(artisan.artisanId)
     }
 
     private fun search(query: String): Completable = Completable.create {
