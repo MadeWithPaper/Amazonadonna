@@ -146,5 +146,7 @@
     <string name="item_info_product_production_tv">Tiempo de producción del producto:</string>
     <string name="item_info_shipping_method">Seleccione el método de envío a continuación:</string>
     <string name="payout_balance">Saldo actual:</string>
+    <string name="view_report_save_report_button">Guardar reporte</string>
+    <string name="view_report_toolbar_text">Ver informe generado</string>
 
 </resources>

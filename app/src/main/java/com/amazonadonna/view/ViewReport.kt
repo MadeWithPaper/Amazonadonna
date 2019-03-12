@@ -1,5 +1,6 @@
 package com.amazonadonna.view
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.graphics.pdf.PdfRenderer
@@ -21,6 +22,10 @@ class ViewReport : AppCompatActivity() {
         setContentView(R.layout.activity_view_report)
         docName = intent.extras!!.getString("reportName")!!
         showPage()
+
+        viewReport_save.setOnClickListener {
+            saveReport()
+        }
     }
 
     private fun showPage() {
@@ -57,5 +62,13 @@ class ViewReport : AppCompatActivity() {
             pdfRenderer!!.close()
             fileDescriptor!!.close()
         }
+    }
+
+    private fun saveReport() {
+        //TODO save report to storage
+        val intent = Intent(this, Reports::class.java)
+        //intent.putExtra("reportName", pdfName)
+        startActivity(intent)
+        finish()
     }
 }

@@ -141,25 +141,20 @@ class Reports : AppCompatActivity(), CoroutineScope {
         return true
     }
 
+    //TODO optimization pdf scaling
     private fun generatePerformanceReport() {
         // create a new document
         val document = PdfDocument()
         // crate a page description
-//        val size = Point()
-//        val screen = windowManager.defaultDisplay.getSize(size)
-//        val screenWidth = size.x
-//        val screenHeight = size.y - 200
         val pageInfo = PdfDocument.PageInfo.Builder(300, 400, 0).create()
         // start a page
         val page = document.startPage(pageInfo)
         val canvas = page.canvas
         val paint = Paint()
         paint.color = Color.BLACK
-        //top left corner is 1, 10
-        //bottom right corner is 560, 830
-        canvas.drawText("test1", 50f, 50f, paint)
-        canvas.drawText("test2", 1f, 10f, paint)
-        canvas.drawText("test3", 260f, 400f, paint)
+        //title
+        canvas.drawText("Performance Report", 100f, 10f, paint)
+       // canvas.drawText("test3", 260f, 400f, paint)
 
         // finish the page
         document.finishPage(page)
