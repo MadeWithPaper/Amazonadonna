@@ -149,7 +149,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
             i++
         }
 
-        launch {
+        runBlocking {
             addProductHelper(context, product)
         }
 
@@ -232,7 +232,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                launch {
+                runBlocking {
                     setSyncedState(product, context)
                 }
                 product.itemId = body!!.substring(1, body!!.length - 1)
@@ -293,7 +293,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
                 // Done uploading last image, so now get rid of the temp product
                 Log.i(TAG, "Am I done uploading images? " + product.pictureURLs[index + 1])
                 if (index == product.pictureURLs.size - 1 || product.pictureURLs[index + 1] == "undefined" || product.pictureURLs[index + 1] == "Not set") {
-                    launch {
+                    runBlocking {
                        // Log.i(TAG, "Deleting temp product")
                         //setSyncedState(product, context)
                         downloadProducts(context)
