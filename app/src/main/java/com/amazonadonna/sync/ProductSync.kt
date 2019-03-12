@@ -33,6 +33,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
     }
 
     private fun uploadProducts(context: Context) {
+        numInProgress++
         runBlocking {
             val newProducts = getNewProducts(context)
             for (product in newProducts) {
@@ -48,6 +49,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
             downloadProducts(context)
         }
         Log.i(TAG, "Done syncing!")
+        numInProgress--
     }
 
     private fun downloadProducts(context: Context) {
@@ -61,8 +63,8 @@ object ProductSync: Synchronizer(), CoroutineScope {
             }
 
             OrderSync.sync(context, ArtisanSync.mCgaId)
-            numInProgress--
         }
+        numInProgress--
     }
 
     fun updateProduct(context : Context, product: Product, artisan: Artisan, photos: ArrayList<File?>) {
@@ -199,6 +201,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
                         uploadProductImage(context, product, i)
                     }
                 }
+                numInProgress--
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
@@ -238,10 +241,12 @@ object ProductSync: Synchronizer(), CoroutineScope {
                 product.itemId = body!!.substring(1, body!!.length - 1)
                 Log.i(TAG, "success $body")
 
-                var i = 0
-                for (picURL in product.pictureURLs) {
-                    if (picURL != "Not set" && picURL != "undefined") {
-                        uploadProductImage(context, product, i++)
+                runBlocking {
+                    var i = 0
+                    for (picURL in product.pictureURLs) {
+                        if (picURL != "Not set" && picURL != "undefined") {
+                            uploadProductImage(context, product, i++)
+                        }
                     }
                 }
                 numInProgress--
@@ -292,13 +297,13 @@ object ProductSync: Synchronizer(), CoroutineScope {
 
                 // Done uploading last image, so now get rid of the temp product
                 Log.i(TAG, "Am I done uploading images? " + product.pictureURLs[index + 1])
-                if (index == product.pictureURLs.size - 1 || product.pictureURLs[index + 1] == "undefined" || product.pictureURLs[index + 1] == "Not set") {
-                    runBlocking {
+                //if (index == product.pictureURLs.size - 1 || product.pictureURLs[index + 1] == "undefined" || product.pictureURLs[index + 1] == "Not set") {
+                 //   runBlocking {
                        // Log.i(TAG, "Deleting temp product")
                         //setSyncedState(product, context)
-                        downloadProducts(context)
-                    }
-                }
+                        //downloadProducts(context)
+                   // }
+               // }
                 numInProgress--
             }
 

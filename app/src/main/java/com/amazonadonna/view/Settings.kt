@@ -93,7 +93,7 @@ class Settings : AppCompatActivity(), CoroutineScope {
             runOnUiThread {
                 alertDialog = AlertDialog.Builder(this@Settings).create()
                 alertDialog.setTitle("Synchronizing Account")
-                alertDialog.setMessage("Please wait while your account data is synchronized...")
+                alertDialog.setMessage("Please wait while your account data is synchronized. Image uploads may take a few minutes...")
                 alertDialog.show()
             }
 
