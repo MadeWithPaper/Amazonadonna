@@ -17,6 +17,8 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.view.LayoutInflater
+import android.widget.ImageView
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.sync.ProductSync
 import java.io.File
@@ -61,6 +63,29 @@ class AddItemReview : AppCompatActivity() {
         addItemReview_ItemQuantity.text = productQuantityString
         addItemReview_itemTime.text = productionTimeString
 
+        var isp = ImageStorageProvider(applicationContext)
+        val inflater = LayoutInflater.from(this)
+
+        for (i in 0..5) {
+            val pic = product.pictureURLs[i]
+            val view = inflater.inflate(R.layout.gallery_item, gallery, false)
+            val imageView = view.findViewById<ImageView>(R.id.imageView_ProductDetails)
+                Log.d("ProductDetails", "adding url: "+pic)
+
+            // If in edit mode with no new picture selected for i and existing one avilable, use existing pic
+            if (editMode && photoFilesArr[i] == null && pic != "Not set" && pic != "undefined") {
+                isp.loadImageIntoUI(pic, imageView, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+                gallery.addView(view)
+            }
+            // else if there is a photo defined at index i, load it
+            else if (photoFilesArr[i] != null){
+                val bitmap = BitmapFactory.decodeFile(photoFilesArr[i]!!.path)
+                imageView.setImageBitmap(bitmap)
+                gallery.addView(view)
+            }
+        }
+
+        /*
         if (editMode && (photoFilesArr.size == 0 || photoFilesArr[0] == null)) {
             var isp = ImageStorageProvider(applicationContext)
             isp.loadImageIntoUI(product.pic0URL, addItemReview_Image, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
@@ -68,7 +93,7 @@ class AddItemReview : AppCompatActivity() {
         else {
             val bitmap = BitmapFactory.decodeFile(photoFilesArr[0]!!.path)
             addItemReview_Image.setImageBitmap(bitmap)
-        }
+        }*/
 
         addItemReview_continueButton.setOnClickListener {
             reviewDone(artisan, product, photoFilesArr)

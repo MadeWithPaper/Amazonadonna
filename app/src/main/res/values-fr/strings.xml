@@ -104,6 +104,7 @@
     <string name="order_id"> </string>
     <string name="order_shipped">Expédié:</string>
     <string name="items_listed">Articles listés:</string>
+    <string name="update_shipped">Mettre à jour le statut expédié</string>
 
     <!-- Payout Signature -->
     <string name="signature_clear_button">Nettoyer</string>
