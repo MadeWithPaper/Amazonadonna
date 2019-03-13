@@ -4,11 +4,13 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.widget.ImageView
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import kotlinx.android.synthetic.main.activity_product_details.*
+import kotlinx.android.synthetic.main.gallery_item.*
 
 class ProductDetails : AppCompatActivity() {
 
@@ -39,16 +41,18 @@ class ProductDetails : AppCompatActivity() {
 
 
         var isp = ImageStorageProvider(applicationContext)
+        val inflater = LayoutInflater.from(this)
 
         for (pic in product.pictureURLs) {
-            val imageView = ImageView(this);
+            val view = inflater.inflate(R.layout.gallery_item, gallery, false)
+            val imageView = view.findViewById<ImageView>(R.id.imageView_ProductDetails)
 
             if (pic != "Not set" && pic != "undefined") {
+                Log.d("ProductDetails", "adding url: "+pic)
                 isp.loadImageIntoUI(pic, imageView, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
-                gallery.addView(imageView)
+                gallery.addView(view)
             }
         }
-//        isp.loadImageIntoUI(product.pictureURLs[0], itemDetail_Image, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
 
         //TODO edit items
         itemDetail_edit.setOnClickListener {
