@@ -64,7 +64,7 @@ class HomeScreen : AppCompatActivity() {
             runOnUiThread {
                 alertDialog = AlertDialog.Builder(this@HomeScreen).create()
                 alertDialog.setTitle("Synchronizing Account")
-                alertDialog.setMessage("Please wait while your account data is synchronized...")
+                alertDialog.setMessage("Please wait while your account data is synchronized. Image uploads may take a few minutes...")
                 alertDialog.show()
                 Log.i("HomeScreen", "loading start, show dialog")
             }

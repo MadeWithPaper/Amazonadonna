@@ -59,13 +59,13 @@ router.post('/add', (req: Request, res: Response) => {
             res.json(id.toString())
             const d = new Date(0)
             d.setUTCMilliseconds(req.body.date)
-            /*sendText(
+            sendText(
                 '19169903748',
                 req.body.artisanId,
                 req.body.payoutId,
                 d.toLocaleDateString(),
                 req.body.amount
-            )*/
+            )
         }
     })
 })

@@ -26,9 +26,7 @@ import kotlinx.android.synthetic.main.activity_add_artisan.*
 import kotlinx.android.synthetic.main.activity_artisan_profile.*
 import kotlinx.android.synthetic.main.activity_edit_artisan.*
 import okhttp3.*
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.IOException
+import java.io.*
 
 class EditArtisan : AppCompatActivity() {
     private var photoFile: File? = null
@@ -117,6 +115,8 @@ class EditArtisan : AppCompatActivity() {
     private fun createImageFile(data: Intent?) {
         var imagePath: String? = null
         val uri = data!!.data
+        val w = 331
+        val h = 273
         if (DocumentsContract.isDocumentUri(this, uri)){
             val docId = DocumentsContract.getDocumentId(uri)
             if ("com.android.providers.media.documents" == uri.authority){
@@ -137,6 +137,28 @@ class EditArtisan : AppCompatActivity() {
         }
 
         photoFile = File(imagePath)
+
+        //pre-scaling bits
+        val uri_test = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
+        val bm = loadScaledBitmap(uri_test, w, h)
+        val stream = ByteArrayOutputStream()
+        bm!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        var byteArray = stream.toByteArray()
+        //byteArray = ByteArray(photoFile!!.length().toInt())
+
+        try {
+
+
+            //convert array of bytes into file
+            val fileOuputStream = FileOutputStream(photoFile)
+            fileOuputStream.write(byteArray)
+            fileOuputStream.close()
+            Log.d("SKETIT", "lol")
+
+            println("Done")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun imagePath(uri: Uri?, selection: String?): String {

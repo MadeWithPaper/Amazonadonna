@@ -13,11 +13,11 @@ abstract class Synchronizer : CoroutineScope {
         const val SYNC_NEW = 1
         const val SYNC_EDIT = 2
         const val SYNCED = 0
+        var numInProgress: Int = 0
     }
 
     lateinit var job: Job
     lateinit var mCgaId: String
-    var numInProgress: Int = 0
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
