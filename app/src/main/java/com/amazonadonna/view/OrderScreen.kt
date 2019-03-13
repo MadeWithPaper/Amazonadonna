@@ -2,6 +2,7 @@ package com.amazonadonna.view
 
 import android.arch.persistence.room.Room
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -11,7 +12,7 @@ import android.widget.TextView
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.Order
 import com.amazonadonna.model.Product
-import com.amazonadonna.view.R
+import com.amazonadonna.sync.OrderSync
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_order_screen.*
@@ -21,6 +22,7 @@ import java.io.IOException
 class OrderScreen : AppCompatActivity() {
     var orderIdString = ""
     val getItemURL = "https://99956e2a.ngrok.io/order/getItems"
+    private lateinit var alertDialog : AlertDialog
     lateinit var order : Order
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +35,7 @@ class OrderScreen : AppCompatActivity() {
 
         //TODO fill in editOrder button onClick listener
         val editOrder: Button = findViewById(R.id.orderScreen_editOrder)
+        editOrder.setOnClickListener { updateShippingStatus() }
 
         // TODO implement a fetch of order data once backend route/database are configured
         orderScreen_recyclerView.layoutManager = LinearLayoutManager(this)
@@ -50,6 +53,22 @@ class OrderScreen : AppCompatActivity() {
             orderScreen_recyclerView.adapter = ListItemsAdapter(applicationContext, order.products)
         }
         //fetchJSON()
+    }
+
+    private fun updateShippingStatus() {
+        var shippedStatus = order.shippedStatus
+        order.shippedStatus = !shippedStatus
+        OrderSync.updateOrder(applicationContext, order)
+        runOnUiThread {
+            populateSelectedOrder(order)
+        }
+        runOnUiThread {
+            alertDialog = AlertDialog.Builder(this@OrderScreen).create()
+            alertDialog.setTitle("Success!")
+            alertDialog.setMessage("Updated shipped status to: "+order.shippedStatus.toString())
+            alertDialog.show()
+            Log.i("OrderScreen", "showing alert")
+        }
     }
 
     //TODO update "artisanDao" to be productDaogi
