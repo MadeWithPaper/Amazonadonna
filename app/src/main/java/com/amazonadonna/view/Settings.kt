@@ -61,28 +61,14 @@ class Settings : AppCompatActivity(), CoroutineScope {
 
         syncDataButton.setOnClickListener {
             syncData()
-           // val intent = Intent(this, HomeScreen::class.java)
-           // startActivity(intent)
-           // finish()
         }
     }
 
     private fun updateSetting(){
-        //change language
-        Log.d("HomeScreen", "old locale ${Locale.getDefault()}")
-        //val locale = Locale(languageSelected)
-       // Locale.setDefault(locale)
-        Log.d("HomeScreen", "new locale ${Locale.getDefault()}")
-        //back to home screen
         val intent = Intent(this, HomeScreen::class.java)
-        Log.d("Settings", "new language picked: " + languageSelected)
-        intent.putExtra("languageSelected", languageSelected)
-        intent.putExtra("cgaId", cgaID)
-       // val res = this.resources
-       // res.configuration.setLocale(locale)
-
-       // recreate()
+       // intent.putExtra("cgaId", cgaID)
         startActivity(intent)
+        finish()
     }
 
     private fun syncData() {
@@ -93,7 +79,7 @@ class Settings : AppCompatActivity(), CoroutineScope {
             runOnUiThread {
                 alertDialog = AlertDialog.Builder(this@Settings).create()
                 alertDialog.setTitle("Synchronizing Account")
-                alertDialog.setMessage("Please wait while your account data is synchronized...")
+                alertDialog.setMessage("Please wait while your account data is synchronized. Image uploads may take a few minutes...")
                 alertDialog.show()
             }
 
@@ -168,5 +154,6 @@ class Settings : AppCompatActivity(), CoroutineScope {
     private fun cancelSetting() {
         val intent = Intent(this, HomeScreen::class.java)
         startActivity(intent)
+        finish()
     }
 }

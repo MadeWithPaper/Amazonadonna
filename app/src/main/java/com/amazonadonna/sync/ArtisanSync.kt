@@ -93,7 +93,9 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
                 Log.i("ArtisanSync", "Successfully synced Artisan data")
 
-                ProductSync.sync(context, mCgaId)
+                runBlocking {
+                    ProductSync.sync(context, mCgaId)
+                }
                 numInProgress--
             }
 

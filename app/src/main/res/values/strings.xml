@@ -48,11 +48,11 @@
     <string name="item_info_product_quantity_tv_hint">Product Quantity</string>
     <string name="item_info_product_production_tv_hint">Days</string>
     <string name="item_info_product_toolbar_text">Item Info</string>
-    <string name="item_info_product_name_tv">Product Name: </string>
-    <string name="item_info_product_desc_tv">Product Description: </string>
-    <string name="item_info_product_price_tv">Product Price ($): </string>
-    <string name="item_info_product_quantity_tv">Product Quantity: </string>
-    <string name="item_info_product_production_tv">Product Production Time: </string>
+    <string name="item_info_product_name_tv">Name: </string>
+    <string name="item_info_product_desc_tv">Description: </string>
+    <string name="item_info_product_price_tv">Price ($): </string>
+    <string name="item_info_product_quantity_tv">Quantity: </string>
+    <string name="item_info_product_production_tv">Production Time: </string>
     <string name="item_info_shipping_method">Select Shipping Method Below: </string>
 
     <!-- Add Item Review -->
@@ -79,7 +79,7 @@
 
     <!-- Home Screen Strings -->
     <string name="homeScreenWelcome">Welcome</string>
-    <string name="homeScreenPlaceHoldercgo">CGO 0</string>
+    <string name="homeScreenPlaceHoldercgo">CGA 0</string>
 
     <!-- Add Item Info -->
     <string name="add_item_info_shipping_warning">Please Select a Shipping Method.</string>
@@ -138,7 +138,7 @@
     <string name="report_generate_button">Generate Report</string>
     <string name="report_select_all">Select All</string>
     <string name="report_select_none">Select None</string>
-    <string name="view_report_save_report_button">Save Report</string>
+    <string name="view_report_done_button">Done</string>
     <string name="view_report_toolbar_text">View Generated Report</string>
 
     <!-- Utility Strings -->

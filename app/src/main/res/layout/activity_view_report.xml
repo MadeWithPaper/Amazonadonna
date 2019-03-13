@@ -35,7 +35,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="8dp"
         android:background="@color/colorGreen"
-        android:text="@string/view_report_save_report_button"
+        android:text="@string/view_report_done_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
