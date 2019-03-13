@@ -106,7 +106,7 @@
     <string name="order_id"> </string>
     <string name="order_shipped">Transported:</string>
     <string name="items_listed">Artículos enumerados:</string>
-    <string name="update_shipped">Réviser</string>
+    <string name="update_shipped">Actualizar estado enviado</string>
 
     <!-- Payout Signature -->
     <string name="signature_clear_button">Limpiar</string>

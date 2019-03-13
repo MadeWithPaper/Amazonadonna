@@ -2,6 +2,7 @@ package com.amazonadonna.view
 
 import android.arch.persistence.room.Room
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -21,7 +22,7 @@ import java.io.IOException
 class OrderScreen : AppCompatActivity() {
     var orderIdString = ""
     val getItemURL = "https://99956e2a.ngrok.io/order/getItems"
-    val updateShippedStatusURL = "https://99956e2a.ngrok.io/order/setShippedStatus"
+    private lateinit var alertDialog : AlertDialog
     lateinit var order : Order
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +61,13 @@ class OrderScreen : AppCompatActivity() {
         OrderSync.updateOrder(applicationContext, order)
         runOnUiThread {
             populateSelectedOrder(order)
+        }
+        runOnUiThread {
+            alertDialog = AlertDialog.Builder(this@OrderScreen).create()
+            alertDialog.setTitle("Success!")
+            alertDialog.setMessage("Updated shipped status to: "+order.shippedStatus.toString())
+            alertDialog.show()
+            Log.i("OrderScreen", "showing alert")
         }
     }
 

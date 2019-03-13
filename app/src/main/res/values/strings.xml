@@ -111,7 +111,7 @@
     <string name="order_id"> </string>
     <string name="order_shipped">Shipped: </string>
     <string name="items_listed">Items listed: </string>
-    <string name="update_shipped">Update</string>
+    <string name="update_shipped">Update Shipped Status</string>
 
     <!-- Payout Signature -->
     <string name="signature_clear_button">Clear</string>
