@@ -2,6 +2,7 @@ package com.amazonadonna.view
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Point
@@ -24,6 +25,9 @@ import kotlin.coroutines.CoroutineContext
 import android.graphics.pdf.PdfDocument
 import kotlinx.android.synthetic.main.activity_view_report.*
 import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.EnumSet.range
 
 
 class Reports : AppCompatActivity(), CoroutineScope {
@@ -123,12 +127,11 @@ class Reports : AppCompatActivity(), CoroutineScope {
         }
 
         when (reportType) {
-            "Performance" -> generatePerformanceReport()
+            "Performance" -> generatePerformanceReport(selectedTargets)
+            "Account Summary" -> generateSummaryReport(selectedTargets)
+            "Account Payables" -> generatePayablesReport(selectedTargets)
         }
-        //Performance report
-        //Account Summary report
-        //Account Payables report
-
+        Log.i(TAG, "generated $reportType")
         Log.i(TAG, "selected list: $selectedTargets")
     }
 
@@ -142,24 +145,37 @@ class Reports : AppCompatActivity(), CoroutineScope {
     }
 
     //TODO optimization pdf scaling
-    private fun generatePerformanceReport() {
+//    Artisans/Communities Performance/Stats/Transaction History Report
+    private fun generatePerformanceReport(selectedTargets : MutableList<ReportTarget>) {
         // create a new document
         val document = PdfDocument()
         // crate a page description
-        val pageInfo = PdfDocument.PageInfo.Builder(300, 400, 0).create()
-        // start a page
-        val page = document.startPage(pageInfo)
-        val canvas = page.canvas
-        val paint = Paint()
-        paint.color = Color.BLACK
-        //title
-        canvas.drawText("Performance Report", 100f, 10f, paint)
-       // canvas.drawText("test3", 260f, 400f, paint)
+        var pageNum = 1
+        selectedTargets.forEach{
+            //Log.i(TAG, "index $pageNum, ${selectedTargets.size}")
+            val currArtisan = it.artisan
+            val pageInfo = PdfDocument.PageInfo.Builder(300, 400, pageNum).create()
+            // start a page
+            val page = document.startPage(pageInfo)
+            val canvas = page.canvas
+            val paint = Paint()
+            paint.color = Color.BLACK
+            //title
+            canvas.drawText("Performance Report", 100f, 10f, paint)
+            //artisan info
+            canvas.drawText("Date: ${getCurrentDate("date")}", 0f, 25f, paint)
+            canvas.drawText("Artisan Name: ${currArtisan.artisanName}", 0f, 40f, paint)
+            canvas.drawText("Balance: $${currArtisan.balance}", 0f, 55f, paint)
+            canvas.drawText("Item Sold: ${(0..100).random()}", 0f, 70f, paint)
+            attachPayoutHistory(canvas)
+            //canvas.drawText("Payout History: ${currArtisan.artisanName}", 0f, 25f, paint)
 
-        // finish the page
-        document.finishPage(page)
-        //save pdf file
-        val pdfName = "test.pdf"
+            // finish the page
+            document.finishPage(page)
+            pageNum++
+        }
+            //save pdf file
+        val pdfName = "Performance_Report_${getCurrentDate("file")}.pdf"
         var fileOutputStream: FileOutputStream? = null
         try {
             fileOutputStream = openFileOutput(pdfName, Context.MODE_PRIVATE)
@@ -177,5 +193,107 @@ class Reports : AppCompatActivity(), CoroutineScope {
         intent.putExtra("reportName", pdfName)
         startActivity(intent)
         finish()
+    }
+    //    Artisans/Communities Accounting summary (units sold, $) / Financial Report
+    private fun generateSummaryReport(selectedTargets : MutableList<ReportTarget>) {
+        // create a new document
+        val document = PdfDocument()
+        // crate a page description
+        var pageNum = 1
+        selectedTargets.forEach{
+            //Log.i(TAG, "index $pageNum, ${selectedTargets.size}")
+            val currArtisan = it.artisan
+            val pageInfo = PdfDocument.PageInfo.Builder(300, 400, pageNum).create()
+            // start a page
+            val page = document.startPage(pageInfo)
+            val canvas = page.canvas
+            val paint = Paint()
+            paint.color = Color.BLACK
+            //title
+            canvas.drawText("Account Summary Report", 100f, 10f, paint)
+            //artisan info
+            canvas.drawText("Artisan Name: ${currArtisan.artisanName}", 0f, 25f, paint)
+            // finish the page
+            document.finishPage(page)
+            pageNum++
+        }
+        //save pdf file
+        val pdfName = "Account_Summary_Report_${getCurrentDate("file")}.pdf"
+        var fileOutputStream: FileOutputStream? = null
+        try {
+            fileOutputStream = openFileOutput(pdfName, Context.MODE_PRIVATE)
+            document.writeTo(fileOutputStream)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            fileOutputStream?.close()
+            document.close()
+        }
+
+        val intent = Intent(this, ViewReport::class.java)
+        intent.putExtra("reportName", pdfName)
+        startActivity(intent)
+        finish()
+    }
+
+    //    Artisans/Communities Account Payables/Receivables Report
+    private fun generatePayablesReport(selectedTargets : MutableList<ReportTarget>) {
+        // create a new document
+        val document = PdfDocument()
+        // crate a page description
+        var pageNum = 1
+        selectedTargets.forEach{
+            //Log.i(TAG, "index $pageNum, ${selectedTargets.size}")
+            val currArtisan = it.artisan
+            val pageInfo = PdfDocument.PageInfo.Builder(300, 400, pageNum).create()
+            // start a page
+            val page = document.startPage(pageInfo)
+            val canvas = page.canvas
+            val paint = Paint()
+            paint.color = Color.BLACK
+            //title
+            canvas.drawText("Account Payables Report", 100f, 10f, paint)
+            //artisan info
+            canvas.drawText("Artisan Name: ${currArtisan.artisanName}", 0f, 25f, paint)
+            // finish the page
+            document.finishPage(page)
+            pageNum++
+        }
+        //save pdf file
+        val pdfName = "Account_payables_Report_${getCurrentDate("file")}.pdf"
+        var fileOutputStream: FileOutputStream? = null
+        try {
+            fileOutputStream = openFileOutput(pdfName, Context.MODE_PRIVATE)
+            document.writeTo(fileOutputStream)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            fileOutputStream?.close()
+            document.close()
+        }
+
+        val intent = Intent(this, ViewReport::class.java)
+        intent.putExtra("reportName", pdfName)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun getCurrentDate(format : String) : String {
+        var dateFormat : SimpleDateFormat? = null
+        when (format){
+            "file" -> dateFormat = SimpleDateFormat("yyy_mm_dd_HHmmss", Locale.getDefault())
+            "date" -> dateFormat = SimpleDateFormat("dd-mm-yyyy", Locale.getDefault())
+        }
+        //val dateFormat = SimpleDateFormat("yyy_mm_dd_HHmmss", Locale.getDefault())
+        val date = Date()
+        return dateFormat!!.format(date)
+    }
+
+    private fun attachPayoutHistory(canvas: Canvas) {
+
     }
 }
