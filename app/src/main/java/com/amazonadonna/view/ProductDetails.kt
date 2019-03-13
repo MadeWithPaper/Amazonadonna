@@ -4,6 +4,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
@@ -36,8 +37,18 @@ class ProductDetails : AppCompatActivity() {
         itemDetail_ItemQuantity.text = productQuantityString
         itemDetail_itemTime.text = productionTimeString
 
+
         var isp = ImageStorageProvider(applicationContext)
-        isp.loadImageIntoUI(product.pictureURLs[0], itemDetail_Image, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+
+        for (pic in product.pictureURLs) {
+            val imageView = ImageView(this);
+
+            if (pic != "Not set" && pic != "undefined") {
+                isp.loadImageIntoUI(pic, imageView, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
+                gallery.addView(imageView)
+            }
+        }
+//        isp.loadImageIntoUI(product.pictureURLs[0], itemDetail_Image, ImageStorageProvider.ITEM_IMAGE_PREFIX, applicationContext)
 
         //TODO edit items
         itemDetail_edit.setOnClickListener {

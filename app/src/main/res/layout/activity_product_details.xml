@@ -55,15 +55,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemDetail_categories" />
 
-    <ImageView
+    <!--<ImageView-->
+        <!--android:id="@+id/itemDetail_Image"-->
+        <!--android:layout_width="200dp"-->
+        <!--android:layout_height="200dp"-->
+        <!--android:layout_marginStart="10dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/itemDetail_ProductNameTF"-->
+        <!--app:srcCompat="@drawable/insertimage" />-->
+
+    <HorizontalScrollView
         android:id="@+id/itemDetail_Image"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
+        android:scrollbars="none"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemDetail_ProductNameTF"
-        app:srcCompat="@drawable/insertimage" />
+        app:layout_constraintTop_toBottomOf="@id/itemDetail_ProductNameTF"
+        >
+
+        <LinearLayout
+            android:id="@+id/gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+    </HorizontalScrollView>
 
     <TextView
         android:id="@+id/itemDetail_itemPrice"

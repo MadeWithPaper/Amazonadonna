@@ -27,18 +27,18 @@ object OrderSync: Synchronizer(), CoroutineScope {
         Log.i(TAG, "Syncing now!")
         updateOrders(context)
         Log.i(TAG, "Done uploading, now downloading")
-        downloadOrders(context)
-        Log.i(TAG, "Done syncing!")
 
     }
 
     private fun updateOrders(context: Context) {
-        launch {
+        runBlocking {
             val updateOrders = getUpdateOrders(context)
             for (order in updateOrders) {
                 updateSingleOrder(context, order)
             }
         }
+        downloadOrders(context)
+        Log.i(TAG, "Done syncing!")
     }
 
     private fun updateSingleOrder(context: Context, order: Order) {
