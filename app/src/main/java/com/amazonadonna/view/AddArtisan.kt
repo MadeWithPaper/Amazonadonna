@@ -31,12 +31,6 @@ import java.io.File
 import java.io.IOException
 import com.amazonaws.util.IOUtils.toByteArray
 
-
-
-
-
-
-
 class AddArtisan : AppCompatActivity() {
     private var cgaId : String = "0"
     private var photoFile: File? = null

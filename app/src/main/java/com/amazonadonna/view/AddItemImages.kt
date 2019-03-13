@@ -53,8 +53,13 @@ class AddItemImages : AppCompatActivity() {
         imageViewMap.put(4, addItemImage4)
         imageViewMap.put(5, addItemImage5)
 
+        //val IMAGE_UPLOADING_PERMISSION = 3
+        //ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
+
+        val PERMISSIONS = arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
         val IMAGE_UPLOADING_PERMISSION = 3
-        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
+        ActivityCompat.requestPermissions(this, PERMISSIONS, IMAGE_UPLOADING_PERMISSION)
 
         val product = intent.extras?.getSerializable("product") as Product
         val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
@@ -226,8 +231,6 @@ class AddItemImages : AppCompatActivity() {
         //byteArray = ByteArray(photoFile!!.length().toInt())
 
         try {
-
-
             //convert array of bytes into file
             val fileOuputStream = FileOutputStream(photoFile)
             fileOuputStream.write(byteArray)
