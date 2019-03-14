@@ -117,6 +117,6 @@ class OrderScreen : AppCompatActivity() {
         orderIDTextView.text = order.orderId
         orderDateTextView.text = "1/23/19"
         orderShippedTextView.text = order.shippedStatus.toString()
-        orderCostTextView.text = order.totalCostDollars.toString()+"."+order.totalCostCents.toString()
+        orderCostTextView.text = "$" + order.totalCostDollars.toString()+"."+order.totalCostCents.toString()
     }
 }

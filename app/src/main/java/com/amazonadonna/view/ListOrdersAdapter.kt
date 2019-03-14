@@ -43,6 +43,6 @@ class OrdersViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
         view.textView_OrderDate.text = "1/23/19"
         view.textView_OrderID_input.text = order.orderId
         view.textView_Shipped_input.text = order.shippedStatus.toString()
-        view.textView_Payout_input.text = order.totalCostDollars.toString()+"."+order.totalCostCents.toString()
+        view.textView_Payout_input.text = "$ ${order.totalCostDollars}.${order.totalCostCents}"
     }
 }
