@@ -178,12 +178,12 @@ class PayoutSignature : AppCompatActivity() {
             builder.setMessage("Current Artisan Balance: $ ${artisan.balance}")
             builder.setOnDismissListener {
                 submitDismiss(artisan)
-                val intent = Intent(this, ArtisanProfile::class.java)
-                intent.putExtra("artisan", artisan)
-                finishAffinity()
-                startActivity(intent)
-               // finishAffinity()
-               // finish()
+//                val intent = Intent(this, ArtisanProfile::class.java)
+//                intent.putExtra("artisan", artisan)
+//                //finishAffinity()
+//                startActivity(intent)
+//               // finishAffinity()
+//               finish()
             }
         } else {
             builder.setTitle("Payout Failed!")
@@ -241,8 +241,8 @@ class PayoutSignature : AppCompatActivity() {
     private fun submitDismiss(artisan: Artisan) {
         val intent = Intent(this, ArtisanProfile::class.java)
         intent.putExtra("artisan", artisan)
-        finishAffinity()
+        //finishAffinity()
         startActivity(intent)
-        //finish()
+        finish()
     }
 }
