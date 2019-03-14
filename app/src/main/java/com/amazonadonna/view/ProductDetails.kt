@@ -3,6 +3,7 @@ package com.amazonadonna.view
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.ImageView
@@ -35,6 +36,7 @@ class ProductDetails : AppCompatActivity() {
         itemDetail_ProductNameTF.text = product.itemName
         itemDetail_itemPrice.text = priceString
         itemDetail_itemDescription.text = product.description
+        itemDetail_itemDescription.setMovementMethod(ScrollingMovementMethod())
         itemDetail_shippingOption.text = product.shippingOption
         itemDetail_ItemQuantity.text = productQuantityString
         itemDetail_itemTime.text = productionTimeString

@@ -82,6 +82,7 @@ class ArtisanProfile() : AppCompatActivity() {
         val intent = Intent(this, ArtisanPayout::class.java)
         intent.putExtra("artisan", artisan)
         startActivity(intent)
+        //finish()
     }
 
     private fun editArtisan(artisan: Artisan) {
