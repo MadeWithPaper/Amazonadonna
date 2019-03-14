@@ -86,7 +86,7 @@
 
     <!-- Add Item review -->
     <string name="item_review_usually_ships">Usually shipped within </string>
-    <string name="number_in_stock"> in Stock</string>
+    <string name="number_in_stock">   in Stock</string>
     <string name="item_review_response_dialog_title">Item Listing …</string>
     <string name="item_review_listing_failed">Your item was NOT submitted!</string>
     <string name="item_review_listing_success">Your item have been successfully submitted!</string>
