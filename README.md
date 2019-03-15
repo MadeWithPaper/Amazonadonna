@@ -14,4 +14,4 @@ Cory Baxes\
 Jaz Singh\
 Liam Schmid\
 Mitchell Overfield\
-Vector Wei
+Victor Wei
