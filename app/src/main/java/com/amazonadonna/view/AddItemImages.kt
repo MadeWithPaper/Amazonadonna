@@ -135,7 +135,6 @@ class AddItemImages : AppCompatActivity() {
 
     private fun addItemImageContinue(product: Product, artisan: Artisan) {
         val intent = Intent(this, AddItemReview::class.java)
-
         intent.putExtra("product", product)
         intent.putExtra("selectedArtisan", artisan)
         intent.putExtra("photoFiles", photoFilesArr)
