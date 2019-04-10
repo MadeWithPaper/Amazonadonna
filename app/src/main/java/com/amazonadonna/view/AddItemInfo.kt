@@ -107,6 +107,11 @@ class AddItemInfo : AppCompatActivity() {
             return false
         }
 
+        if (addItemInfo_ProductPriceTF.text.toString() == "."){
+            addItemInfo_ProductPriceTF.error = this.resources.getString(R.string.payout_amount_format_error)
+            return false
+        }
+
         return true
     }
 
