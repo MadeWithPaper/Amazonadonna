@@ -113,7 +113,7 @@
         android:layout_marginEnd="30dp"
         android:ems="10"
         android:hint="@string/add_artisan_contact_number_tv_hint"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editArtisan_cc" />
