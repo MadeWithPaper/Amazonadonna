@@ -16,3 +16,5 @@
 /app/src/main/assets/api_key.txt
 /.idea
 /codemr
+/app/release
+/app/src/main/assets/api_key_backup.txt

@@ -96,6 +96,7 @@
     <string name="payout_error_title">Payout Error</string>
     <string name="payout_error_message">Payout amount exceeds Artisan\'s Payout balance!</string>
     <string name="payout_balance">Current Balance: </string>
+    <string name="payout_amount_format_error">Please enter a valid amount! </string>
 
     <!-- Product Detail -->
     <string name="product_detail_usually_ships_in">"Usually shipped within  "</string>

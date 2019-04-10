@@ -147,5 +147,6 @@
     <string name="payout_balance">Solde actuel:</string>
     <string name="view_report_toolbar_text">Voir le rapport généré</string>
     <string name="view_report_done_button">Terminé</string>
+    <string name="payout_amount_format_error">S\'il vous plaît entrer un montant valide!</string>
 
 </resources>
