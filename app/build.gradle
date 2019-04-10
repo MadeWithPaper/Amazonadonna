@@ -7,6 +7,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'alphaKey'
+            keyPassword 'capstone2019'
+            storeFile file('/home/jacky/AndroidStudioProjects/handmadeRelease.jks')
+            storePassword 'capstone2019'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.amazonadonna.amazonhandmade"
@@ -30,7 +38,6 @@ android {
         }
     }
     buildToolsVersion '28.0.3'
-
     bundle {
         language {
             enableSplit = false
@@ -66,10 +73,10 @@ dependencies {
     implementation files('libs/login-with-amazon-sdk.jar')
     //Search list dependencies
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation "io.reactivex.rxjava2:rxjava:2.1.9"
-    implementation "io.reactivex.rxjava2:rxkotlin:2.2.0"
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation 'com.jakewharton.rxbinding2:rxbinding-kotlin:2.1.1'
-    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
     //signature pad library
     implementation 'com.github.gcacace:signature-pad:1.2.1'
     //Room SQLite stuff
