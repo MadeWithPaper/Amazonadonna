@@ -23,7 +23,7 @@ const val SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE
 class LoginScreen : AppCompatActivity() {
 
     private var requestContext : RequestContext = RequestContext.create(this)
-    private val scopes : Array<Scope> = arrayOf(ProfileScope.profile(), ProfileScope.postalCode())
+    private val scopes : Array<Scope> = arrayOf(ProfileScope.profile(), ProfileScope.postalCode(), ProfileScope.profile())
 
     private var signUpListener = object  : AuthorizeListener() {
         /* Authorization was completed successfully. */
@@ -76,7 +76,7 @@ class LoginScreen : AppCompatActivity() {
         login_with_amazon.setOnClickListener(View.OnClickListener {
             _ -> AuthorizationManager.authorize(AuthorizeRequest
                         .Builder(requestContext)
-                        .addScopes(ProfileScope.profile(),  ProfileScope.postalCode()) // if you change these, need to also change the scopes val at top to match
+                        .addScopes(ProfileScope.profile(),  ProfileScope.postalCode(), ProfileScope.profile()) // if you change these, need to also change the scopes val at top to match
                         .build())
         })
     }
