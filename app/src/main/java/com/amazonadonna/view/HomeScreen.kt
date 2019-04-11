@@ -21,6 +21,7 @@ import java.lang.Thread.sleep
 
 class HomeScreen : AppCompatActivity() {
     private var cgaID : String = "0" // initialize to prevent crash while testing
+    private var cgaAmaznName : String = ""
     private var newLang : String = "en_US"
     private val amaznIdURL = "https://99956e2a.ngrok.io/cgo/getByAmznId"
     private lateinit var alertDialog : AlertDialog
@@ -39,7 +40,8 @@ class HomeScreen : AppCompatActivity() {
             try {
                 currUser = p0
                 cgoNameTV.text = p0.userName
-            } catch (e : Exception){
+                cgaAmaznName = p0.userName
+            } catch (e : Exception) {
                 //do nothing use placeholder text
             }
 
@@ -211,7 +213,7 @@ class HomeScreen : AppCompatActivity() {
         val url = "https://7bd92aed.ngrok.io/cgo/add"
         val requestBody = FormBody.Builder().add("amznId", cgaID!!)
                 .add("city", "San Francisco").add("country","USA")
-                .add("name", "Victor").add("lat", "32.19").add("lon", "77.398").build()
+                .add("name", cgaAmaznName).add("lat", "32.19").add("lon", "77.398").build()
         val db = Room.databaseBuilder(
                 applicationContext,
                 AppDatabase::class.java, "amazonadonna-main"
