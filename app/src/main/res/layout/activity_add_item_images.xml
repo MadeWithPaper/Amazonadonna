@@ -58,151 +58,223 @@
         app:layout_constraintStart_toStartOf="@+id/addItemImage_toolBar"
         app:layout_constraintTop_toTopOf="@+id/addItemImage_toolBar" />
 
-    <ImageButton
-        android:id="@+id/addItemImage0"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="215dp"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.384"
-        app:layout_constraintStart_toStartOf="parent"
+
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/item_images_grid"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:horizontalSpacing="3dp"
+        android:verticalSpacing="3dp"
+        app:columnCount="2"
         app:layout_constraintTop_toBottomOf="@+id/addItemProgress_2"
-        app:srcCompat="@drawable/insertimage" />
-
-    <ImageButton
-        android:id="@+id/addItemImage1"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.39"
-        app:layout_constraintStart_toEndOf="@+id/addItemImage0"
-        app:layout_constraintTop_toBottomOf="@+id/addItemProgress_2"
-        app:srcCompat="@drawable/insertimage" />
-
-    <TextView
-        android:id="@+id/addItem_mainImageTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:text="@string/item_images_main"
-        android:textColor="#000"
-        android:textSize="15sp"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemImage0" />
+        app:rowCount="3">
 
-    <TextView
-        android:id="@+id/addItem_image1TV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="50dp"
-        android:text="@string/item_images_alt1"
-        android:textColor="#000"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemImage1" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
 
-    <ImageButton
-        android:id="@+id/addItemImage2"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="24dp"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemImage0"
-        app:srcCompat="@drawable/insertimage" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
 
-    <ImageButton
-        android:id="@+id/addItemImage3"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="20dp"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/addItemImage2"
-        app:layout_constraintTop_toTopOf="@+id/addItem_image1TV"
-        app:srcCompat="@drawable/insertimage" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/addItemImage2TV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:text="@string/item_images_alt2"
-        android:textColor="#000"
-        android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemImage2" />
+                    <ImageButton
+                        android:id="@+id/addItemImage0"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        app:srcCompat="@drawable/insertimage"
+                        android:layout_centerHorizontal="true"/>
 
-    <TextView
-        android:id="@+id/addItemImage3TV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="50dp"
-        android:text="@string/item_images_alt3"
-        android:textColor="#000"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemImage3" />
-s
-    <ImageButton
-        android:id="@+id/addItemImage4"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="25dp"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemImage2"
-        app:srcCompat="@drawable/insertimage" />
+                    <TextView
+                        android:id="@+id/addItem_mainImageTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/addItemImage0"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/item_images_main"
+                        android:textAlignment="center"
+                        android:textColor="#000"
+                        android:textSize="15sp" />
+                </RelativeLayout>
 
-    <ImageButton
-        android:id="@+id/addItemImage5"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="20dp"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/addItemImage4"
-        app:layout_constraintTop_toBottomOf="@+id/addItemImage3"
-        app:srcCompat="@drawable/insertimage" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:text="@string/item_images_alt4"
-        android:textColor="#000"
-        android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemImage4" />
+                    <ImageButton
+                        android:id="@+id/addItemImage1"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:srcCompat="@drawable/insertimage"
+                        android:layout_centerHorizontal="true"/>
 
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="50dp"
-        android:text="@string/item_images_alt5"
-        android:textColor="#000"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemImage5" />
+                    <TextView
+                        android:id="@+id/addItem_image1TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/addItemImage1"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/item_images_alt1"
+                        android:textAlignment="center"
+                        android:textColor="#000"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:layout_marginTop="8dp">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageButton
+                        android:id="@+id/addItemImage2"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        app:srcCompat="@drawable/insertimage"
+                        android:layout_centerHorizontal="true"/>
+
+                    <TextView
+                        android:id="@+id/addItem_addItemImage2TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/addItemImage2"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/item_images_alt2"
+                        android:textAlignment="center"
+                        android:textColor="#000"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageButton
+                        android:id="@+id/addItemImage3"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:srcCompat="@drawable/insertimage"
+                        android:layout_centerHorizontal="true"/>
+
+                    <TextView
+                        android:id="@+id/addItem_image3TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/addItemImage3"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/item_images_alt3"
+                        android:textAlignment="center"
+                        android:textColor="#000"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:layout_marginTop="8dp">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageButton
+                        android:id="@+id/addItemImage4"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        app:srcCompat="@drawable/insertimage"
+                        android:layout_centerHorizontal="true"/>
+
+                    <TextView
+                        android:id="@+id/addItem_addItemImage4TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/addItemImage4"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/item_images_alt4"
+                        android:textAlignment="center"
+                        android:textColor="#000"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageButton
+                        android:id="@+id/addItemImage5"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:srcCompat="@drawable/insertimage"
+                        android:layout_centerHorizontal="true"/>
+
+                    <TextView
+                        android:id="@+id/addItem_image5TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/addItemImage5"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/item_images_alt5"
+                        android:textAlignment="center"
+                        android:textColor="#000"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.GridLayout>
 
 
 </android.support.constraint.ConstraintLayout>
