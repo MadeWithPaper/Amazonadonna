@@ -34,6 +34,9 @@ interface ProductDao {
             "LIMIT 1")
     fun findByID(id: String): Product
 
+    @Query("UPDATE product SET artisanId = :newArtisanId WHERE artisanId = :oldArtisanId")
+    fun updateArtisanId(oldArtisanId: String, newArtisanId : String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(products: List<Product>)
 
