@@ -82,8 +82,8 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 val gson = GsonBuilder().create()
                 val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
                 for (artisan in artisans) {
-                    if(artisan.contactNumber == null)
-                        artisan.contactNumber = "1234567890"
+                    if(artisan.phoneNumber == null)
+                        artisan.phoneNumber = "1234567890"
                 }
 
                 Log.d("HOTFIX2", artisans.toString())
@@ -114,7 +114,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 .add("city",artisan.city)
                 .add("country", artisan.country)
                 .add("artisanName", artisan.artisanName)
-                .add("contactNumber", artisan.contactNumber)
+                .add("phoneNumber", artisan.phoneNumber)
                 .add("lat", artisan.lat.toString())
                 .add("lon", artisan.lon.toString())
                 .add("balance", "5000.0")
@@ -167,7 +167,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 .add("city", artisan.city)
                 .add("country", artisan.country)
                 .add("artisanName", artisan.artisanName)
-                .add("contactNumber", artisan.contactNumber)
+                .add("phoneNumber", artisan.phoneNumber)
                 .add("lat", artisan.lat.toString())
                 .add("lon", artisan.lat.toString())
                 .add("balance", artisan.balance.toString())

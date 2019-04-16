@@ -1,6 +1,5 @@
 package com.amazonadonna.view
 
-import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.github.gcacace.signaturepad.views.SignaturePad
@@ -9,15 +8,11 @@ import kotlinx.android.synthetic.main.activity_payout_signature.*
 import android.util.Log
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
-import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Payout
 import com.amazonadonna.sync.PayoutSync
 import com.amazonadonna.sync.Synchronizer.Companion.SYNC_NEW
-import com.amazonadonna.view.R
-import kotlinx.android.synthetic.main.activity_artisan_item_list.*
 import okhttp3.*
 import java.io.*
 import java.text.SimpleDateFormat

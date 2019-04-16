@@ -39,7 +39,7 @@ class HomeScreen : AppCompatActivity() {
 
             try {
                 currUser = p0
-                cgoNameTV.text = p0.userName
+                cgaNameTV.text = p0.userName
                 cgaAmaznName = p0.userName
             } catch (e : Exception) {
                 //do nothing use placeholder text

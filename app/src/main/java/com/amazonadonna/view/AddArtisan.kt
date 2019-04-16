@@ -25,11 +25,9 @@ import android.graphics.BitmapFactory
 import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.sync.Synchronizer
 import android.graphics.Bitmap
-import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.view.View
 import java.io.File
 import java.io.IOException
-import com.amazonaws.util.IOUtils.toByteArray
 
 class AddArtisan : AppCompatActivity() {
     private var cgaId : String = "0"
@@ -417,7 +415,7 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
                 .add("city",artisan.city)
                 .add("country", artisan.country)
                 .add("artisanName", artisan.artisanName)
-                .add("contactNumber", artisan.contactNumber)
+                .add("phoneNumber", artisan.phoneNumber)
                 .add("lat", artisan.lat.toString())
                 .add("lon", artisan.lon.toString())
                 //TODO remove hard code balance
