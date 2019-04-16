@@ -170,7 +170,10 @@ router.post('/edit', (req: Request, res: Response) => {
                 balance: req.body.balance
                     ? req.body.balance
                     : unmarshed.balance,
-                picURL: req.body.picURL ? req.body.picURL : unmarshed.picURL
+                picURL: req.body.picURL ? req.body.picURL : unmarshed.picURL,
+                phoneNumber: req.body.phoneNumber
+                    ? req.body.phoneNumber
+                    : unmarshed.phoneNumber
             }
 
             const editArtisanParam: aws.DynamoDB.Types.UpdateItemInput = {
