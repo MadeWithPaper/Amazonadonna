@@ -20,10 +20,6 @@ import android.widget.ImageView
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.sync.ArtisanSync
-import com.amazonadonna.view.R
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_add_artisan.*
-import kotlinx.android.synthetic.main.activity_artisan_profile.*
 import kotlinx.android.synthetic.main.activity_edit_artisan.*
 import okhttp3.*
 import java.io.*
@@ -50,7 +46,7 @@ class EditArtisan : AppCompatActivity() {
         editArtisanBio.setText(oldArtisan.bio)
         editArtisan_cc.setText(oldArtisan.city + "," + oldArtisan.country)
         editArtisan_name.setText(oldArtisan.artisanName)
-        editArtisan_number.setText(oldArtisan.contactNumber)
+        editArtisan_number.setText(oldArtisan.phoneNumber)
 
         /*if (oldArtisan.picURL != "Not set") {
             Picasso.with(this).load(oldArtisan.picURL).into(this.editArtisan_pic)
@@ -308,7 +304,7 @@ class EditArtisan : AppCompatActivity() {
             oldArtisan.bio = editArtisanBio.text.toString()
             oldArtisan.city = parseLoc().first
             oldArtisan.country = parseLoc().second
-            oldArtisan.contactNumber = editArtisan_number.text.toString()
+            oldArtisan.phoneNumber = editArtisan_number.text.toString()
 
 
             var newPhoto: File? = null
@@ -330,12 +326,12 @@ class EditArtisan : AppCompatActivity() {
         var updatePic = false
 
         val requestBody = FormBody.Builder().add("artisanId", oldArtisan.artisanId)
-                .add("cgoId", oldArtisan.cgoId)
+                .add("cgaId", oldArtisan.cgaId)
                 .add("bio", oldArtisan.bio)
                 .add("city", oldArtisan.city)
                 .add("country", oldArtisan.country)
                 .add("artisanName", oldArtisan.artisanName)
-                .add("contactNumber", oldArtisan.contactNumber)
+                .add("phoneNumber", oldArtisan.phoneNumber)
                 .add("lat", 0.0.toString())
                 .add("lon", 0.0.toString())
                 .add("balance", oldArtisan.balance.toString())

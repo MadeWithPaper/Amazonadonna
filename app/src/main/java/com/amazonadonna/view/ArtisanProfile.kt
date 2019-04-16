@@ -2,20 +2,12 @@ package com.amazonadonna.view
 
 import android.content.Intent
 import android.content.Intent.createChooser
-import android.content.pm.LabeledIntent
-import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
 import com.amazonadonna.model.Artisan
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_artisan_profile.*
 import android.text.method.ScrollingMovementMethod
 import com.amazonadonna.database.ImageStorageProvider
-import com.amazonadonna.sync.ArtisanSync
-import com.amazonadonna.view.R
-import kotlinx.android.synthetic.main.list_artisan_cell.view.*
 
 
 class ArtisanProfile() : AppCompatActivity() {
@@ -50,7 +42,7 @@ class ArtisanProfile() : AppCompatActivity() {
         //TODO put in real artisan number
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
-        intent.putExtra("address", artisan.contactNumber)
+        intent.putExtra("address", artisan.phoneNumber)
         val messagechooser = createChooser(intent, "Please Choose an Application to Send Messages...")
         startActivity(messagechooser)
     }

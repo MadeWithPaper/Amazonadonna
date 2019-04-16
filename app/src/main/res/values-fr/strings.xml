@@ -73,7 +73,7 @@
 
     <!-- Home Screen Strings -->
     <string name="homeScreenWelcome">Accueillir</string>
-    <string name="homeScreenPlaceHoldercgo">CGO 0</string>
+    <string name="homeScreenPlaceHoldercga">CGA 0</string>
 
     <!-- Add Item Info -->
     <string name="add_item_info_shipping_warning">Veuillez choisir un mode de livraison.</string>

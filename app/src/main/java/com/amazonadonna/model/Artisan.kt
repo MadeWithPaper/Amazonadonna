@@ -12,11 +12,11 @@ import java.util.*
 data class Artisan (
         @ColumnInfo(name = "artisanName") @Json(name = "artisanName") var artisanName : String,
         @PrimaryKey @ColumnInfo(name = "artisanId") @Json(name = "artisanId") var artisanId : String,
-        @ColumnInfo(name = "contactNumber") @Json (name = "contactNumber") var contactNumber : String,
+        @ColumnInfo(name = "phoneNumber") @Json (name = "phoneNumber") var phoneNumber : String,
         @ColumnInfo(name = "city") @Json(name = "city") var city : String,
         @ColumnInfo(name = "country") @Json(name = "country") var country : String,
         @ColumnInfo(name = "bio") @Json(name = "bio")var bio : String,
-        @ColumnInfo(name = "cgoId") @Json(name = "cgoId") var cgoId : String,
+        @ColumnInfo(name = "cgaId") @Json(name = "cgaId") var cgaId : String,
         @ColumnInfo(name = "lat") @Json(name = "lon") var lon : Double,
         @ColumnInfo(name = "lon") @Json(name = "lat") var lat : Double,
         @ColumnInfo(name = "picURL") @Json(name = "picURL") var picURL : String?,
@@ -26,7 +26,7 @@ data class Artisan (
     fun generateTempID() {
        //TODO fill in logic for generating unique ID for artisan
         var num = Random().nextInt()
-        artisanId = artisanName + cgoId + num.toString()
+        artisanId = artisanName + cgaId + num.toString()
     }
 
 

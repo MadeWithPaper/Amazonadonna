@@ -34,7 +34,7 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor>, CoroutineScope 
         get() = Dispatchers.Main + job
 
     var cgaId : String = "0"
-    val listOrderURL = "https://99956e2a.ngrok.io/order/listAllForCgo"
+    val listOrderURL = "https://99956e2a.ngrok.io/order/listAllForCga"
     val originalOrders : MutableList<Order> = mutableListOf()
     val filteredOrders: MutableList<Order> = mutableListOf()
     val oldFilteredOrders: MutableList<Order> = mutableListOf()
@@ -112,7 +112,7 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor>, CoroutineScope 
     }
 
     private fun fetchJSON() {
-        val requestBody = FormBody.Builder().add("cgoId", cgaId)
+        val requestBody = FormBody.Builder().add("cgaId", cgaId)
                 .build()
         val request = Request.Builder().url(listOrderURL).post(requestBody).build()
         val db = Room.databaseBuilder(
