@@ -48,7 +48,8 @@ router.post('/add', (req: Request, res: Response) => {
             lat: { N: req.body.lat },
             lon: { N: req.body.lon },
             balance: { N: req.body.balance },
-            picURL: { S: 'Not set' }
+            picURL: { S: 'Not set' },
+            phoneNumber: { S: req.body.phoneNumber }
         }
     }
     ddb.putItem(putItemParams, (err, data) => {
