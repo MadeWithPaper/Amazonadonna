@@ -60,7 +60,6 @@ router.post('/add', (req: Request, res: Response) => {
             const d = new Date(0)
             d.setUTCMilliseconds(req.body.date)
             sendText(
-                '19169903748',
                 req.body.artisanId,
                 req.body.payoutId,
                 d.toLocaleDateString(),
@@ -132,7 +131,6 @@ router.post('/updateImage', (req: Request, res: Response) => {
 
 /*date, amount, ArtisanName*/
 const sendText = (
-    phoneNumber: string,
     artisanId: string,
     payoutId: string,
     date: string,
@@ -162,13 +160,13 @@ const sendText = (
                     "' on " +
                     date +
                     '.',
-                PhoneNumber: phoneNumber
+                PhoneNumber: unmarshed.phoneNumber
             }
             sns.publish(params, (snserr, snsdata) => {
                 if (err) {
                     console.log(
                         'Error sending text to ' +
-                            params.PhoneNumber +
+                            unmarshed.phoneNumber +
                             'for payoutId' +
                             payoutId
                     )

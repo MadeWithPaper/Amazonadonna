@@ -9,6 +9,7 @@ interface Artisan {
     lon: string
     balance: string
     picURL: string
+    phoneNumber: string
 }
 
 export { Artisan }
