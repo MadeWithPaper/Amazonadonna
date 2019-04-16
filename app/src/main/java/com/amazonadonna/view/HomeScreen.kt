@@ -22,7 +22,7 @@ import java.lang.Thread.sleep
 class HomeScreen : AppCompatActivity() {
     private var cgaID : String = "0" // initialize to prevent crash while testing
     private var newLang : String = "en_US"
-    private val amaznIdURL = "https://99956e2a.ngrok.io/cgo/getByAmznId"
+    private val amaznIdURL = "https://99956e2a.ngrok.io/cga/getByAmznId"
     private lateinit var alertDialog : AlertDialog
     private var currUser : User? = null
     private var getUserInfoListener = object : Listener<User, AuthError> {
@@ -38,7 +38,7 @@ class HomeScreen : AppCompatActivity() {
 
             try {
                 currUser = p0
-                cgoNameTV.text = p0.userName
+                cgaNameTV.text = p0.userName
             } catch (e : Exception){
                 //do nothing use placeholder text
             }
@@ -56,7 +56,7 @@ class HomeScreen : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         if (currUser != null){
-            cgoNameTV.text = currUser!!.userName
+            cgaNameTV.text = currUser!!.userName
         }
     }
     fun syncData() {
@@ -194,7 +194,7 @@ class HomeScreen : AppCompatActivity() {
 
                 if (body == "{}") {
                     Log.d("HomeScreen", "artisan not in db")
-                    addCGOToDB()
+                    addCGAToDB()
                 }
 
 //                val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
@@ -207,8 +207,8 @@ class HomeScreen : AppCompatActivity() {
         })
     }
 
-    private fun addCGOToDB() {
-        val url = "https://7bd92aed.ngrok.io/cgo/add"
+    private fun addCGAToDB() {
+        val url = "https://7bd92aed.ngrok.io/cga/add"
         val requestBody = FormBody.Builder().add("amznId", cgaID!!)
                 .add("city", "San Francisco").add("country","USA")
                 .add("name", "Victor").add("lat", "32.19").add("lon", "77.398").build()

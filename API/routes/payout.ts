@@ -42,7 +42,7 @@ router.post('/add', (req: Request, res: Response) => {
         Item: {
             payoutId: { S: id },
             artisanId: { S: req.body.artisanId },
-            cgoId: { S: req.body.cgoId },
+            cgaId: { S: req.body.cgaId },
             amount: { N: req.body.amount },
             /*Date values are stored as ISO-8601 formatted strings*/
             date: { S: req.body.date },

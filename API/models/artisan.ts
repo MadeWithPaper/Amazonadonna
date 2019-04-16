@@ -1,6 +1,6 @@
 interface Artisan {
     artisanId: string
-    cgoId: string
+    cgaId: string
     bio: string
     city: string
     country: string

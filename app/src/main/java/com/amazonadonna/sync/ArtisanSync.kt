@@ -16,7 +16,7 @@ import android.graphics.BitmapFactory
 
 object ArtisanSync: Synchronizer(), CoroutineScope {
     //var cgaId : String = "0"
-    private const val listAllArtisansURL = "https://99956e2a.ngrok.io/artisan/listAllForCgo"
+    private const val listAllArtisansURL = "https://99956e2a.ngrok.io/artisan/listAllForCga"
     private const val addArtisanURL = "https://99956e2a.ngrok.io/artisan/add"
     private const val artisanPicURL = "https://99956e2a.ngrok.io/artisan/updateImage"
     private const val editArtisanURL = "https://99956e2a.ngrok.io/artisan/edit"
@@ -62,7 +62,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
     private fun downloadArtisans(context : Context) {
         numInProgress++
-        val requestBody = FormBody.Builder().add("cgoId", mCgaId)
+        val requestBody = FormBody.Builder().add("cgaId", mCgaId)
                 .build()
 
         val client = OkHttpClient()
@@ -109,7 +109,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
     private fun uploadSingleArtisan(context: Context, artisan: Artisan) {
         numInProgress++
 
-        val requestBody = FormBody.Builder().add("cgoId", artisan.cgoId)
+        val requestBody = FormBody.Builder().add("cgaId", artisan.cgaId)
                 .add("bio", artisan.bio)
                 .add("city",artisan.city)
                 .add("country", artisan.country)
@@ -154,7 +154,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
         var updatePic = false
 
         val requestBody = FormBody.Builder().add("artisanId", artisan.artisanId)
-                .add("cgoId", artisan.cgoId)
+                .add("cgaId", artisan.cgaId)
                 .add("bio", artisan.bio)
                 .add("city", artisan.city)
                 .add("country", artisan.country)

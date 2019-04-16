@@ -15,11 +15,11 @@ class Payout (
     @ColumnInfo(name = "artisanId") @Json(name = "price") var artisanId : String,
     @ColumnInfo(name = "synced") var synced : Int,
     @ColumnInfo(name = "signaturePicURL") var signaturePicURL : String,
-    @ColumnInfo(name = "cgoId") @Json(name = "price") var cgoId : String) : Serializable {
+    @ColumnInfo(name = "cgaId") @Json(name = "price") var cgaId : String) : Serializable {
 
     fun generateTempID() {
         var num = Random().nextInt()
-        payoutId = artisanId + cgoId + num.toString()
+        payoutId = artisanId + cgaId + num.toString()
     }
 
 }

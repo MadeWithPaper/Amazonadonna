@@ -16,7 +16,7 @@ data class Artisan (
         @ColumnInfo(name = "city") @Json(name = "city") var city : String,
         @ColumnInfo(name = "country") @Json(name = "country") var country : String,
         @ColumnInfo(name = "bio") @Json(name = "bio")var bio : String,
-        @ColumnInfo(name = "cgoId") @Json(name = "cgoId") var cgoId : String,
+        @ColumnInfo(name = "cgaId") @Json(name = "cgaId") var cgaId : String,
         @ColumnInfo(name = "lat") @Json(name = "lon") var lon : Double,
         @ColumnInfo(name = "lon") @Json(name = "lat") var lat : Double,
         @ColumnInfo(name = "picURL") @Json(name = "picURL") var picURL : String?,
@@ -26,7 +26,7 @@ data class Artisan (
     fun generateTempID() {
        //TODO fill in logic for generating unique ID for artisan
         var num = Random().nextInt()
-        artisanId = artisanName + cgoId + num.toString()
+        artisanId = artisanName + cgaId + num.toString()
     }
 
 

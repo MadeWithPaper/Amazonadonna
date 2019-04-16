@@ -412,7 +412,7 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
 //        val number = editText_ContactNumber.text.toString()
 
         val requestBody = FormBody.Builder().add("artisanId",artisan.artisanId)
-                .add("cgoId", artisan.cgoId)
+                .add("cgaId", artisan.cgaId)
                 .add("bio", artisan.bio)
                 .add("city",artisan.city)
                 .add("country", artisan.country)

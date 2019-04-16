@@ -37,7 +37,7 @@ describe('artisans', () => {
                         TableName: 'artisan',
                         AttributeDefinitions: [
                             { AttributeName: 'artisanId', AttributeType: 'S' },
-                            { AttributeName: 'cgoId', AttributeType: 'S' }
+                            { AttributeName: 'cgaId', AttributeType: 'S' }
                         ],
                         KeySchema: [
                             { AttributeName: 'artisanId', KeyType: 'HASH' }
@@ -48,10 +48,10 @@ describe('artisans', () => {
                         },
                         GlobalSecondaryIndexes: [
                             {
-                                IndexName: 'cgoId-index',
+                                IndexName: 'cgaId-index',
                                 KeySchema: [
                                     {
-                                        AttributeName: 'cgoId',
+                                        AttributeName: 'cgaId',
                                         KeyType: 'HASH'
                                     }
                                 ],
@@ -95,7 +95,7 @@ describe('artisans', () => {
                     TableName: 'artisan',
                     Item: {
                         artisanId: { S: '1234' },
-                        cgoId: { S: '0' },
+                        cgaId: { S: '0' },
                         bio: { S: 'test bio!' },
                         city: { S: 'SLO, CA' },
                         country: { S: 'USA' },
@@ -122,7 +122,7 @@ describe('artisans', () => {
                         res.body[0].should.be.an('Object')
                         res.body[0].should.be.eql({
                             artisanId: '1234',
-                            cgoId: '0',
+                            cgaId: '0',
                             bio: 'test bio!',
                             city: 'SLO, CA',
                             country: 'USA',
@@ -143,7 +143,7 @@ describe('artisans', () => {
                 .post('/artisan/add')
                 .send({
                     artisanId: '5678',
-                    cgoId: '0',
+                    cgaId: '0',
                     bio: 'testing adding artisan',
                     city: 'Tampa',
                     country: 'USA',
@@ -166,7 +166,7 @@ describe('artisans', () => {
                     res.body[1].should.be.an('Object')
                     res.body[1].should.be.eql({
                         artisanId: '5678',
-                        cgoId: '0',
+                        cgaId: '0',
                         bio: 'testing adding artisan',
                         city: 'Tampa',
                         country: 'USA',

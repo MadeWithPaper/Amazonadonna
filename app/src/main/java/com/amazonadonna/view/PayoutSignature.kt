@@ -78,7 +78,7 @@ class PayoutSignature : AppCompatActivity() {
 
     private fun saveSignature(artisan: Artisan, amount : Double) {
         val signatureFilePath = saveSignatureToCache()
-        var payout = Payout("", amount, System.currentTimeMillis(), artisan.artisanId, SYNC_NEW, "Not set", artisan.cgoId)
+        var payout = Payout("", amount, System.currentTimeMillis(), artisan.artisanId, SYNC_NEW, "Not set", artisan.cgaId)
         PayoutSync.addPayout(applicationContext, payout, artisan, File(signatureFilePath))
         runOnUiThread{
             showResponseDialog(artisan, true, amount)
@@ -147,7 +147,7 @@ class PayoutSignature : AppCompatActivity() {
 
     private fun submitPayoutToDB(artisan: Artisan, amount: Double, signatureFilePath: String) {
         val requestBody = FormBody.Builder().add("artisanId", artisan.artisanId)
-                .add("cgoId", artisan.cgoId)
+                .add("cgaId", artisan.cgaId)
                 .add("amount", amount.toString())
                 .add("date", System.currentTimeMillis().toString())
 
