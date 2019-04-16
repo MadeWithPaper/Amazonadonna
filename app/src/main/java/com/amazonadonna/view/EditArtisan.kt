@@ -45,7 +45,7 @@ class EditArtisan : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
 
         val oldArtisan = intent.extras?.getSerializable("artisan") as Artisan
-        Log.d("HOT FIX 12", oldArtisan.toString())
+        //Log.d("HOT FIX 12", oldArtisan.toString())
         //fill in information from old artisan
         editArtisanBio.setText(oldArtisan.bio)
         editArtisan_cc.setText(oldArtisan.city + "," + oldArtisan.country)

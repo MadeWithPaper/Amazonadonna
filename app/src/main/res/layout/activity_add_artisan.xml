@@ -80,12 +80,10 @@
 
     <Button
         android:id="@+id/button_addArtisan"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         android:layout_marginBottom="50dp"
         android:text="@string/add_artisan_add_button"
         android:background="#00a8e1"

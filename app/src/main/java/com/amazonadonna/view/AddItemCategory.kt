@@ -92,12 +92,15 @@ class AddItemCategory : AppCompatActivity() {
 
     var product : Product = Product(0.0, "0", "placeholder", "placeholder", arrayOf("undefined", "undefined", "undefined", "undefined", "undefined", "undefined"), "undefined", "undefined", "undefined", "undefined", "undefined", "undefined", "placeholder", "placeholder", "placeholder", "placeholder", "Placeholder", 0,  SYNC_NEW, 0)
     private var editMode : Boolean = false
+    private lateinit var subMap : Map<String, Array<String>>
+    private lateinit var specificMap : Map<String, Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_category)
 
         val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        initDataMap()
 
         // Create an ArrayAdapter
         val mainArrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, mainCategoryList)
@@ -114,19 +117,10 @@ class AddItemCategory : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val spinnerValue = itemCategory_mainSpinner.getSelectedItem().toString()
                 mainCategory = spinnerValue
+                Log.i("AddItemCategory.kt", "2")
                 when (spinnerValue) {
-                    "Jewelry" -> setSpinner(itemCategory_subSpinner, jewelrysub)
-                    "Home & Kitchen" -> setSpinner(itemCategory_subSpinner, homeKitchensub)
-                    "Clothing, Shoes & Accessories" -> setSpinner(itemCategory_subSpinner, csasub)
-                    "Wedding" -> setSpinner(itemCategory_subSpinner, weddingsub)
-                    "Handbags & Totes" -> setSpinner(itemCategory_subSpinner, handbagssub)
-                    "Beauty & Grooming" -> setSpinner(itemCategory_subSpinner, groomingsub)
-                    "Stationery & Party Supplies" -> setSpinner(itemCategory_subSpinner, stationerypartysub)
-                    "Toys & Games" -> setSpinner(itemCategory_subSpinner, toysgamessub)
-                    "Pet Supplies" -> setSpinner(itemCategory_subSpinner, petsuppliessub)
-                    "Sports & Outdoors" -> setSpinner(itemCategory_subSpinner, sportsgoodssub)
-                    "Baby" -> setSpinner(itemCategory_subSpinner, babysub)
-                    SELECT_CATEGORY -> setSpinner(itemCategory_subSpinner, arrayOf(SELECT_SUBCATEGORY))
+                    SELECT_CATEGORY -> setSpinner(itemCategory_subSpinner, arrayOf(SELECT_SUBCATEGORY), editMode)
+                    else -> setSpinner(itemCategory_subSpinner, subMap.getOrElse(spinnerValue, {arrayOf(SELECT_SUBCATEGORY)}), editMode, 0)
                 }
             }
         }
@@ -139,66 +133,17 @@ class AddItemCategory : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val spinnerValue = itemCategory_subSpinner.getSelectedItem().toString()
                 subCategory = spinnerValue
+                Log.i("AddItemCategory.kt", "3")
                 when (spinnerValue) {
-                    "Accessories" -> setSpinner(itemCategory_specificSpinner, accessoriessub)
                     "Anklets", "Body Jewelry", "Brooches & Pins", "Charms", "Jewelry Sets",
                         "Pendants & Coins", "Wedding & Engagement", "Insoles & Shoe Accessories",
                         "Backpack Handbags", "Clutches", "Cross-Body Bags", "Satchels", "Totes",
                         "Wristlets", "Wellness & Relaxation", "Pens & Pencils", "Baby & Toddler Toys",
                         "Dolls, Toy Figures & Accessories", "Lawn & Playground", "Learning & Education",
                         "Musical Toy Instruments", "Plushies & Stuffed Animals", "Pretend Play",
-                        "Puppets", "Puzzles", "Cycling", "Fishing", "Child Carriers", "Nursery Furniture" -> setSpinner(itemCategory_specificSpinner, nosub)
-                    "Bracelets" -> setSpinner(itemCategory_specificSpinner, braceletssub)
-                    "Cufflings & Shirt Accessories" -> setSpinner(itemCategory_specificSpinner, cufflingssub)
-                    "Earrings" -> setSpinner(itemCategory_specificSpinner, earringssub)
-                    "Hair Jewelry" -> setSpinner(itemCategory_specificSpinner, hairjewelrysub)
-                    "Necklaces" -> setSpinner(itemCategory_specificSpinner, necklacessub)
-                    "Rings" -> setSpinner(itemCategory_specificSpinner, ringssub)
-                    "Artwork" -> setSpinner(itemCategory_specificSpinner, artwroksub)
-                    "Bath" -> setSpinner(itemCategory_specificSpinner, bathsub)
-                    "Bedding" -> setSpinner(itemCategory_specificSpinner, beddingsub)
-                    "Furniture" -> setSpinner(itemCategory_specificSpinner, furnituresub)
-                    "Home Decor" -> setSpinner(itemCategory_specificSpinner, homedecorsub)
-                    "Kitchen & Dinning" -> setSpinner(itemCategory_specificSpinner, kitchendiningsub)
-                    "Lighting" -> setSpinner(itemCategory_specificSpinner, homelightingsub)
-                    "Patio, Lawn & Garden" -> setSpinner(itemCategory_specificSpinner, lawngardensub)
-                    "Storage & Organization" -> setSpinner(itemCategory_specificSpinner, storageorganizationsub)
-                    "Cleaning Supplies" -> setSpinner(itemCategory_specificSpinner, cleanningsupsub)
-                    "Fashion Accessories" -> setSpinner(itemCategory_specificSpinner, fashionaccessoriessub)
-                    "Gifts & Keepsakes" -> setSpinner(itemCategory_specificSpinner, giftskeepsakessub)
-                    "Handbags & Pocket Accessories" -> setSpinner(itemCategory_specificSpinner, weddingaccessoriessub)
-                    "Jewelry & Jewelry Accessories" -> setSpinner(itemCategory_specificSpinner, weddingjewelrysub)
-                    "Stationery & Party Supplies" -> setSpinner(itemCategory_specificSpinner, weddingstationerysub)
-                    "Wedding Decor" -> setSpinner(itemCategory_specificSpinner, weddingdecorsub)
-                    "Women", "Men" -> setSpinner(itemCategory_specificSpinner, womenandmensub)
-                    "Girls", "Boy" -> setSpinner(itemCategory_specificSpinner, girlboysub)
-                    "baby" -> setSpinner(itemCategory_specificSpinner, babygendersub)
-                    "Hair Accessories" -> setSpinner(itemCategory_specificSpinner, hairaccessoriessub)
-                    "Handbags & Shoulder Bags" -> setSpinner(itemCategory_specificSpinner, csabags)
-                    "Luggage & Travel Gear" -> setSpinner(itemCategory_specificSpinner, luggagesub)
-                    "Baby & Child Care" -> setSpinner(itemCategory_specificSpinner, childcaresub)
-                    "Fragrance" -> setSpinner(itemCategory_specificSpinner, fragrancesub)
-                    "Hair Care" -> setSpinner(itemCategory_specificSpinner, haircaresub)
-                    "Makeup" -> setSpinner(itemCategory_specificSpinner, makeupsub)
-                    "Personal Care" -> setSpinner(itemCategory_specificSpinner, personalcaresub)
-                    "Shaving & Hair Removal" -> setSpinner(itemCategory_specificSpinner, hairremovalsub)
-                    "Skin Care" -> setSpinner(itemCategory_specificSpinner, skincaresub)
-                    "Tools & Accessories" -> setSpinner(itemCategory_specificSpinner, beautytoolssb)
-                    "Party Supplies" -> setSpinner(itemCategory_specificSpinner, partysuppliessub)
-                    "Stationery" -> setSpinner(itemCategory_specificSpinner, stationerysub)
-                    "Novelty & Gag Toys" -> setSpinner(itemCategory_specificSpinner, noveltygagtoysub)
-                    "Dogs" -> setSpinner(itemCategory_specificSpinner, dogsub)
-                    "Cats" -> setSpinner(itemCategory_specificSpinner, catsub)
-                    "Camping & Hiking" -> setSpinner(itemCategory_specificSpinner, campingsub)
-                    "Car & Vehicle Accessories" -> setSpinner(itemCategory_specificSpinner, vehicleaccessoriessub)
-                    "Hunting & Shooting" -> setSpinner(itemCategory_specificSpinner, huntingsub)
-                    "Sports & Fitness" -> setSpinner(itemCategory_specificSpinner, fitnesssub)
-                    "Diaper Changing" -> setSpinner(itemCategory_specificSpinner, diapersuppliessub)
-                    "Nursery Bedding" -> setSpinner(itemCategory_specificSpinner, nurserybeddingsub)
-                    "Nursery Decor" -> setSpinner(itemCategory_specificSpinner, nurserydecorsub)
-                    "Nursing & Feeding" -> setSpinner(itemCategory_specificSpinner, nursingfeedingsub)
-                    "Pacifiers & Teethers" -> setSpinner(itemCategory_specificSpinner, pacifierssub)
-                    SELECT_SUBCATEGORY -> setSpinner(itemCategory_specificSpinner, arrayOf(SELECT_SPECIFICCATEGORY))
+                        "Puppets", "Puzzles", "Cycling", "Fishing", "Child Carriers", "Nursery Furniture" -> setSpinner(itemCategory_specificSpinner, nosub, editMode, 1)
+                    SELECT_SUBCATEGORY -> setSpinner(itemCategory_specificSpinner, arrayOf(SELECT_SPECIFICCATEGORY), editMode)
+                    else -> setSpinner(itemCategory_specificSpinner, specificMap.getOrElse(spinnerValue, {arrayOf(SELECT_SPECIFICCATEGORY)}), editMode, 1)
                 }
             }
         }
@@ -219,18 +164,20 @@ class AddItemCategory : AppCompatActivity() {
 
         if (intent.hasExtra("product")) {
             //edit product
+
+            Log.i("AddItemCategory.kt", "1")
+
             product = intent.extras?.getSerializable("product") as Product
-            Log.i("Edit Item", product.toString())
+            Log.i("AddItemCategory.kt", "edit item product")
             editMode = true
-            //Log.i("AddItemCategoryEdit", mainArrayAdapter.getPosition(product.category).toString())
             itemCategory_mainSpinner.setSelection(mainArrayAdapter.getPosition(product.category))
-//
-//            val subInt = editPosition(itemCategory_subSpinner, product.subCategory)
-//
-//            itemCategory_subSpinner.setSelection(subInt)
-//
-//
-//            itemCategory_specificSpinner.setSelection(editPosition(itemCategory_specificSpinner, product.specificCategory))
+
+            val sub = subMap.get(product.category)!!
+            setSpinner(itemCategory_subSpinner, sub, editMode, 0)
+
+            val spc = specificMap.get(product.subCategory)!!
+            setSpinner(itemCategory_specificSpinner, spc, editMode, 1)
+
         } else {
             //creating new product set artisanID
             product.artisanId = artisan.artisanId
@@ -253,10 +200,18 @@ class AddItemCategory : AppCompatActivity() {
     }
 
     //spinner factory
-    private fun setSpinner(spinnersub : Spinner, values: Array<String>) {
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, values)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) // Specify the layout to use when the list of choices appears
-        spinnersub.adapter = adapter
+    private fun setSpinner(spinnersub : Spinner, values: Array<String>, editMode : Boolean, spc : Int = -1) {
+        val spAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, values)
+        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) // Specify the layout to use when the list of choices appears
+        spinnersub.adapter = spAdapter
+
+        if (editMode && spc == 0) {
+            Log.d("AddItemCategory.kt:", "sub editMode: $editMode, index: ${spAdapter.getPosition(product.subCategory)}")
+            spinnersub.setSelection(spAdapter.getPosition(product.subCategory))
+        } else if (editMode && spc == 1){
+            Log.d("AddItemCategory.kt:", "spc editMode: $editMode, index: ${spAdapter.getPosition(product.subCategory)}")
+            spinnersub.setSelection(spAdapter.getPosition(product.specificCategory))
+        }
     }
 
     private fun addItemCategoryContinue(main : String, sub : String, specific : String, artisan: Artisan) {
@@ -277,6 +232,74 @@ class AddItemCategory : AppCompatActivity() {
             // do nothing not all categories are set correctly
             //TODO warning message?
         }
+    }
+
+    private fun initDataMap(){
+        subMap = mapOf("Jewelry" to jewelrysub,
+                        "Home & Kitchen" to homeKitchensub,
+                        "Clothing, Shoes & Accessories" to csasub,
+                        "Wedding" to weddingsub,
+                        "Handbags & Totes" to handbagssub,
+                        "Beauty & Grooming" to groomingsub,
+                        "Stationery & Party Supplies" to stationerypartysub,
+                        "Toys & Games" to toysgamessub,
+                        "Pet Supplies" to petsuppliessub,
+                        "Sports & Outdoors" to sportsgoodssub,
+                        "Baby" to babysub)
+
+        specificMap = mapOf("Accessories" to accessoriessub,
+                            "Bracelets" to braceletssub,
+                            "Cufflings & Shirt Accessories" to cufflingssub,
+                            "Earrings" to earringssub,
+                            "Hair Jewelry" to hairjewelrysub,
+                            "Necklaces" to necklacessub,
+                            "Rings" to ringssub,
+                            "Artwork" to artwroksub,
+                            "Bath" to bathsub,
+                            "Bedding" to beddingsub,
+                            "Furniture" to furnituresub,
+                            "Home Decor" to homedecorsub,
+                            "Kitchen & Dinning" to kitchendiningsub,
+                            "Lighting" to homelightingsub,
+                            "Patio, Lawn & Garden" to lawngardensub,
+                            "Storage & Organization" to storageorganizationsub,
+                            "Cleaning Supplies" to cleanningsupsub,
+                            "Fashion Accessories" to fashionaccessoriessub,
+                            "Gifts & Keepsakes" to giftskeepsakessub,
+                            "Handbags & Pocket Accessories" to weddingaccessoriessub,
+                            "Jewelry & Jewelry Accessories" to weddingjewelrysub,
+                            "Stationery & Party Supplies" to weddingstationerysub,
+                            "Wedding Decor" to weddingdecorsub,
+                            "Women" to womenandmensub,
+                            "Men" to womenandmensub,
+                            "Girls" to girlboysub,
+                            "Boys" to girlboysub,
+                            "Baby" to babygendersub,
+                            "Hair Accessories" to hairaccessoriessub,
+                            "Handbags & Shoulder Bags" to csabags,
+                            "Luggage & Travel Gear" to luggagesub,
+                            "Baby & Child Care" to childcaresub,
+                            "Fragrance" to fragrancesub,
+                            "Hair Care" to haircaresub,
+                            "Makeup" to makeupsub,
+                            "Personal Care" to personalcaresub,
+                            "Shaving & Hair Removal" to hairremovalsub,
+                            "Skin Care" to skincaresub,
+                            "Tools & Accessories" to beautytoolssb,
+                            "Party Supplies" to partysuppliessub,
+                            "Stationery" to stationerysub,
+                            "Novelty & Gag Toys" to noveltygagtoysub,
+                            "Dogs" to dogsub,
+                            "Cats" to catsub,
+                            "Camping & Hiking" to campingsub,
+                            "Car & Vehicle Accessories" to vehicleaccessoriessub,
+                            "Hunting & Shooting" to huntingsub,
+                            "Sports & Fitness" to fitnesssub,
+                            "Diaper Changing" to diapersuppliessub,
+                            "Nursery Bedding" to nurserybeddingsub,
+                            "Nursery Decor" to nurserydecorsub,
+                            "Nursing & Feeding" to nursingfeedingsub,
+                            "Pacifiers & Teethers" to pacifierssub)
     }
 
 }

@@ -62,7 +62,7 @@ class AddItemInfo : AppCompatActivity() {
         }
 
         if (editMode) {
-            addItemInfo_ProductShippingSpinner.setSelection(shippingArrayAdapter.getPosition(product.category))
+            addItemInfo_ProductShippingSpinner.setSelection(shippingArrayAdapter.getPosition(product.shippingOption))
         }
     }
 
@@ -115,7 +115,7 @@ class AddItemInfo : AppCompatActivity() {
         return true
     }
 
-    fun clearFields() {
+    private fun clearFields() {
         addItemInfo_ProductNameTF.text.clear()
         addItemInfo_ProductDescriptionTF.text.clear()
         addItemInfo_ProductionTimeTF.text.clear()
@@ -140,6 +140,5 @@ class AddItemInfo : AppCompatActivity() {
 
         }
     }
-
 
 }

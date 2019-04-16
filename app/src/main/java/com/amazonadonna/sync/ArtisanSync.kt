@@ -133,7 +133,15 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 launch {
                     setSyncedState(artisan, context)
                 }
-                artisan.artisanId = body!!.substring(1, body!!.length - 1)
+                val newArtisanId = body!!.substring(1, body!!.length - 1)
+
+                Log.d("ArtisanSync", "OLDID " + artisan.artisanId)
+                runBlocking {
+                    updateItemsForArtisan(context, artisan.artisanId, newArtisanId)
+                }
+
+                artisan.artisanId = newArtisanId
+
                 Log.i("AddArtisan", "success $body")
                 if (artisan.picURL != "Not set") {
                     uploadArtisanImage(context, artisan)
@@ -274,7 +282,9 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
     fun updateArtisan(context : Context, artisan : Artisan, newPhoto: File? = null) {
         job = Job()
         stageImageUpdate(context, artisan, newPhoto)
-        artisan.synced = SYNC_EDIT
+
+        if (artisan.synced != SYNC_NEW)
+            artisan.synced = SYNC_EDIT
 
         launch {
             updateArtisanHelper(context, artisan)
@@ -313,6 +323,11 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
     private suspend fun getUpdateArtisans(context : Context) = withContext(Dispatchers.IO) {
         AppDatabase.getDatabase(context).artisanDao().getAllBySyncState(SYNC_EDIT)
+    }
+
+    private suspend fun updateItemsForArtisan(context : Context, oldArtisanId : String, newArtisanId : String) = withContext(Dispatchers.IO) {
+        Log.d("ArtisanSync", oldArtisanId + " " + newArtisanId)
+        AppDatabase.getDatabase(context).productDao().updateArtisanId(oldArtisanId, newArtisanId)
     }
 
 

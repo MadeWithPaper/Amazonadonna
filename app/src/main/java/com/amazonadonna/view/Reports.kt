@@ -130,6 +130,10 @@ class Reports : AppCompatActivity(), CoroutineScope {
             }
         }
 
+        if (selectedTargets.isEmpty()) {
+            return
+        }
+
         when (reportType) {
             "Performance" -> generatePerformanceReport(selectedTargets)
             "Account Summary" -> generateSummaryReport(selectedTargets)

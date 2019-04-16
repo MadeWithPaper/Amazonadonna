@@ -89,7 +89,7 @@ class ArtisanProfile() : AppCompatActivity() {
         val intent = Intent(this, EditArtisan::class.java)
         intent.putExtra("artisan", artisan)
         startActivity(intent)
-        finish()
+        //finish()
     }
     //TODO rating system
 }
