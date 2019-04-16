@@ -1,4 +1,4 @@
-    aq1`12  `   import { Router, Request, Response } from 'express'
+import { Router, Request, Response } from 'express'
 import * as aws from 'aws-sdk'
 import { ddb, s3 } from '../server'
 
