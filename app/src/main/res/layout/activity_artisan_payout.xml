@@ -41,6 +41,8 @@
         android:layout_marginBottom="50dp"
         android:background="#00a8e1"
         android:text="@string/artisan_payout_continue_to_signature_button"
+        android:textColor="#fff"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

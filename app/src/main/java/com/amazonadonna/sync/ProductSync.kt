@@ -34,6 +34,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
 
     private fun uploadProducts(context: Context) {
         numInProgress++
+        //Thread.sleep(5000)
         runBlocking {
             val newProducts = getNewProducts(context)
             for (product in newProducts) {
@@ -74,7 +75,9 @@ object ProductSync: Synchronizer(), CoroutineScope {
             stageImageUpdate(context, product, photo, i)
             i++
         }
-        product.synced = SYNC_EDIT
+
+        if (product.synced != SYNC_NEW)
+            product.synced = SYNC_EDIT
 
         launch {
             updateProductHelper(context, product)
