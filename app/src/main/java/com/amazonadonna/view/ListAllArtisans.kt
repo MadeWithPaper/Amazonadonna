@@ -34,7 +34,7 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
         get() = Dispatchers.Main + job
 
     var cgaId: String = "0"
-    val listAllArtisansURL = "https://99956e2a.ngrok.io/artisan/listAllForCgo"
+    val listAllArtisansURL = "https://99956e2a.ngrok.io/artisan/listAllForCga"
     val originalArtisans: MutableList<Artisan> = mutableListOf()
     val filteredArtisans: MutableList<Artisan> = mutableListOf()
     val oldFilteredArtisans: MutableList<Artisan> = mutableListOf()
@@ -132,9 +132,9 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
     }
 
     private fun fetchJSON() {
-        //TODO update cgo id to real
+        //TODO update cga id to real
         Log.d("ListAllArtisans", "getting artisans for: "+cgaId)
-        val requestBody = FormBody.Builder().add("cgoId", cgaId)
+        val requestBody = FormBody.Builder().add("cgaId", cgaId)
                 .build()
 
         val client = OkHttpClient()

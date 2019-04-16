@@ -76,7 +76,7 @@ object PayoutSync : Synchronizer(), CoroutineScope {
         numInProgress++
         Log.i(TAG, payout.artisanId)
         val requestBody = FormBody.Builder().add("artisanId", payout.artisanId)
-                .add("cgoId", payout.cgoId)
+                .add("cgaId", payout.cgaId)
                 .add("amount", payout.amount.toString())
                 .add("date", payout.date.toString())
 

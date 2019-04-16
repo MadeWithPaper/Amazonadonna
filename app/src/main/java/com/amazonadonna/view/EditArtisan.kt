@@ -330,7 +330,7 @@ class EditArtisan : AppCompatActivity() {
         var updatePic = false
 
         val requestBody = FormBody.Builder().add("artisanId", oldArtisan.artisanId)
-                .add("cgoId", oldArtisan.cgoId)
+                .add("cgaId", oldArtisan.cgaId)
                 .add("bio", oldArtisan.bio)
                 .add("city", oldArtisan.city)
                 .add("country", oldArtisan.country)

@@ -8,7 +8,7 @@ import * as aws from 'aws-sdk'
 import { artisanRouter } from './routes/artisan'
 import { orderRouter } from './routes/order'
 import { itemRouter } from './routes/item'
-import { cgoRouter } from './routes/cgo'
+import { cgaRouter } from './routes/cga'
 import { payoutRouter } from './routes/payout'
 
 const app = express()
@@ -52,7 +52,7 @@ app.get('/', (req: express.Request, res: express.Response) => {
 app.use('/artisan', artisanRouter)
 app.use('/order', orderRouter)
 app.use('/item', itemRouter)
-app.use('/cgo', cgoRouter)
+app.use('/cga', cgaRouter)
 app.use('/payout', payoutRouter)
 
 export { app as server, ddb, s3 }

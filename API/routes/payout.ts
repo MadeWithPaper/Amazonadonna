@@ -42,7 +42,7 @@ router.post('/add', (req: Request, res: Response) => {
         Item: {
             payoutId: { S: id },
             artisanId: { S: req.body.artisanId },
-            cgoId: { S: req.body.cgoId },
+            cgaId: { S: req.body.cgaId },
             amount: { N: req.body.amount },
             /*Date values are stored as ISO-8601 formatted strings*/
             date: { S: req.body.date },
@@ -60,7 +60,6 @@ router.post('/add', (req: Request, res: Response) => {
             const d = new Date(0)
             d.setUTCMilliseconds(req.body.date)
             sendText(
-                '19169903748',
                 req.body.artisanId,
                 req.body.payoutId,
                 d.toLocaleDateString(),
@@ -132,7 +131,6 @@ router.post('/updateImage', (req: Request, res: Response) => {
 
 /*date, amount, ArtisanName*/
 const sendText = (
-    phoneNumber: string,
     artisanId: string,
     payoutId: string,
     date: string,
@@ -162,13 +160,13 @@ const sendText = (
                     "' on " +
                     date +
                     '.',
-                PhoneNumber: phoneNumber
+                PhoneNumber: unmarshed.phoneNumber
             }
             sns.publish(params, (snserr, snsdata) => {
                 if (err) {
                     console.log(
                         'Error sending text to ' +
-                            params.PhoneNumber +
+                            unmarshed.phoneNumber +
                             'for payoutId' +
                             payoutId
                     )

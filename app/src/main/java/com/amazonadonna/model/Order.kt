@@ -18,7 +18,7 @@ data class Order (
         //TODO uncomment when backend route supports amOrderNumber, otherwise causes crash
         //@ColumnInfo(name = "amOrderNumber") @Json(name = "amOrderNumber") var amOrderNumber : String,
         @ColumnInfo(name = "products") @Json(name = "products") var products : List<Product>,
-        @ColumnInfo(name = "cgoId") @Json(name = "cgoId") var cgoId : String,
+        @ColumnInfo(name = "cgaId") @Json(name = "cgaId") var cgaId : String,
         @ColumnInfo(name = "synced") var synced : Int = Synchronizer.SYNCED)
         //TODO change format of date
         //TODO uncomment when backend route supports orderDate, otherwise causes crash

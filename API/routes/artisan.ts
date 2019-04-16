@@ -10,19 +10,19 @@ import * as uuid from 'uuid'
 
 const router = Router()
 
-router.post('/listAllForCgo', (req: Request, res: Response) => {
+router.post('/listAllForCga', (req: Request, res: Response) => {
     const listAllArtisansParams: aws.DynamoDB.Types.QueryInput = {
         TableName: 'artisan',
-        IndexName: 'cgoId-index',
-        KeyConditionExpression: 'cgoId = :id',
+        IndexName: 'cgaId-index',
+        KeyConditionExpression: 'cgaId = :id',
         ExpressionAttributeValues: {
-            ':id': { S: req.body.cgoId }
+            ':id': { S: req.body.cgaId }
         }
     }
 
     ddb.query(listAllArtisansParams, (err, data) => {
         if (err) {
-            const msg = 'Error fetching artisans in artisan/listAllForCgo: '
+            const msg = 'Error fetching artisans in artisan/listAllForCga: '
             console.log(msg + err)
             res.status(400).send(msg + err.message)
         } else {
@@ -40,7 +40,7 @@ router.post('/add', (req: Request, res: Response) => {
         TableName: 'artisan',
         Item: {
             artisanId: { S: id },
-            cgoId: { S: req.body.cgoId },
+            cgaId: { S: req.body.cgaId },
             bio: { S: req.body.bio },
             city: { S: req.body.city },
             country: { S: req.body.country },
@@ -48,7 +48,8 @@ router.post('/add', (req: Request, res: Response) => {
             lat: { N: req.body.lat },
             lon: { N: req.body.lon },
             balance: { N: req.body.balance },
-            picURL: { S: 'Not set' }
+            picURL: { S: 'Not set' },
+            phoneNumber: { S: req.body.phoneNumber }
         }
     }
     ddb.putItem(putItemParams, (err, data) => {
@@ -155,7 +156,7 @@ router.post('/edit', (req: Request, res: Response) => {
                 artisanId: req.body.artisanId
                     ? req.body.artisanId
                     : unmarshed.artisanId,
-                cgoId: req.body.cgoId ? req.body.cgoId : unmarshed.cgoId,
+                cgaId: req.body.cgaId ? req.body.cgaId : unmarshed.cgaId,
                 bio: req.body.bio ? req.body.bio : unmarshed.bio,
                 city: req.body.city ? req.body.city : unmarshed.city,
                 country: req.body.country
@@ -169,13 +170,16 @@ router.post('/edit', (req: Request, res: Response) => {
                 balance: req.body.balance
                     ? req.body.balance
                     : unmarshed.balance,
-                picURL: req.body.picURL ? req.body.picURL : unmarshed.picURL
+                picURL: req.body.picURL ? req.body.picURL : unmarshed.picURL,
+                phoneNumber: req.body.phoneNumber
+                    ? req.body.phoneNumber
+                    : unmarshed.phoneNumber
             }
 
             const editArtisanParam: aws.DynamoDB.Types.UpdateItemInput = {
                 TableName: 'artisan',
                 Key: { artisanId: { S: req.body.artisanId } },
-                UpdateExpression: `set cgoId = :cgoId, 
+                UpdateExpression: `set cgaId = :cgaId, 
                                     bio = :bio, 
                                     city = :city,
                                     country = :country,
@@ -185,7 +189,7 @@ router.post('/edit', (req: Request, res: Response) => {
                                     balance = :balance,
                                     picURL = :picURL`,
                 ExpressionAttributeValues: {
-                    ':cgoId': { S: whatToUpdate.cgoId },
+                    ':cgaId': { S: whatToUpdate.cgaId },
                     ':bio': { S: whatToUpdate.bio },
                     ':city': { S: whatToUpdate.city },
                     ':country': { S: whatToUpdate.country },
@@ -213,8 +217,8 @@ router.post('/edit', (req: Request, res: Response) => {
 router.get('/deleteAll', (req: Request, res: Response) => {
     const listAllArtisansParams: aws.DynamoDB.Types.QueryInput = {
         TableName: 'artisan',
-        IndexName: 'cgoId-index',
-        KeyConditionExpression: 'cgoId = :id',
+        IndexName: 'cgaId-index',
+        KeyConditionExpression: 'cgaId = :id',
         ExpressionAttributeValues: {
             ':id': { S: '0' }
         }

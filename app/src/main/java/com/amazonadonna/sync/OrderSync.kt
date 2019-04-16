@@ -17,7 +17,7 @@ import java.io.IOException
 
 object OrderSync: Synchronizer(), CoroutineScope {
     private const val TAG = "OrderSync"
-    private const val listOrderURL = "https://99956e2a.ngrok.io/order/listAllForCgo"
+    private const val listOrderURL = "https://99956e2a.ngrok.io/order/listAllForCga"
     private const val getItemURL = "https://99956e2a.ngrok.io/order/getItems"
     private const val editOrderURL = "https://99956e2a.ngrok.io/order/setShippedStatus"
 
@@ -75,7 +75,7 @@ object OrderSync: Synchronizer(), CoroutineScope {
 
     private fun downloadOrders(context: Context) {
         numInProgress++
-        val requestBody = FormBody.Builder().add("cgoId", mCgaId)
+        val requestBody = FormBody.Builder().add("cgaId", mCgaId)
                 .build()
         val request = Request.Builder().url(listOrderURL).post(requestBody).build()
         val orderDao = AppDatabase.getDatabase(context).orderDao()
