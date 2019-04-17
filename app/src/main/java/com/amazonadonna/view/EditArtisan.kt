@@ -154,16 +154,28 @@ class EditArtisan : AppCompatActivity() {
             CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
                     val dataURI = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
+                    val cr = contentResolver
                     try {
-                        Log.d("Add Artisan post photo", "Success")
-                        Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
-                        val bm = loadScaledBitmap(dataURI, w, h)
+                        val bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, dataURI)
+                        Bitmap.createScaledBitmap(bitmap,331,273,true)
                         val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
-                        ivPreview.setImageBitmap(bm)
-                        //setImageView()
-                    } catch (e: Error) {
+                        ivPreview.setImageBitmap(bitmap)
+
+                    }
+                    catch (e: Error) {
                         Log.d("Add Artisan post Photo", "it failed")
                     }
+//                    val dataURI = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
+//                    try {
+//                        Log.d("Add Artisan post photo", "Success")
+//                        Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
+//                        val bm = loadScaledBitmap(dataURI, w, h)
+//                        val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
+//                        ivPreview.setImageBitmap(bm)
+//                        //setImageView()
+//                    } catch (e: Error) {
+//                        Log.d("Add Artisan post Photo", "it failed")
+//                    }
 
                 }
             CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE ->
