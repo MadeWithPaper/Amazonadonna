@@ -24,6 +24,8 @@ class HomeScreen : AppCompatActivity() {
     private var cgaAmaznName : String = ""
     private var newLang : String = "en_US"
     private val amaznIdURL = "https://99956e2a.ngrok.io/cga/getByAmznId"
+    private val addAmaznIdURL = "https://99956e2a.ngrok.io/cga/add"
+
     private lateinit var alertDialog : AlertDialog
     private var currUser : User? = null
     private var getUserInfoListener = object : Listener<User, AuthError> {
@@ -210,7 +212,7 @@ class HomeScreen : AppCompatActivity() {
     }
 
     private fun addCGAToDB() {
-        val url = "https://7bd92aed.ngrok.io/cga/add"
+       // val url = "https://7bd92aed.ngrok.io/cga/add"
         val requestBody = FormBody.Builder().add("amznId", cgaID!!)
                 .add("city", "San Francisco").add("country","USA")
                 .add("name", cgaAmaznName).add("lat", "32.19").add("lon", "77.398").build()
@@ -220,7 +222,7 @@ class HomeScreen : AppCompatActivity() {
         ).fallbackToDestructiveMigration().build()
         val client = OkHttpClient()
         val request = Request.Builder()
-                .url(url)
+                .url(addAmaznIdURL)
                 .post(requestBody)
                 .build()
 
@@ -236,7 +238,7 @@ class HomeScreen : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("HomeScreen", "failed to do POST request to database" + url)
+                Log.e("HomeScreen", "failed to do POST request to database" + addAmaznIdURL)
             }
         })
     }
