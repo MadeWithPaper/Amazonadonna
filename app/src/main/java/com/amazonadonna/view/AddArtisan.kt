@@ -83,6 +83,7 @@ class AddArtisan : AppCompatActivity() {
 
         val fileProvider = FileProvider.getUriForFile(this@AddArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
 
+
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
 
         if (intent.resolveActivity(packageManager) != null) {
