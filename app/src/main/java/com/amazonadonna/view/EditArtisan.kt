@@ -3,6 +3,8 @@ package com.amazonadonna.view
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.ContentUris
+import android.content.ContextWrapper
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -25,12 +27,14 @@ import okhttp3.*
 import java.io.*
 
 class EditArtisan : AppCompatActivity() {
+
     private var photoFile: File? = null
     private val fileName: String = "editProfilePic.png"
     private val editArtisanURL = "https://99956e2a.ngrok.io/artisan/edit"
     private val updateArtisanURL = "https://99956e2a.ngrok.io/artisan/updateImage"
     private val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
+
     private lateinit var pic : Drawable
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,18 +97,11 @@ class EditArtisan : AppCompatActivity() {
         val fileProvider = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
 
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
+        Log.d("EditArtisan", "uri: "+fileProvider)
 
         if (intent.resolveActivity(packageManager) != null) {
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE)
         }
-    }
-
-    private fun setImageView() {
-        val takenImage = BitmapFactory.decodeFile(photoFile!!.absolutePath)
-        // RESIZE BITMAP, see section below
-        // Load the taken image into a preview
-        val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
-        ivPreview.setImageBitmap(takenImage)
     }
 
     @TargetApi(19)
@@ -115,12 +112,14 @@ class EditArtisan : AppCompatActivity() {
         val h = 273
         if (DocumentsContract.isDocumentUri(this, uri)){
             val docId = DocumentsContract.getDocumentId(uri)
+            Log.d("EditArtisan", "docID: "+docId)
             if ("com.android.providers.media.documents" == uri.authority){
                 val id = docId.split(":")[1]
                 val selsetion = MediaStore.Images.Media._ID + "=" + id
                 imagePath = imagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selsetion)
             }
             else if ("com.android.providers.downloads.documents" == uri.authority){
+                Log.d("EditArtisan", "uri: "+uri)
                 val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(docId))
                 imagePath = imagePath(contentUri, null)
             }
@@ -143,8 +142,6 @@ class EditArtisan : AppCompatActivity() {
         //byteArray = ByteArray(photoFile!!.length().toInt())
 
         try {
-
-
             //convert array of bytes into file
             val fileOuputStream = FileOutputStream(photoFile)
             fileOuputStream.write(byteArray)
@@ -169,9 +166,31 @@ class EditArtisan : AppCompatActivity() {
         return path!!
     }
 
+    private fun bitmapToFile(bitmap:Bitmap): Uri {
+        // Get the context wrapper
+        val wrapper = ContextWrapper(applicationContext)
+
+        // Initialize a new file instance to save bitmap object
+        var file = wrapper.getDir("Images",Context.MODE_PRIVATE)
+        file = File(file,fileName)
+
+        try{
+            // Compress the bitmap and save in jpg format
+            val stream:OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
+            stream.flush()
+            stream.close()
+        }catch (e:IOException){
+            e.printStackTrace()
+        }
+
+        // Return the saved bitmap uri
+        return Uri.parse(file.absolutePath)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode){
+        when(requestCode) {
             CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
                     val w = 331
@@ -202,38 +221,21 @@ class EditArtisan : AppCompatActivity() {
                         val w = 331
                         val h = 273
                         val dataURI = data.data
-                        Log.d("HEIGHT", h.toString())
-                        Log.d("WIDTH", w.toString())
-                        Log.d("dataURI", dataURI.toString())
-                        createImageFile(data)
-
 
                         try {
-                            Log.d("Add Artisan post photo", "Success")
-                            Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
                             val bm = loadScaledBitmap(dataURI, w, h)
+                            val uri = bitmapToFile(bm!!)
+                            photoFile = File(uri.path)
+
                             val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
                             ivPreview.setImageBitmap(bm)
                             //setImageView()
-                        }
-                        catch(e: Error) {
+                        } catch (e: Error) {
                             Log.d("Add Artisan post Photo", "it failed")
                         }
-//                        createImageFile(data)
-//                        Log.d("Add Artisan postGallery", "File:  Exists?: " + photoFile!!.exists())
-//                        setImageView()
-                    }
-                    else {
+                    } else {
                         Log.d("Add Artisan postGallery", "Data was null")
                     }
-//                    if (data != null) {
-//                        createImageFile(data)
-//                        Log.d("EditArtisan postGallery", "File:  Exists?: " + photoFile!!.exists())
-//                        setImageView()
-//                    }
-//                    else {
-//                        Log.d("EditArtisan postGallery", "Data was null")
-//                    }
                 }
         }
     }
