@@ -104,67 +104,6 @@ class EditArtisan : AppCompatActivity() {
         }
     }
 
-    @TargetApi(19)
-    private fun createImageFile(data: Intent?) {
-        var imagePath: String? = null
-        val uri = data!!.data
-        val w = 331
-        val h = 273
-        if (DocumentsContract.isDocumentUri(this, uri)){
-            val docId = DocumentsContract.getDocumentId(uri)
-            Log.d("EditArtisan", "docID: "+docId)
-            if ("com.android.providers.media.documents" == uri.authority){
-                val id = docId.split(":")[1]
-                val selsetion = MediaStore.Images.Media._ID + "=" + id
-                imagePath = imagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selsetion)
-            }
-            else if ("com.android.providers.downloads.documents" == uri.authority){
-                Log.d("EditArtisan", "uri: "+uri)
-                val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(docId))
-                imagePath = imagePath(contentUri, null)
-            }
-        }
-        else if ("content".equals(uri.scheme, ignoreCase = true)){
-            imagePath = imagePath(uri, null)
-        }
-        else if ("file".equals(uri.scheme, ignoreCase = true)){
-            imagePath = uri.path
-        }
-
-        photoFile = File(imagePath)
-
-        //pre-scaling bits
-        val uri_test = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
-        val bm = loadScaledBitmap(uri_test, w, h)
-        val stream = ByteArrayOutputStream()
-        bm!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        var byteArray = stream.toByteArray()
-        //byteArray = ByteArray(photoFile!!.length().toInt())
-
-        try {
-            //convert array of bytes into file
-            val fileOuputStream = FileOutputStream(photoFile)
-            fileOuputStream.write(byteArray)
-            fileOuputStream.close()
-            Log.d("SKETIT", "lol")
-
-            println("Done")
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun imagePath(uri: Uri?, selection: String?): String {
-        var path: String? = null
-        val cursor = contentResolver.query(uri, null, selection, null, null )
-        if (cursor != null){
-            if (cursor.moveToFirst()) {
-                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
-            }
-            cursor.close()
-        }
-        return path!!
-    }
 
     private fun bitmapToFile(bitmap:Bitmap): Uri {
         // Get the context wrapper
