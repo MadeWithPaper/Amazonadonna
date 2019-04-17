@@ -7,18 +7,18 @@ import * as uuid from 'uuid'
 
 const router = Router()
 
-router.post('/listAllForCgo', (req: Request, res: Response) => {
+router.post('/listAllForCga', (req: Request, res: Response) => {
     const listAllOrdersParams: aws.DynamoDB.Types.QueryInput = {
         TableName: 'order',
-        IndexName: 'cgoId-index',
-        KeyConditionExpression: 'cgoId = :id',
+        IndexName: 'cgaId-index',
+        KeyConditionExpression: 'cgaId = :id',
         ExpressionAttributeValues: {
-            ':id': { S: req.body.cgoId }
+            ':id': { S: req.body.cgaId }
         }
     }
     ddb.query(listAllOrdersParams, (err, data) => {
         if (err) {
-            const msg = 'Error fetching orders in order/listAllForCgo: '
+            const msg = 'Error fetching orders in order/listAllForCga: '
             console.log(msg + err)
             res.status(400).send(msg + err.message)
         } else {
@@ -36,7 +36,7 @@ router.post('/add', (req: Request, res: Response) => {
         TableName: 'order',
         Item: {
             orderId: { S: id },
-            cgoId: { S: req.body.cgoId },
+            cgaId: { S: req.body.cgaId },
             shippedStatus: { BOOL: req.body.shippedStatus },
             numItems: { N: req.body.numItems },
             shippingAddress: { S: req.body.shippingAddress },

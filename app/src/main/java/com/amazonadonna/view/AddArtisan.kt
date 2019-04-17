@@ -72,8 +72,9 @@ class AddArtisan : AppCompatActivity() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         val w = 331
         val h = 273
-
         photoFile = File(externalCacheDir, fileName)
+
+
 
         if(photoFile!!.exists()) {
             photoFile!!.delete()
@@ -82,6 +83,7 @@ class AddArtisan : AppCompatActivity() {
 
 
         val fileProvider = FileProvider.getUriForFile(this@AddArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
+
 
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
 
@@ -180,19 +182,31 @@ class AddArtisan : AppCompatActivity() {
         when(requestCode){
             CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
-                    val w = imageView_artisanProfilePic.width
-                    val h = imageView_artisanProfilePic.height
                     val dataURI = FileProvider.getUriForFile(this@AddArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
-                        try {
-                            Log.d("Add Artisan post photo", "Success")
-                            Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
-                            val bm = loadScaledBitmap(dataURI, w, h)
-                            val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
-                            ivPreview.setImageBitmap(bm)
-                            //setImageView()
-                        } catch (e: Error) {
+                    val cr = contentResolver
+                    try {
+                        val bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, dataURI)
+                        Bitmap.createScaledBitmap(bitmap,331,273,true)
+                        val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
+                        ivPreview.setImageBitmap(bitmap)
+
+                    }
+                    catch (e: Error) {
                             Log.d("Add Artisan post Photo", "it failed")
                         }
+//                    val w = imageView_artisanProfilePic.width
+//                    val h = imageView_artisanProfilePic.height
+//                    val dataURI = FileProvider.getUriForFile(this@AddArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
+//                        try {
+//                            Log.d("Add Artisan post photo", "Success")
+//                            Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
+//                            val bm = loadScaledBitmap(dataURI, w, h)
+//                            val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
+//                            ivPreview.setImageBitmap(bm)
+//                            //setImageView()
+//                        } catch (e: Error) {
+//                            Log.d("Add Artisan post Photo", "it failed")
+//                        }
                     }
             CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {

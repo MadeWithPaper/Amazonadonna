@@ -54,7 +54,7 @@
             android:name=".AddItemInfo"
             android:configChanges="layoutDirection|locale"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".AddItemCategory"
             android:configChanges="layoutDirection|locale"
