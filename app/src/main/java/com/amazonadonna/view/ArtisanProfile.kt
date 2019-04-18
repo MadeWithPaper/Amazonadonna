@@ -1,5 +1,6 @@
 package com.amazonadonna.view
 
+import android.util.Log
 import android.content.Intent
 import android.content.Intent.createChooser
 import android.os.Bundle
@@ -12,30 +13,38 @@ import com.amazonadonna.database.ImageStorageProvider
 
 class ArtisanProfile() : AppCompatActivity() {
 
+    var artisan : Artisan? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_profile)
         //ArtisanSync.sync(this)
-        val artisan = intent.extras?.getSerializable("artisan") as Artisan
+        artisan = intent.extras?.getSerializable("artisan") as Artisan
 
         artisanProfileBio.setMovementMethod(ScrollingMovementMethod())
 
-        populateSelectedArtisan(artisan)
+        populateSelectedArtisan(artisan as Artisan)
 
         artisanProfileItemListButton.setOnClickListener {
-            artisanItemList(artisan)
+            artisanItemList(artisan as Artisan)
         }
 
         artisanProfileMessagesButton.setOnClickListener {
-            artisanMessage(artisan)
+            artisanMessage(artisan as Artisan)
         }
         artisanProfilePayoutButton.setOnClickListener {
-            artisanPayout(artisan)
+            artisanPayout(artisan as Artisan)
         }
 
         artisanProfile_edit.setOnClickListener {
-            editArtisan(artisan)
+            editArtisan(artisan as Artisan)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("ArtisanProfile", "in onResume")
+        populateSelectedArtisan(artisan as Artisan)
     }
 
     private fun artisanMessage(artisan: Artisan) {
