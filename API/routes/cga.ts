@@ -30,7 +30,8 @@ router.post('/add', (req: Request, res: Response) => {
             name: { S: req.body.name },
             lat: { N: req.body.lat },
             lon: { N: req.body.lon }
-        }
+        },
+        ConditionExpression: 'attribute_not_exists(amznId)'
     }
     ddb.putItem(putCgaParams, (err, data) => {
         if (err) {
