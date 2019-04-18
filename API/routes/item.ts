@@ -7,6 +7,7 @@ import { ddb, s3 } from '../server'
 import { Item } from '../models/item'
 import { unmarshUtil } from '../utilities/unmarshall'
 import * as uuid from 'uuid'
+import * as _ from 'lodash'
 
 const router = Router()
 
@@ -158,58 +159,66 @@ router.post('/editItem', (req: Request, res: Response) => {
             )
         } else {
             const unmarshed = aws.DynamoDB.Converter.unmarshall(data.Item)
-            const whatToUpdate: Item = {
-                itemId: req.body.itemId ? req.body.itemId : unmarshed.itemId,
-                artisanId: req.body.artisanId
-                    ? req.body.artisanId
-                    : unmarshed.artisanId,
-                price: req.body.price ? req.body.price : unmarshed.price,
-                description: req.body.description
-                    ? req.body.description
-                    : unmarshed.description,
-                category: req.body.category
-                    ? req.body.category
-                    : unmarshed.category,
-                subCategory: req.body.subCategory
-                    ? req.body.subCategory
-                    : unmarshed.subCategory,
-                specificCategory: req.body.specificCategory
-                    ? req.body.specificCategory
-                    : unmarshed.specificCategory,
-                itemName: req.body.itemName
-                    ? req.body.itemName
-                    : unmarshed.itemName,
-                shippingOption: req.body.shippingOption
-                    ? req.body.shippingOption
-                    : unmarshed.shippingOption,
-                itemQuantity: req.body.itemQuantity
-                    ? req.body.itemQuantity
-                    : unmarshed.itemQuantity,
-                productionTime: req.body.productionTime
-                    ? req.body.productionTime
-                    : unmarshed.productionTime,
-                pic0URL: req.body.pic0URL
-                    ? req.body.pic0URL
-                    : unmarshed.pic0URL,
-                pic1URL: req.body.pic1URL
-                    ? req.body.pic1URL
-                    : unmarshed.pic1URL,
-                pic2URL: req.body.pic2URL
-                    ? req.body.pic2URL
-                    : unmarshed.pic2URL,
-                pic3URL: req.body.pic3URL
-                    ? req.body.pic3URL
-                    : unmarshed.pic3URL,
-                pic4URL: req.body.pic4URL
-                    ? req.body.pic4URL
-                    : unmarshed.pic4URL,
-                pic5URL: req.body.pic5URL ? req.body.pic5URL : unmarshed.pic5URL
-            }
+            if (_.isEmpty(unmarshed)) {
+                const msg = 'Error getting item in item/editItem/getItem: '
+                const DNEerr = 'Item does not exist'
+                console.log(msg + DNEerr)
+                res.status(400).send(msg + DNEerr)
+            } else {
+                const whatToUpdate: Item = {
+                    itemId: unmarshed.itemId,
+                    artisanId: req.body.artisanId
+                        ? req.body.artisanId
+                        : unmarshed.artisanId,
+                    price: req.body.price ? req.body.price : unmarshed.price,
+                    description: req.body.description
+                        ? req.body.description
+                        : unmarshed.description,
+                    category: req.body.category
+                        ? req.body.category
+                        : unmarshed.category,
+                    subCategory: req.body.subCategory
+                        ? req.body.subCategory
+                        : unmarshed.subCategory,
+                    specificCategory: req.body.specificCategory
+                        ? req.body.specificCategory
+                        : unmarshed.specificCategory,
+                    itemName: req.body.itemName
+                        ? req.body.itemName
+                        : unmarshed.itemName,
+                    shippingOption: req.body.shippingOption
+                        ? req.body.shippingOption
+                        : unmarshed.shippingOption,
+                    itemQuantity: req.body.itemQuantity
+                        ? req.body.itemQuantity
+                        : unmarshed.itemQuantity,
+                    productionTime: req.body.productionTime
+                        ? req.body.productionTime
+                        : unmarshed.productionTime,
+                    pic0URL: req.body.pic0URL
+                        ? req.body.pic0URL
+                        : unmarshed.pic0URL,
+                    pic1URL: req.body.pic1URL
+                        ? req.body.pic1URL
+                        : unmarshed.pic1URL,
+                    pic2URL: req.body.pic2URL
+                        ? req.body.pic2URL
+                        : unmarshed.pic2URL,
+                    pic3URL: req.body.pic3URL
+                        ? req.body.pic3URL
+                        : unmarshed.pic3URL,
+                    pic4URL: req.body.pic4URL
+                        ? req.body.pic4URL
+                        : unmarshed.pic4URL,
+                    pic5URL: req.body.pic5URL
+                        ? req.body.pic5URL
+                        : unmarshed.pic5URL
+                }
 
-            const editItemParams: aws.DynamoDB.Types.UpdateItemInput = {
-                TableName: 'item',
-                Key: { itemId: { S: req.body.itemId } },
-                UpdateExpression: `set artisanId = :artisanId, 
+                const editItemParams: aws.DynamoDB.Types.UpdateItemInput = {
+                    TableName: 'item',
+                    Key: { itemId: { S: req.body.itemId } },
+                    UpdateExpression: `set artisanId = :artisanId, 
                                     price = :price, 
                                     description = :description,
                                     category = :category,
@@ -225,43 +234,46 @@ router.post('/editItem', (req: Request, res: Response) => {
                                     pic3URL = :pic3URL,
                                     pic4URL = :pic4URL,
                                     pic5URL = :pic5URL`,
-                ExpressionAttributeValues: {
-                    ':artisanId': { S: whatToUpdate.artisanId },
-                    ':price': { S: whatToUpdate.price },
-                    ':description': { S: whatToUpdate.description },
-                    ':category': { S: whatToUpdate.category },
-                    ':subCategory': { S: whatToUpdate.subCategory },
-                    ':specificCategory': { S: whatToUpdate.specificCategory },
-                    ':itemName': { S: whatToUpdate.itemName },
-                    ':shippingOption': { S: whatToUpdate.shippingOption },
-                    ':itemQuantity': {
-                        N: whatToUpdate.itemQuantity.toString()
+                    ExpressionAttributeValues: {
+                        ':artisanId': { S: whatToUpdate.artisanId },
+                        ':price': { S: whatToUpdate.price },
+                        ':description': { S: whatToUpdate.description },
+                        ':category': { S: whatToUpdate.category },
+                        ':subCategory': { S: whatToUpdate.subCategory },
+                        ':specificCategory': {
+                            S: whatToUpdate.specificCategory
+                        },
+                        ':itemName': { S: whatToUpdate.itemName },
+                        ':shippingOption': { S: whatToUpdate.shippingOption },
+                        ':itemQuantity': {
+                            N: whatToUpdate.itemQuantity.toString()
+                        },
+                        ':productionTime': {
+                            N: whatToUpdate.productionTime.toString()
+                        },
+                        ':pic0URL': { S: whatToUpdate.pic0URL },
+                        ':pic1URL': { S: whatToUpdate.pic1URL },
+                        ':pic2URL': { S: whatToUpdate.pic2URL },
+                        ':pic3URL': { S: whatToUpdate.pic3URL },
+                        ':pic4URL': { S: whatToUpdate.pic4URL },
+                        ':pic5URL': { S: whatToUpdate.pic5URL }
                     },
-                    ':productionTime': {
-                        N: whatToUpdate.productionTime.toString()
-                    },
-                    ':pic0URL': { S: whatToUpdate.pic0URL },
-                    ':pic1URL': { S: whatToUpdate.pic1URL },
-                    ':pic2URL': { S: whatToUpdate.pic2URL },
-                    ':pic3URL': { S: whatToUpdate.pic3URL },
-                    ':pic4URL': { S: whatToUpdate.pic4URL },
-                    ':pic5URL': { S: whatToUpdate.pic5URL }
-                },
-                ReturnValues: 'UPDATED_NEW'
-            }
-            ddb.updateItem(editItemParams, (updateErr, updateData) => {
-                if (updateErr) {
-                    console.log(
-                        'Error updating item in item/editItem: ' + updateErr
-                    )
-                    res.status(400).send(
-                        'Error updating item in item/editItem: ' +
-                            updateErr.message
-                    )
-                } else {
-                    res.send('Success!')
+                    ReturnValues: 'UPDATED_NEW'
                 }
-            })
+                ddb.updateItem(editItemParams, (updateErr, updateData) => {
+                    if (updateErr) {
+                        console.log(
+                            'Error updating item in item/editItem: ' + updateErr
+                        )
+                        res.status(400).send(
+                            'Error updating item in item/editItem: ' +
+                                updateErr.message
+                        )
+                    } else {
+                        res.send('Success!')
+                    }
+                })
+            }
         }
     })
 })
