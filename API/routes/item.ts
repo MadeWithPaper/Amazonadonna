@@ -78,80 +78,72 @@ router.post('/add', (req: Request, res: Response) => {
 
 router.post('/updateImage', (req: Request, res: Response) => {
     // setup pic uploader with itemId as filename
-    const picNum = Number(req.body.picIndex)
-    console.log(picNum)
-    console.log(req.body.picIndex)
-    if (!isNaN(picNum) && picNum >= 0 && picNum < 6) {
-        const artisanPicsUploader = multer({
-            storage: multerS3({
-                s3,
-                bucket: 'artisan-item-pics',
-                acl: 'public-read',
-                contentType: (picReq, file, cb) => {
-                    cb(null, file.mimetype)
-                },
-                metadata: (picReq, file, cb) => {
-                    cb(null, { fieldName: file.fieldname })
-                },
-                key: (picReq, file, cb) => {
-                    cb(
-                        null,
-                        req.body.itemId +
-                            '-' +
-                            Date.now() +
-                            '.' +
-                            mime.getExtension(file.mimetype)
-                    )
-                }
-            })
-        })
-
-        const singleItemPicUpload = artisanPicsUploader.single('image')
-
-        // upload pic
-        singleItemPicUpload(req, res, picErr => {
-            if (picErr) {
-                console.log(
-                    'Error uploading picture in item/updateImage',
-                    picErr
+    const artisanPicsUploader = multer({
+        storage: multerS3({
+            s3,
+            bucket: 'artisan-item-pics',
+            acl: 'public-read',
+            contentType: (picReq, file, cb) => {
+                cb(null, file.mimetype)
+            },
+            metadata: (picReq, file, cb) => {
+                cb(null, { fieldName: file.fieldname })
+            },
+            key: (picReq, file, cb) => {
+                cb(
+                    null,
+                    req.body.itemId +
+                        '-' +
+                        Date.now() +
+                        '.' +
+                        mime.getExtension(file.mimetype)
                 )
-                res.status(422).send(
-                    'Error uploading picture in item/updateImage: ' +
-                        picErr.message
-                )
-            } else {
-                let picURL = 'Error: no picture attached'
-                if (req.file) {
-                    picURL = (req.file as any).location
-                }
-                const updateExpress = 'set pic' + req.body.picIndex + 'URL = :u'
-                const params: aws.DynamoDB.UpdateItemInput = {
-                    TableName: 'item',
-                    Key: { itemId: { S: req.body.itemId } },
-                    UpdateExpression: updateExpress,
-                    ExpressionAttributeValues: { ':u': { S: picURL } },
-                    ReturnValues: 'UPDATED_NEW'
-                }
-                // check string, params
-                ddb.updateItem(params, (err, data) => {
-                    if (err) {
-                        const msg = 'Error updating item record with pic '
-                        console.log(msg + req.body.itemId + ' : ' + err)
-                        res.status(400).send(
-                            msg + req.body.itemId + ' : ' + err.message
-                        )
-                    } else {
-                        res.json(picURL)
-                    }
-                })
             }
         })
-    } else {
-        const msg =
-            'Error updating item record with pic ' + req.body.itemId + ' : '
-        console.log(msg + 'picIndex must be 0-5')
-        res.status(400).send(msg + 'picIndex must be 0-5')
-    }
+    })
+
+    const singleItemPicUpload = artisanPicsUploader.single('image')
+
+    // upload pic
+    singleItemPicUpload(req, res, picErr => {
+        const picNum = Number(req.body.picIndex)
+        if (picErr) {
+            console.log('Error uploading picture in item/updateImage', picErr)
+            res.status(422).send(
+                'Error uploading picture in item/updateImage: ' + picErr.message
+            )
+        } else if (isNaN(picNum) || picNum < 0 || picNum >= 6) {
+            const msg =
+                'Error updating item record with pic ' + req.body.itemId + ' : '
+            console.log(msg + 'picIndex must be 0-5')
+            res.status(400).send(msg + 'picIndex must be 0-5')
+        } else {
+            let picURL = 'Error: no picture attached'
+            if (req.file) {
+                picURL = (req.file as any).location
+            }
+            const updateExpress = 'set pic' + req.body.picIndex + 'URL = :u'
+            const params: aws.DynamoDB.UpdateItemInput = {
+                TableName: 'item',
+                Key: { itemId: { S: req.body.itemId } },
+                UpdateExpression: updateExpress,
+                ExpressionAttributeValues: { ':u': { S: picURL } },
+                ReturnValues: 'UPDATED_NEW'
+            }
+            // check string, params
+            ddb.updateItem(params, (err, data) => {
+                if (err) {
+                    const msg = 'Error updating item record with pic '
+                    console.log(msg + req.body.itemId + ' : ' + err)
+                    res.status(400).send(
+                        msg + req.body.itemId + ' : ' + err.message
+                    )
+                } else {
+                    res.json(picURL)
+                }
+            })
+        }
+    })
 })
 
 router.post('/editItem', (req: Request, res: Response) => {
