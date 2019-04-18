@@ -1,8 +1,8 @@
 package com.amazonadonna.view
 
-import android.annotation.TargetApi
 import android.app.Activity
-import android.content.ContentUris
+import android.content.ContextWrapper
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
@@ -25,12 +24,14 @@ import okhttp3.*
 import java.io.*
 
 class EditArtisan : AppCompatActivity() {
+
     private var photoFile: File? = null
     private val fileName: String = "editProfilePic.png"
     private val editArtisanURL = "https://99956e2a.ngrok.io/artisan/edit"
     private val updateArtisanURL = "https://99956e2a.ngrok.io/artisan/updateImage"
     private val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
+
     private lateinit var pic : Drawable
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,50 +94,38 @@ class EditArtisan : AppCompatActivity() {
         val fileProvider = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
 
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
+        Log.d("EditArtisan", "uri: "+fileProvider)
 
         if (intent.resolveActivity(packageManager) != null) {
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE)
         }
     }
 
-    private fun setImageView() {
-        val takenImage = BitmapFactory.decodeFile(photoFile!!.absolutePath)
-        // RESIZE BITMAP, see section below
-        // Load the taken image into a preview
-        val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
-        ivPreview.setImageBitmap(takenImage)
+
+    private fun bitmapToFile(bitmap:Bitmap): Uri {
+        // Get the context wrapper
+        val wrapper = ContextWrapper(applicationContext)
+
+        // Initialize a new file instance to save bitmap object
+        var file = wrapper.getDir("Images",Context.MODE_PRIVATE)
+        file = File(file,fileName)
+
+        try{
+            // Compress the bitmap and save in jpg format
+            val stream:OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
+            stream.flush()
+            stream.close()
+        }catch (e:IOException){
+            e.printStackTrace()
+        }
+
+        // Return the saved bitmap uri
+        return Uri.parse(file.absolutePath)
     }
 
-    @TargetApi(19)
-    private fun createImageFile(data: Intent?) {
-        var imagePath: String? = null
-        val uri = data!!.data
-        val w = 331
-        val h = 273
-        if (DocumentsContract.isDocumentUri(this, uri)){
-            val docId = DocumentsContract.getDocumentId(uri)
-            if ("com.android.providers.media.documents" == uri.authority){
-                val id = docId.split(":")[1]
-                val selsetion = MediaStore.Images.Media._ID + "=" + id
-                imagePath = imagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selsetion)
-            }
-            else if ("com.android.providers.downloads.documents" == uri.authority){
-                val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(docId))
-                imagePath = imagePath(contentUri, null)
-            }
-        }
-        else if ("content".equals(uri.scheme, ignoreCase = true)){
-            imagePath = imagePath(uri, null)
-        }
-        else if ("file".equals(uri.scheme, ignoreCase = true)){
-            imagePath = uri.path
-        }
-
-        photoFile = File(imagePath)
-
-        //pre-scaling bits
-        val uri_test = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
-        val bm = loadScaledBitmap(uri_test, w, h)
+    private fun scalePhotoFile(uri: Uri,w:Int, h:Int) {
+        val bm = loadScaledBitmap(uri, w, h)
         val stream = ByteArrayOutputStream()
         bm!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
         var byteArray = stream.toByteArray()
@@ -157,83 +146,58 @@ class EditArtisan : AppCompatActivity() {
         }
     }
 
-    private fun imagePath(uri: Uri?, selection: String?): String {
-        var path: String? = null
-        val cursor = contentResolver.query(uri, null, selection, null, null )
-        if (cursor != null){
-            if (cursor.moveToFirst()) {
-                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
-            }
-            cursor.close()
-        }
-        return path!!
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode){
+        val w = 331
+        val h = 273
+        when(requestCode) {
             CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
-                    val w = 331
-                    val h = 273
                     val dataURI = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
+                    val cr = contentResolver
                     try {
-                        Log.d("Add Artisan post photo", "Success")
-                        Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
-                        val bm = loadScaledBitmap(dataURI, w, h)
+                        val bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, dataURI)
+                        Bitmap.createScaledBitmap(bitmap,331,273,true)
                         val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
-                        ivPreview.setImageBitmap(bm)
-                        //setImageView()
-                    } catch (e: Error) {
+                        ivPreview.setImageBitmap(bitmap)
+
+                    }
+                    catch (e: Error) {
                         Log.d("Add Artisan post Photo", "it failed")
                     }
+//                    val dataURI = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
 //                    try {
-//                        Log.d("EditArtisan post photo", "Success")
-//                        Log.d("EditArtisan post photo", "Exists?: " + photoFile!!.exists())
-//                        setImageView()
+//                        Log.d("Add Artisan post photo", "Success")
+//                        Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
+//                        val bm = loadScaledBitmap(dataURI, w, h)
+//                        val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
+//                        ivPreview.setImageBitmap(bm)
+//                        //setImageView()
+//                    } catch (e: Error) {
+//                        Log.d("Add Artisan post Photo", "it failed")
 //                    }
-//                    catch(e: Error) {
-//                        Log.d("EditArtisan post Photo", "it failed")
-//                    }
+
                 }
             CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
                     if (data != null) {
-                        val w = 331
-                        val h = 273
                         val dataURI = data.data
-                        Log.d("HEIGHT", h.toString())
-                        Log.d("WIDTH", w.toString())
-                        Log.d("dataURI", dataURI.toString())
-                        createImageFile(data)
-
 
                         try {
-                            Log.d("Add Artisan post photo", "Success")
-                            Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
                             val bm = loadScaledBitmap(dataURI, w, h)
+                            val uri = bitmapToFile(bm!!)
+                            photoFile = File(uri.path)
+                            scalePhotoFile(dataURI, w, h)
+
                             val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
                             ivPreview.setImageBitmap(bm)
                             //setImageView()
-                        }
-                        catch(e: Error) {
+                        } catch (e: Error) {
                             Log.d("Add Artisan post Photo", "it failed")
                         }
-//                        createImageFile(data)
-//                        Log.d("Add Artisan postGallery", "File:  Exists?: " + photoFile!!.exists())
-//                        setImageView()
-                    }
-                    else {
+                    } else {
                         Log.d("Add Artisan postGallery", "Data was null")
                     }
-//                    if (data != null) {
-//                        createImageFile(data)
-//                        Log.d("EditArtisan postGallery", "File:  Exists?: " + photoFile!!.exists())
-//                        setImageView()
-//                    }
-//                    else {
-//                        Log.d("EditArtisan postGallery", "Data was null")
-//                    }
                 }
         }
     }

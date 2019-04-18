@@ -125,29 +125,38 @@ router.post('/getItems', (req: Request, res: Response) => {
 
 router.post('/setShippedStatus', (req: Request, res: Response) => {
     const shippedBool = req.body.shippedStatus === 'true'
-    const setShippedStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
-        TableName: 'order',
-        Key: { orderId: { S: req.body.orderId } },
-        UpdateExpression: 'set shippedStatus = :u',
-        ExpressionAttributeValues: {
-            ':u': { BOOL: shippedBool }
-        },
-        ReturnValues: 'UPDATED_NEW'
-    }
-    ddb.updateItem(setShippedStatusParams, (err, data) => {
-        if (err) {
-            console.log(
-                'Error updating shipped status in order/setShippedStatus: ' +
-                    err
-            )
-            res.status(400).send(
-                'Error updating shipped status in order/setShippedStatus: ' +
-                    err.message
-            )
-        } else {
-            res.send('Success!')
+    const negShippedBool = req.body.shippedStatus === 'false'
+    if (!shippedBool && !negShippedBool) {
+        const msg = 'Error updating shipped status in order/setShippedStatus: '
+        const err = 'shippedStatus key is not true or false or is missing'
+        console.log(msg + err)
+        res.status(400).send(msg + err)
+    } else {
+        const setShippedStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
+            TableName: 'order',
+            Key: { orderId: { S: req.body.orderId } },
+            UpdateExpression: 'set shippedStatus = :u',
+            ExpressionAttributeValues: {
+                ':u': { BOOL: shippedBool }
+            },
+            ReturnValues: 'UPDATED_NEW',
+            ConditionExpression: 'attribute_exists(orderId)'
         }
-    })
+        ddb.updateItem(setShippedStatusParams, (err, data) => {
+            if (err) {
+                console.log(
+                    'Error updating shipped status in order/setShippedStatus: ' +
+                        err
+                )
+                res.status(400).send(
+                    'Error updating shipped status in order/setShippedStatus: ' +
+                        err.message
+                )
+            } else {
+                res.send('Success!')
+            }
+        })
+    }
 })
 
 function sendText(phoneNumber: string, orderId: string) {
