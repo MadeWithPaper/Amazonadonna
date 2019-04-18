@@ -4,7 +4,6 @@ import { ddb } from '../server'
 import { OrderItem } from '../models/orderItem'
 import { unmarshUtil } from '../utilities/unmarshall'
 import * as uuid from 'uuid'
-import * as _ from 'lodash'
 
 const router = Router()
 
@@ -125,13 +124,14 @@ router.post('/getItems', (req: Request, res: Response) => {
 })
 
 router.post('/setShippedStatus', (req: Request, res: Response) => {
-    if (_.isUndefined(req.body.shippedStatus)) {
+    const shippedBool = req.body.shippedStatus === 'true'
+    const negShippedBool = req.body.shippedStatus === 'false'
+    if (!shippedBool && !negShippedBool) {
         const msg = 'Error updating shipped status in order/setShippedStatus: '
-        const err = 'shippedStatus key missing on request'
+        const err = 'shippedStatus key is not true or false or is missing'
         console.log(msg + err)
         res.status(400).send(msg + err)
     } else {
-        const shippedBool = req.body.shippedStatus === 'true'
         const setShippedStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
             TableName: 'order',
             Key: { orderId: { S: req.body.orderId } },
