@@ -113,8 +113,7 @@ router.post('/updateImage', (req: Request, res: Response) => {
                 'Error uploading picture in item/updateImage: ' + picErr.message
             )
         } else if (isNaN(picNum) || picNum < 0 || picNum >= 6) {
-            const msg =
-                'Error updating item record with pic ' + req.body.itemId + ' : '
+            const msg = 'Error updating item ' + req.body.itemId + ' with pic: '
             console.log(msg + 'picIndex must be 0-5')
             res.status(400).send(msg + 'picIndex must be 0-5')
         } else {
@@ -133,11 +132,10 @@ router.post('/updateImage', (req: Request, res: Response) => {
             // check string, params
             ddb.updateItem(params, (err, data) => {
                 if (err) {
-                    const msg = 'Error updating item record with pic '
-                    console.log(msg + req.body.itemId + ' : ' + err)
-                    res.status(400).send(
-                        msg + req.body.itemId + ' : ' + err.message
-                    )
+                    const msg =
+                        'Error updating item ' + req.body.itemId + ' with pic: '
+                    console.log(msg + err)
+                    res.status(400).send(msg + err.message)
                 } else {
                     res.json(picURL)
                 }

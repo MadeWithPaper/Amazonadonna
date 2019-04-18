@@ -153,9 +153,7 @@ router.post('/edit', (req: Request, res: Response) => {
         } else {
             const unmarshed = aws.DynamoDB.Converter.unmarshall(data.Item)
             const whatToUpdate: Artisan = {
-                artisanId: req.body.artisanId
-                    ? req.body.artisanId
-                    : unmarshed.artisanId,
+                artisanId: unmarshed.artisanId,
                 cgaId: req.body.cgaId ? req.body.cgaId : unmarshed.cgaId,
                 bio: req.body.bio ? req.body.bio : unmarshed.bio,
                 city: req.body.city ? req.body.city : unmarshed.city,
