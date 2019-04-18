@@ -3,6 +3,8 @@ package com.amazonadonna.view
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.ContentUris
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -23,10 +25,7 @@ import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import com.amazonadonna.view.R
 import kotlinx.android.synthetic.main.activity_add_item_images.*
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
+import java.io.*
 import java.util.*
 
 
@@ -165,9 +164,51 @@ class AddItemImages : AppCompatActivity() {
         imageViewMap.get(imageNum).setImageBitmap(takenImage)
     }
 
+    private fun bitmapToFile(bitmap:Bitmap): Uri {
+        val fileName :String = "editItemImage"+imageNum+".png"
+        // Get the context wrapper
+        val wrapper = ContextWrapper(applicationContext)
+
+        // Initialize a new file instance to save bitmap object
+        var file = wrapper.getDir("Images", Context.MODE_PRIVATE)
+        file = File(file, fileName)
+
+        try{
+            // Compress the bitmap and save in jpg format
+            val stream: OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
+            stream.flush()
+            stream.close()
+        }catch (e: IOException){
+            e.printStackTrace()
+        }
+
+        // Return the saved bitmap uri
+        return Uri.parse(file.absolutePath)
+    }
+
+    private fun scalePhotoFile(uri: Uri,w:Int, h:Int) {
+        val bm = loadScaledBitmap(uri, w, h)
+        val stream = ByteArrayOutputStream()
+        bm!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        var byteArray = stream.toByteArray()
+        //byteArray = ByteArray(photoFile!!.length().toInt())
+
+        try {
+            //convert array of bytes into file
+            val fileOuputStream = FileOutputStream(photoFile)
+            fileOuputStream.write(byteArray)
+            fileOuputStream.close()
+
+            println("Done")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode){
+        when(requestCode) {
             //TODO discuss if we want to have pic taken in list item
 //            CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ->
 //                if (resultCode == Activity.RESULT_OK) {
@@ -182,15 +223,26 @@ class AddItemImages : AppCompatActivity() {
 //                }
             CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
-                    if (data != null) {
-                        createImageFile(data)
-                        Log.d("AddItemImage", "File:  Exists?: " + photoFile!!.exists())
+                    val w = 331
+                    val h = 273
+                    val dataURI = data?.data
+
+                    try {
+                        val bm = loadScaledBitmap(dataURI!!, w, h)
+                        val uri = bitmapToFile(bm!!)
+                        Log.d("AddItemImages", uri.path)
+                        Log.d("AddItemImages", dataURI.path)
+//                        scalePhotoFile(uri, w, h)
+                        photoFile = File(uri.path)
+
                         setImageView()
+                    } catch (e: Error) {
+                        Log.d("Add Artisan post Photo", "it failed")
                     }
-                    else {
-                        Log.d("AddItemImage", "Data was null")
-                    }
+                } else {
+                    Log.d("Add Artisan postGallery", "Data was null")
                 }
+
         }
     }
 
