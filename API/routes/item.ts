@@ -128,7 +128,8 @@ router.post('/updateImage', (req: Request, res: Response) => {
                 Key: { itemId: { S: req.body.itemId } },
                 UpdateExpression: updateExpress,
                 ExpressionAttributeValues: { ':u': { S: picURL } },
-                ReturnValues: 'UPDATED_NEW'
+                ReturnValues: 'UPDATED_NEW',
+                ConditionExpression: 'attribute_exists(itemId)'
             }
             // check string, params
             ddb.updateItem(params, (err, data) => {
