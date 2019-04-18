@@ -79,6 +79,8 @@ router.post('/add', (req: Request, res: Response) => {
 router.post('/updateImage', (req: Request, res: Response) => {
     // setup pic uploader with itemId as filename
     const picNum = Number(req.body.picIndex)
+    console.log(picNum)
+    console.log(req.body.picIndex)
     if (!isNaN(picNum) && picNum >= 0 && picNum < 6) {
         const artisanPicsUploader = multer({
             storage: multerS3({
