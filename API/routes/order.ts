@@ -139,7 +139,8 @@ router.post('/setShippedStatus', (req: Request, res: Response) => {
             ExpressionAttributeValues: {
                 ':u': { BOOL: shippedBool }
             },
-            ReturnValues: 'UPDATED_NEW'
+            ReturnValues: 'UPDATED_NEW',
+            ConditionExpression: 'attribute_exists(orderId)'
         }
         ddb.updateItem(setShippedStatusParams, (err, data) => {
             if (err) {
