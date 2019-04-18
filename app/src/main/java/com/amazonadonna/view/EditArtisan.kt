@@ -153,18 +153,48 @@ class EditArtisan : AppCompatActivity() {
         when(requestCode) {
             CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
+                    photoFile = File(externalCacheDir, fileName)
                     val dataURI = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
                     val cr = contentResolver
                     try {
-                        val bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, dataURI)
-                        Bitmap.createScaledBitmap(bitmap,331,273,true)
+                        var bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, dataURI)
+                        bitmap = Bitmap.createScaledBitmap(bitmap,331,273,true)
                         val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
                         ivPreview.setImageBitmap(bitmap)
+
+                        val stream = ByteArrayOutputStream()
+                        bitmap!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                        var byteArray = stream.toByteArray()
+                        //byteArray = ByteArray(photoFile!!.length().toInt())
+
+                        try {
+                            //convert array of bytes into file
+                            val fileOuputStream = FileOutputStream(photoFile)
+                            fileOuputStream.write(byteArray)
+                            fileOuputStream.close()
+                            Log.d("SKETIT", "lol")
+
+                            println("Done")
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
 
                     }
                     catch (e: Error) {
                         Log.d("Add Artisan post Photo", "it failed")
                     }
+//                    val dataURI = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
+//                    val cr = contentResolver
+//                    try {
+//                        val bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, dataURI)
+//                        Bitmap.createScaledBitmap(bitmap,331,273,true)
+//                        val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
+//                        ivPreview.setImageBitmap(bitmap)
+//
+//                    }
+//                    catch (e: Error) {
+//                        Log.d("Add Artisan post Photo", "it failed")
+//                    }
 //                    val dataURI = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
 //                    try {
 //                        Log.d("Add Artisan post photo", "Success")
