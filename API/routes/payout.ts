@@ -111,7 +111,8 @@ router.post('/updateImage', (req: Request, res: Response) => {
                 Key: { payoutId: { S: req.body.payoutId } },
                 UpdateExpression: 'set signaturePicURL = :u',
                 ExpressionAttributeValues: { ':u': { S: signaturePicURL } },
-                ReturnValues: 'UPDATED_NEW'
+                ReturnValues: 'UPDATED_NEW',
+                ConditionExpression: 'attribute_exists(payoutId)'
             }
             // check string, params
             ddb.updateItem(params, (err, data) => {
