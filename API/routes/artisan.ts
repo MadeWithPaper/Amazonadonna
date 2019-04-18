@@ -151,7 +151,9 @@ router.post('/edit', (req: Request, res: Response) => {
             console.log(msg + err)
             res.status(400).send(msg + err.message)
         } else {
+            console.log('found record for: ' + req.body.artisanId)
             const unmarshed = aws.DynamoDB.Converter.unmarshall(data.Item)
+            console.log(unmarshed.artisanId)
             const whatToUpdate: Artisan = {
                 artisanId: unmarshed.artisanId,
                 cgaId: req.body.cgaId ? req.body.cgaId : unmarshed.cgaId,
