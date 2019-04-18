@@ -177,11 +177,13 @@ class AddArtisan : AppCompatActivity() {
         return path!!
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode){
             CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
+                    photoFile = File(externalCacheDir, fileName)
                     val dataURI = FileProvider.getUriForFile(this@AddArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
                     val cr = contentResolver
                     try {
