@@ -7,6 +7,7 @@ import { ddb, s3 } from '../server'
 import { unmarshUtil } from '../utilities/unmarshall'
 import { Artisan } from '../models/artisan'
 import * as uuid from 'uuid'
+import * as _ from 'lodash'
 
 const router = Router()
 
@@ -151,35 +152,41 @@ router.post('/edit', (req: Request, res: Response) => {
             console.log(msg + err)
             res.status(400).send(msg + err.message)
         } else {
-            console.log('found record for: ' + req.body.artisanId)
             const unmarshed = aws.DynamoDB.Converter.unmarshall(data.Item)
-            console.log(unmarshed)
-            const whatToUpdate: Artisan = {
-                artisanId: unmarshed.artisanId,
-                cgaId: req.body.cgaId ? req.body.cgaId : unmarshed.cgaId,
-                bio: req.body.bio ? req.body.bio : unmarshed.bio,
-                city: req.body.city ? req.body.city : unmarshed.city,
-                country: req.body.country
-                    ? req.body.country
-                    : unmarshed.country,
-                artisanName: req.body.artisanName
-                    ? req.body.artisanName
-                    : unmarshed.artisanName,
-                lat: req.body.lat ? req.body.lat : unmarshed.lat,
-                lon: req.body.lon ? req.body.lon : unmarshed.lon,
-                balance: req.body.balance
-                    ? req.body.balance
-                    : unmarshed.balance,
-                picURL: req.body.picURL ? req.body.picURL : unmarshed.picURL,
-                phoneNumber: req.body.phoneNumber
-                    ? req.body.phoneNumber
-                    : unmarshed.phoneNumber
-            }
+            if (_.isEmpty(unmarshed)) {
+                const msg = 'Error getting artisan in artisan/edit/getArtisan: '
+                const DNEerr = 'Artisan does not exist'
+                console.log(msg + DNEerr)
+                res.status(400).send(msg + DNEerr)
+            } else {
+                const whatToUpdate: Artisan = {
+                    artisanId: unmarshed.artisanId,
+                    cgaId: req.body.cgaId ? req.body.cgaId : unmarshed.cgaId,
+                    bio: req.body.bio ? req.body.bio : unmarshed.bio,
+                    city: req.body.city ? req.body.city : unmarshed.city,
+                    country: req.body.country
+                        ? req.body.country
+                        : unmarshed.country,
+                    artisanName: req.body.artisanName
+                        ? req.body.artisanName
+                        : unmarshed.artisanName,
+                    lat: req.body.lat ? req.body.lat : unmarshed.lat,
+                    lon: req.body.lon ? req.body.lon : unmarshed.lon,
+                    balance: req.body.balance
+                        ? req.body.balance
+                        : unmarshed.balance,
+                    picURL: req.body.picURL
+                        ? req.body.picURL
+                        : unmarshed.picURL,
+                    phoneNumber: req.body.phoneNumber
+                        ? req.body.phoneNumber
+                        : unmarshed.phoneNumber
+                }
 
-            const editArtisanParam: aws.DynamoDB.Types.UpdateItemInput = {
-                TableName: 'artisan',
-                Key: { artisanId: { S: req.body.artisanId } },
-                UpdateExpression: `set cgaId = :cgaId, 
+                const editArtisanParam: aws.DynamoDB.Types.UpdateItemInput = {
+                    TableName: 'artisan',
+                    Key: { artisanId: { S: req.body.artisanId } },
+                    UpdateExpression: `set cgaId = :cgaId, 
                                     bio = :bio, 
                                     city = :city,
                                     country = :country,
@@ -188,28 +195,29 @@ router.post('/edit', (req: Request, res: Response) => {
                                     lon = :lon,
                                     balance = :balance,
                                     picURL = :picURL`,
-                ExpressionAttributeValues: {
-                    ':cgaId': { S: whatToUpdate.cgaId },
-                    ':bio': { S: whatToUpdate.bio },
-                    ':city': { S: whatToUpdate.city },
-                    ':country': { S: whatToUpdate.country },
-                    ':artisanName': { S: whatToUpdate.artisanName },
-                    ':lat': { N: whatToUpdate.lat.toString() },
-                    ':lon': { N: whatToUpdate.lon.toString() },
-                    ':balance': { N: whatToUpdate.balance.toString() },
-                    ':picURL': { S: whatToUpdate.picURL }
-                },
-                ReturnValues: 'UPDATED_NEW'
-            }
-            ddb.updateItem(editArtisanParam, (updateErr, updateData) => {
-                if (updateErr) {
-                    const msg = 'Error updating artisan in artisan/edit: '
-                    console.log(msg + updateErr)
-                    res.status(400).send(msg + updateErr.message)
-                } else {
-                    res.send('Success!')
+                    ExpressionAttributeValues: {
+                        ':cgaId': { S: whatToUpdate.cgaId },
+                        ':bio': { S: whatToUpdate.bio },
+                        ':city': { S: whatToUpdate.city },
+                        ':country': { S: whatToUpdate.country },
+                        ':artisanName': { S: whatToUpdate.artisanName },
+                        ':lat': { N: whatToUpdate.lat.toString() },
+                        ':lon': { N: whatToUpdate.lon.toString() },
+                        ':balance': { N: whatToUpdate.balance.toString() },
+                        ':picURL': { S: whatToUpdate.picURL }
+                    },
+                    ReturnValues: 'UPDATED_NEW'
                 }
-            })
+                ddb.updateItem(editArtisanParam, (updateErr, updateData) => {
+                    if (updateErr) {
+                        const msg = 'Error updating artisan in artisan/edit: '
+                        console.log(msg + updateErr)
+                        res.status(400).send(msg + updateErr.message)
+                    } else {
+                        res.send('Success!')
+                    }
+                })
+            }
         }
     })
 })
