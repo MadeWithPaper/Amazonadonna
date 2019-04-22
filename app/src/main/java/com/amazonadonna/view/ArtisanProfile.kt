@@ -66,10 +66,10 @@ class ArtisanProfile() : AppCompatActivity() {
         var isp = ImageStorageProvider(applicationContext)
         isp.loadImageIntoUI(artisan.picURL, this.artisanProfilePicture, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
 
+        Log.d("ArtisanProfile", artisan.bio)
         artisanProfileName.text = artisan.artisanName
         artisanProfileBio.text = artisan.bio
         artisanProfileBalance.text = "Balance: $${artisan.balance}"
-
     }
 
     private fun artisanItemList(artisan : Artisan){
