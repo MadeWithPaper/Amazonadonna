@@ -272,4 +272,21 @@ router.get('/deleteAll', (req: Request, res: Response) => {
     })
 })
 
+router.post('/delete', (req: Request, res: Response) => {
+    const deleteArtisanParams: aws.DynamoDB.Types.DeleteItemInput = {
+        TableName: 'artisan',
+        Key: { artisanId: { S: req.body.artisanId } }
+    }
+
+    ddb.deleteItem(deleteArtisanParams, (err, data) => {
+        if (err) {
+            const msg = 'Error deleting items in artisan/delete: '
+            console.log(msg + err)
+            res.status(400).send(msg + err.message)
+        } else {
+            res.send('Success!')
+        }
+    })
+})
+
 export { router as artisanRouter }
