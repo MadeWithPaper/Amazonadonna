@@ -2,6 +2,7 @@ package com.amazonadonna.view
 
 import android.content.Context
 import android.content.Intent
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,14 +11,31 @@ import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.list_artisan_cell.view.*
 import android.util.Log
 import com.amazonadonna.database.ImageStorageProvider
+import com.amazonadonna.sync.Synchronizer
 
 
-class ListArtisanAdapter (private val context: Context, private val artisans : List<Artisan>) : RecyclerView.Adapter<ArtisanViewHolder> () {
+class ListArtisanAdapter (private val context: Context, private val artisans :MutableList<Artisan>) : RecyclerView.Adapter<ArtisanViewHolder> () {
+    private var removedPostion = 0
+    private var removedArtisan = Artisan("", "", "", "", "", "", "", 0.0,0.0,"", Synchronizer.SYNCED,0.0)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtisanViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val cellForRow = layoutInflater.inflate(R.layout.list_artisan_cell, parent, false)
         return ArtisanViewHolder(cellForRow)
+    }
+
+    fun removeItem(viewHolder: RecyclerView.ViewHolder) {
+        removedPostion = viewHolder.adapterPosition
+        removedArtisan = artisans[viewHolder.adapterPosition]
+
+        //remove functionality
+        artisans.removeAt(viewHolder.adapterPosition)
+        notifyItemRemoved(viewHolder.adapterPosition)
+        //undo functionality
+        Snackbar.make(viewHolder.itemView, "${removedArtisan.artisanName} deleted.", Snackbar.LENGTH_LONG).setAction("UNDO") {
+            artisans.add(removedPostion, removedArtisan)
+            notifyItemInserted(removedPostion)
+        }.show()
     }
 
     override fun getItemCount(): Int {

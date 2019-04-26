@@ -1,10 +1,16 @@
 package com.amazonadonna.view
 
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.list_all_artisans.*
@@ -15,6 +21,8 @@ import okhttp3.*
 import java.io.IOException
 import com.google.gson.reflect.TypeToken
 import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.view.R
 import kotlinx.coroutines.*
@@ -29,6 +37,7 @@ import java.util.concurrent.TimeUnit
 
 class ListAllArtisans : AppCompatActivity(), CoroutineScope {
     lateinit var job: Job
+    lateinit var deleteIcon: Drawable
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -38,8 +47,11 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
     val originalArtisans: MutableList<Artisan> = mutableListOf()
     val filteredArtisans: MutableList<Artisan> = mutableListOf()
     val oldFilteredArtisans: MutableList<Artisan> = mutableListOf()
+    var swipeBackground = ColorDrawable(Color.parseColor("#FF0000"))
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete)!!
         filteredArtisans.clear()
         originalArtisans.clear()
         oldFilteredArtisans.clear()
@@ -72,7 +84,44 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
                                 diffResult.dispatchUpdatesTo((recyclerView_listAllartisans.adapter as ListArtisanAdapter))
                             }
                 }
+        //item swipe to delete functionality
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
+            override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
+                (recyclerView_listAllartisans.adapter as ListArtisanAdapter).removeItem(viewHolder)
+            }
+            //drawing the red rectangle with icon when swiping
+            override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+                val itemView = viewHolder.itemView
+                val iconMargin = itemView.height - deleteIcon.intrinsicHeight / 2
+
+                if (dX < 0) {
+                    swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                    deleteIcon.setBounds(itemView.right - iconMargin - deleteIcon.intrinsicWidth,itemView.top + iconMargin, itemView.right - iconMargin, itemView.bottom - iconMargin)
+                }
+                swipeBackground.draw(c)
+
+                c.save()
+
+                if (dX < 0) {
+                    c.clipRect(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                }
+
+                deleteIcon.draw(c)
+                c.restore()
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
+
+        }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView_listAllartisans)
+
     }
+
 
     override fun onResume() {
         super.onResume()
