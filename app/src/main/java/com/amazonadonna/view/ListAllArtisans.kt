@@ -96,15 +96,17 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
             //drawing the red rectangle with icon when swiping
             override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
                 val itemView = viewHolder.itemView
-                val iconMargin = itemView.height - deleteIcon.intrinsicHeight / 2
+                val iconMargin = (itemView.height - deleteIcon.intrinsicHeight) / 2
 
                 if (dX < 0) {
                     swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
                     deleteIcon.setBounds(itemView.right - iconMargin - deleteIcon.intrinsicWidth,itemView.top + iconMargin, itemView.right - iconMargin, itemView.bottom - iconMargin)
+                    deleteIcon.level = 1
                 }
                 swipeBackground.draw(c)
 
                 c.save()
+
 
                 if (dX < 0) {
                     c.clipRect(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
