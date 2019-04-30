@@ -2,6 +2,7 @@ package com.amazonadonna.view
 
 import android.content.Context
 import android.content.Intent
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,7 +15,9 @@ import kotlinx.android.synthetic.main.list_item_cell.view.*
 import com.amazonadonna.sync.Synchronizer
 import kotlinx.android.synthetic.main.list_artisan_cell.view.*
 
-class ListItemsAdapter (private val context: Context, private val products : List<Product>, private val artisan : Artisan? = Artisan("artisanName", "id", "1234567", "", "country", "bio", "cogid", 0.0, 0.0, "url", Synchronizer.SYNCED,0.0) ) : RecyclerView.Adapter<ItemsViewHolder> () {
+class ListItemsAdapter (private val context: Context, private val products : MutableList<Product>, private val artisan : Artisan? = Artisan("artisanName", "id", "1234567", "", "country", "bio", "cogid", 0.0, 0.0, "url", Synchronizer.SYNCED,0.0) ) : RecyclerView.Adapter<ItemsViewHolder> () {
+    private var removedPostion = 0
+    private var removedProduct = Product(0.0, "", "", "", emptyArray(), "", "", "","","", "", "", "", "", "", "", 0, Synchronizer.SYNCED, 0)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -22,6 +25,19 @@ class ListItemsAdapter (private val context: Context, private val products : Lis
         return ItemsViewHolder(cellForRow)
     }
 
+    fun removeItem(viewHolder: RecyclerView.ViewHolder) {
+        removedPostion = viewHolder.adapterPosition
+        removedProduct = products[viewHolder.adapterPosition]
+
+        //remove functionality
+        products.removeAt(viewHolder.adapterPosition)
+        notifyItemRemoved(viewHolder.adapterPosition)
+        //undo functionality
+//        Snackbar.make(viewHolder.itemView, "${removedArtisan.artisanName} deleted.", Snackbar.LENGTH_INDEFINITE).setAction("UNDO") {
+//            products.add(removedPostion, removedArtisan)
+//            notifyItemInserted(removedPostion)
+//        }.show()
+    }
 
     override fun getItemCount(): Int {
         return products.count()
