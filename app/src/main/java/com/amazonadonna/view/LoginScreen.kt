@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.util.Log
 import android.content.Intent
+import android.support.v7.app.AlertDialog
+import android.view.WindowManager
 
 import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
@@ -24,6 +26,7 @@ class LoginScreen : AppCompatActivity() {
 
     private var requestContext : RequestContext = RequestContext.create(this)
     private val scopes : Array<Scope> = arrayOf(ProfileScope.profile(), ProfileScope.postalCode(), ProfileScope.profile())
+    private lateinit var alertDialog : AlertDialog
 
     private var signUpListener = object  : AuthorizeListener() {
         /* Authorization was completed successfully. */
@@ -38,11 +41,15 @@ class LoginScreen : AppCompatActivity() {
         /* There was an error during the attempt to authorize the application. */
         override fun onError(ae: AuthError) {
             /* Inform the user of the error */
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            alertDialog.dismiss()
         }
 
         /* Authorization was cancelled before it could be completed. */
         override fun onCancel(cancellation: AuthCancellation) {
             /* Reset the UI to a ready-to-login state */
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            alertDialog.dismiss()
         }
     }
 
@@ -73,12 +80,22 @@ class LoginScreen : AppCompatActivity() {
 
         email_sign_in_button.setOnClickListener { test()/*attemptLogin()*/ }
 
-        login_with_amazon.setOnClickListener(View.OnClickListener {
-            _ -> AuthorizationManager.authorize(AuthorizeRequest
-                        .Builder(requestContext)
-                        .addScopes(ProfileScope.profile(),  ProfileScope.postalCode(), ProfileScope.profile()) // if you change these, need to also change the scopes val at top to match
-                        .build())
-        })
+        login_with_amazon.setOnClickListener{
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
+            AuthorizationManager.authorize(AuthorizeRequest
+                    .Builder(requestContext)
+                    .addScopes(ProfileScope.profile(), ProfileScope.postalCode(), ProfileScope.profile())
+                    .showProgress(true)// if you change these, need to also change the scopes val at top to match
+                    .build())
+
+            alertDialog = AlertDialog.Builder(this@LoginScreen).create()
+            alertDialog.setTitle("Logging In")
+            alertDialog.setMessage("Please wait while login is completed...")
+            alertDialog.setCanceledOnTouchOutside(false)
+            alertDialog.show()
+        }
     }
 
     override fun onStart() {
