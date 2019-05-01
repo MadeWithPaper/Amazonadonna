@@ -132,7 +132,7 @@ object OrderSync: Synchronizer(), CoroutineScope {
 
                 //Log.d("ITEMS", body)
                 val gson = GsonBuilder().create()
-                val products : List<Product> = gson.fromJson(body,  object : TypeToken<List<Product>>() {}.type)
+                val products : MutableList<Product> = gson.fromJson(body,  object : TypeToken<List<Product>>() {}.type)
                 for (product in products) {
                     product.pictureURLs = Array(PictureListTypeConverter.NUM_PICS, { i -> "undefined"})
                     product.pictureURLs[0] = product.pic0URL

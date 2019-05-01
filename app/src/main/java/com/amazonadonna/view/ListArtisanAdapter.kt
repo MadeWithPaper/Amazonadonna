@@ -36,7 +36,8 @@ class ListArtisanAdapter (private val context: Context, private val artisans :Mu
         ArtisanSync.deleteArtisan(context, removedArtisan)
 
         //undo functionality
-        /*Snackbar.make(viewHolder.itemView, "${removedArtisan.artisanName} deleted.", Snackbar.LENGTH_INDEFINITE).setAction("UNDO") {
+        /*
+        Snackbar.make(viewHolder.itemView, "${removedArtisan.artisanName} deleted.", Snackbar.LENGTH_LONG).setAction("UNDO") {
             artisans.add(removedPostion, removedArtisan)
             notifyItemInserted(removedPostion)
         }.show()*/
