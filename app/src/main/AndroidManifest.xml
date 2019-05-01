@@ -66,6 +66,9 @@
             android:name=".OrderScreen"
             android:configChanges="layoutDirection|locale" />
         <activity
+            android:name=".MessageArtisan"
+            android:configChanges="layoutDirection|locale" />
+        <activity
             android:name=".ArtisanProfile"
             android:configChanges="layoutDirection|locale"
             android:label="@string/title_activity_artisan_profile"
