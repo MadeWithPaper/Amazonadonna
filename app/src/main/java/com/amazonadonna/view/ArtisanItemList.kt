@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.ContextCompat.startActivity
+import android.support.v7.app.AlertDialog
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -105,7 +106,23 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                (artisanItemList_recyclerView.adapter as ListItemsAdapter).removeItem(viewHolder)
+                val builder = AlertDialog.Builder(this@ArtisanItemList)
+                builder.setTitle("Confirm Item Deletion")
+                builder.setMessage("Are you sure you want to delete this item? This action cannot be undone.")
+
+                builder.setPositiveButton("Permanently Delete"){dialog, which ->
+                    (artisanItemList_recyclerView.adapter as ListItemsAdapter).removeItem(viewHolder)
+                    dialog.cancel()
+                }
+
+                builder.setNeutralButton("Cancel") { dialog, which ->
+                    (artisanItemList_recyclerView.adapter as ListItemsAdapter).notifyItemChanged(viewHolder.adapterPosition)
+                    dialog.cancel()
+                }
+
+                var dialog = builder.create()
+                dialog.show()
+                dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.argb(255, 24, 163, 198))
             }
             //drawing the red rectangle with icon when swiping
             override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
