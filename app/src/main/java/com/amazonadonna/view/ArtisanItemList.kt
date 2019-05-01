@@ -11,6 +11,7 @@ import android.util.Log
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
+import com.amazonadonna.sync.Synchronizer
 import com.amazonadonna.view.R
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -100,7 +101,7 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
     }
 
     private suspend fun getProductsFromDb() = withContext(Dispatchers.IO) {
-        AppDatabase.getDatabase(application).productDao().getAllByArtisanId(artisan.artisanId)
+        AppDatabase.getDatabase(application).productDao().getAllByArtisanIdWithoutSyncState(artisan.artisanId, Synchronizer.SYNC_DELETE)
     }
 
     private fun search(query: String): Completable = Completable.create {

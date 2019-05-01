@@ -21,6 +21,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
     private const val artisanPicURL = "https://99956e2a.ngrok.io/artisan/updateImage"
     private const val editArtisanURL = "https://99956e2a.ngrok.io/artisan/edit"
     private const val updateArtisanURL = "https://99956e2a.ngrok.io/artisan/updateImage"
+    private const val deleteArtisanURL = "https://99956e2a.ngrok.io/artisan/delete"
 
     override fun sync(context: Context, cgaId: String) {
         super.sync(context, cgaId)
@@ -53,6 +54,11 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
             val updateArtisans = getUpdateArtisans(context)
             for (artisan in updateArtisans) {
                 updateSingleArtisan(context, artisan)
+            }
+            val deleteArtisans = getDeleteArtisans(context)
+            for (artisan in deleteArtisans) {
+                Log.i("ArtisanSync", "Delete artisan " + artisan.artisanId)
+                deleteSingleArtisan(context, artisan)
             }
             Log.i("ArtisanSync", "Done uploading, now downloading")
             downloadArtisans(context)
@@ -204,6 +210,33 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
     }
 
+    private fun deleteSingleArtisan(context: Context, artisan: Artisan) {
+        numInProgress++
+
+        val requestBody = FormBody.Builder().add("artisanId", artisan.artisanId)
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+                .url(deleteArtisanURL)
+                .post(requestBody.build())
+                .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()?.string()
+                Log.i("DeleteArtisan", body)
+
+                numInProgress--
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.e("DeleteArtisan", "failed to do POST request to database" + deleteArtisanURL)
+                numInProgress--
+            }
+        })
+
+    }
+
     fun updateArtisanImage(context : Context, artisan: Artisan) {
         val sourceFile: File = context.getFileStreamPath(ImageStorageProvider.ARTISAN_IMAGE_PREFIX + artisan.picURL)
         //val sourceFile = photoFile!!
@@ -292,6 +325,23 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
     }
 
+    fun deleteArtisan(context : Context, artisan : Artisan) {
+        job = Job()
+
+        if (artisan.synced != SYNC_NEW) {
+            artisan.synced = SYNC_DELETE
+            launch {
+                updateArtisanHelper(context, artisan)
+            }
+        }
+        else {
+            artisan.synced = SYNC_DELETE
+            launch {
+                deleteArtisanHelper(context, artisan)
+            }
+        }
+    }
+
 
     private fun stageImageUpdate(context : Context, artisan : Artisan, photoFile: File? = null) {
         if (photoFile != null) {
@@ -317,8 +367,16 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
         AppDatabase.getDatabase(context).artisanDao().update(artisan)
     }
 
+    private suspend fun deleteArtisanHelper(context : Context, artisan : Artisan) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).artisanDao().delete(artisan)
+    }
+
     private suspend fun getNewArtisans(context : Context) = withContext(Dispatchers.IO) {
         AppDatabase.getDatabase(context).artisanDao().getAllBySyncState(SYNC_NEW)
+    }
+
+    private suspend fun getDeleteArtisans(context : Context) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).artisanDao().getAllBySyncState(SYNC_DELETE)
     }
 
     private suspend fun getUpdateArtisans(context : Context) = withContext(Dispatchers.IO) {

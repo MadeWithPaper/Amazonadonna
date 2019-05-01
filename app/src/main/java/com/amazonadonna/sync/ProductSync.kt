@@ -85,6 +85,23 @@ object ProductSync: Synchronizer(), CoroutineScope {
 
     }
 
+    fun deleteProduct(context : Context, product: Product) {
+        job = Job()
+
+        if (product.synced != SYNC_NEW) {
+            product.synced = SYNC_DELETE
+            launch {
+                updateProductHelper(context, product)
+            }
+        }
+        else {
+            product.synced = SYNC_DELETE
+            launch {
+                deleteProductHelper(context, product)
+            }
+        }
+    }
+
     private suspend fun updateProductHelper(context : Context, product: Product) = withContext(Dispatchers.IO) {
         AppDatabase.getDatabase(context).productDao().update(product)
     }
@@ -137,6 +154,11 @@ object ProductSync: Synchronizer(), CoroutineScope {
     private suspend fun deleteAllProducts(context : Context) = withContext(Dispatchers.IO) {
         AppDatabase.getDatabase(context).productDao().deleteAll()
     }
+
+    private suspend fun deleteProductHelper(context : Context, product : Product) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).productDao().delete(product)
+    }
+
 
     private suspend fun getNewProducts(context : Context) = withContext(Dispatchers.IO) {
         AppDatabase.getDatabase(context).productDao().getAllBySyncState(SYNC_NEW)
