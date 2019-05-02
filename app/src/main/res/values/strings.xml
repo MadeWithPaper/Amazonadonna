@@ -17,9 +17,9 @@
     <string name="loc_missing_comma">Missing \',\' between City and Country.</string>
     <string name="add_artisan_contact_number_tv_hint">Artisan Contact Number</string>
     <string name="add_artisan_loc_tv_hint">Artisan City, Country</string>
-    <string name="add_artisan_loc_tv">City, Country: </string>
+    <string name="add_artisan_loc_tv">Location: </string>
     <string name="add_artisan_name_tv_hint">Artisan Name</string>
-    <string name="add_artisan_name_tv">Artisan Name: </string>
+    <string name="add_artisan_name_tv">Name: </string>
     <string name="add_artisan_add_button">Add Artisan</string>
     <string name="add_artisan_contact_number_tv">Contact :</string>
     <string name="add_artisan_bio_tv_hint">Artisan Biography</string>
