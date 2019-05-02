@@ -150,5 +150,6 @@
     <string name="view_report_toolbar_text">Ver informe generado</string>
     <string name="view_report_done_button">Hecho</string>
     <string name="payout_amount_format_error">Por favor, introduzca una cantidad válida!</string>
+    <string name="send_message_button">Enviar</string>
 
 </resources>
