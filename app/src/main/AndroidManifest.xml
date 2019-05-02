@@ -24,53 +24,68 @@
         android:supportsRtl="true"
         android:syncable="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewReport"></activity>
-        <activity android:name=".report_target_cell" />
-        <activity android:name=".Reports" />
+
+        <activity android:name=".ViewReport"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".report_target_cell"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Reports"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Settings"
-            android:configChanges="layoutDirection|locale" />
+            android:configChanges="layoutDirection|locale"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".PayoutSignature"
             android:configChanges="layoutDirection|locale" />
         <activity
             android:name=".ArtisanPayout"
-            android:configChanges="layoutDirection|locale" />
+            android:configChanges="layoutDirection|locale"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".EditArtisan"
-            android:configChanges="layoutDirection|locale" />
+            android:configChanges="layoutDirection|locale"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ProductDetails"
-            android:configChanges="layoutDirection|locale" />
+            android:configChanges="layoutDirection|locale"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".AddItemReview"
             android:configChanges="layoutDirection|locale"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".AddItemImages"
             android:configChanges="layoutDirection|locale"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".AddItemInfo"
             android:configChanges="layoutDirection|locale"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".AddItemCategory"
             android:configChanges="layoutDirection|locale"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ArtisanItemList"
-            android:configChanges="layoutDirection|locale" />
+            android:configChanges="layoutDirection|locale"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".OrderScreen"
-            android:configChanges="layoutDirection|locale" />
+            android:configChanges="layoutDirection|locale"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ArtisanProfile"
             android:configChanges="layoutDirection|locale"
             android:label="@string/title_activity_artisan_profile"
             android:launchMode="singleTask"
-            android:parentActivityName=".ListAllArtisans">
+            android:parentActivityName=".ListAllArtisans"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.amazonadonna.view.ListAllArtisans" />
@@ -80,7 +95,8 @@
             android:allowTaskReparenting="true"
             android:configChanges="layoutDirection|locale"
             android:launchMode="singleTask"
-            android:theme="@android:style/Theme.NoDisplay">
+            android:theme="@android:style/Theme.NoDisplay"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -105,10 +121,12 @@
 
         <activity
             android:name=".HomeScreen"
-            android:configChanges="layoutDirection|locale" />
+            android:configChanges="layoutDirection|locale"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".LoginScreen"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|layoutDirection|locale">
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|layoutDirection|locale"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -119,13 +137,16 @@
             android:name=".ListAllArtisans"
             android:configChanges="layoutDirection|locale"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AddArtisan"
-            android:configChanges="layoutDirection|locale" />
+            android:configChanges="layoutDirection|locale"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ListOrders"
-            android:configChanges="layoutDirection|locale" />
+            android:configChanges="layoutDirection|locale"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

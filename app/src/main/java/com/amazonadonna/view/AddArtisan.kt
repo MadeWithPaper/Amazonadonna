@@ -26,6 +26,9 @@ import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.sync.Synchronizer
 import android.graphics.Bitmap
 import android.view.View
+import android.media.ExifInterface
+import android.graphics.Matrix
+import android.os.Build
 import java.io.File
 import java.io.IOException
 
@@ -177,7 +180,45 @@ class AddArtisan : AppCompatActivity() {
         return path!!
     }
 
+    //helper for preventing unwanted rotation when importing pictures
+    private fun rotateBitmap(bitmap: Bitmap, orientation: Int) : Bitmap? {
+        val matrix = Matrix();
+        when (orientation) {
+            ExifInterface.ORIENTATION_NORMAL -> bitmap
+            ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> matrix.setScale(-1f, 1f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.setRotate(180f)
+            ExifInterface.ORIENTATION_FLIP_VERTICAL -> {
+                matrix.setRotate(180f)
+                matrix.postScale(-1f, 1f)
+            }
+            ExifInterface.ORIENTATION_TRANSPOSE -> {
+                matrix.setRotate(90f)
+                matrix.postScale(-1f, 1f)
+            }
+            ExifInterface.ORIENTATION_ROTATE_90 ->
+               matrix.setRotate(90f)
+            ExifInterface.ORIENTATION_TRANSVERSE -> {
+                matrix.setRotate(-90f)
+                matrix.postScale(-1f, 1f)
+            }
+            ExifInterface.ORIENTATION_ROTATE_270 ->
+               matrix.setRotate(-90f)
+            else ->
+               return bitmap
+        }
+        var bmRotated = Bitmap.createBitmap(0, 0, Bitmap.Config.ARGB_8888)
+        try {
+            bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true)
+            bitmap.recycle()
+        }
+        catch (e: OutOfMemoryError) {
+            e.printStackTrace();
+        }
+        return bmRotated
+    }
 
+
+    @TargetApi(Build.VERSION_CODES.N)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode){
@@ -186,14 +227,23 @@ class AddArtisan : AppCompatActivity() {
                     photoFile = File(externalCacheDir, fileName)
                     val dataURI = FileProvider.getUriForFile(this@AddArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
                     val cr = contentResolver
+                    val inputStream = cr.openInputStream(dataURI)
+                    //Log.e("AddArtisan.kt", "testing path from onActivityResult $path")
+
                     try {
                         var bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, dataURI)
                         bitmap = Bitmap.createScaledBitmap(bitmap,331,273,true)
                         val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
-                        ivPreview.setImageBitmap(bitmap)
+
+                        val exif =  ExifInterface(inputStream)
+                        val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                                ExifInterface.ORIENTATION_UNDEFINED)
+                        val bmRotated = rotateBitmap(bitmap, orientation)
+
+                        ivPreview.setImageBitmap(bmRotated)
 
                         val stream = ByteArrayOutputStream()
-                        bitmap!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                        bmRotated!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
                         var byteArray = stream.toByteArray()
                         //byteArray = ByteArray(photoFile!!.length().toInt())
 
@@ -233,6 +283,8 @@ class AddArtisan : AppCompatActivity() {
                         val w = imageView_artisanProfilePic.width
                         val h = imageView_artisanProfilePic.height
                         val dataURI = data.data
+                        val cr = contentResolver
+                        val inputStream = cr.openInputStream(dataURI)
                         Log.d("HEIGHT", h.toString())
                         Log.d("WIDTH", w.toString())
                         Log.d("dataURI", dataURI.toString())
@@ -241,10 +293,18 @@ class AddArtisan : AppCompatActivity() {
 
                         try {
                             Log.d("Add Artisan post photo", "Success")
-                           Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
-                            val bm = loadScaledBitmap(dataURI, w, h)
+                            Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
+
+                            var bitmap = android.provider.MediaStore.Images.Media.getBitmap(contentResolver, dataURI)
+                            bitmap = Bitmap.createScaledBitmap(bitmap,331,273,true)
                             val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
-                            ivPreview.setImageBitmap(bm)
+
+                            val exif =  ExifInterface(inputStream)
+                            val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                                    ExifInterface.ORIENTATION_UNDEFINED)
+                            val bmRotated = rotateBitmap(bitmap, orientation)
+
+                            ivPreview.setImageBitmap(bmRotated)
                             //setImageView()
                         }
                         catch(e: Error) {
