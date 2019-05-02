@@ -31,6 +31,7 @@
             android:screenOrientation="portrait"></activity>
         <activity android:name=".Reports"
             android:screenOrientation="portrait"></activity>
+
         <activity
             android:name=".Settings"
             android:configChanges="layoutDirection|locale"
@@ -79,6 +80,9 @@
             android:name=".OrderScreen"
             android:configChanges="layoutDirection|locale"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".MessageArtisan"
+            android:configChanges="layoutDirection|locale" />
         <activity
             android:name=".ArtisanProfile"
             android:configChanges="layoutDirection|locale"

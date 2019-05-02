@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.Product
 import com.amazonadonna.model.Artisan
+import com.amazonadonna.sync.ProductSync
 import kotlinx.android.synthetic.main.list_item_cell.view.*
 import com.amazonadonna.sync.Synchronizer
 import kotlinx.android.synthetic.main.list_artisan_cell.view.*
@@ -32,6 +33,7 @@ class ListItemsAdapter (private val context: Context, private val products : Mut
         //remove functionality
         products.removeAt(viewHolder.adapterPosition)
         notifyItemRemoved(viewHolder.adapterPosition)
+        ProductSync.deleteProduct(context, removedProduct)
         //undo functionality
 //        Snackbar.make(viewHolder.itemView, "${removedArtisan.artisanName} deleted.", Snackbar.LENGTH_INDEFINITE).setAction("UNDO") {
 //            products.add(removedPostion, removedArtisan)

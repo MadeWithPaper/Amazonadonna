@@ -1,5 +1,6 @@
 package com.amazonadonna.view
 
+import android.support.v7.app.AlertDialog;
 import android.content.Context
 import android.content.Intent
 import android.support.design.widget.Snackbar
@@ -11,6 +12,7 @@ import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.list_artisan_cell.view.*
 import android.util.Log
 import com.amazonadonna.database.ImageStorageProvider
+import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.sync.Synchronizer
 
 
@@ -31,12 +33,17 @@ class ListArtisanAdapter (private val context: Context, private val artisans :Mu
         //remove functionality
         artisans.removeAt(viewHolder.adapterPosition)
         notifyItemRemoved(viewHolder.adapterPosition)
+        ArtisanSync.deleteArtisan(context, removedArtisan)
+
         //undo functionality
+        /*
         Snackbar.make(viewHolder.itemView, "${removedArtisan.artisanName} deleted.", Snackbar.LENGTH_LONG).setAction("UNDO") {
             artisans.add(removedPostion, removedArtisan)
             notifyItemInserted(removedPostion)
-        }.show()
+        }.show()*/
     }
+
+
 
     override fun getItemCount(): Int {
         return artisans.count()

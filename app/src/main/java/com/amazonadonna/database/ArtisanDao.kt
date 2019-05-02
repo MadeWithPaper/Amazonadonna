@@ -2,6 +2,7 @@ package com.amazonadonna.database
 
 import android.arch.persistence.room.*
 import com.amazonadonna.model.Artisan
+import com.amazonadonna.sync.Synchronizer
 
 @Dao
 interface ArtisanDao {
@@ -13,6 +14,9 @@ interface ArtisanDao {
 
     @Query("SELECT * FROM artisan WHERE synced = (:syncState)")
     fun getAllBySyncState(syncState: Int): List<Artisan>
+
+    @Query("SELECT * FROM artisan WHERE synced != (:syncState)")
+    fun getAllWithoutSyncState(syncState: Int): List<Artisan>
 
     @Query("SELECT * FROM artisan WHERE artisanId IN (:artisanIds)")
     fun loadAllByIds(artisanIds: IntArray): List<Artisan>

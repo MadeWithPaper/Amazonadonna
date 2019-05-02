@@ -23,6 +23,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
     private const val addItemImageURL = "https://99956e2a.ngrok.io/item/updateImage"
     private const val editItemURL = "https://99956e2a.ngrok.io/item/editItem"
     private const val listAllItemsURL = "https://99956e2a.ngrok.io/item/listAllForArtisan"
+    private const val deleteItemURL = "https://99956e2a.ngrok.io/item/delete"
 
     override fun sync(context: Context, cgaId: String) {
         super.sync(context, cgaId)
@@ -43,6 +44,11 @@ object ProductSync: Synchronizer(), CoroutineScope {
             val updateProducts = getUpdateProducts(context)
             for (product in updateProducts) {
                 updateSingleProduct(context, product)
+            }
+            val deleteProducts = getDeleteProducts(context)
+            for (product in deleteProducts) {
+                Log.i("ProductSync", "Delete product " + product.itemId)
+                deleteSingleProduct(context, product)
             }
         }
         Log.i(TAG, "Done uploading, now downloading")
@@ -85,7 +91,51 @@ object ProductSync: Synchronizer(), CoroutineScope {
 
     }
 
-    private suspend fun updateProductHelper(context : Context, product: Product) = withContext(Dispatchers.IO) {
+    fun deleteProduct(context : Context, product: Product) {
+        job = Job()
+
+        if (product.synced != SYNC_NEW) {
+            product.synced = SYNC_DELETE
+            launch {
+                updateProductHelper(context, product)
+            }
+        }
+        else {
+            product.synced = SYNC_DELETE
+            launch {
+                deleteProductHelper(context, product)
+            }
+        }
+    }
+
+    private fun deleteSingleProduct(context: Context, product: Product) {
+        numInProgress++
+
+        val requestBody = FormBody.Builder().add("itemId", product.itemId)
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+                .url(deleteItemURL)
+                .post(requestBody.build())
+                .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()?.string()
+                Log.i("DeleteItem", body)
+
+                numInProgress--
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.e("DeleteItem", "failed to do POST request to database" + deleteItemURL)
+                numInProgress--
+            }
+        })
+    }
+
+
+        private suspend fun updateProductHelper(context : Context, product: Product) = withContext(Dispatchers.IO) {
         AppDatabase.getDatabase(context).productDao().update(product)
     }
 
@@ -138,6 +188,11 @@ object ProductSync: Synchronizer(), CoroutineScope {
         AppDatabase.getDatabase(context).productDao().deleteAll()
     }
 
+    private suspend fun deleteProductHelper(context : Context, product : Product) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).productDao().delete(product)
+    }
+
+
     private suspend fun getNewProducts(context : Context) = withContext(Dispatchers.IO) {
         AppDatabase.getDatabase(context).productDao().getAllBySyncState(SYNC_NEW)
     }
@@ -145,6 +200,11 @@ object ProductSync: Synchronizer(), CoroutineScope {
     private suspend fun getUpdateProducts(context : Context) = withContext(Dispatchers.IO) {
         AppDatabase.getDatabase(context).productDao().getAllBySyncState(SYNC_EDIT)
     }
+
+    private suspend fun getDeleteProducts(context : Context) = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(context).productDao().getAllBySyncState(SYNC_DELETE)
+    }
+
 
     fun addProduct(context : Context, product: Product, artisan: Artisan, photos: ArrayList<File?>) {
         job = Job()

@@ -11,6 +11,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.list_all_artisans.*
@@ -29,6 +30,7 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 import com.amazonadonna.database.ArtisanDao
 import com.amazonadonna.sync.ArtisanSync
+import com.amazonadonna.sync.Synchronizer
 import com.jakewharton.rxbinding2.widget.textChanges
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -91,7 +93,23 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                (recyclerView_listAllartisans.adapter as ListArtisanAdapter).removeItem(viewHolder)
+                val builder = AlertDialog.Builder(this@ListAllArtisans)
+                builder.setTitle("Confirm Artisan Deletion")
+                builder.setMessage("Are you sure you want to delete this artisan? This action cannot be undone.")
+
+                builder.setPositiveButton("Permanently Delete"){dialog, which ->
+                    (recyclerView_listAllartisans.adapter as ListArtisanAdapter).removeItem(viewHolder)
+                    dialog.cancel()
+                }
+
+                builder.setNeutralButton("Cancel") { dialog, which ->
+                    (recyclerView_listAllartisans.adapter as ListArtisanAdapter).notifyItemChanged(viewHolder.adapterPosition)
+                    dialog.cancel()
+                }
+
+                var dialog = builder.create()
+                dialog.show()
+                dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.argb(255, 24, 163, 198))
             }
             //drawing the red rectangle with icon when swiping
             override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
@@ -171,7 +189,7 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
     }
 
     private suspend fun getArtisansFromDb() = withContext(Dispatchers.IO) {
-        AppDatabase.getDatabase(application).artisanDao().getAll() as List<Artisan>
+        AppDatabase.getDatabase(application).artisanDao().getAllWithoutSyncState(Synchronizer.SYNC_DELETE) as List<Artisan>
     }
 
     private fun addArtisan() {
@@ -180,48 +198,6 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
         intent.putExtra("cgaId", cgaId)
         startActivity(intent)
 
-    }
-
-    private fun fetchJSON() {
-        //TODO update cga id to real
-        Log.d("ListAllArtisans", "getting artisans for: "+cgaId)
-        val requestBody = FormBody.Builder().add("cgaId", cgaId)
-                .build()
-
-        val client = OkHttpClient()
-
-        val request = Request.Builder()
-                .url(listAllArtisansURL)
-                .post(requestBody)
-                .build()
-
-        val artisanDao = AppDatabase.getDatabase(application).artisanDao()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                Log.d("ListAllArtisan", "response body: " + body)
-
-                val gson = GsonBuilder().create()
-                //val artisans : List<com.amazonadonna.model.Artisan> =  gson.fromJson(body, mutableListOf<com.amazonadonna.model.Artisan>().javaClass)
-                //System.out.print(artisans.get(0))
-                val artisans: List<Artisan> = gson.fromJson(body, object : TypeToken<List<Artisan>>() {}.type)
-                originalArtisans.addAll(artisans)
-                oldFilteredArtisans.addAll(artisans)
-                filteredArtisans.addAll(artisans)
-
-                artisanDao.insertAll(artisans)
-
-                runOnUiThread {
-                    recyclerView_listAllartisans.adapter = ListArtisanAdapter(applicationContext, oldFilteredArtisans)
-                }
-
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("ListAllArtisan", "failed to do POST request to database" + listAllArtisansURL)
-            }
-        })
     }
 
     override fun onDestroy() {

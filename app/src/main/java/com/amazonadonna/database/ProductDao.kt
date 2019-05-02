@@ -14,6 +14,9 @@ interface ProductDao {
     @Query("SELECT * FROM product WHERE synced = (:syncState)")
     fun getAllBySyncState(syncState: Int): List<Product>
 
+    @Query("SELECT * FROM product WHERE artisanId = (:artisanId) AND synced != (:syncState)")
+    fun getAllByArtisanIdWithoutSyncState(artisanId: String, syncState: Int): List<Product>
+
     @Query("SELECT * FROM product WHERE itemId IN (:productIds)")
     fun loadAllByIds(productIds: IntArray): List<Product>
 
