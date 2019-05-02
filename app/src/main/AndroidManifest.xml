@@ -24,7 +24,7 @@
         android:supportsRtl="true"
         android:syncable="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewReport"></activity>
+        <activity android:name=".ViewReport" />
         <activity android:name=".report_target_cell" />
         <activity android:name=".Reports" />
         <activity
@@ -64,6 +64,9 @@
             android:configChanges="layoutDirection|locale" />
         <activity
             android:name=".OrderScreen"
+            android:configChanges="layoutDirection|locale" />
+        <activity
+            android:name=".MessageArtisan"
             android:configChanges="layoutDirection|locale" />
         <activity
             android:name=".ArtisanProfile"

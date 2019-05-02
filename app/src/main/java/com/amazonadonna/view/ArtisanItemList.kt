@@ -2,15 +2,25 @@ package com.amazonadonna.view
 
 import android.content.ClipData
 import android.content.Intent
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.startActivity
+import android.support.v7.app.AlertDialog
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
+import com.amazonadonna.sync.Synchronizer
 import com.amazonadonna.view.R
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -28,6 +38,7 @@ import kotlin.coroutines.CoroutineContext
 
 class ArtisanItemList : AppCompatActivity() , CoroutineScope {
     lateinit var job: Job
+    lateinit var deleteIcon: Drawable
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -37,8 +48,10 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
     private val originalItems: MutableList<Product> = mutableListOf()
     private val filteredItems: MutableList<Product> = mutableListOf()
     private val oldFilteredItems: MutableList<Product> = mutableListOf()
+    var swipeBackground = ColorDrawable(Color.parseColor("#FF0000"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete)!!
         filteredItems.clear()
         originalItems.clear()
         oldFilteredItems.clear()
@@ -54,9 +67,19 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
 
         //TODO remove testing
         //val testItem = Product(1.0, "id", "des", "aid", "url", "Jewelry", "Earrings", "Hoop Earrings", "item name", "shipping", 1, 2)
-//        val emptyProductList : List<Product> = emptyList()
+        val emptyProductList : MutableList<Product> = mutableListOf()
+//        if (originalItems.isEmpty()) {
+//            artisanItemList_recyclerView.adapter = ListItemsAdapter(this, emptyProductList)
+//        }
+//        else {
+//            artisanItemList_recyclerView.adapter = ListItemsAdapter(this, originalItems)
+//        }
         artisanItemList_recyclerView.adapter = ListItemsAdapter(this, originalItems)
         artisanItemList_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
+        artisanItemList_addItemButton.setOnClickListener{
+            addItem(artisan)
+        }
 
         listItems_Search
                 .textChanges()
@@ -73,9 +96,63 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
                             }
                 }
 
-        artisanItemList_addItemButton.setOnClickListener{
-            addItem(artisan)
+
+
+
+        //item swipe to delete functionality
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
+                val builder = AlertDialog.Builder(this@ArtisanItemList)
+                builder.setTitle("Confirm Item Deletion")
+                builder.setMessage("Are you sure you want to delete this item? This action cannot be undone.")
+
+                builder.setPositiveButton("Permanently Delete"){dialog, which ->
+                    (artisanItemList_recyclerView.adapter as ListItemsAdapter).removeItem(viewHolder)
+                    dialog.cancel()
+                }
+
+                builder.setNeutralButton("Cancel") { dialog, which ->
+                    (artisanItemList_recyclerView.adapter as ListItemsAdapter).notifyItemChanged(viewHolder.adapterPosition)
+                    dialog.cancel()
+                }
+
+                var dialog = builder.create()
+                dialog.show()
+                dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.argb(255, 24, 163, 198))
+            }
+            //drawing the red rectangle with icon when swiping
+            override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+                val itemView = viewHolder.itemView
+                val iconMargin = (itemView.height - deleteIcon.intrinsicHeight) / 2
+
+                if (dX < 0) {
+                    swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                    deleteIcon.setBounds(itemView.right - iconMargin - deleteIcon.intrinsicWidth,itemView.top + iconMargin, itemView.right - iconMargin, itemView.bottom - iconMargin)
+                    deleteIcon.level = 1
+                }
+                swipeBackground.draw(c)
+
+                c.save()
+
+
+                if (dX < 0) {
+                    c.clipRect(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                }
+
+                deleteIcon.draw(c)
+                c.restore()
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
+
         }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(artisanItemList_recyclerView)
+
     }
 
     override fun onStart() {
@@ -100,7 +177,7 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
     }
 
     private suspend fun getProductsFromDb() = withContext(Dispatchers.IO) {
-        AppDatabase.getDatabase(application).productDao().getAllByArtisanId(artisan.artisanId)
+        AppDatabase.getDatabase(application).productDao().getAllByArtisanIdWithoutSyncState(artisan.artisanId, Synchronizer.SYNC_DELETE)
     }
 
     private fun search(query: String): Completable = Completable.create {

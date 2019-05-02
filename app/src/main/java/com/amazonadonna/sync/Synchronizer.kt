@@ -12,6 +12,7 @@ abstract class Synchronizer : CoroutineScope {
     companion object {
         const val SYNC_NEW = 1
         const val SYNC_EDIT = 2
+        const val SYNC_DELETE = 3
         const val SYNCED = 0
         var numInProgress: Int = 0
     }

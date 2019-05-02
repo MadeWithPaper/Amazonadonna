@@ -40,7 +40,7 @@ class OrderScreen : AppCompatActivity() {
         // TODO implement a fetch of order data once backend route/database are configured
         orderScreen_recyclerView.layoutManager = LinearLayoutManager(this)
         //load an empty list as placeholder before GET request completes
-        val emptyItemList : List<Product> = emptyList()
+        val emptyItemList : MutableList<Product> = mutableListOf()
         orderScreen_recyclerView.adapter = ListItemsAdapter(this, emptyItemList)
         //TODO make order screen adapter
         orderScreen_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
@@ -91,7 +91,7 @@ class OrderScreen : AppCompatActivity() {
 
                 Log.d("ITEMS", body)
                 val gson = GsonBuilder().create()
-                val products : List<Product> = gson.fromJson(body,  object : TypeToken<List<Product>>() {}.type)
+                val products : MutableList<Product> = gson.fromJson(body,  object : TypeToken<List<Product>>() {}.type)
 
 //                artisanDao.insertAll(orders)
                 Log.d("ITEMS", "worked")

@@ -49,11 +49,15 @@ class ArtisanProfile() : AppCompatActivity() {
 
     private fun artisanMessage(artisan: Artisan) {
         //TODO put in real artisan number
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.type = "text/plain"
-        intent.putExtra("address", artisan.phoneNumber)
-        val messagechooser = createChooser(intent, "Please Choose an Application to Send Messages...")
-        startActivity(messagechooser)
+        val intent = Intent(this, MessageArtisan::class.java)
+        //intent.putExtra("selectedArtisan", artisan)
+        startActivity(intent)
+        finish()
+//        val intent = Intent(Intent.ACTION_SEND)
+//        intent.type = "text/plain"
+//        intent.putExtra("address", artisan.phoneNumber)
+//        val messagechooser = createChooser(intent, "Please Choose an Application to Send Messages...")
+//        startActivity(messagechooser)
     }
 
     private fun populateSelectedArtisan(artisan : Artisan) {
@@ -66,10 +70,10 @@ class ArtisanProfile() : AppCompatActivity() {
         var isp = ImageStorageProvider(applicationContext)
         isp.loadImageIntoUI(artisan.picURL, this.artisanProfilePicture, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
 
+        Log.d("ArtisanProfile", artisan.bio)
         artisanProfileName.text = artisan.artisanName
         artisanProfileBio.text = artisan.bio
         artisanProfileBalance.text = "Balance: $${artisan.balance}"
-
     }
 
     private fun artisanItemList(artisan : Artisan){

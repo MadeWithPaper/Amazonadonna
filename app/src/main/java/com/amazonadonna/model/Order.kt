@@ -17,7 +17,7 @@ data class Order (
         @ColumnInfo(name = "totalCostCents") @Json(name = "totalCostCents") var totalCostCents : Int,
         //TODO uncomment when backend route supports amOrderNumber, otherwise causes crash
         //@ColumnInfo(name = "amOrderNumber") @Json(name = "amOrderNumber") var amOrderNumber : String,
-        @ColumnInfo(name = "products") @Json(name = "products") var products : List<Product>,
+        @ColumnInfo(name = "products") @Json(name = "products") var products : MutableList<Product>,
         @ColumnInfo(name = "cgaId") @Json(name = "cgaId") var cgaId : String,
         @ColumnInfo(name = "synced") var synced : Int = Synchronizer.SYNCED)
         //TODO change format of date
