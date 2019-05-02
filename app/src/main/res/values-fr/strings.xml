@@ -148,5 +148,6 @@
     <string name="view_report_toolbar_text">Voir le rapport généré</string>
     <string name="view_report_done_button">Terminé</string>
     <string name="payout_amount_format_error">S\'il vous plaît entrer un montant valide!</string>
+    <string name="send_message_button">Envoyer</string>
 
 </resources>

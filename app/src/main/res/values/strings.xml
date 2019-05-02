@@ -149,5 +149,6 @@
     <string name="edit">Edit</string>
     <string name="cancel">Cancel</string>
     <string name="chooser_title">Choose a Messaging Application</string>
+    <string name="send_message_button">Send</string>
 
 </resources>

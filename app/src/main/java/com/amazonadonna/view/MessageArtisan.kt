@@ -1,5 +1,6 @@
 package com.amazonadonna.view
 
+import android.app.Activity
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
@@ -7,8 +8,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -26,6 +29,7 @@ import com.twilio.chat.ErrorInfo
 import com.twilio.chat.Member
 import com.twilio.chat.Message
 import com.twilio.chat.StatusListener
+import kotlinx.android.synthetic.main.activity_message_artisan.*
 
 import java.util.ArrayList
 
@@ -33,16 +37,9 @@ class MessageArtisan : AppCompatActivity() {
 
     // Update this identity for each individual user, for instance after they login
     private val mIdentity = "CHAT_USER"
-
-    private var mMessagesRecyclerView: RecyclerView? = null
     private var mMessagesAdapter: MessagesAdapter? = null
     private val mMessages = ArrayList<Message>()
-
-    private var mWriteMessageEditText: EditText? = null
-    private var mSendChatMessageButton: Button? = null
-
     private var mChatClient: ChatClient? = null
-
     private var mGeneralChannel: Channel? = null
 
     private val mChatClientCallback = object : CallbackListener<ChatClient>() {
@@ -108,29 +105,31 @@ class MessageArtisan : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_artisan)
 
-        mMessagesRecyclerView = findViewById(R.id.messagesRecyclerView) as RecyclerView
+        messageArtisanLayout.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View, m: MotionEvent): Boolean {
+                hideKeyboard(v)
+                return true
+            }
+        })
 
         val layoutManager = LinearLayoutManager(this)
         // for a chat app, show latest at the bottom
         layoutManager.stackFromEnd = true
-        mMessagesRecyclerView!!.layoutManager = layoutManager
+        messagesRecyclerView!!.layoutManager = layoutManager
 
         mMessagesAdapter = MessagesAdapter()
-        mMessagesRecyclerView!!.adapter = mMessagesAdapter
+        messagesRecyclerView!!.adapter = mMessagesAdapter
 
-        mWriteMessageEditText = findViewById(R.id.writeMessageEditText) as EditText
-
-        mSendChatMessageButton = findViewById(R.id.sendChatMessageButton) as Button
-        mSendChatMessageButton!!.setOnClickListener {
+        sendChatMessageButton!!.setOnClickListener {
             if (mGeneralChannel != null) {
-                val messageBody = mWriteMessageEditText!!.text.toString()
+                val messageBody = writeMessageEditText!!.text.toString()
                 val options = Message.options().withBody(messageBody)
                 Log.d(TAG, "Message created")
                 mGeneralChannel!!.messages.sendMessage(options, object : CallbackListener<Message>() {
                     override fun onSuccess(message: Message) {
                         this@MessageArtisan.runOnUiThread {
                             // need to modify user interface elements on the UI thread
-                            mWriteMessageEditText!!.setText("")
+                            writeMessageEditText!!.setText("")
                         }
                     }
                 })
@@ -139,6 +138,12 @@ class MessageArtisan : AppCompatActivity() {
 
         retrieveAccessTokenfromServer()
     }
+
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
 
     private fun retrieveAccessTokenfromServer() {
         val deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
@@ -222,8 +227,7 @@ class MessageArtisan : AppCompatActivity() {
 
         internal inner class ViewHolder(var mMessageTextView: TextView) : RecyclerView.ViewHolder(mMessageTextView)
 
-        override fun onCreateViewHolder(parent: ViewGroup,
-                                        viewType: Int): MessagesAdapter.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessagesAdapter.ViewHolder {
             val messageTextView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.message_text_view, parent, false) as TextView
             return ViewHolder(messageTextView)
@@ -242,12 +246,10 @@ class MessageArtisan : AppCompatActivity() {
     }
 
     companion object {
-
         /*
        Change this URL to match the token URL for your Twilio Function
     */
         internal val SERVER_TOKEN_URL = "https://YOUR_DOMAIN_HERE.twil.io/chat-token"
-
         internal val DEFAULT_CHANNEL_NAME = "general"
         internal val TAG = "TwilioChat"
     }
