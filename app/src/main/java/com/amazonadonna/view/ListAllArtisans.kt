@@ -109,6 +109,7 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
 
                 var dialog = builder.create()
                 dialog.show()
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
                 dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.argb(255, 24, 163, 198))
             }
             //drawing the red rectangle with icon when swiping

@@ -11,7 +11,7 @@
         android:id="@+id/takePicture"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:background="@android:drawable/ic_menu_camera"
         app:layout_constraintBottom_toBottomOf="@+id/imageView_artisanProfilePic"
         app:layout_constraintStart_toStartOf="@+id/imageView_artisanProfilePic" />
@@ -20,7 +20,7 @@
         android:id="@+id/selectPicture"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginLeft="75dp"
+        android:layout_marginStart="75dp"
         android:background="@android:drawable/ic_menu_gallery"
         app:layout_constraintBottom_toBottomOf="@+id/imageView_artisanProfilePic"
         app:layout_constraintStart_toStartOf="@+id/imageView_artisanProfilePic" />
