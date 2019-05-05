@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import com.amazonadonna.database.AppDatabase
+import com.amazonadonna.model.App
 import com.amazonadonna.model.Order
 import com.amazonadonna.model.Product
 import com.amazonadonna.sync.OrderSync
@@ -21,7 +22,7 @@ import java.io.IOException
 
 class OrderScreen : AppCompatActivity() {
     var orderIdString = ""
-    val getItemURL = "https://99956e2a.ngrok.io/order/getItems"
+    val getItemURL = App.BACKEND_BASE_URL +  "/order/getItems"
     private lateinit var alertDialog : AlertDialog
     lateinit var order : Order
 

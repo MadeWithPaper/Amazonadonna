@@ -27,8 +27,6 @@
 
         <activity android:name=".ViewReport"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".report_target_cell"
-            android:screenOrientation="portrait"></activity>
         <activity android:name=".Reports"
             android:screenOrientation="portrait"></activity>
 

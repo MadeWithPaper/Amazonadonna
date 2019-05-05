@@ -1,25 +1,23 @@
 package com.amazonadonna.sync
 
-import android.arch.persistence.room.Room
 import android.content.Context
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.database.PictureListTypeConverter
+import com.amazonadonna.model.App
 import com.amazonadonna.model.Order
 import com.amazonadonna.model.Product
-import com.amazonadonna.view.ListItemsAdapter
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.activity_order_screen.*
 import kotlinx.coroutines.*
 import okhttp3.*
 import java.io.IOException
 
 object OrderSync: Synchronizer(), CoroutineScope {
     private const val TAG = "OrderSync"
-    private const val listOrderURL = "https://99956e2a.ngrok.io/order/listAllForCga"
-    private const val getItemURL = "https://99956e2a.ngrok.io/order/getItems"
-    private const val editOrderURL = "https://99956e2a.ngrok.io/order/setShippedStatus"
+    private val listOrderURL = App.BACKEND_BASE_URL + "/order/listAllForCga"
+    private val getItemURL = App.BACKEND_BASE_URL + "/order/getItems"
+    private val editOrderURL = App.BACKEND_BASE_URL + "/order/setShippedStatus"
 
     override fun sync(context: Context, cgaId: String) {
         super.sync(context, cgaId)

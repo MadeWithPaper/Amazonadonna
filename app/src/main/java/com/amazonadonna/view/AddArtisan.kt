@@ -29,6 +29,7 @@ import android.view.View
 import android.media.ExifInterface
 import android.graphics.Matrix
 import android.os.Build
+import com.amazonadonna.model.App
 import java.io.File
 import java.io.IOException
 
@@ -38,8 +39,8 @@ class AddArtisan : AppCompatActivity() {
     private val fileName: String = "output.png"
     private val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
-    private val addArtisanURL = "https://99956e2a.ngrok.io/artisan/add"
-    private val artisanPicURL = "https://99956e2a.ngrok.io/artisan/updateImage"
+    private val addArtisanURL = App.BACKEND_BASE_URL + "/artisan/add"
+    private val artisanPicURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -494,7 +495,6 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
 
     fun submitToDB(artisan: Artisan) {
 
-        //TODO clean up when id generation is moved to backend
 //        if (!validateFields()) {
 //            return
 //        }

@@ -6,6 +6,7 @@ import android.util.Log
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.database.PictureListTypeConverter
+import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import com.google.gson.GsonBuilder
@@ -19,11 +20,11 @@ import java.util.concurrent.TimeUnit
 
 object ProductSync: Synchronizer(), CoroutineScope {
     private const val TAG = "ProductSync"
-    private const val addItemURL = "https://99956e2a.ngrok.io/item/add"
-    private const val addItemImageURL = "https://99956e2a.ngrok.io/item/updateImage"
-    private const val editItemURL = "https://99956e2a.ngrok.io/item/editItem"
-    private const val listAllItemsURL = "https://99956e2a.ngrok.io/item/listAllForArtisan"
-    private const val deleteItemURL = "https://99956e2a.ngrok.io/item/delete"
+    private val addItemURL = App.BACKEND_BASE_URL + "/item/add"
+    private val addItemImageURL = App.BACKEND_BASE_URL + "/item/updateImage"
+    private val editItemURL = App.BACKEND_BASE_URL + "/item/editItem"
+    private val listAllItemsURL = App.BACKEND_BASE_URL + "/item/listAllForArtisan"
+    private val deleteItemURL = App.BACKEND_BASE_URL + "/item/delete"
 
     override fun sync(context: Context, cgaId: String) {
         super.sync(context, cgaId)

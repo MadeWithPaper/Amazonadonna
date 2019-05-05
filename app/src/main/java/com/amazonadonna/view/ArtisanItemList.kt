@@ -18,6 +18,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
+import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import com.amazonadonna.sync.Synchronizer
@@ -44,7 +45,7 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
         get() = Dispatchers.Main + job
 
     lateinit var artisan : Artisan
-    private val listAllItemsURL = "https://99956e2a.ngrok.io/item/listAllForArtisan"
+    private val listAllItemsURL = App.BACKEND_BASE_URL + "/item/listAllForArtisan"
     private val originalItems: MutableList<Product> = mutableListOf()
     private val filteredItems: MutableList<Product> = mutableListOf()
     private val oldFilteredItems: MutableList<Product> = mutableListOf()

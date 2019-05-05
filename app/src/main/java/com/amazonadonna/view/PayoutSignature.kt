@@ -9,6 +9,7 @@ import android.util.Log
 import android.content.Intent
 import android.graphics.Bitmap
 import android.support.v7.app.AlertDialog
+import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Payout
 import com.amazonadonna.sync.PayoutSync
@@ -22,9 +23,9 @@ import java.util.*
 class PayoutSignature : AppCompatActivity() {
 
     private val REQUEST_EXTERNAL_STORAGE = 3
-    private val updateURL = "https://99956e2a.ngrok.io/artisan/edit"
-    private val payoutHistory = "https://99956e2a.ngrok.io/payout/add"
-    private val payoutSignatureURL = "https://99956e2a.ngrok.io/payout/updateImage"
+    private val updateURL = App.BACKEND_BASE_URL + "/artisan/edit"
+    private val payoutHistory = App.BACKEND_BASE_URL + "/payout/add"
+    private val payoutSignatureURL = App.BACKEND_BASE_URL + "/payout/updateImage"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

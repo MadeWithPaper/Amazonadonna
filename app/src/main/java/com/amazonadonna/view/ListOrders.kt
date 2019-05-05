@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.util.DiffUtil
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
+import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Order
 import com.google.gson.GsonBuilder
@@ -34,7 +35,7 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor>, CoroutineScope 
         get() = Dispatchers.Main + job
 
     var cgaId : String = "0"
-    val listOrderURL = "https://99956e2a.ngrok.io/order/listAllForCga"
+    val listOrderURL = App.BACKEND_BASE_URL + "/order/listAllForCga"
     val originalOrders : MutableList<Order> = mutableListOf()
     val filteredOrders: MutableList<Order> = mutableListOf()
     val oldFilteredOrders: MutableList<Order> = mutableListOf()

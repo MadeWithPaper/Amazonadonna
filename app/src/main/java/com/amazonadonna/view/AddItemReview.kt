@@ -20,6 +20,7 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.widget.ImageView
 import com.amazonadonna.database.ImageStorageProvider
+import com.amazonadonna.model.App
 import com.amazonadonna.sync.ProductSync
 import java.io.File
 import java.util.*
@@ -28,9 +29,9 @@ import java.util.*
 class AddItemReview : AppCompatActivity() {
 
     //private var photoFile: File? = null
-    private val addItemURL = "https://99956e2a.ngrok.io/item/add"
-    private val addItemImageURL = "https://99956e2a.ngrok.io/item/updateImage"
-    private val editItemURL = "https://99956e2a.ngrok.io/item/editItem"
+    private val addItemURL = App.BACKEND_BASE_URL + "/item/add"
+    private val addItemImageURL = App.BACKEND_BASE_URL + "/item/updateImage"
+    private val editItemURL = App.BACKEND_BASE_URL + "/item/editItem"
     var editMode : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {

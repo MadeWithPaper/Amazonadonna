@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.database.ImageStorageProvider
+import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Payout
 import kotlinx.coroutines.*
@@ -13,8 +14,8 @@ import java.io.File
 import java.io.IOException
 
 object PayoutSync : Synchronizer(), CoroutineScope {
-    private const val payoutHistory = "https://99956e2a.ngrok.io/payout/add"
-    private const val payoutSignatureURL = "https://99956e2a.ngrok.io/payout/updateImage"
+    private val payoutHistory = App.BACKEND_BASE_URL + "/payout/add"
+    private val payoutSignatureURL = App.BACKEND_BASE_URL + "/payout/updateImage"
     private const val TAG = "PayoutSync"
 
     override fun sync(context: Context, cgaId: String) {
