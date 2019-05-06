@@ -1,8 +1,8 @@
 package com.amazonadonna.view
 
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.amazon.identity.auth.device.AuthError
@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_home_screen.*
 import okhttp3.*
 import java.io.IOException
 import java.lang.Exception
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import com.amazonadonna.model.App
 import java.lang.Thread.sleep
 

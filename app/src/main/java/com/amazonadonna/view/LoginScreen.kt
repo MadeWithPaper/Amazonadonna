@@ -1,12 +1,15 @@
 package com.amazonadonna.view
 
-import android.support.v7.app.AppCompatActivity
+import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.util.Log
 import android.content.Intent
-import android.support.v7.app.AlertDialog
+import android.view.MotionEvent
+import androidx.appcompat.app.AlertDialog
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 
 import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
@@ -80,7 +83,7 @@ class LoginScreen : AppCompatActivity() {
 
         email_sign_in_button.setOnClickListener { test()/*attemptLogin()*/ }
 
-        login_with_amazon.setOnClickListener{
+        log_in_with_amazon.setOnClickListener{
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
@@ -96,6 +99,14 @@ class LoginScreen : AppCompatActivity() {
             alertDialog.setCanceledOnTouchOutside(false)
             alertDialog.show()
         }
+
+        log_in_layout.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View, m: MotionEvent): Boolean {
+                hideKeyboard(v)
+                return true
+            }
+        })
+
     }
 
     override fun onStart() {
@@ -123,4 +134,10 @@ class LoginScreen : AppCompatActivity() {
         //TODO: Replace this with your own logic
         return password.length > 4
     }
+
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
 }

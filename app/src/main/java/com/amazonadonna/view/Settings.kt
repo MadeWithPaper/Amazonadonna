@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -15,7 +15,7 @@ import java.util.*
 import android.content.ComponentName
 import android.content.DialogInterface
 import android.os.AsyncTask
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
 import com.amazon.identity.auth.device.api.authorization.AuthorizationManager

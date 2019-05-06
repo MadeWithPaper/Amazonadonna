@@ -1,7 +1,7 @@
 package com.amazonadonna.view
 
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_add_artisan.*
 import com.amazonadonna.model.Artisan
@@ -13,9 +13,9 @@ import android.util.Log
 import okhttp3.*
 import android.content.Intent
 import android.provider.MediaStore
-import android.support.v4.content.FileProvider
+import androidx.core.content.FileProvider
 import android.app.Activity
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
 import android.provider.DocumentsContract
 import android.content.ContentUris
 import android.content.pm.PackageManager

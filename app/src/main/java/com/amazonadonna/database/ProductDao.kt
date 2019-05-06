@@ -1,6 +1,6 @@
 package com.amazonadonna.database
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.amazonadonna.model.Product
 
 @Dao

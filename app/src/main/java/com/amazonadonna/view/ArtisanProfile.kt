@@ -4,7 +4,7 @@ import android.util.Log
 import android.content.Intent
 import android.content.Intent.createChooser
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.activity_artisan_profile.*
 import android.text.method.ScrollingMovementMethod

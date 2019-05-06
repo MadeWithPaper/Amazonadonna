@@ -1,14 +1,14 @@
 package com.amazonadonna.view
 
-import android.arch.persistence.room.Room
-import android.support.v7.app.AppCompatActivity
-import android.support.v4.app.LoaderManager.LoaderCallbacks
+import androidx.room.Room
+import androidx.appcompat.app.AppCompatActivity
+import androidx.loader.app.LoaderManager.LoaderCallbacks
 import android.database.Cursor
 import android.os.Bundle
-import android.support.v4.content.Loader
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.util.DiffUtil
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DiffUtil
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.App

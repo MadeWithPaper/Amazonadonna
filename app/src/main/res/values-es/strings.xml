@@ -4,7 +4,6 @@
     <!-- Login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Contraseña</string>
-    <string name="action_sign_in_short">Registrarse</string>
     <string name="error_invalid_email">Esta dirección de correo electrónico no es válida</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -151,5 +150,6 @@
     <string name="view_report_done_button">Hecho</string>
     <string name="payout_amount_format_error">Por favor, introduzca una cantidad válida!</string>
     <string name="send_message_button">Enviar</string>
+    <string name="action_log_in_short">Registrarse</string>
 
 </resources>

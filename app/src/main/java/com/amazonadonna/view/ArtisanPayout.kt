@@ -1,14 +1,14 @@
 package com.amazonadonna.view
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.activity_artisan_payout.*
 import java.text.SimpleDateFormat
 import java.util.*
 import android.app.DatePickerDialog
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.util.Log
 import com.amazonadonna.view.R
 
