@@ -5,6 +5,7 @@ import { OrderItem } from '../models/orderItem'
 import { Item } from '../models/item'
 import { unmarshUtil } from '../utilities/unmarshall'
 import * as uuid from 'uuid'
+import * as _ from 'lodash'
 
 const router = Router()
 
@@ -55,7 +56,6 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
         } else {
             const convert = unmarshUtil(data.Items)
             Promise.all(convert).then(items => {
-                console.log('All Items:', items)
                 const ordersQuery = items.map((item: Item) => {
                     return new Promise(resolve => {
                         const getOrderItemParam: aws.DynamoDB.Types.QueryInput = {
@@ -106,42 +106,49 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                         )
                         Promise.all(convertOrderItems).then(
                             (orderItems: OrderItem[][]) => {
-                                console.log('All OrderIems:', orderItems)
                                 const queryOrders = orderItems.map(
                                     orderItem => {
-                                        const singleOrderItem = orderItem[0]
-                                        return new Promise(resolve => {
-                                            const getOrderParams: aws.DynamoDB.Types.GetItemInput = {
-                                                TableName: 'order',
-                                                Key: {
-                                                    orderId: {
-                                                        S:
-                                                            singleOrderItem.orderId
+                                        if (orderItem.length === 1) {
+                                            const singleOrderItem = orderItem[0]
+                                            return new Promise(resolve => {
+                                                const getOrderParams: aws.DynamoDB.Types.GetItemInput = {
+                                                    TableName: 'order',
+                                                    Key: {
+                                                        orderId: {
+                                                            S:
+                                                                singleOrderItem.orderId
+                                                        }
                                                     }
                                                 }
-                                            }
 
-                                            ddb.getItem(
-                                                getOrderParams,
-                                                (
-                                                    getOrderErr,
-                                                    getOrderData: aws.DynamoDB.Types.GetItemOutput
-                                                ) => {
-                                                    if (getOrderErr) {
-                                                        console.log(
-                                                            'Error fetching orders in order/listAllForArtisan/getOrder: ' +
-                                                                getOrderErr
-                                                        )
-                                                        res.status(400).send(
-                                                            'Error fetching orders in order/listAllForArtisan/getOrder: ' +
-                                                                getOrderErr.message
-                                                        )
-                                                    } else {
-                                                        resolve(getOrderData)
+                                                ddb.getItem(
+                                                    getOrderParams,
+                                                    (
+                                                        getOrderErr,
+                                                        getOrderData: aws.DynamoDB.Types.GetItemOutput
+                                                    ) => {
+                                                        if (getOrderErr) {
+                                                            console.log(
+                                                                'Error fetching orders in order/listAllForArtisan/getOrder: ' +
+                                                                    getOrderErr
+                                                            )
+                                                            res.status(
+                                                                400
+                                                            ).send(
+                                                                'Error fetching orders in order/listAllForArtisan/getOrder: ' +
+                                                                    getOrderErr.message
+                                                            )
+                                                        } else {
+                                                            resolve(
+                                                                getOrderData
+                                                            )
+                                                        }
                                                     }
-                                                }
-                                            )
-                                        })
+                                                )
+                                            })
+                                        } else {
+                                            return null
+                                        }
                                     }
                                 )
                                 Promise.all(queryOrders).then(
@@ -160,7 +167,12 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                         )
                                         Promise.all(convertItems).then(
                                             orderData => {
-                                                res.json(orderData)
+                                                res.json(
+                                                    _.uniqBy(
+                                                        orderData,
+                                                        'orderId'
+                                                    )
+                                                )
                                             }
                                         )
                                     }
