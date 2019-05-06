@@ -113,6 +113,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                                 orderId: { S: item.orderId }
                                             }
                                         }
+                                        console.log('orderId:', item.orderId)
                                         ddb.getItem(
                                             getOrderParams,
                                             (
