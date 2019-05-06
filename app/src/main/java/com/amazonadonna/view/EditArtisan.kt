@@ -11,10 +11,14 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.telephony.PhoneNumberFormattingTextWatcher
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import android.text.TextUtils
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.App
@@ -45,10 +49,10 @@ class EditArtisan : AppCompatActivity() {
         val oldArtisan = intent.extras?.getSerializable("artisan") as Artisan
         //Log.d("HOT FIX 12", oldArtisan.toString())
         //fill in information from old artisan
-        editArtisanBio.setText(oldArtisan.bio)
-        editArtisan_cc.setText(oldArtisan.city + "," + oldArtisan.country)
-        editArtisan_name.setText(oldArtisan.artisanName)
-        editArtisan_number.setText(oldArtisan.phoneNumber)
+        editArtisanBio_et.setText(oldArtisan.bio)
+        editArtisanLoc_et.setText(oldArtisan.city + "," + oldArtisan.country)
+        editArtisanName_et.setText(oldArtisan.artisanName)
+        editArtisanContact_et.setText(oldArtisan.phoneNumber)
 
         /*if (oldArtisan.picURL != "Not set") {
             Picasso.with(this).load(oldArtisan.picURL).into(this.editArtisan_pic)
@@ -71,6 +75,16 @@ class EditArtisan : AppCompatActivity() {
         editTakePicture.setOnClickListener {
             takePicture()
         }
+
+        editArtisanContact_et.addTextChangedListener(PhoneNumberFormattingTextWatcher())
+
+        editArtisan_layout.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View, m: MotionEvent): Boolean {
+                hideKeyboard(v)
+                return true
+            }
+        })
+
     }
 
     private fun selectPicture() {
@@ -284,7 +298,7 @@ class EditArtisan : AppCompatActivity() {
     }
 
     private fun parseLoc () : Pair<String, String> {
-        val rawLoc = editArtisan_cc.text.toString()
+        val rawLoc = editArtisanLoc_et.text.toString()
         val ind = rawLoc.indexOf(',')
         return Pair(rawLoc.substring(0, ind), rawLoc.substring(ind+1))
     }
@@ -295,11 +309,11 @@ class EditArtisan : AppCompatActivity() {
             return
         } else {
 
-            oldArtisan.artisanName = editArtisan_name.text.toString()
-            oldArtisan.bio = editArtisanBio.text.toString()
+            oldArtisan.artisanName = editArtisanName_et.text.toString()
+            oldArtisan.bio = editArtisanBio_et.text.toString()
             oldArtisan.city = parseLoc().first
             oldArtisan.country = parseLoc().second
-            oldArtisan.phoneNumber = editArtisan_number.text.toString()
+            oldArtisan.phoneNumber = editArtisanContact_et.text.toString()
 
 
             var newPhoto: File? = null
@@ -360,28 +374,28 @@ class EditArtisan : AppCompatActivity() {
     }
 
     private fun validateFields() : Boolean {
-        if (TextUtils.isEmpty(editArtisan_name.text.toString())){
-            editArtisan_name.error = this.resources.getString(R.string.requiredFieldError)
+        if (editArtisanName_et.text.toString().isEmpty()){
+            editArtisanName_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
-        if (TextUtils.isEmpty(editArtisan_cc.text.toString())) {
-            editArtisan_cc.error = this.resources.getString(R.string.requiredFieldError)
+        if (editArtisanLoc_et.text.toString().isEmpty()) {
+            editArtisanLoc_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
-        if ((!editArtisan_cc.text.toString().contains(","))) {
-            editArtisan_cc.error = this.resources.getString(R.string.loc_missing_comma)
+        if (!editArtisanLoc_et.text.toString().contains(",")) {
+            editArtisanLoc_til.error = this.resources.getString(R.string.loc_missing_comma)
             return false
         }
 
-        if (TextUtils.isEmpty(editArtisan_number.text.toString())){
-            editArtisan_number.error = this.resources.getString(R.string.requiredFieldError)
+        if (editArtisanContact_et.text.toString().isEmpty()){
+            editArtisanContact_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
-        if (TextUtils.isEmpty(editArtisanBio.text.toString())){
-            editArtisanBio.error = this.resources.getString(R.string.requiredFieldError)
+        if (editArtisanBio_et.text.toString().isEmpty()){
+            editArtisanBio_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
@@ -416,5 +430,9 @@ class EditArtisan : AppCompatActivity() {
                 Log.e("EditArtisan", "failed to do POST request to database" + updateArtisanURL)
             }
         })
+    }
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
