@@ -107,37 +107,44 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                         Promise.all(convertOrderItems).then(
                             (orderItems: OrderItem[]) => {
                                 console.log('All OrderIems:', orderItems)
-                                const queryOrders = orderItems.map(item => {
-                                    return new Promise(resolve => {
-                                        const getOrderParams: aws.DynamoDB.Types.GetItemInput = {
-                                            TableName: 'order',
-                                            Key: {
-                                                orderId: { S: item.orderId }
-                                            }
-                                        }
-                                        console.log('orderId:', item.orderId)
-                                        ddb.getItem(
-                                            getOrderParams,
-                                            (
-                                                getOrderErr,
-                                                getOrderData: aws.DynamoDB.Types.GetItemOutput
-                                            ) => {
-                                                if (getOrderErr) {
-                                                    console.log(
-                                                        'Error fetching orders in order/listAllForArtisan/getOrder: ' +
-                                                            getOrderErr
-                                                    )
-                                                    res.status(400).send(
-                                                        'Error fetching orders in order/listAllForArtisan/getOrder: ' +
-                                                            getOrderErr.message
-                                                    )
-                                                } else {
-                                                    resolve(getOrderData)
+                                const queryOrders = orderItems.map(
+                                    orderItem => {
+                                        return new Promise(resolve => {
+                                            const getOrderParams: aws.DynamoDB.Types.GetItemInput = {
+                                                TableName: 'order',
+                                                Key: {
+                                                    orderId: {
+                                                        S: orderItem.orderId
+                                                    }
                                                 }
                                             }
-                                        )
-                                    })
-                                })
+                                            console.log(
+                                                'orderId:',
+                                                orderItem.orderId
+                                            )
+                                            ddb.getItem(
+                                                getOrderParams,
+                                                (
+                                                    getOrderErr,
+                                                    getOrderData: aws.DynamoDB.Types.GetItemOutput
+                                                ) => {
+                                                    if (getOrderErr) {
+                                                        console.log(
+                                                            'Error fetching orders in order/listAllForArtisan/getOrder: ' +
+                                                                getOrderErr
+                                                        )
+                                                        res.status(400).send(
+                                                            'Error fetching orders in order/listAllForArtisan/getOrder: ' +
+                                                                getOrderErr.message
+                                                        )
+                                                    } else {
+                                                        resolve(getOrderData)
+                                                    }
+                                                }
+                                            )
+                                        })
+                                    }
+                                )
                                 Promise.all(queryOrders).then(
                                     (
                                         marshallItems: aws.DynamoDB.Types.GetItemOutput[]
