@@ -105,17 +105,18 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                             }
                         )
                         Promise.all(convertOrderItems).then(
-                            (orderItems: OrderItem[]) => {
+                            (orderItems: OrderItem[][]) => {
                                 console.log('All OrderIems:', orderItems)
                                 const queryOrders = orderItems.map(
                                     orderItem => {
-                                        console.log('orderItem:', orderItem)
+                                        const singleOrderItem = orderItem[0]
                                         return new Promise(resolve => {
                                             const getOrderParams: aws.DynamoDB.Types.GetItemInput = {
                                                 TableName: 'order',
                                                 Key: {
                                                     orderId: {
-                                                        S: orderItem.orderId
+                                                        S:
+                                                            singleOrderItem.orderId
                                                     }
                                                 }
                                             }
