@@ -25,18 +25,18 @@ class ArtisanProfile() : AppCompatActivity() {
 
         populateSelectedArtisan(artisan as Artisan)
 
-        artisanProfileItemListButton.setOnClickListener {
+        artisanItemList.setOnClickListener {
             artisanItemList(artisan as Artisan)
         }
 
-        artisanProfileMessagesButton.setOnClickListener {
+        artisanMessageButton.setOnClickListener {
             artisanMessage(artisan as Artisan)
         }
-        artisanProfilePayoutButton.setOnClickListener {
+        artisanPayoutButton.setOnClickListener {
             artisanPayout(artisan as Artisan)
         }
 
-        artisanProfile_edit.setOnClickListener {
+        artisanProfileEditButton.setOnClickListener {
             editArtisan(artisan as Artisan)
         }
     }
@@ -73,7 +73,9 @@ class ArtisanProfile() : AppCompatActivity() {
         Log.d("ArtisanProfile", artisan.bio)
         artisanProfileName.text = artisan.artisanName
         artisanProfileBio.text = artisan.bio
-        artisanProfileBalance.text = "Balance: $${artisan.balance}"
+        artisanProfileBalance.text = "$${artisan.balance}"
+        artisanProfileLoc.text = "${artisan.city}, ${artisan.country}"
+        artisanProfileContact.text = artisan.phoneNumber
     }
 
     private fun artisanItemList(artisan : Artisan){

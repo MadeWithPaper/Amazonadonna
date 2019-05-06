@@ -11,15 +11,11 @@
     <ImageView
         android:id="@+id/artisanProfilePicture"
         android:layout_width="200dp"
-        android:layout_height="198dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="250dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_height="200dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/artisanProfileToolbar"
-        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/placeholder" />
 
     <androidx.appcompat.widget.Toolbar
@@ -33,123 +29,196 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/artisanProfileToolbarText"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/artisanProfileEditButton"
+        style="@style/Widget.MaterialComponents.Button.Icon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/artisan_profile_toolbar_text"
-        android:textAlignment="center"
-        android:textSize="25sp"
-        android:textColor="#fff"
-        app:layout_constraintEnd_toEndOf="@+id/artisanProfileToolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/artisanProfile_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:text="@string/edit"
-        android:textColor="#fff"
-        android:textSize="20sp"
+        android:layout_height="0dp"
+        android:text="edit"
+        app:icon="@drawable/edit_icon"
         app:layout_constraintBottom_toBottomOf="@+id/artisanProfileToolbar"
         app:layout_constraintEnd_toEndOf="@+id/artisanProfileToolbar"
         app:layout_constraintTop_toTopOf="@+id/artisanProfileToolbar" />
 
     <TextView
         android:id="@+id/artisanProfileName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="5dp"
-        android:textColor="#000"
-        android:textSize="28sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/artisanProfilePicture"
-        app:layout_constraintTop_toBottomOf="@+id/artisanProfileToolbar"
-        android:maxLines="5"
-        android:scrollHorizontally="false"/>
-
-    <TextView
-        android:id="@+id/artisanProfileBio"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="250dp"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:scrollbarFadeDuration="0"
-        android:scrollbarSize="2dp"
-        android:scrollbars="vertical"
-        android:textAlignment="gravity"
-        android:textColor="#000"
-        android:textSize="25sp"
-        android:verticalScrollbarPosition="right"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/artisanProfilePicture" />
-
-    <ImageButton
-        android:id="@+id/artisanProfileMessagesButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:background="?attr/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/artisanProfileBio"
-        app:srcCompat="@drawable/messages" />
+        android:layout_marginStart="10dp"
+        android:text="Name"
+        android:textColor="#fff"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/artisanProfileToolbar"
+        app:layout_constraintStart_toStartOf="@+id/artisanProfileToolbar"
+        app:layout_constraintTop_toTopOf="@+id/artisanProfileToolbar" />
 
-    <ImageButton
-        android:id="@+id/artisanProfilePayoutButton"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="#ff9900"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/artisanProfileItemListButton"
-        app:layout_constraintStart_toEndOf="@+id/artisanProfileMessagesButton"
-        app:layout_constraintTop_toBottomOf="@+id/artisanProfileBio"
-        app:srcCompat="@drawable/money_icon" />
-
-    <ImageButton
-        android:id="@+id/artisanProfileItemListButton"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="?attr/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/artisanProfileBio"
-        app:srcCompat="@drawable/item_list" />
-
-    <TextView
-        android:id="@+id/artisanProfileBalance"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:textColor="#000"
-        android:textSize="20sp"
-        android:layout_marginBottom="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/artisanProfileBio"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/artisanProfilePicture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/artisanProfilePicture"
-        app:layout_constraintTop_toBottomOf="@+id/artisanProfileName" />
+        app:layout_constraintTop_toBottomOf="@+id/artisanProfileToolbar">
+
+        <TextView
+            android:id="@+id/artisanProfileLoc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/location_icon"
+            android:drawablePadding="5dp"
+            android:paddingStart="5dp"
+            android:paddingTop="50dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="10dp"
+            android:text="City, Country"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/artisanProfileContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/phone_icon"
+            android:drawablePadding="5dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="10dp"
+            android:text="Phone Number"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/artisanProfileBalance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/money_label_icon"
+            android:drawablePadding="5dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="10dp"
+            android:text="Balance"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/artisanProfilePicture">
+
+        <TextView
+            android:id="@+id/artisanProfileBio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="10dp"
+            android:scrollbars="vertical"
+            android:text="Bio"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="395dp"
+        android:layout_height="3dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/artisanPayoutButton"
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Payout"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/money_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/artisanPayoutHistory"
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Payout History"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/history_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/artisanPayoutButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/artisanMessageButton"
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:text="Message"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:cornerRadius="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            app:icon="@drawable/message_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/artisanPayoutButton" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/artisanItemList"
+            style="@style/Widget.MaterialComponents.Button.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="Item List"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:cornerRadius="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            app:icon="@drawable/offer_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/artisanMessageButton"
+            app:layout_constraintTop_toBottomOf="@+id/artisanPayoutHistory" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
