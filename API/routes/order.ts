@@ -109,6 +109,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                 console.log('All OrderIems:', orderItems)
                                 const queryOrders = orderItems.map(
                                     orderItem => {
+                                        console.log('orderItem:', orderItem)
                                         return new Promise(resolve => {
                                             const getOrderParams: aws.DynamoDB.Types.GetItemInput = {
                                                 TableName: 'order',
@@ -118,10 +119,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                                     }
                                                 }
                                             }
-                                            console.log(
-                                                'orderId:',
-                                                orderItem.orderId
-                                            )
+
                                             ddb.getItem(
                                                 getOrderParams,
                                                 (
