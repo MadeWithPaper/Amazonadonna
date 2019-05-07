@@ -35,6 +35,29 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
     })
 })
 
+router.post('/listAllForCga', (req: Request, res: Response) => {
+    const listAllPayoutsParams: aws.DynamoDB.Types.QueryInput = {
+        TableName: 'payout',
+        IndexName: 'cgaId-index',
+        KeyConditionExpression: 'cgaId = :id',
+        ExpressionAttributeValues: {
+            ':id': { S: req.body.cgaId }
+        }
+    }
+    ddb.query(listAllPayoutsParams, (err, data) => {
+        if (err) {
+            const msg = 'Error fetching payots in payout/listAllForCga'
+            console.log(msg + err)
+            res.status(400).send(msg + err.message)
+        } else {
+            const convert = unmarshUtil(data.Items)
+            Promise.all(convert).then(items => {
+                res.json(items)
+            })
+        }
+    })
+})
+
 router.post('/add', (req: Request, res: Response) => {
     const id = uuid.v1()
     const params: aws.DynamoDB.PutItemInput = {
