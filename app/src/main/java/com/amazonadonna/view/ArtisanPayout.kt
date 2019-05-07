@@ -92,6 +92,11 @@ class ArtisanPayout : AppCompatActivity() {
             return false
         }
 
+        if (artisanPayout_amount.text.toString().isEmpty()){
+            artisanPayout_amount.error = this.resources.getString(R.string.requiredFieldError)
+            return false
+        }
+
         return true
     }
 }
