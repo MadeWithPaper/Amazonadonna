@@ -64,6 +64,23 @@ class Settings : AppCompatActivity(), CoroutineScope {
         }
     }
 
+    override fun onBackPressed() {
+        runOnUiThread {
+            alertDialog = AlertDialog.Builder(this@Settings).create()
+            alertDialog.setTitle("Are you sure?")
+            alertDialog.setMessage("Any changed settings will be overridden if you have not clicked 'Update Settings'")
+            alertDialog.setButton(-1, "Continue") { dialog, which ->
+                super.onBackPressed()
+            }
+            alertDialog.setButton(-2, "Go back") { dialog, which ->
+                alertDialog.dismiss()
+            }
+            alertDialog.setCanceledOnTouchOutside(false)
+            alertDialog.show()
+            Log.i("Settings", "back pressed, showing dialog")
+        }
+    }
+
     private fun updateSetting(){
         val intent = Intent(this, HomeScreen::class.java)
        // intent.putExtra("cgaId", cgaID)
