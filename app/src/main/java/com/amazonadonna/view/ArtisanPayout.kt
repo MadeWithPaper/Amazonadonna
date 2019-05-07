@@ -11,9 +11,12 @@ import android.app.DatePickerDialog
 import androidx.appcompat.app.AlertDialog
 import android.util.Log
 import com.amazonadonna.view.R
+import kotlinx.android.synthetic.main.activity_artisan_profile.*
 
 
 class ArtisanPayout : AppCompatActivity() {
+
+    private val TAG = "ArtisanPayout.kt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +34,7 @@ class ArtisanPayout : AppCompatActivity() {
         artisanPayout_datePicker.setOnClickListener {
             pickDate()
         }
+
     }
 
     private fun pickDate() {

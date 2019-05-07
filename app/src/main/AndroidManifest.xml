@@ -25,60 +25,61 @@
         android:supportsRtl="true"
         android:syncable="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-
-        <activity android:name=".ViewReport"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".Reports"
-            android:screenOrientation="portrait"></activity>
-
+        <activity android:name=".PayoutHistoryCGA"></activity>
+        <activity
+            android:name=".ViewReport"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Reports"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Settings"
             android:configChanges="layoutDirection|locale"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PayoutSignature"
             android:configChanges="layoutDirection|locale" />
         <activity
             android:name=".ArtisanPayout"
             android:configChanges="layoutDirection|locale"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".EditArtisan"
             android:configChanges="layoutDirection|locale"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ProductDetails"
             android:configChanges="layoutDirection|locale"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AddItemReview"
             android:configChanges="layoutDirection|locale"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AddItemImages"
             android:configChanges="layoutDirection|locale"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AddItemInfo"
             android:configChanges="layoutDirection|locale"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".AddItemCategory"
             android:configChanges="layoutDirection|locale"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ArtisanItemList"
             android:configChanges="layoutDirection|locale"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".OrderScreen"
             android:configChanges="layoutDirection|locale"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MessageArtisan"
             android:configChanges="layoutDirection|locale" />
@@ -98,8 +99,8 @@
             android:allowTaskReparenting="true"
             android:configChanges="layoutDirection|locale"
             android:launchMode="singleTask"
-            android:theme="@android:style/Theme.NoDisplay"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -125,7 +126,7 @@
         <activity
             android:name=".HomeScreen"
             android:configChanges="layoutDirection|locale"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LoginScreen"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|layoutDirection|locale"
@@ -140,8 +141,8 @@
             android:name=".ListAllArtisans"
             android:configChanges="layoutDirection|locale"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".AddArtisan"
             android:configChanges="layoutDirection|locale"

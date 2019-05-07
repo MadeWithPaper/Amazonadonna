@@ -13,7 +13,8 @@ import com.amazonadonna.database.ImageStorageProvider
 
 class ArtisanProfile() : AppCompatActivity() {
 
-    var artisan : Artisan? = null
+    private var artisan : Artisan? = null
+    private val TAG = "ArtisanProfile.kt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +22,7 @@ class ArtisanProfile() : AppCompatActivity() {
         //ArtisanSync.sync(this)
         artisan = intent.extras?.getSerializable("artisan") as Artisan
 
-        artisanProfileBio.setMovementMethod(ScrollingMovementMethod())
+        artisanProfileBio.movementMethod = ScrollingMovementMethod()
 
         populateSelectedArtisan(artisan as Artisan)
 
@@ -38,6 +39,10 @@ class ArtisanProfile() : AppCompatActivity() {
 
         artisanProfileEditButton.setOnClickListener {
             editArtisan(artisan as Artisan)
+        }
+
+        artisanPayoutHistory.setOnClickListener {
+            payoutHistory(artisan as Artisan)
         }
     }
 
@@ -98,5 +103,11 @@ class ArtisanProfile() : AppCompatActivity() {
         startActivity(intent)
         //finish()
     }
-    //TODO rating system
+
+    private fun payoutHistory(artisan: Artisan) {
+        val intent = Intent(this, PayoutHistoryCGA::class.java)
+        intent.putExtra("cgaID", artisan.cgaId)
+        Log.d(TAG, "payout history screen with cgaID: ${artisan.cgaId}")
+        startActivity(intent)
+    }
 }

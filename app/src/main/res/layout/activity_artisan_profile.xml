@@ -34,7 +34,7 @@
         style="@style/Widget.MaterialComponents.Button.Icon"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:text="edit"
+        android:text="@string/edit"
         app:icon="@drawable/edit_icon"
         app:layout_constraintBottom_toBottomOf="@+id/artisanProfileToolbar"
         app:layout_constraintEnd_toEndOf="@+id/artisanProfileToolbar"
@@ -135,91 +135,107 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="5dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintBottom_toTopOf="@+id/artisanProfile_Buttongrp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+    <LinearLayout
+        android:id="@+id/artisanProfile_Buttongrp"
         android:layout_width="0dp"
         android:layout_height="200dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/artisanPayoutButton"
-            style="@style/Widget.MaterialComponents.Button.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="20dp"
-            android:paddingEnd="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="Payout"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:cornerRadius="20dp"
-            app:icon="@drawable/money_icon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/artisanPayoutHistory"
-            style="@style/Widget.MaterialComponents.Button.Icon"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="Payout History"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:cornerRadius="20dp"
-            app:icon="@drawable/history_icon"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/artisanPayoutButton"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/artisanMessageButton"
-            style="@style/Widget.MaterialComponents.Button.Icon"
-            android:layout_width="wrap_content"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/artisanPayoutButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/artisan_profile_payout"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/money_icon" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/artisanPayoutHistory"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="@string/artisan_profile_payout_history"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/history_icon" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="20dp"
-            android:text="Message"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:cornerRadius="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            app:icon="@drawable/message_icon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/artisanPayoutButton" />
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/artisanItemList"
-            style="@style/Widget.MaterialComponents.Button.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="Item List"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:cornerRadius="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            app:icon="@drawable/offer_icon"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/artisanMessageButton"
-            app:layout_constraintTop_toBottomOf="@+id/artisanPayoutHistory" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/artisanMessageButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="@string/artisan_profile_message"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/message_icon" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/artisanItemList"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="@string/artisan_profile_item_list"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/offer_icon" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

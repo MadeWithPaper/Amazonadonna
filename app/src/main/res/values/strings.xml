@@ -75,7 +75,7 @@
     <string name="intent_chooser_title">Choose Application to send message with</string>
     <string name="artisan_profile_message">Message</string>
     <string name="artisan_profile_payout">Payout</string>
-    <string name="artisan_profile_payout_history">Payout History</string>
+    <string name="artisan_profile_payout_history">History</string>
     <string name="artisan_profile_item_list">Item List</string>
     <!-- Edit Artisan -->
     <string name="edit_artisan_toolbar_text">Edit Artisan Profile</string>

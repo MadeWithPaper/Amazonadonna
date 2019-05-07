@@ -76,5 +76,4 @@ class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
         //view.textView_bio.text = artisan.bio
         view.textView_artisanLoc.text = (artisan.city + "," + artisan.country)
     }
-
 }   
