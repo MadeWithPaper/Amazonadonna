@@ -1,10 +1,10 @@
 package com.amazonadonna.view
 
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context
 import android.content.Intent
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,5 +76,4 @@ class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
         //view.textView_bio.text = artisan.bio
         view.textView_artisanLoc.text = (artisan.city + "," + artisan.country)
     }
-
 }   

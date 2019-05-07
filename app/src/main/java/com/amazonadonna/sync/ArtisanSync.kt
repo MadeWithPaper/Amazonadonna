@@ -12,16 +12,17 @@ import okhttp3.*
 import java.io.File
 import java.io.IOException
 import android.graphics.BitmapFactory
+import com.amazonadonna.model.App
 
 
 object ArtisanSync: Synchronizer(), CoroutineScope {
     //var cgaId : String = "0"
-    private const val listAllArtisansURL = "https://99956e2a.ngrok.io/artisan/listAllForCga"
-    private const val addArtisanURL = "https://99956e2a.ngrok.io/artisan/add"
-    private const val artisanPicURL = "https://99956e2a.ngrok.io/artisan/updateImage"
-    private const val editArtisanURL = "https://99956e2a.ngrok.io/artisan/edit"
-    private const val updateArtisanURL = "https://99956e2a.ngrok.io/artisan/updateImage"
-    private const val deleteArtisanURL = "https://99956e2a.ngrok.io/artisan/delete"
+    private val listAllArtisansURL =  App.BACKEND_BASE_URL + "/artisan/listAllForCga"
+    private val addArtisanURL = App.BACKEND_BASE_URL + "/artisan/add"
+    private val artisanPicURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
+    private val editArtisanURL = App.BACKEND_BASE_URL + "/artisan/edit"
+    private val updateArtisanURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
+    private val deleteArtisanURL = App.BACKEND_BASE_URL + "/artisan/delete"
 
     override fun sync(context: Context, cgaId: String) {
         super.sync(context, cgaId)

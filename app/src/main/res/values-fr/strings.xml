@@ -4,7 +4,6 @@
     <!-- Login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Mot de passe</string>
-    <string name="action_sign_in_short">Se Connecter</string>
     <string name="error_invalid_email">Cette adresse email est invalide</string>
     <string name="error_invalid_password">Ce mot de passe est trop court</string>
     <string name="error_incorrect_password">Ce mot de passe est incorrect</string>
@@ -149,5 +148,10 @@
     <string name="view_report_done_button">Terminé</string>
     <string name="payout_amount_format_error">S\'il vous plaît entrer un montant valide!</string>
     <string name="send_message_button">Envoyer</string>
+    <string name="action_log_in_short">Se Connecter</string>
+    <string name="artisan_profile_item_list">Liste des articles</string>
+    <string name="artisan_profile_message">Message</string>
+    <string name="artisan_profile_payout">Paiement</string>
+    <string name="artisan_profile_payout_history">Historique de paiement</string>
 
 </resources>

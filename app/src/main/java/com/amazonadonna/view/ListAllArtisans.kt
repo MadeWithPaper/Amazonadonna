@@ -1,35 +1,26 @@
 package com.amazonadonna.view
 
-import android.content.Context
 import android.content.Intent
-import android.database.Cursor
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.list_all_artisans.*
 import com.amazonadonna.model.Artisan
 import android.util.Log
-import com.google.gson.GsonBuilder
-import okhttp3.*
-import java.io.IOException
-import com.google.gson.reflect.TypeToken
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.amazonadonna.database.AppDatabase
-import com.amazonadonna.view.R
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
-import com.amazonadonna.database.ArtisanDao
-import com.amazonadonna.sync.ArtisanSync
+import com.amazonadonna.model.App
 import com.amazonadonna.sync.Synchronizer
 import com.jakewharton.rxbinding2.widget.textChanges
 import io.reactivex.Completable
@@ -45,7 +36,7 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
         get() = Dispatchers.Main + job
 
     var cgaId: String = "0"
-    val listAllArtisansURL = "https://99956e2a.ngrok.io/artisan/listAllForCga"
+    val listAllArtisansURL = App.BACKEND_BASE_URL + "/artisan/listAllForCga"
     val originalArtisans: MutableList<Artisan> = mutableListOf()
     val filteredArtisans: MutableList<Artisan> = mutableListOf()
     val oldFilteredArtisans: MutableList<Artisan> = mutableListOf()

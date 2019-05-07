@@ -1,19 +1,22 @@
 package com.amazonadonna.view
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.activity_artisan_payout.*
 import java.text.SimpleDateFormat
 import java.util.*
 import android.app.DatePickerDialog
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.util.Log
 import com.amazonadonna.view.R
+import kotlinx.android.synthetic.main.activity_artisan_profile.*
 
 
 class ArtisanPayout : AppCompatActivity() {
+
+    private val TAG = "ArtisanPayout.kt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +34,7 @@ class ArtisanPayout : AppCompatActivity() {
         artisanPayout_datePicker.setOnClickListener {
             pickDate()
         }
+
     }
 
     private fun pickDate() {
@@ -89,6 +93,11 @@ class ArtisanPayout : AppCompatActivity() {
     private fun validateFields(): Boolean {
         if (artisanPayout_amount.text.toString() == "."){
             artisanPayout_amount.error = this.resources.getString(R.string.payout_amount_format_error)
+            return false
+        }
+
+        if (artisanPayout_amount.text.toString().isEmpty()){
+            artisanPayout_amount.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 

@@ -2,7 +2,7 @@ package com.amazonadonna.view
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.graphics.pdf.PdfRenderer
 import android.graphics.Bitmap

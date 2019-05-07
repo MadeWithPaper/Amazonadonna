@@ -1,15 +1,16 @@
 package com.amazonadonna.view
 
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import com.amazonadonna.database.AppDatabase
+import com.amazonadonna.model.App
 import com.amazonadonna.model.Order
 import com.amazonadonna.model.Product
 import com.amazonadonna.sync.OrderSync
@@ -21,7 +22,7 @@ import java.io.IOException
 
 class OrderScreen : AppCompatActivity() {
     var orderIdString = ""
-    val getItemURL = "https://99956e2a.ngrok.io/order/getItems"
+    val getItemURL = App.BACKEND_BASE_URL +  "/order/getItems"
     private lateinit var alertDialog : AlertDialog
     lateinit var order : Order
 

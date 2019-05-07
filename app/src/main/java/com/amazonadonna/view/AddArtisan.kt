@@ -1,7 +1,7 @@
 package com.amazonadonna.view
 
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_add_artisan.*
 import com.amazonadonna.model.Artisan
@@ -13,9 +13,9 @@ import android.util.Log
 import okhttp3.*
 import android.content.Intent
 import android.provider.MediaStore
-import android.support.v4.content.FileProvider
+import androidx.core.content.FileProvider
 import android.app.Activity
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
 import android.provider.DocumentsContract
 import android.content.ContentUris
 import android.content.pm.PackageManager
@@ -29,6 +29,11 @@ import android.view.View
 import android.media.ExifInterface
 import android.graphics.Matrix
 import android.os.Build
+import android.telephony.PhoneNumberFormattingTextWatcher
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
+import com.amazonadonna.model.App
+import kotlinx.android.synthetic.main.activity_login_screen.*
 import java.io.File
 import java.io.IOException
 
@@ -38,8 +43,8 @@ class AddArtisan : AppCompatActivity() {
     private val fileName: String = "output.png"
     private val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
-    private val addArtisanURL = "https://99956e2a.ngrok.io/artisan/add"
-    private val artisanPicURL = "https://99956e2a.ngrok.io/artisan/updateImage"
+    private val addArtisanURL = App.BACKEND_BASE_URL + "/artisan/add"
+    private val artisanPicURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +65,16 @@ class AddArtisan : AppCompatActivity() {
         selectPicture.setOnClickListener{
             selectImageInAlbum()
         }
+
+        artisanContact_et.addTextChangedListener(PhoneNumberFormattingTextWatcher())
+
+        addArtisan_layout.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View, m: MotionEvent): Boolean {
+                hideKeyboard(v)
+                return true
+            }
+        })
+
     }
 
     private fun selectImageInAlbum() {
@@ -392,9 +407,9 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
         if (!validateFields()) {
             return
         }
-        val name = editText_Name.text.toString()
-        val bio = editText_bio.text.toString()
-        val number = editText_ContactNumber.text.toString()
+        val name = artisanName_et.text.toString()
+        val bio = artisanBio_et.text.toString()
+        val number = artisanContact_et.text.toString()
 
         val newArtisan = Artisan(name, "", number, "","", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 3000.00)
         newArtisan.generateTempID()
@@ -413,7 +428,7 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
     }
 
     private fun parseLoc (artisan: Artisan) {
-        val rawLoc = editText_loc.text.toString()
+        val rawLoc = artisanLoc_et.text.toString()
 
         val ind = rawLoc.indexOf(',')
 
@@ -422,10 +437,10 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
     }
 
     private fun clearFields() {
-        editText_Name.text.clear()
-        editText_ContactNumber.text.clear()
-        editText_bio.text.clear()
-        editText_loc.text.clear()
+        artisanName_et.text!!.clear()
+        artisanContact_et.text!!.clear()
+        artisanBio_et.text!!.clear()
+        artisanLoc_et.text!!.clear()
 
         Log.i("AddArtisan", "Clearing fields")
     }
@@ -433,28 +448,28 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
     //Validate all fields entered
     //TODO add more checks
     private fun validateFields() : Boolean {
-        if (TextUtils.isEmpty(editText_Name.text.toString())){
-            editText_Name.error = this.resources.getString(R.string.requiredFieldError)
+        if (artisanName_et.text.toString().isEmpty()){
+            artisanName_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
-        if (TextUtils.isEmpty(editText_loc.text.toString())) {
-            editText_loc.error = this.resources.getString(R.string.requiredFieldError)
+        if (artisanLoc_et.text.toString().isEmpty()) {
+            artisanLoc_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
-        if ((!editText_loc.text.toString().contains(","))) {
-            editText_loc.error = this.resources.getString(R.string.loc_missing_comma)
+        if (!artisanLoc_et.text.toString().contains(",")) {
+            artisanLoc_til.error = this.resources.getString(R.string.loc_missing_comma)
             return false
         }
 
-        if (TextUtils.isEmpty(editText_ContactNumber.text.toString())){
-            editText_ContactNumber.error = this.resources.getString(R.string.requiredFieldError)
+        if (artisanContact_et.text.toString().isEmpty()){
+            artisanContact_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
-        if (TextUtils.isEmpty(editText_bio.text.toString())){
-            editText_bio.error = this.resources.getString(R.string.requiredFieldError)
+        if (artisanBio_et.text.toString().isEmpty()){
+            artisanBio_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
@@ -494,7 +509,6 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
 
     fun submitToDB(artisan: Artisan) {
 
-        //TODO clean up when id generation is moved to backend
 //        if (!validateFields()) {
 //            return
 //        }
@@ -533,5 +547,10 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
                 Log.e("AddArtisan", "failed to do POST request to database $addArtisanURL")
             }
         })
+    }
+
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

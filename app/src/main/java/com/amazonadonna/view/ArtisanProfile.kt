@@ -4,7 +4,7 @@ import android.util.Log
 import android.content.Intent
 import android.content.Intent.createChooser
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.activity_artisan_profile.*
 import android.text.method.ScrollingMovementMethod
@@ -13,7 +13,8 @@ import com.amazonadonna.database.ImageStorageProvider
 
 class ArtisanProfile() : AppCompatActivity() {
 
-    var artisan : Artisan? = null
+    private var artisan : Artisan? = null
+    private val TAG = "ArtisanProfile.kt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,23 +22,27 @@ class ArtisanProfile() : AppCompatActivity() {
         //ArtisanSync.sync(this)
         artisan = intent.extras?.getSerializable("artisan") as Artisan
 
-        artisanProfileBio.setMovementMethod(ScrollingMovementMethod())
+        artisanProfileBio.movementMethod = ScrollingMovementMethod()
 
         populateSelectedArtisan(artisan as Artisan)
 
-        artisanProfileItemListButton.setOnClickListener {
+        artisanItemList.setOnClickListener {
             artisanItemList(artisan as Artisan)
         }
 
-        artisanProfileMessagesButton.setOnClickListener {
+        artisanMessageButton.setOnClickListener {
             artisanMessage(artisan as Artisan)
         }
-        artisanProfilePayoutButton.setOnClickListener {
+        artisanPayoutButton.setOnClickListener {
             artisanPayout(artisan as Artisan)
         }
 
-        artisanProfile_edit.setOnClickListener {
+        artisanProfileEditButton.setOnClickListener {
             editArtisan(artisan as Artisan)
+        }
+
+        artisanPayoutHistory.setOnClickListener {
+            payoutHistory(artisan as Artisan)
         }
     }
 
@@ -73,7 +78,9 @@ class ArtisanProfile() : AppCompatActivity() {
         Log.d("ArtisanProfile", artisan.bio)
         artisanProfileName.text = artisan.artisanName
         artisanProfileBio.text = artisan.bio
-        artisanProfileBalance.text = "Balance: $${artisan.balance}"
+        artisanProfileBalance.text = "$${artisan.balance}"
+        artisanProfileLoc.text = "${artisan.city}, ${artisan.country}"
+        artisanProfileContact.text = artisan.phoneNumber
     }
 
     private fun artisanItemList(artisan : Artisan){
@@ -96,5 +103,11 @@ class ArtisanProfile() : AppCompatActivity() {
         startActivity(intent)
         //finish()
     }
-    //TODO rating system
+
+    private fun payoutHistory(artisan: Artisan) {
+        val intent = Intent(this, PayoutHistoryCGA::class.java)
+        intent.putExtra("cgaID", artisan.cgaId)
+        Log.d(TAG, "payout history screen with cgaID: ${artisan.cgaId}")
+        startActivity(intent)
+    }
 }

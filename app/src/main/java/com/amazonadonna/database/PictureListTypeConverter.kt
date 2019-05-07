@@ -1,6 +1,6 @@
 package com.amazonadonna.database
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 import android.util.Log
 
 class PictureListTypeConverter {

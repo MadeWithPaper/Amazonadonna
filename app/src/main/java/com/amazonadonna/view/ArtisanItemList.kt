@@ -6,18 +6,19 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.ContextCompat.startActivity
-import android.support.v7.app.AlertDialog
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
+import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import com.amazonadonna.sync.Synchronizer
@@ -44,7 +45,7 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
         get() = Dispatchers.Main + job
 
     lateinit var artisan : Artisan
-    private val listAllItemsURL = "https://99956e2a.ngrok.io/item/listAllForArtisan"
+    private val listAllItemsURL = App.BACKEND_BASE_URL + "/item/listAllForArtisan"
     private val originalItems: MutableList<Product> = mutableListOf()
     private val filteredItems: MutableList<Product> = mutableListOf()
     private val oldFilteredItems: MutableList<Product> = mutableListOf()
