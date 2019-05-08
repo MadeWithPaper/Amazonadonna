@@ -23,94 +23,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_image"
-        android:inputType="textEmailAddress"
-        android:id="@+id/email_til"
-        app:errorEnabled="true">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/email_icon"
-            android:drawablePadding="5dp"
-            android:id="@+id/email_et"
-            android:imeOptions="actionNext"
-            android:lines="1"
-            android:hint="@string/prompt_email"
-            android:inputType="textEmailAddress"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:id="@+id/password_til"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="30dp"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_til"
-        app:errorEnabled="true">
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/password_et"
-        android:drawableStart="@drawable/password_icon"
-        android:drawablePadding="5dp"
-        android:lines="1"
-        android:inputType="textPassword"
-        android:imeOptions="actionDone"
-        android:layout_width="match_parent"
-        android:hint="@string/prompt_password"
-        android:layout_height="wrap_content"/>
-
-</com.google.android.material.textfield.TextInputLayout>
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/email_sign_in_button"
         style="@style/Widget.MaterialComponents.Button.Icon"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/action_log_in_short"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="50dp"
+        android:text="@string/artisan_log_in"
         android:textAlignment="textStart"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="25sp"
         app:cornerRadius="20dp"
         app:icon="@drawable/log_in_icon"
         app:iconGravity="start"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_til" />
+        app:layout_constraintTop_toBottomOf="@+id/login_image" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/log_in_with_amazon"
         style="@style/Widget.MaterialComponents.Button.Icon"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginTop="40dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="50dp"
+        android:layout_marginBottom="10dp"
         android:backgroundTint="@color/colorSecondary"
-        android:text="@string/action_log_in_short"
+        android:text="@string/cga_log_in"
         android:textAlignment="textStart"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="25sp"
         app:cornerRadius="20dp"
         app:icon="@drawable/amazon_login_logo"
         app:iconGravity="start"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_til" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email_sign_in_button"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/login_image"
