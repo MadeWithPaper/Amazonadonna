@@ -25,7 +25,10 @@
         android:supportsRtl="true"
         android:syncable="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-        <activity android:name=".PayoutHistoryCGA"></activity>
+        <activity android:name=".HomeScreenArtisan"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".PayoutHistoryCGA"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ViewReport"
             android:screenOrientation="portrait" />
@@ -82,7 +85,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".MessageArtisan"
-            android:configChanges="layoutDirection|locale" />
+            android:configChanges="layoutDirection|locale"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ArtisanProfile"
             android:configChanges="layoutDirection|locale"
