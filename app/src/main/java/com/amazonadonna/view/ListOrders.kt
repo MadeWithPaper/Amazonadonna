@@ -35,6 +35,7 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor>, CoroutineScope 
         get() = Dispatchers.Main + job
 
     var cgaId : String = "0"
+    private lateinit var artisanID : String
     val listOrderURL = App.BACKEND_BASE_URL + "/order/listAllForCga"
     val originalOrders : MutableList<Order> = mutableListOf()
     val filteredOrders: MutableList<Order> = mutableListOf()
@@ -65,7 +66,9 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor>, CoroutineScope 
         setContentView(R.layout.activity_list_orders)
 
         cgaId = intent.extras.getString("cgaId")
-
+        if (intent.hasExtra("artisanId")){
+            artisanID = intent.extras.getString("artisanId")
+        }
         recyclerView_listOrders.layoutManager = LinearLayoutManager(this)
 
         //load an empty list as placeholder before GET request completes
@@ -97,6 +100,7 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor>, CoroutineScope 
         //fetchJSON()
         job = Job()
 
+        //TODO check if App.artisanMode is true, if so fetch aritsan orders from db
         launch {
             val dbOrders: List<Order> = getOrdersFromDb()
             originalOrders.addAll(dbOrders)

@@ -11,7 +11,7 @@ import android.app.DatePickerDialog
 import androidx.appcompat.app.AlertDialog
 import android.util.Log
 import com.amazonadonna.view.R
-import kotlinx.android.synthetic.main.activity_artisan_profile.*
+import kotlinx.android.synthetic.main.activity_artisan_profile_cga.*
 
 
 class ArtisanPayout : AppCompatActivity() {

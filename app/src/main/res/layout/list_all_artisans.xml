@@ -56,15 +56,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/toolbar_addartisan"
-        android:layout_width="44dp"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="60dp"
         android:layout_height="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/adduser"
+        app:icon="@drawable/add_artisan_icon"
         app:layout_constraintBottom_toBottomOf="@+id/listallartisantoolbar_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

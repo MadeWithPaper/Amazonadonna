@@ -6,7 +6,7 @@
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ArtisanProfile">
+    tools:context="com.amazonadonna.artisanOnlyViews.ArtisanProfile">
 
     <ImageView
         android:id="@+id/artisanProfilePicture"
@@ -109,7 +109,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintBottom_toTopOf="@+id/artisanProfileDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/artisanProfilePicture">
@@ -128,7 +128,7 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/divider"
+        android:id="@+id/artisanProfileDivider"
         android:layout_width="395dp"
         android:layout_height="3dp"
         android:layout_marginStart="10dp"
@@ -139,103 +139,53 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+
     <LinearLayout
         android:id="@+id/artisanProfile_Buttongrp"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/artisanPayoutHistory"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:layout_gravity="end"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:paddingStart="10dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/artisan_profile_payout_history"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/history_icon" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/artisanPayoutButton"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="20dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="10dp"
-                android:paddingStart="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/artisan_profile_payout"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:cornerRadius="20dp"
-                app:icon="@drawable/money_icon" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/artisanPayoutHistory"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingEnd="10dp"
-                android:paddingStart="10dp"
-                android:text="@string/artisan_profile_payout_history"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:cornerRadius="20dp"
-                app:icon="@drawable/history_icon" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/artisanItemList"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/artisanMessageButton"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="20dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingEnd="10dp"
-                android:paddingStart="10dp"
-                android:text="@string/artisan_profile_message"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:cornerRadius="20dp"
-                app:icon="@drawable/message_icon" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/artisanItemList"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingEnd="10dp"
-                android:paddingStart="10dp"
-                android:text="@string/artisan_profile_item_list"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:cornerRadius="20dp"
-                app:icon="@drawable/offer_icon" />
-
-        </LinearLayout>
+            android:layout_gravity="end"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:paddingStart="10dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/artisan_profile_item_list"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/offer_icon" />
     </LinearLayout>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
