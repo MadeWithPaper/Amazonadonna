@@ -1,7 +1,8 @@
-package com.amazonadonna.view
+package com.amazonadonna.ArtisanOnlyViews
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.amazonadonna.view.R
 
 class HomeScreenArtisan : AppCompatActivity() {
 
