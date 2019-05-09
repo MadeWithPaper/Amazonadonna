@@ -15,6 +15,7 @@ import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
 import com.amazon.identity.auth.device.api.authorization.*
 import com.amazon.identity.auth.device.api.workflow.RequestContext
+import com.amazonadonna.artisanOnlyViews.HomeScreenArtisan
 
 import kotlinx.android.synthetic.main.activity_login_screen.*
 
@@ -81,9 +82,10 @@ class LoginScreen : AppCompatActivity() {
 
         requestContext.registerListener(signUpListener)
 
-        email_sign_in_button.setOnClickListener { test()/*attemptLogin()*/ }
+        //TODO implement Artisan login
+        artisan_log_in_button.setOnClickListener { test()/*attemptLogin()*/ }
 
-        log_in_with_amazon.setOnClickListener{
+        cga_log_in_button.setOnClickListener{
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
@@ -121,7 +123,7 @@ class LoginScreen : AppCompatActivity() {
 
     private fun test() {
         // go to home screen
-        val intent =  Intent(this, HomeScreen::class.java)
+        val intent =  Intent(this, HomeScreenArtisan::class.java)
         startActivity(intent)
     }
 

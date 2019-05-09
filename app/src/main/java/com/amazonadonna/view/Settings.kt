@@ -19,6 +19,8 @@ import androidx.appcompat.app.AlertDialog
 import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
 import com.amazon.identity.auth.device.api.authorization.AuthorizationManager
+import com.amazonadonna.artisanOnlyViews.HomeScreenArtisan
+import com.amazonadonna.model.App
 import com.amazonadonna.sync.ArtisanSync
 import kotlinx.coroutines.*
 import java.lang.Thread.sleep
@@ -34,12 +36,14 @@ class Settings : AppCompatActivity(), CoroutineScope {
     private var languageSelected = "en_US"
     private lateinit var alertDialog : AlertDialog
     private lateinit var cgaID : String
+    private lateinit var artisanName : String
     lateinit var job: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         cgaID = intent.extras!!.getString("cgaID")!!
+        artisanName = intent.extras!!.getString("artisanName")!!
 
         settingCurrentLanguageTV.text = Locale.getDefault().displayLanguage
 
@@ -82,8 +86,12 @@ class Settings : AppCompatActivity(), CoroutineScope {
     }
 
     private fun updateSetting(){
-        val intent = Intent(this, HomeScreen::class.java)
+        var intent = Intent(this, HomeScreen::class.java)
        // intent.putExtra("cgaId", cgaID)
+        if (App.artisanMode) {
+            intent = Intent(this, HomeScreenArtisan::class.java)
+            intent.putExtra("artisanName", artisanName)
+        }
         startActivity(intent)
         finish()
     }
@@ -169,7 +177,13 @@ class Settings : AppCompatActivity(), CoroutineScope {
     }
 
     private fun cancelSetting() {
-        val intent = Intent(this, HomeScreen::class.java)
+        var intent = Intent(this, HomeScreen::class.java)
+        Log.d("inside setting", "${App.artisanMode}")
+        if (App.artisanMode){
+            intent = Intent(this, HomeScreenArtisan::class.java)
+            intent.putExtra("artisanName", artisanName)
+            Log.d("from Setting", "$artisanName")
+        }
         startActivity(intent)
         finish()
     }

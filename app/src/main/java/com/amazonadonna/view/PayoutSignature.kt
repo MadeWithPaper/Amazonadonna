@@ -174,7 +174,7 @@ class PayoutSignature : AppCompatActivity() {
             builder.setMessage("Current Artisan Balance: $ ${artisan.balance}")
             builder.setOnDismissListener {
                 submitDismiss(artisan)
-//                val intent = Intent(this, ArtisanProfile::class.java)
+//                val intent = Intent(this, ArtisanProfileCGA::class.java)
 //                intent.putExtra("artisan", artisan)
 //                //finishAffinity()
 //                startActivity(intent)
@@ -235,7 +235,7 @@ class PayoutSignature : AppCompatActivity() {
     }
 
     private fun submitDismiss(artisan: Artisan) {
-        val intent = Intent(this, ArtisanProfile::class.java)
+        val intent = Intent(this, ArtisanProfileCGA::class.java)
         intent.putExtra("artisan", artisan)
         //finishAffinity()
         startActivity(intent)

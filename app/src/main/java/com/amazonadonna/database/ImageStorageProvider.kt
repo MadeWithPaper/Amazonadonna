@@ -7,7 +7,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.widget.ImageView
 import com.amazonadonna.view.R
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_artisan_profile.*
+import kotlinx.android.synthetic.main.activity_artisan_profile_cga.*
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.FileOutputStream

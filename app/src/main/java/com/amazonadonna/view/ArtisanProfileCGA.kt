@@ -2,53 +2,52 @@ package com.amazonadonna.view
 
 import android.util.Log
 import android.content.Intent
-import android.content.Intent.createChooser
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity;
 import com.amazonadonna.model.Artisan
-import kotlinx.android.synthetic.main.activity_artisan_profile.*
+import kotlinx.android.synthetic.main.activity_artisan_profile_cga.*
 import android.text.method.ScrollingMovementMethod
 import com.amazonadonna.database.ImageStorageProvider
 
 
-class ArtisanProfile() : AppCompatActivity() {
+class ArtisanProfileCGA() : AppCompatActivity() {
 
     private var artisan : Artisan? = null
-    private val TAG = "ArtisanProfile.kt"
+    private val TAG = "ArtisanProfileCGACGA.kt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_artisan_profile)
+        setContentView(R.layout.activity_artisan_profile_cga)
         //ArtisanSync.sync(this)
         artisan = intent.extras?.getSerializable("artisan") as Artisan
 
-        artisanProfileBio.movementMethod = ScrollingMovementMethod()
+        artisanProfileBio_cga.movementMethod = ScrollingMovementMethod()
 
         populateSelectedArtisan(artisan as Artisan)
 
-        artisanItemList.setOnClickListener {
+        artisanItemList_cga.setOnClickListener {
             artisanItemList(artisan as Artisan)
         }
 
-        artisanMessageButton.setOnClickListener {
+        artisanMessageButton_cga.setOnClickListener {
             artisanMessage(artisan as Artisan)
         }
-        artisanPayoutButton.setOnClickListener {
+        artisanPayoutButton_cga.setOnClickListener {
             artisanPayout(artisan as Artisan)
         }
 
-        artisanProfileEditButton.setOnClickListener {
+        artisanProfileEditButton_cga.setOnClickListener {
             editArtisan(artisan as Artisan)
         }
 
-        artisanPayoutHistory.setOnClickListener {
+        artisanPayoutHistory_cga.setOnClickListener {
             payoutHistory(artisan as Artisan)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d("ArtisanProfile", "in onResume")
+        Log.d("ArtisanProfileCGA", "in onResume")
         populateSelectedArtisan(artisan as Artisan)
     }
 
@@ -73,14 +72,14 @@ class ArtisanProfile() : AppCompatActivity() {
             this.artisanProfilePicture.setImageResource(R.drawable.placeholder)*/
 
         var isp = ImageStorageProvider(applicationContext)
-        isp.loadImageIntoUI(artisan.picURL, this.artisanProfilePicture, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
+        isp.loadImageIntoUI(artisan.picURL, this.artisanProfilePicture_cga, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
 
-        Log.d("ArtisanProfile", artisan.bio)
-        artisanProfileName.text = artisan.artisanName
-        artisanProfileBio.text = artisan.bio
-        artisanProfileBalance.text = "$${artisan.balance}"
-        artisanProfileLoc.text = "${artisan.city}, ${artisan.country}"
-        artisanProfileContact.text = artisan.phoneNumber
+        Log.d("ArtisanProfileCGA", artisan.bio)
+        artisanProfileName_cga.text = artisan.artisanName
+        artisanProfileBio_cga.text = artisan.bio
+        artisanProfileBalance_cga.text = "$${artisan.balance}"
+        artisanProfileLoc_cga.text = "${artisan.city}, ${artisan.country}"
+        artisanProfileContact_cga.text = artisan.phoneNumber
     }
 
     private fun artisanItemList(artisan : Artisan){

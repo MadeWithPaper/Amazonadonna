@@ -25,10 +25,14 @@
         android:supportsRtl="true"
         android:syncable="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-        <activity android:name=".HomeScreenArtisan"
+        <activity android:name="com.amazonadonna.artisanOnlyViews.ArtisanProfile"
             android:screenOrientation="portrait"/>
-        <activity android:name=".PayoutHistoryCGA"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.amazonadonna.artisanOnlyViews.HomeScreenArtisan"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PayoutHistoryCGA"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ViewReport"
             android:screenOrientation="portrait" />
@@ -86,9 +90,9 @@
         <activity
             android:name=".MessageArtisan"
             android:configChanges="layoutDirection|locale"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".ArtisanProfile"
+            android:name=".ArtisanProfileCGA"
             android:configChanges="layoutDirection|locale"
             android:label="@string/title_activity_artisan_profile"
             android:launchMode="singleTask"

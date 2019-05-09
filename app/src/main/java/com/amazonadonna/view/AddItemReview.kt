@@ -13,12 +13,12 @@ import java.io.IOException
 import android.annotation.TargetApi
 import android.content.ContentUris
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.widget.ImageView
+import com.amazonadonna.artisanOnlyViews.ArtisanProfile
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.App
 import com.amazonadonna.sync.ProductSync
@@ -127,8 +127,11 @@ class AddItemReview : AppCompatActivity() {
     }
 
     private fun submitDismiss(artisan: Artisan) {
-        val intent = Intent(this, ArtisanProfile::class.java)
+        var intent = Intent(this, ArtisanProfileCGA::class.java)
         Log.i("AddItemReview", "review done adding item to db")
+        if (App.artisanMode) {
+            intent = Intent(this, ArtisanProfile::class.java)
+        }
         intent.putExtra("artisan", artisan)
         startActivity(intent)
         finish()

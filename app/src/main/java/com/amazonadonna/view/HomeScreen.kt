@@ -42,7 +42,7 @@ class HomeScreen : AppCompatActivity() {
 
             try {
                 currUser = p0
-                cgaNameTV.text = p0.userName
+                artisanNameTV.text = p0.userName
                 cgaAmaznName = p0.userName
             } catch (e : Exception) {
                 //do nothing use placeholder text
@@ -61,7 +61,7 @@ class HomeScreen : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         if (currUser != null){
-            cgaNameTV.text = currUser!!.userName
+            artisanNameTV.text = currUser!!.userName
         }
     }
     fun syncData() {
@@ -157,6 +157,7 @@ class HomeScreen : AppCompatActivity() {
     private fun openSettings() {
         val intent = Intent(this, Settings::class.java)
         intent.putExtra("cgaID", cgaID)
+        intent.putExtra("artisanName", "place_holder")
         startActivity(intent)
     }
 

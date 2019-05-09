@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.amazonadonna.view.HomeScreenArtisan">
+    tools:context="com.amazonadonna.artisanOnlyViews.HomeScreenArtisan">
 
     <ImageView
         android:id="@+id/logo_image_artisan"
@@ -44,7 +44,7 @@
                 android:weightSum="2">
 
                 <ImageButton
-                    android:id="@+id/listAllArtisan"
+                    android:id="@+id/artisanItemList_cga"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -52,10 +52,10 @@
                     android:layout_weight="1"
                     android:background="#232f3e"
                     android:scaleType="centerInside"
-                    app:srcCompat="@drawable/communitywithtext" />
+                    app:srcCompat="@drawable/artisan_items" />
 
                 <ImageButton
-                    android:id="@+id/listOrders"
+                    android:id="@+id/artisanOrderList"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -74,16 +74,16 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <!--<ImageButton-->
-                    <!--android:id="@+id/reports"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:layout_margin="0.5dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:background="?attr/colorPrimary"-->
-                    <!--android:scaleType="centerInside"-->
-                    <!--app:srcCompat="@drawable/" />-->
+                <ImageButton
+                    android:id="@+id/artisanProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="0.5dp"
+                    android:layout_weight="1"
+                    android:background="?attr/colorPrimary"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/artisan_profile" />
 
                 <ImageButton
                     android:id="@+id/setting"
@@ -129,7 +129,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/cgaNameTV"
+            android:id="@+id/artisanNameTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"

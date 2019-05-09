@@ -14,12 +14,12 @@ import android.provider.MediaStore
 import android.telephony.PhoneNumberFormattingTextWatcher
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-import android.text.TextUtils
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import com.amazonadonna.artisanOnlyViews.ArtisanProfile
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
@@ -324,7 +324,10 @@ class EditArtisan : AppCompatActivity() {
             ArtisanSync.updateArtisan(applicationContext, oldArtisan, newPhoto)
 
             //submitToDB(oldArtisan)
-            val intent = Intent(this, ArtisanProfile::class.java)
+            var intent = Intent(this, ArtisanProfileCGA::class.java)
+            if (App.artisanMode){
+                intent = Intent(this, ArtisanProfile::class.java)
+            }
             intent.putExtra("artisan", oldArtisan)
             startActivity(intent)
             finish()

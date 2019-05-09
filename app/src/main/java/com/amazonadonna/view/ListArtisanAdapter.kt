@@ -1,9 +1,7 @@
 package com.amazonadonna.view
 
-import androidx.appcompat.app.AlertDialog;
 import android.content.Context
 import android.content.Intent
-import com.google.android.material.snackbar.Snackbar
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -54,7 +52,7 @@ class ListArtisanAdapter (private val context: Context, private val artisans :Mu
         holder.bindArtisian(artisan, context)
 
         holder.view.setOnClickListener{
-            val intent = Intent(context, ArtisanProfile::class.java)
+            val intent = Intent(context, ArtisanProfileCGA::class.java)
             intent.putExtra("artisan", artisan)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
