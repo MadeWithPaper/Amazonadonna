@@ -1,6 +1,8 @@
 package com.amazonadonna.sync
 
+import android.app.Activity
 import android.content.Context
+import android.widget.Toast
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.database.ImageStorageProvider
@@ -12,6 +14,7 @@ import okhttp3.*
 import java.io.File
 import java.io.IOException
 import android.graphics.BitmapFactory
+import androidx.appcompat.app.AlertDialog
 import com.amazonadonna.model.App
 
 
@@ -23,16 +26,20 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
     private val editArtisanURL = App.BACKEND_BASE_URL + "/artisan/edit"
     private val updateArtisanURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
     private val deleteArtisanURL = App.BACKEND_BASE_URL + "/artisan/delete"
+    private lateinit var callerContext: Context
+    private lateinit var callerActivity: Activity
 
-    override fun sync(context: Context, cgaId: String) {
+    fun sync(context: Context, activity: Activity, cgaId: String) {
         super.sync(context, cgaId)
+        callerActivity = activity
+        callerContext = context
 
         Log.i("ArtisanSync", "Syncing now!")
         numInProgress = 1
         Log.i("ArtisanSync", numInProgress.toString())
 
         runBlocking {
-            PayoutSync.sync(context, cgaId)
+            PayoutSync.sync(context, activity, cgaId)
         }
 
         uploadNewArtisans(context)
@@ -40,8 +47,8 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
         downloadArtisans(context)
         Log.i("ArtisanSync", "Done syncing!")*/
 
-        /*ProductSync.sync(context, cgaId)
-        OrderSync.sync(context, cgaId)*/
+        /*ProductSync.sync(context, activity, cgaId)
+        OrderSync.sync(context, activity, cgaId)*/
         Log.i("ArtisanSync", numInProgress.toString())
         numInProgress--
     }
@@ -87,11 +94,23 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call?, response: Response?) {
+                var alertDialog : AlertDialog
                 val body = response?.body()?.string()
+                var artisans = listOf<Artisan>()
                 Log.i("ListAllArtisan", "response body: " + body)
 
                 val gson = GsonBuilder().create()
-                val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
+
+                try {
+                    artisans = gson.fromJson(body, object : TypeToken<List<Artisan>>() {}.type)
+                } catch (e: Exception) {
+                    Log.d("ArtisanSync", "Caught exception")
+                    callerActivity.runOnUiThread {
+                        Toast.makeText(callerContext,"Please try again later. There may be unexpected behavior until a sync is complete.",Toast.LENGTH_LONG).show()
+                    }
+
+                }
+
                 for (artisan in artisans) {
                     if(artisan.phoneNumber == null)
                         artisan.phoneNumber = "1234567890"
@@ -105,7 +124,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 Log.i("ArtisanSync", "Successfully synced Artisan data")
 
                 runBlocking {
-                    ProductSync.sync(context, mCgaId)
+                    ProductSync.sync(context, callerActivity, mCgaId)
                 }
                 numInProgress--
             }

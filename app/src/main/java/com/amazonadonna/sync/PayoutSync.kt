@@ -1,8 +1,10 @@
 package com.amazonadonna.sync
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.util.Log
+import android.widget.Toast
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.App
@@ -19,10 +21,14 @@ object PayoutSync : Synchronizer(), CoroutineScope {
     private val payoutHistory = App.BACKEND_BASE_URL + "/payout/add"
     private val payoutSignatureURL = App.BACKEND_BASE_URL + "/payout/updateImage"
     private val cgaPayoutsURL = App.BACKEND_BASE_URL + "/payout/listAllForCga"
+    private lateinit var callerContext: Context
+    private lateinit var callerActivity: Activity
     private const val TAG = "PayoutSync"
 
-    override fun sync(context: Context, cgaId: String) {
+    fun sync(context: Context, activity: Activity, cgaId: String) {
         super.sync(context, cgaId)
+        callerActivity = activity
+        callerContext = context
 
         Log.i(TAG, "Syncing now!")
         uploadNewPayouts(context)
@@ -59,10 +65,19 @@ object PayoutSync : Synchronizer(), CoroutineScope {
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
+                var payouts = listOf<Payout>()
                 Log.i("PayoutSync", "response body: " + body)
 
                 val gson = GsonBuilder().create()
-                val payouts : List<Payout> = gson.fromJson(body,  object : TypeToken<List<Payout>>() {}.type)
+
+                try {
+                    payouts = gson.fromJson(body, object : TypeToken<List<Payout>>() {}.type)
+                } catch (e: Exception) {
+                    Log.d("PayoutSync", "Caught exception")
+                    callerActivity.runOnUiThread {
+                        Toast.makeText(callerContext,"Please try again later. There may be unexpected behavior until a sync is complete.", Toast.LENGTH_LONG).show()
+                    }
+                }
 
                 payoutDao.deleteAll()
                 payoutDao.insertAll(payouts)
