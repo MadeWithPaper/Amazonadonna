@@ -1,8 +1,10 @@
 package com.amazonadonna.sync
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.util.Log
+import android.widget.Toast
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.database.PictureListTypeConverter
@@ -25,9 +27,14 @@ object ProductSync: Synchronizer(), CoroutineScope {
     private val editItemURL = App.BACKEND_BASE_URL + "/item/editItem"
     private val listAllItemsURL = App.BACKEND_BASE_URL + "/item/listAllForArtisan"
     private val deleteItemURL = App.BACKEND_BASE_URL + "/item/delete"
+    private lateinit var callerContext: Context
+    private lateinit var callerActivity: Activity
 
-    override fun sync(context: Context, cgaId: String) {
+    fun sync(context: Context, activity: Activity, cgaId: String) {
         super.sync(context, cgaId)
+
+        callerContext = context
+        callerActivity = activity
 
         Log.i(TAG, "Syncing now!")
         uploadProducts(context)
@@ -74,7 +81,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
                 downloadProductsForArtisan(context, artisan)
             }
 
-            OrderSync.sync(context, ArtisanSync.mCgaId)
+            OrderSync.sync(context, callerActivity, ArtisanSync.mCgaId)
         }
         numInProgress--
     }
@@ -159,11 +166,20 @@ object ProductSync: Synchronizer(), CoroutineScope {
 
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
+                var products = listOf<Product>()
                 val body = response?.body()?.string()
                 Log.i("ArtisanItemList", body)
                 val gson = GsonBuilder().create()
 
-                val products : List<Product> = gson.fromJson(body,  object : TypeToken<List<Product>>() {}.type)
+                try {
+                    products = gson.fromJson(body, object : TypeToken<List<Product>>() {}.type)
+                } catch (e: Exception) {
+                    Log.d("ProductSync", "Caught exception")
+                    callerActivity.runOnUiThread {
+                        Toast.makeText(callerContext,"Please try again later. There may be unexpected behavior until a sync is complete.", Toast.LENGTH_LONG).show()
+                    }
+                }
+
                 for (product in products) {
                     product.pictureURLs = Array(PictureListTypeConverter.NUM_PICS, { i -> "undefined"})
                     product.pictureURLs[0] = product.pic0URL

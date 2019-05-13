@@ -110,7 +110,7 @@ class Settings : AppCompatActivity(), CoroutineScope {
 
             launch {
                 val task = async {
-                    ArtisanSync.sync(applicationContext, cgaID)
+                    ArtisanSync.sync(applicationContext, this@Settings, cgaID)
                     Log.d("Settings", cgaID)
 
                     // Wait for sync to finish
@@ -125,7 +125,7 @@ class Settings : AppCompatActivity(), CoroutineScope {
                     Log.d("Settings", "First sync done, now one more to verify data integrity")
 
                     // Perform one more data fetch to ensure data integrity is goodandroid button do asynch
-                    ArtisanSync.sync(applicationContext, cgaID)
+                    ArtisanSync.sync(applicationContext, this@Settings, cgaID)
                     do {
                         sleep(500)
                     } while (ArtisanSync.inProgress())
