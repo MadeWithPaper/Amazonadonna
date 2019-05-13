@@ -161,6 +161,7 @@ class Settings : AppCompatActivity(), CoroutineScope {
     }
 
     private fun logout() {
+        App.artisanMode = false
         AuthorizationManager.signOut(this, signoutListener)
     }
 

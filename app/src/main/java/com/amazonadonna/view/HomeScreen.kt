@@ -59,6 +59,7 @@ class HomeScreen : AppCompatActivity() {
     }
 
     override fun onStart() {
+        App.artisanMode = false
         super.onStart()
         if (currUser != null){
             artisanNameTV.text = currUser!!.userName
