@@ -50,6 +50,7 @@ class OrderScreen : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
+        Log.d("OrderScreen", "In order screen")
         runOnUiThread {
             orderScreen_recyclerView.adapter = ListItemsAdapter(applicationContext, order.products)
         }
@@ -72,42 +73,6 @@ class OrderScreen : AppCompatActivity() {
         }
     }
 
-    //TODO update "artisanDao" to be productDaogi
-    private fun fetchJSON() {
-        val requestBody = FormBody.Builder()
-                .add("orderId", orderIdString)
-                .build()
-        val request = Request.Builder().url(getItemURL).post(requestBody).build()
-        val db = Room.databaseBuilder(
-                applicationContext,
-                AppDatabase::class.java, "amazonadonna-main"
-        ).fallbackToDestructiveMigration().build()
-//        val artisanDao = db.artisanDao()
-        Log.d("ORDERID", orderIdString)
-
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object: Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-
-                Log.d("ITEMS", body)
-                val gson = GsonBuilder().create()
-                val products : MutableList<Product> = gson.fromJson(body,  object : TypeToken<List<Product>>() {}.type)
-
-//                artisanDao.insertAll(orders)
-                Log.d("ITEMS", "worked")
-                runOnUiThread {
-                    orderScreen_recyclerView.adapter = ListItemsAdapter(applicationContext, products)
-                }
-
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                println("Failed to execute request")
-                Log.d("ERROR", "Failed to execute GET request to " + getItemURL)
-            }
-        })
-    }
 
     private fun populateSelectedOrder(order: Order) {
         val orderIDTextView : TextView = findViewById(R.id.orderScreen_toolbar_input)

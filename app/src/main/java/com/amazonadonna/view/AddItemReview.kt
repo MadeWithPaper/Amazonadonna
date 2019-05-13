@@ -137,67 +137,6 @@ class AddItemReview : AppCompatActivity() {
         finish()
     }
 
-    private fun submitToDB(product: Product, artisan: Artisan, photos: ArrayList<File?>) {
-        var status = false
-        var url = ""
-        if (editMode) {
-            Log.i("editmode", editMode.toString())
-            url = editItemURL
-        } else {
-            url = addItemURL
-        }
-        //TODO add process bar to show submitting process
-        val requestBody = FormBody.Builder().add("itemName", product.itemName)
-                .add("price", product.price.toString())
-                .add("description", product.description)
-                .add("artisanId", product.artisanId)
-                .add("category", product.category)
-                .add("subCategory", product.subCategory)
-                .add("specificCategory", product.specificCategory)
-                .add("shippingOption", product.shippingOption)
-                .add("itemQuantity", product.itemQuantity.toString())
-                .add("productionTime", product.productionTime.toString())
-        if (editMode) {
-            requestBody.add("itemId", product.itemId)
-        }
-        Log.d("AddItemReview", product.toString())
-        val client = OkHttpClient()
-
-        val request = Request.Builder()
-                .url(url)
-                .post(requestBody.build())
-                .build()
-
-        client.newCall(request).enqueue(object: Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                Log.i("AddItemReview", "prodcut id: $body")
-                if (!editMode) {
-                    product.itemId = body!!
-                }
-                runOnUiThread {
-                    showResponseDialog(true)
-                }
-                var i = 0
-                for (photo in photos) {
-                    if (photo != null) {
-                        submitPictureToDB(product, photo, i)
-                    }
-                    i++
-                }
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("AddItemReview", "failed to do POST request to database: " + url)
-                runOnUiThread {
-                    showResponseDialog(false)
-                }
-            }
-        })
-
-        //showResponseDialog(artisan, status)
-    }
-
     private fun showResponseDialog(status: Boolean) {
         val builder = AlertDialog.Builder(this@AddItemReview)
         if (status) {
@@ -217,37 +156,6 @@ class AddItemReview : AppCompatActivity() {
     }
 
     //TODO change product pic to an array of url as it can have more than one pic or have multiple fields for the images
-    fun submitPictureToDB(product: Product, photoFile: File, index: Int) {
-        Log.d("hitFunction", "we here")
-        val sourceFile = photoFile
-        Log.d("AddItemReview", "File...::::" + sourceFile + " : " + sourceFile.exists())
-
-        val MEDIA_TYPE = MediaType.parse("image/png")
-
-        val requestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("itemId", product.itemId)
-                .addFormDataPart("picIndex", index.toString())
-                .addFormDataPart("image", "itemImage.png", RequestBody.create(MEDIA_TYPE, sourceFile))
-                .build()
-
-        val request = Request.Builder()
-                .url(addItemImageURL)
-                .post(requestBody)
-                .build()
-
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object: Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                Log.i("AddItemImage", body)
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("ERROR", "failed to do POST request to database")
-            }
-        })
-    }
 
     @TargetApi(19)
     private fun createImageFile(data: Intent?) {

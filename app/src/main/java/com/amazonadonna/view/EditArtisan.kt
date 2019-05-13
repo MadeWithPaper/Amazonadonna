@@ -334,48 +334,6 @@ class EditArtisan : AppCompatActivity() {
         }
     }
 
-    private fun submitToDB(oldArtisan: Artisan) {
-        var updatePic = false
-
-        val requestBody = FormBody.Builder().add("artisanId", oldArtisan.artisanId)
-                .add("cgaId", oldArtisan.cgaId)
-                .add("bio", oldArtisan.bio)
-                .add("city", oldArtisan.city)
-                .add("country", oldArtisan.country)
-                .add("artisanName", oldArtisan.artisanName)
-                .add("phoneNumber", oldArtisan.phoneNumber)
-                .add("lat", 0.0.toString())
-                .add("lon", 0.0.toString())
-                .add("balance", oldArtisan.balance.toString())
-
-        if (editArtisan_pic.drawable == pic) {
-            requestBody.add("picURL", oldArtisan.picURL)
-        } else {
-            updatePic = true
-        }
-
-        val client = OkHttpClient()
-        val request = Request.Builder()
-                .url(editArtisanURL)
-                .post(requestBody.build())
-                .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                Log.i("EditArtisan", body)
-
-                if (updatePic) {
-                    updateArtisanPic()
-                }
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("EditArtisan", "failed to do POST request to database" + editArtisanURL)
-            }
-        })
-    }
-
     private fun validateFields() : Boolean {
         if (editArtisanName_et.text.toString().isEmpty()){
             editArtisanName_til.error = this.resources.getString(R.string.requiredFieldError)
@@ -405,35 +363,6 @@ class EditArtisan : AppCompatActivity() {
         return true
     }
 
-    fun updateArtisanPic() {
-        val sourceFile = photoFile!!
-        Log.d("EditArtisan", "submitPictureToDB file" + sourceFile + " : " + sourceFile!!.exists())
-
-        val MEDIA_TYPE = MediaType.parse("image/png")
-
-        val requestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("artisanId", App.currentArtisan.artisanId)
-                .addFormDataPart("image", "editProfilePic.png", RequestBody.create(MEDIA_TYPE, sourceFile))
-                .build()
-
-        val request = Request.Builder()
-                .url(updateArtisanURL)
-                .post(requestBody)
-                .build()
-
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object: Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                Log.d("EditArtisan", body)
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("EditArtisan", "failed to do POST request to database" + updateArtisanURL)
-            }
-        })
-    }
     private fun hideKeyboard(view: View) {
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
