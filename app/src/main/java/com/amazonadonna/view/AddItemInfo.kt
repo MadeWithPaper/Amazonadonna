@@ -26,7 +26,7 @@ class AddItemInfo : AppCompatActivity() {
         setContentView(R.layout.activity_add_item_info)
 
         val product = intent.extras?.getSerializable("product") as Product
-        val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        //val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
         editMode = intent.extras?.get("editMode") as Boolean
 
         if (editMode) {
@@ -38,7 +38,7 @@ class AddItemInfo : AppCompatActivity() {
         }
 
         addItemInfo_continueButton.setOnClickListener {
-            addItemInfoContinue(product, artisan)
+            addItemInfoContinue(product)
         }
 
         addItemInfo_ProductDescriptionTF.setImeOptions(EditorInfo.IME_ACTION_NEXT)
@@ -66,12 +66,12 @@ class AddItemInfo : AppCompatActivity() {
         }
     }
 
-    private fun addItemInfoContinue(product: Product, artisan: Artisan) {
+    private fun addItemInfoContinue(product: Product) {
         val intent = Intent(this, AddItemImages::class.java)
         if (validateFields()) {
             updateProduct(product)
             intent.putExtra("product", product)
-            intent.putExtra("selectedArtisan", artisan)
+            //intent.putExtra("selectedArtisan", artisan)
             intent.putExtra("editMode", editMode)
             Log.i("AddItemInfo", "product updated 2/4: " + product)
             clearFields()

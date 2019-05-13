@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.list_item_cell.view.*
 import com.amazonadonna.sync.Synchronizer
 import kotlinx.android.synthetic.main.list_artisan_cell.view.*
 
-class ListItemsAdapter (private val context: Context, private val products : MutableList<Product>, private val artisan : Artisan? = Artisan("artisanName", "id", "1234567", "", "country", "bio", "cogid", 0.0, 0.0, "url", Synchronizer.SYNCED,0.0) ) : RecyclerView.Adapter<ItemsViewHolder> () {
+class ListItemsAdapter (private val context: Context, private val products : MutableList<Product>) : RecyclerView.Adapter<ItemsViewHolder> () {
     private var removedPostion = 0
     private var removedProduct = Product(0.0, "", "", "", emptyArray(), "", "", "","","", "", "", "", "", "", "", 0, Synchronizer.SYNCED, 0)
 
@@ -52,7 +52,7 @@ class ListItemsAdapter (private val context: Context, private val products : Mut
         holder.view.setOnClickListener{
             val intent = Intent(context, ProductDetails::class.java)
             intent.putExtra("product", product)
-            intent.putExtra("selectedArtisan", artisan)
+            //intent.putExtra("selectedArtisan", artisan)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
         }

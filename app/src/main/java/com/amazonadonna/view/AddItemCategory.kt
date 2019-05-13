@@ -7,9 +7,9 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.activity_add_item_category.*
 import android.widget.Spinner
+import com.amazonadonna.model.App
 import com.amazonadonna.model.Product
 import com.amazonadonna.sync.Synchronizer.Companion.SYNC_NEW
 
@@ -99,7 +99,7 @@ class AddItemCategory : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_category)
 
-        val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        //val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
         initDataMap()
 
         // Create an ArrayAdapter
@@ -159,7 +159,7 @@ class AddItemCategory : AppCompatActivity() {
         }
 
         addItemCategory_continueButton.setOnClickListener {
-            addItemCategoryContinue(mainCategory, subCategory, specificCategory, artisan)
+            addItemCategoryContinue(mainCategory, subCategory, specificCategory)
         }
 
         if (intent.hasExtra("product")) {
@@ -180,7 +180,7 @@ class AddItemCategory : AppCompatActivity() {
 
         } else {
             //creating new product set artisanID
-            product.artisanId = artisan.artisanId
+            product.artisanId = App.currentArtisan.artisanId
         }
 
     }
@@ -214,7 +214,7 @@ class AddItemCategory : AppCompatActivity() {
         }
     }
 
-    private fun addItemCategoryContinue(main : String, sub : String, specific : String, artisan: Artisan) {
+    private fun addItemCategoryContinue(main : String, sub : String, specific : String) {
         if (main != SELECT_CATEGORY && sub != SELECT_SUBCATEGORY && specific != SELECT_SPECIFICCATEGORY){
             Log.i("AddItemCategory", "Main: " + main + " Sub: " + sub + " Specific: " + specific)
             val intent = Intent(this, AddItemInfo::class.java)
@@ -222,10 +222,10 @@ class AddItemCategory : AppCompatActivity() {
             product.category = main
             product.subCategory = sub
             product.specificCategory = specific
-            product.artisanId = artisan.artisanId
+            product.artisanId = App.currentArtisan.artisanId
             intent.putExtra("product", product)
             intent.putExtra("editMode", editMode)
-            intent.putExtra("selectedArtisan", artisan)
+            //intent.putExtra("selectedArtisan", artisan)
             startActivity(intent)
             finish()
         } else {

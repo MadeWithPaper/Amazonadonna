@@ -1,6 +1,5 @@
 package com.amazonadonna.view
 
-import android.content.ClipData
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
@@ -9,7 +8,6 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,10 +17,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.App
-import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import com.amazonadonna.sync.Synchronizer
-import com.amazonadonna.view.R
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.jakewharton.rxbinding2.widget.textChanges
@@ -30,7 +26,6 @@ import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_artisan_item_list.*
-import kotlinx.android.synthetic.main.list_all_artisans.*
 import kotlinx.coroutines.*
 import okhttp3.*
 import java.io.IOException
@@ -44,7 +39,7 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    lateinit var artisan : Artisan
+    //lateinit var artisan : Artisan
     private val listAllItemsURL = App.BACKEND_BASE_URL + "/item/listAllForArtisan"
     private val originalItems: MutableList<Product> = mutableListOf()
     private val filteredItems: MutableList<Product> = mutableListOf()
@@ -60,7 +55,7 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_item_list)
 
-        artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+       // artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
 
         artisanItemList_recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -79,7 +74,7 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
         artisanItemList_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
         artisanItemList_addItemButton.setOnClickListener{
-            addItem(artisan)
+            addItem()
         }
 
         listItems_Search
@@ -172,14 +167,14 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
             oldFilteredItems.addAll(dbProducts)
             filteredItems.addAll(dbProducts)
             runOnUiThread {
-                artisanItemList_recyclerView.adapter = ListItemsAdapter(applicationContext, oldFilteredItems, artisan)
+                artisanItemList_recyclerView.adapter = ListItemsAdapter(applicationContext, oldFilteredItems)
             }
         }
         //fetchJSON()
     }
 
     private suspend fun getProductsFromDb() = withContext(Dispatchers.IO) {
-        AppDatabase.getDatabase(application).productDao().getAllByArtisanIdWithoutSyncState(artisan.artisanId, Synchronizer.SYNC_DELETE)
+        AppDatabase.getDatabase(application).productDao().getAllByArtisanIdWithoutSyncState(App.currentArtisan.artisanId, Synchronizer.SYNC_DELETE)
     }
 
     private fun search(query: String): Completable = Completable.create {
@@ -200,10 +195,10 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
         it.onComplete()
     }
 
-    private fun addItem(artisan: Artisan) {
+    private fun addItem() {
         //go to list all artisan screen
         val intent = Intent(this, AddItemCategory::class.java)
-        intent.putExtra("selectedArtisan", artisan)
+        //intent.putExtra("selectedArtisan", artisan)
         startActivity(intent)
         finish()
     }
@@ -214,7 +209,7 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
     private fun fetchJSON() {
         val client = OkHttpClient()
 
-        val requestBody = FormBody.Builder().add("artisanId",artisan.artisanId).build()
+        val requestBody = FormBody.Builder().add("artisanId", App.currentArtisan.artisanId).build()
 
 
         val request = Request.Builder()
@@ -235,7 +230,7 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
                 filteredItems.addAll(products)
 
                 runOnUiThread {
-                    artisanItemList_recyclerView.adapter = ListItemsAdapter(applicationContext, oldFilteredItems, artisan)
+                    artisanItemList_recyclerView.adapter = ListItemsAdapter(applicationContext, oldFilteredItems)
                 }
             }
 

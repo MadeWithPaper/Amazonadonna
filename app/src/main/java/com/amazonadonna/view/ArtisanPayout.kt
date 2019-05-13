@@ -10,6 +10,7 @@ import java.util.*
 import android.app.DatePickerDialog
 import androidx.appcompat.app.AlertDialog
 import android.util.Log
+import com.amazonadonna.model.App
 import com.amazonadonna.view.R
 import kotlinx.android.synthetic.main.activity_artisan_profile_cga.*
 
@@ -22,13 +23,13 @@ class ArtisanPayout : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_payout)
 
-        val artisan = intent.extras?.getSerializable("artisan") as Artisan
+        //val artisan = intent.extras?.getSerializable("artisan") as Artisan
 
-        artisanPayout_balance.text = " $ ${artisan.balance}"
-        artisanPayout_amount.setText(artisan.balance.toString())
+        artisanPayout_balance.text = " $ ${App.currentArtisan.balance}"
+        artisanPayout_amount.setText(App.currentArtisan.balance.toString())
         artisanPayout_dateTV.text = this.resources.getString(R.string.payout_date) + " " + getCurrDate()
         artisanPayout_continue.setOnClickListener {
-            continueToSignature(artisan)
+            continueToSignature()
         }
 
         artisanPayout_datePicker.setOnClickListener {
@@ -61,12 +62,12 @@ class ArtisanPayout : AppCompatActivity() {
         return dateFormat.format(date)
     }
 
-    private fun continueToSignature(artisan: Artisan) {
+    private fun continueToSignature() {
         //validate fields
         if (!validateFields()) {
             return
         } else {
-            if (validateAmount(artisan)) {
+            if (validateAmount()) {
                 Log.w("ArtisanPayout", "Payout amount exceeded balance")
                 val builder = AlertDialog.Builder(this@ArtisanPayout)
                 builder.setTitle(this.resources.getString(R.string.payout_error_title))
@@ -78,7 +79,7 @@ class ArtisanPayout : AppCompatActivity() {
                 dialog.show()
             } else {
                 val intent = Intent(this, PayoutSignature::class.java)
-                intent.putExtra("artisan", artisan)
+               // intent.putExtra("artisan", artisan)
                 intent.putExtra("payoutAmount", artisanPayout_amount.text.toString().toDouble())
                 startActivity(intent)
                 finish()
@@ -86,8 +87,8 @@ class ArtisanPayout : AppCompatActivity() {
         }
     }
 
-    private fun validateAmount(artisan: Artisan): Boolean {
-        return (artisanPayout_amount.text.toString().toDouble() > artisan.balance)
+    private fun validateAmount(): Boolean {
+        return (artisanPayout_amount.text.toString().toDouble() > App.currentArtisan.balance)
     }
 
     private fun validateFields(): Boolean {

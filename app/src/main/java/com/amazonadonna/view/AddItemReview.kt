@@ -41,7 +41,7 @@ class AddItemReview : AppCompatActivity() {
 //        val bitmap = this.intent.getParcelableExtra<Parcelable>("image0") as Bitmap
 //        addItemReview_Image.setImageBitmap(bitmap)
 
-        val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+       // val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
         val product = intent.extras?.getSerializable("product") as Product
         var photoFilesArr = intent.extras?.getSerializable("photoFiles") as HashMap<Int, File?>
         editMode = intent.extras?.get("editMode") as Boolean
@@ -97,12 +97,12 @@ class AddItemReview : AppCompatActivity() {
         }*/
 
         addItemReview_continueButton.setOnClickListener {
-            reviewDone(artisan, product, photoFilesArr)
+            reviewDone(product, photoFilesArr)
         }
     }
 
     //TODO user horizontal scroll bar to make a nicer item pic gallery
-    private fun reviewDone (artisan: Artisan, product: Product, photosMap: HashMap<Int, File?>) {
+    private fun reviewDone (product: Product, photosMap: HashMap<Int, File?>) {
         //submitToDB(product, artisan, photos)
         var photos = ArrayList<File?>(6)
 
@@ -111,28 +111,28 @@ class AddItemReview : AppCompatActivity() {
         }
 
         if (editMode) {
-            ProductSync.updateProduct(applicationContext, product, artisan, photos)
+            ProductSync.updateProduct(applicationContext, product, App.currentArtisan, photos)
             //submitToDB(product, artisan, photos)
             runOnUiThread {
-                showResponseDialog(artisan, true)
+                showResponseDialog(true)
             }
         }
         else {
             product.generateTempID()
-            ProductSync.addProduct(applicationContext, product, artisan, photos)
+            ProductSync.addProduct(applicationContext, product, App.currentArtisan, photos)
             runOnUiThread {
-                showResponseDialog(artisan, true)
+                showResponseDialog(true)
             }
         }
     }
 
-    private fun submitDismiss(artisan: Artisan) {
+    private fun submitDismiss() {
         var intent = Intent(this, ArtisanProfileCGA::class.java)
         Log.i("AddItemReview", "review done adding item to db")
         if (App.artisanMode) {
             intent = Intent(this, ArtisanProfile::class.java)
         }
-        intent.putExtra("artisan", artisan)
+        //intent.putExtra("artisan", artisan)
         startActivity(intent)
         finish()
     }
@@ -176,7 +176,7 @@ class AddItemReview : AppCompatActivity() {
                     product.itemId = body!!
                 }
                 runOnUiThread {
-                    showResponseDialog(artisan, true)
+                    showResponseDialog(true)
                 }
                 var i = 0
                 for (photo in photos) {
@@ -190,7 +190,7 @@ class AddItemReview : AppCompatActivity() {
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("AddItemReview", "failed to do POST request to database: " + url)
                 runOnUiThread {
-                    showResponseDialog(artisan, false)
+                    showResponseDialog(false)
                 }
             }
         })
@@ -198,13 +198,13 @@ class AddItemReview : AppCompatActivity() {
         //showResponseDialog(artisan, status)
     }
 
-    private fun showResponseDialog(artisan: Artisan, status: Boolean) {
+    private fun showResponseDialog(status: Boolean) {
         val builder = AlertDialog.Builder(this@AddItemReview)
         if (status) {
             builder.setTitle(this.resources.getString(R.string.item_review_response_dialog_title))
             builder.setMessage(this.resources.getString(R.string.item_review_listing_success))
             builder.setOnDismissListener {
-                submitDismiss(artisan)
+                submitDismiss()
             }
         } else
         {

@@ -10,6 +10,7 @@ import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.list_artisan_cell.view.*
 import android.util.Log
 import com.amazonadonna.database.ImageStorageProvider
+import com.amazonadonna.model.App
 import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.sync.Synchronizer
 
@@ -53,8 +54,10 @@ class ListArtisanAdapter (private val context: Context, private val artisans :Mu
 
         holder.view.setOnClickListener{
             val intent = Intent(context, ArtisanProfileCGA::class.java)
-            intent.putExtra("artisan", artisan)
+            //intent.putExtra("artisan", artisan)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            App.currentArtisan = artisan
+            Log.i("ListArtisanAdapter.kt", "new artisan selected, updating global artisan")
             context.startActivity(intent)
         }
     }

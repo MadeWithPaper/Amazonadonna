@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.ImageView
 import com.amazonadonna.database.ImageStorageProvider
+import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import kotlinx.android.synthetic.main.activity_product_details.*
@@ -15,14 +16,14 @@ import kotlinx.android.synthetic.main.gallery_item.*
 
 class ProductDetails : AppCompatActivity() {
 
-    private lateinit var artisan : Artisan
+    //private lateinit var artisan : Artisan
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_details)
 
-        artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
-        Log.d("Productdetails", artisan.artisanId)
+       // artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        Log.d("Productdetails", App.currentArtisan.artisanId)
 
         val product = intent.extras?.getSerializable("product") as Product
 
@@ -58,14 +59,14 @@ class ProductDetails : AppCompatActivity() {
 
         //TODO edit items
         itemDetail_edit.setOnClickListener {
-            editItem(product, artisan)
+            editItem(product)
         }
     }
 
-    private fun editItem(product: Product, artisan: Artisan) {
+    private fun editItem(product: Product) {
         val intent = Intent(this, AddItemCategory::class.java)
         intent.putExtra("product", product)
-        intent.putExtra("selectedArtisan", artisan)
+       // intent.putExtra("selectedArtisan", artisan)
         startActivity(intent)
         finish()
     }
