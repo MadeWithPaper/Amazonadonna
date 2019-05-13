@@ -46,6 +46,10 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
         numInProgress--
     }
 
+    override fun syncArtisanMode(context: Context, artisanId: String) {
+        throw NotImplementedError()
+    }
+
     private fun uploadNewArtisans(context : Context) {
         runBlocking {
             val newArtisans = getNewArtisans(context)

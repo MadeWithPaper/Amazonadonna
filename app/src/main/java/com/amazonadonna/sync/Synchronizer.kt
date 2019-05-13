@@ -19,6 +19,7 @@ abstract class Synchronizer : CoroutineScope {
 
     lateinit var job: Job
     lateinit var mCgaId: String
+    lateinit var mArtisanId: String
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -26,6 +27,11 @@ abstract class Synchronizer : CoroutineScope {
     open fun sync(context: Context, cgaId: String) {
         job = Job()
         mCgaId = cgaId
+    }
+
+    open fun syncArtisanMode(context: Context, artisanId: String) {
+        job = Job()
+        mArtisanId = artisanId
     }
 
     fun inProgress() : Boolean {

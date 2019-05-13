@@ -2,33 +2,47 @@ package com.amazonadonna.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Payout
+import com.amazonadonna.sync.Synchronizer
 import kotlinx.android.synthetic.main.activity_payout_history_cga.*
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-class PayoutHistoryCGA : AppCompatActivity() {
+class PayoutHistoryCGA : AppCompatActivity(), CoroutineScope {
+    lateinit var job: Job
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     private val payoutHistoryPath = App.BACKEND_BASE_URL + "/payout/listAllForCga"
     private val payoutHistoryList : MutableList<Payout> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        job = Job()
+
         setContentView(R.layout.activity_payout_history_cga)
 
-        val cgaID = intent.extras.getString("cgaID")
+        //val cgaID = intent.extras.getString("cgaID")
 
-        fetchHistory(cgaID)
+        launch {
+            val payouts = fetchHistory()
+            payoutHistoryList.addAll(payouts)
 
-        //TODO remove test data
-        payoutHistoryList.add(Payout("test", 2.4, 3, "id", 1, "qwer", "qwer"))
-
-        payoutHistoryRV.layoutManager = LinearLayoutManager(this)
-        payoutHistoryRV.adapter = PayoutHistoryAdapter(this, payoutHistoryList)
-        payoutHistoryRV.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+            runOnUiThread {
+                payoutHistoryRV.layoutManager = LinearLayoutManager(applicationContext)
+                payoutHistoryRV.adapter = PayoutHistoryAdapter(applicationContext, payoutHistoryList)
+                payoutHistoryRV.addItemDecoration(DividerItemDecoration(applicationContext, DividerItemDecoration.VERTICAL))
+            }
+        }
     }
 
-    private fun fetchHistory(cgaID: String) {
-        //TODO fetch data from db
+    private suspend fun fetchHistory() = withContext(Dispatchers.IO) {
+        AppDatabase.getDatabase(application).payoutDao().getAllByArtisanId(App.currentArtisan.artisanId) as List<Payout>
     }
+
 }

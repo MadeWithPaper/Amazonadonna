@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.amazonadonna.model.Payout
 import com.jakewharton.rxbinding2.widget.color
 import kotlinx.android.synthetic.main.payout_history_cell.view.*
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class PayoutHistoryAdapter (private val context: Context, private val recalls : List<Payout>) : RecyclerView.Adapter<PayoutHistoryViewHolder> () {
 
@@ -31,8 +34,11 @@ class PayoutHistoryAdapter (private val context: Context, private val recalls : 
 class PayoutHistoryViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
 
     fun bindRecall(payout: Payout, context: Context) {
+        val date = Date(payout.date)
+        val format = SimpleDateFormat("MM/dd/yyyy")
+
        view.payoutHistory_amount.text = "$${payout.amount}"
-        view.payoutHistory_date.text = payout.date.toString()
+        view.payoutHistory_date.text = format.format(date)
         view.payoutHistory_amount.setTextColor(Color.RED)
         if (payout.amount < 0){
             view.payoutHistory_amount.setTextColor(Color.GREEN)

@@ -34,6 +34,10 @@ object ProductSync: Synchronizer(), CoroutineScope {
 
     }
 
+    override fun syncArtisanMode(context: Context, artisanId: String) {
+        throw NotImplementedError()
+    }
+
     private fun uploadProducts(context: Context) {
         numInProgress++
         //Thread.sleep(5000)
