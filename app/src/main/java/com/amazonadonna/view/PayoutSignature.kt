@@ -26,13 +26,15 @@ class PayoutSignature : AppCompatActivity() {
     private val updateURL = App.BACKEND_BASE_URL + "/artisan/edit"
     private val payoutHistory = App.BACKEND_BASE_URL + "/payout/add"
     private val payoutSignatureURL = App.BACKEND_BASE_URL + "/payout/updateImage"
+    //private lateinit var artisan: Artisan
+    private var amount = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payout_signature)
-        val artisan = intent.extras?.getSerializable("artisan") as Artisan
-        val amount = intent.getDoubleExtra("payoutAmount", 0.0)
-        Log.i("PayoutSignature", "Artisan original balance: ${artisan.balance}")
+        //artisan = intent.extras?.getSerializable("artisan") as Artisan
+        amount = intent.getDoubleExtra("payoutAmount", 0.0)
+        Log.i("PayoutSignature", "Artisan original balance: ${App.currentArtisan.balance}")
         Log.i("PayoutSignature", "Processing payout amount of : $amount")
 
         clearSignature_Button.isEnabled = false
@@ -64,7 +66,7 @@ class PayoutSignature : AppCompatActivity() {
         }
 
         doneSignature_button.setOnClickListener {
-            saveSignature(artisan, amount)
+            saveSignature()
         }
     }
 
@@ -72,12 +74,12 @@ class PayoutSignature : AppCompatActivity() {
         signature_pad.clear()
     }
 
-    private fun saveSignature(artisan: Artisan, amount : Double) {
+    private fun saveSignature() {
         val signatureFilePath = saveSignatureToCache()
-        var payout = Payout("", amount, System.currentTimeMillis(), artisan.artisanId, SYNC_NEW, "Not set", artisan.cgaId)
-        PayoutSync.addPayout(applicationContext, payout, artisan, File(signatureFilePath))
+        var payout = Payout("", amount, System.currentTimeMillis(), App.currentArtisan.artisanId, SYNC_NEW, "Not set", App.currentArtisan.cgaId)
+        PayoutSync.addPayout(applicationContext, payout, App.currentArtisan, File(signatureFilePath))
         runOnUiThread{
-            showResponseDialog(artisan, true, amount)
+            showResponseDialog(true)
         }
         //updateArtisanBalance(artisan, amount, signatureFilePath)
         //showResponseDialog(artisan, true)
@@ -113,10 +115,10 @@ class PayoutSignature : AppCompatActivity() {
         return dateFormat.format(date)
     }
 
-    private fun updateArtisanBalance(artisan: Artisan, amount: Double, signatureFilePath : String) {
-        Log.i("PayoutSignature", "updating Artisan with new balance of: " + (artisan.balance - amount).toString())
-        val requestBody = FormBody.Builder().add("artisanId", artisan.artisanId)
-                .add("balance", (artisan.balance - amount).toString())
+    private fun updateArtisanBalance(amount: Double, signatureFilePath : String) {
+        Log.i("PayoutSignature", "updating Artisan with new balance of: " + (App.currentArtisan.balance - amount).toString())
+        val requestBody = FormBody.Builder().add("artisanId", App.currentArtisan.artisanId)
+                .add("balance", (App.currentArtisan.balance - amount).toString())
 
         val client = OkHttpClient()
         val request = Request.Builder()
@@ -129,7 +131,7 @@ class PayoutSignature : AppCompatActivity() {
                 val body = response?.body()?.string()
                 Log.i("PayoutSignature", "artisan update $body")
                 //balance updated now send signature
-                submitPayoutToDB(artisan, amount, signatureFilePath)
+                submitPayoutToDB(amount, signatureFilePath)
                 //submitSignatureToDB(artisan, signatureFilePath)
             }
 
@@ -141,9 +143,9 @@ class PayoutSignature : AppCompatActivity() {
         //showResponseDialog(artisan, true)
     }
 
-    private fun submitPayoutToDB(artisan: Artisan, amount: Double, signatureFilePath: String) {
-        val requestBody = FormBody.Builder().add("artisanId", artisan.artisanId)
-                .add("cgaId", artisan.cgaId)
+    private fun submitPayoutToDB(amount: Double, signatureFilePath: String) {
+        val requestBody = FormBody.Builder().add("artisanId", App.currentArtisan.artisanId)
+                .add("cgaId", App.currentArtisan.cgaId)
                 .add("amount", amount.toString())
                 .add("date", System.currentTimeMillis().toString())
 
@@ -157,7 +159,7 @@ class PayoutSignature : AppCompatActivity() {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()!!.string()
                 Log.i("PayoutSignature", "payoutid $body")
-                submitSignatureToDB(artisan, body, signatureFilePath, amount)
+                submitSignatureToDB(body, signatureFilePath, amount)
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
@@ -167,13 +169,14 @@ class PayoutSignature : AppCompatActivity() {
 
         //showResponseDialog(artisan, true)
     }
-    private fun showResponseDialog(artisan: Artisan, status: Boolean, amount: Double) {
+    private fun showResponseDialog(status: Boolean) {
         val builder = AlertDialog.Builder(this@PayoutSignature)
         if (status) {
             builder.setTitle("Payout Approved!")
-            builder.setMessage("Current Artisan Balance: $ ${artisan.balance}")
+            builder.setMessage("Current Artisan Balance: $ ${App.currentArtisan.balance}")
             builder.setOnDismissListener {
-                submitDismiss(artisan)
+                Log.i("PayoutSignature.kt", "before payout dismiss ${App.currentArtisan.balance}")
+                submitDismiss()
 //                val intent = Intent(this, ArtisanProfileCGA::class.java)
 //                intent.putExtra("artisan", artisan)
 //                //finishAffinity()
@@ -183,7 +186,7 @@ class PayoutSignature : AppCompatActivity() {
             }
         } else {
             builder.setTitle("Payout Failed!")
-            builder.setMessage("Current Artisan Balance: $ ${artisan.balance}")
+            builder.setMessage("Current Artisan Balance: $ ${App.currentArtisan.balance}")
             builder.setOnDismissListener {
                 //do nothing
             }
@@ -193,7 +196,7 @@ class PayoutSignature : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun submitSignatureToDB(artisan: Artisan, payoutId : String , signatureFilePath: String, amount: Double) {
+    private fun submitSignatureToDB(payoutId : String , signatureFilePath: String, amount: Double) {
         val signatureFile = File(signatureFilePath)
         Log.d("PayoutSignature", "submitSignatureToDB file " + signatureFile + " : " + signatureFile.exists())
 
@@ -216,7 +219,7 @@ class PayoutSignature : AppCompatActivity() {
                 val body = response?.body()?.string()
                 Log.d("PayoutSignature", "signature pic success $body")
                 runOnUiThread{
-                    showResponseDialog(artisan, true, amount)
+                    showResponseDialog(true)
                 }
                 signatureFile.delete()
                 Log.d("PayoutSignature", "signature file clean up " + signatureFile + " : " + signatureFile.exists())
@@ -226,7 +229,7 @@ class PayoutSignature : AppCompatActivity() {
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("PayoutSignature", "failed to do POST request to database $payoutSignatureURL")
                 runOnUiThread{
-                    showResponseDialog(artisan, false, amount)
+                    showResponseDialog(false)
                 }
                 signatureFile.delete()
                 Log.d("PayoutSignature", "signature file clean up " + signatureFile + " : " + signatureFile.exists())
@@ -234,10 +237,10 @@ class PayoutSignature : AppCompatActivity() {
         })
     }
 
-    private fun submitDismiss(artisan: Artisan) {
+    private fun submitDismiss() {
         val intent = Intent(this, ArtisanProfileCGA::class.java)
-        intent.putExtra("artisan", artisan)
-        //finishAffinity()
+        //intent.putExtra("artisan", artisan)
+       // Log.i("PayoutSignature.kt", "post payout amount ${artisan.balance}")
         startActivity(intent)
         finish()
     }

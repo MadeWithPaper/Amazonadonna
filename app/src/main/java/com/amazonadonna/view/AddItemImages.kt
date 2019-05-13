@@ -61,11 +61,11 @@ class AddItemImages : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, PERMISSIONS, IMAGE_UPLOADING_PERMISSION)
 
         val product = intent.extras?.getSerializable("product") as Product
-        val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        //val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
         editMode = intent.extras?.get("editMode") as Boolean
 
         addItemImage_continueButton.setOnClickListener {
-            addItemImageContinue(product, artisan)
+            addItemImageContinue(product)
         }
 
         addItemImage0.setOnClickListener {
@@ -132,10 +132,10 @@ class AddItemImages : AppCompatActivity() {
 
     }
 
-    private fun addItemImageContinue(product: Product, artisan: Artisan) {
+    private fun addItemImageContinue(product: Product) {
         val intent = Intent(this, AddItemReview::class.java)
         intent.putExtra("product", product)
-        intent.putExtra("selectedArtisan", artisan)
+        //intent.putExtra("selectedArtisan", artisan)
         intent.putExtra("photoFiles", photoFilesArr)
 //        val bitmap = (addItemImage0.drawable as BitmapDrawable).bitmap
 //        val pic = Bitmap.createScaledBitmap(bitmap, 300, 300, true)

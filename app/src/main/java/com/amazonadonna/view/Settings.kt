@@ -36,14 +36,14 @@ class Settings : AppCompatActivity(), CoroutineScope {
     private var languageSelected = "en_US"
     private lateinit var alertDialog : AlertDialog
     private lateinit var cgaID : String
-    private lateinit var artisanName : String
+    //private lateinit var artisanName : String
     lateinit var job: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         cgaID = intent.extras!!.getString("cgaID")!!
-        artisanName = intent.extras!!.getString("artisanName")!!
+       // artisanName = intent.extras!!.getString("artisanName")!!
 
         settingCurrentLanguageTV.text = Locale.getDefault().displayLanguage
 
@@ -90,7 +90,7 @@ class Settings : AppCompatActivity(), CoroutineScope {
        // intent.putExtra("cgaId", cgaID)
         if (App.artisanMode) {
             intent = Intent(this, HomeScreenArtisan::class.java)
-            intent.putExtra("artisanName", artisanName)
+            //intent.putExtra("artisanName", artisanName)
         }
         startActivity(intent)
         finish()
@@ -181,8 +181,8 @@ class Settings : AppCompatActivity(), CoroutineScope {
         Log.d("inside setting", "${App.artisanMode}")
         if (App.artisanMode){
             intent = Intent(this, HomeScreenArtisan::class.java)
-            intent.putExtra("artisanName", artisanName)
-            Log.d("from Setting", "$artisanName")
+            //intent.putExtra("artisanName", artisanName)
+            //Log.d("from Setting", "$artisanName")
         }
         startActivity(intent)
         finish()

@@ -46,13 +46,13 @@ class EditArtisan : AppCompatActivity() {
 //        ArtisanSync.sync(this, cgaId)
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
 
-        val oldArtisan = intent.extras?.getSerializable("artisan") as Artisan
+       // val oldArtisan = intent.extras?.getSerializable("artisan") as Artisan
         //Log.d("HOT FIX 12", oldArtisan.toString())
         //fill in information from old artisan
-        editArtisanBio_et.setText(oldArtisan.bio)
-        editArtisanLoc_et.setText(oldArtisan.city + "," + oldArtisan.country)
-        editArtisanName_et.setText(oldArtisan.artisanName)
-        editArtisanContact_et.setText(oldArtisan.phoneNumber)
+        editArtisanBio_et.setText(App.currentArtisan.bio)
+        editArtisanLoc_et.setText(App.currentArtisan.city + "," + App.currentArtisan.country)
+        editArtisanName_et.setText(App.currentArtisan.artisanName)
+        editArtisanContact_et.setText(App.currentArtisan.phoneNumber)
 
         /*if (oldArtisan.picURL != "Not set") {
             Picasso.with(this).load(oldArtisan.picURL).into(this.editArtisan_pic)
@@ -60,12 +60,12 @@ class EditArtisan : AppCompatActivity() {
             this.editArtisan_pic.setImageResource(R.drawable.placeholder)
         }*/
         var isp = ImageStorageProvider(applicationContext)
-        isp.loadImageIntoUI(oldArtisan.picURL, this.editArtisan_pic, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
+        isp.loadImageIntoUI(App.currentArtisan.picURL, this.editArtisan_pic, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
 
         pic = editArtisan_pic.drawable
 
         editArisan_SaveButton.setOnClickListener {
-            updateArtisan(oldArtisan)
+            updateArtisan()
         }
 
         editSelectPicture.setOnClickListener {
@@ -304,16 +304,16 @@ class EditArtisan : AppCompatActivity() {
     }
 
     //TODO need to update pic on back button
-    private fun updateArtisan(oldArtisan : Artisan) {
+    private fun updateArtisan() {
         if (!validateFields()) {
             return
         } else {
 
-            oldArtisan.artisanName = editArtisanName_et.text.toString()
-            oldArtisan.bio = editArtisanBio_et.text.toString()
-            oldArtisan.city = parseLoc().first
-            oldArtisan.country = parseLoc().second
-            oldArtisan.phoneNumber = editArtisanContact_et.text.toString()
+            App.currentArtisan.artisanName = editArtisanName_et.text.toString()
+            App.currentArtisan.bio = editArtisanBio_et.text.toString()
+            App.currentArtisan.city = parseLoc().first
+            App.currentArtisan.country = parseLoc().second
+            App.currentArtisan.phoneNumber = editArtisanContact_et.text.toString()
 
 
             var newPhoto: File? = null
@@ -321,14 +321,14 @@ class EditArtisan : AppCompatActivity() {
                 newPhoto = photoFile
             }
 
-            ArtisanSync.updateArtisan(applicationContext, oldArtisan, newPhoto)
+            ArtisanSync.updateArtisan(applicationContext, App.currentArtisan, newPhoto)
 
             //submitToDB(oldArtisan)
             var intent = Intent(this, ArtisanProfileCGA::class.java)
             if (App.artisanMode){
                 intent = Intent(this, ArtisanProfile::class.java)
             }
-            intent.putExtra("artisan", oldArtisan)
+            //intent.putExtra("artisan", oldArtisan)
             startActivity(intent)
             finish()
         }
@@ -366,7 +366,7 @@ class EditArtisan : AppCompatActivity() {
                 Log.i("EditArtisan", body)
 
                 if (updatePic) {
-                    updateArtisanPic(oldArtisan)
+                    updateArtisanPic()
                 }
             }
 
@@ -405,7 +405,7 @@ class EditArtisan : AppCompatActivity() {
         return true
     }
 
-    fun updateArtisanPic(artisan: Artisan) {
+    fun updateArtisanPic() {
         val sourceFile = photoFile!!
         Log.d("EditArtisan", "submitPictureToDB file" + sourceFile + " : " + sourceFile!!.exists())
 
@@ -413,7 +413,7 @@ class EditArtisan : AppCompatActivity() {
 
         val requestBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("artisanId", artisan.artisanId)
+                .addFormDataPart("artisanId", App.currentArtisan.artisanId)
                 .addFormDataPart("image", "editProfilePic.png", RequestBody.create(MEDIA_TYPE, sourceFile))
                 .build()
 

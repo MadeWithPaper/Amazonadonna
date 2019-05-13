@@ -4,55 +4,56 @@ import android.util.Log
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity;
-import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.activity_artisan_profile_cga.*
 import android.text.method.ScrollingMovementMethod
 import com.amazonadonna.database.ImageStorageProvider
+import com.amazonadonna.model.App
 
 
 class ArtisanProfileCGA() : AppCompatActivity() {
 
-    private var artisan : Artisan? = null
+    //private lateinit var artisan : Artisan
     private val TAG = "ArtisanProfileCGACGA.kt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_profile_cga)
         //ArtisanSync.sync(this)
-        artisan = intent.extras?.getSerializable("artisan") as Artisan
+       // artisan = intent.extras?.getSerializable("artisan") as Artisan
 
         artisanProfileBio_cga.movementMethod = ScrollingMovementMethod()
+        //Log.d("ArtisanProfileCGA", "in onCreate payout ${artisan.balance}")
 
-        populateSelectedArtisan(artisan as Artisan)
+        populateSelectedArtisan()
 
         artisanItemList_cga.setOnClickListener {
-            artisanItemList(artisan as Artisan)
+            artisanItemList()
         }
 
         artisanMessageButton_cga.setOnClickListener {
-            artisanMessage(artisan as Artisan)
+            artisanMessage()
         }
         artisanPayoutButton_cga.setOnClickListener {
-            artisanPayout(artisan as Artisan)
+            artisanPayout()
         }
 
         artisanProfileEditButton_cga.setOnClickListener {
-            editArtisan(artisan as Artisan)
+            editArtisan()
         }
 
         artisanPayoutHistory_cga.setOnClickListener {
-            payoutHistory(artisan as Artisan)
+            payoutHistory()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d("ArtisanProfileCGA", "in onResume")
-        populateSelectedArtisan(artisan as Artisan)
+        //App.currentArtisan = intent.extras?.getSerializable("artisan") as Artisan
+        //Log.d("ArtisanProfileCGA", "in onResume payout ${artisan.balance}")
+        populateSelectedArtisan()
     }
 
-    private fun artisanMessage(artisan: Artisan) {
-        //TODO put in real artisan number
+    private fun artisanMessage() {
         val intent = Intent(this, MessageArtisan::class.java)
         //intent.putExtra("selectedArtisan", artisan)
         startActivity(intent)
@@ -64,7 +65,8 @@ class ArtisanProfileCGA() : AppCompatActivity() {
 //        startActivity(messagechooser)
     }
 
-    private fun populateSelectedArtisan(artisan : Artisan) {
+    private fun populateSelectedArtisan() {
+        //val artisan = App.currentArtisan
         /*if (artisan.picURL != "Not set")
             Picasso.with(this).load(artisan.picURL).into(this.artisanProfilePicture)
         //DownLoadImageTask(view.imageView_artisanProfilePic).execute(artisan.picURL)
@@ -72,41 +74,41 @@ class ArtisanProfileCGA() : AppCompatActivity() {
             this.artisanProfilePicture.setImageResource(R.drawable.placeholder)*/
 
         var isp = ImageStorageProvider(applicationContext)
-        isp.loadImageIntoUI(artisan.picURL, this.artisanProfilePicture_cga, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
+        isp.loadImageIntoUI(App.currentArtisan.picURL, this.artisanProfilePicture_cga, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
 
-        Log.d("ArtisanProfileCGA", artisan.bio)
-        artisanProfileName_cga.text = artisan.artisanName
-        artisanProfileBio_cga.text = artisan.bio
-        artisanProfileBalance_cga.text = "$${artisan.balance}"
-        artisanProfileLoc_cga.text = "${artisan.city}, ${artisan.country}"
-        artisanProfileContact_cga.text = artisan.phoneNumber
+        Log.d("ArtisanProfileCGA", "$App.currentArtisan")
+        artisanProfileName_cga.text = App.currentArtisan.artisanName
+        artisanProfileBio_cga.text = App.currentArtisan.bio
+        artisanProfileBalance_cga.text = "$${App.currentArtisan.balance}"
+        artisanProfileLoc_cga.text = "${App.currentArtisan.city}, ${App.currentArtisan.country}"
+        artisanProfileContact_cga.text = App.currentArtisan.phoneNumber
     }
 
-    private fun artisanItemList(artisan : Artisan){
+    private fun artisanItemList(){
         val intent = Intent(this, ArtisanItemList::class.java)
-        intent.putExtra("selectedArtisan", artisan)
+        //intent.putExtra("selectedArtisan", artisan)
         startActivity(intent)
-        finish()
+        //finish()
     }
 
-    private fun artisanPayout(artisan: Artisan){
+    private fun artisanPayout(){
         val intent = Intent(this, ArtisanPayout::class.java)
-        intent.putExtra("artisan", artisan)
+        //intent.putExtra("artisan", artisan)
         startActivity(intent)
         //finish()
     }
 
-    private fun editArtisan(artisan: Artisan) {
+    private fun editArtisan() {
         val intent = Intent(this, EditArtisan::class.java)
-        intent.putExtra("artisan", artisan)
+        //intent.putExtra("artisan", artisan)
         startActivity(intent)
         //finish()
     }
 
-    private fun payoutHistory(artisan: Artisan) {
+    private fun payoutHistory() {
         val intent = Intent(this, PayoutHistoryCGA::class.java)
-        intent.putExtra("cgaID", artisan.cgaId)
-        Log.d(TAG, "payout history screen with cgaID: ${artisan.cgaId}")
+        //intent.putExtra("cgaID", artisan.cgaId)
+        //Log.d(TAG, "payout history screen with cgaID: ${artisan.cgaId}")
         startActivity(intent)
     }
 }

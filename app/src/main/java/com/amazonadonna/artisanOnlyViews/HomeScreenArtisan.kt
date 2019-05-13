@@ -20,6 +20,8 @@ class HomeScreenArtisan : AppCompatActivity() {
         App.artisanMode = true
         //TODO replace test data with artisan logged in
         val testArtisan = App.testArtisan
+        //TODO set global artisan
+        App.currentArtisan = testArtisan
 
         val extras = intent.extras
         if (extras != null) {
