@@ -115,60 +115,7 @@ class PayoutSignature : AppCompatActivity() {
         return dateFormat.format(date)
     }
 
-    private fun updateArtisanBalance(amount: Double, signatureFilePath : String) {
-        Log.i("PayoutSignature", "updating Artisan with new balance of: " + (App.currentArtisan.balance - amount).toString())
-        val requestBody = FormBody.Builder().add("artisanId", App.currentArtisan.artisanId)
-                .add("balance", (App.currentArtisan.balance - amount).toString())
 
-        val client = OkHttpClient()
-        val request = Request.Builder()
-                .url(updateURL)
-                .post(requestBody.build())
-                .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                Log.i("PayoutSignature", "artisan update $body")
-                //balance updated now send signature
-                submitPayoutToDB(amount, signatureFilePath)
-                //submitSignatureToDB(artisan, signatureFilePath)
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("PayoutSignature", "failed to do POST request to database $updateURL")
-            }
-        })
-
-        //showResponseDialog(artisan, true)
-    }
-
-    private fun submitPayoutToDB(amount: Double, signatureFilePath: String) {
-        val requestBody = FormBody.Builder().add("artisanId", App.currentArtisan.artisanId)
-                .add("cgaId", App.currentArtisan.cgaId)
-                .add("amount", amount.toString())
-                .add("date", System.currentTimeMillis().toString())
-
-        val client = OkHttpClient()
-        val request = Request.Builder()
-                .url(payoutHistory)
-                .post(requestBody.build())
-                .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()!!.string()
-                Log.i("PayoutSignature", "payoutid $body")
-                submitSignatureToDB(body, signatureFilePath, amount)
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("PayoutSignature", "failed to do POST request to database $payoutHistory")
-            }
-        })
-
-        //showResponseDialog(artisan, true)
-    }
     private fun showResponseDialog(status: Boolean) {
         val builder = AlertDialog.Builder(this@PayoutSignature)
         if (status) {
@@ -194,47 +141,6 @@ class PayoutSignature : AppCompatActivity() {
 
         val dialog : AlertDialog = builder.create()
         dialog.show()
-    }
-
-    private fun submitSignatureToDB(payoutId : String , signatureFilePath: String, amount: Double) {
-        val signatureFile = File(signatureFilePath)
-        Log.d("PayoutSignature", "submitSignatureToDB file " + signatureFile + " : " + signatureFile.exists())
-
-        val MEDIA_TYPE = MediaType.parse("image/png")
-
-        val requestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("payoutId", payoutId)
-                .addFormDataPart("image", "payout.png", RequestBody.create(MEDIA_TYPE, signatureFile))
-                .build()
-
-        val request = Request.Builder()
-                .url(payoutSignatureURL)
-                .post(requestBody)
-                .build()
-
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object: Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                Log.d("PayoutSignature", "signature pic success $body")
-                runOnUiThread{
-                    showResponseDialog(true)
-                }
-                signatureFile.delete()
-                Log.d("PayoutSignature", "signature file clean up " + signatureFile + " : " + signatureFile.exists())
-
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("PayoutSignature", "failed to do POST request to database $payoutSignatureURL")
-                runOnUiThread{
-                    showResponseDialog(false)
-                }
-                signatureFile.delete()
-                Log.d("PayoutSignature", "signature file clean up " + signatureFile + " : " + signatureFile.exists())
-            }
-        })
     }
 
     private fun submitDismiss() {
