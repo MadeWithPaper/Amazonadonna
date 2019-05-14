@@ -20,28 +20,24 @@ object OrderSync: Synchronizer(), CoroutineScope {
     private val listOrderURL = App.BACKEND_BASE_URL + "/order/listAllForCga"
     private val getItemURL = App.BACKEND_BASE_URL + "/order/getItems"
     private val editOrderURL = App.BACKEND_BASE_URL + "/order/setShippedStatus"
-    private lateinit var callerContext: Context
-    private lateinit var callerActivity: Activity
 
     fun sync(context: Context, activity: Activity, cgaId: String) {
         super.sync(context, cgaId)
-        callerContext = context
-        callerActivity = activity
 
         Log.i(TAG, "Syncing now!")
-        updateOrders(context)
+        updateOrders(context, activity)
         Log.i(TAG, "Done uploading, now downloading")
 
     }
 
-    private fun updateOrders(context: Context) {
+    private fun updateOrders(context: Context, activity: Activity) {
         runBlocking {
             val updateOrders = getUpdateOrders(context)
             for (order in updateOrders) {
                 updateSingleOrder(context, order)
             }
         }
-        downloadOrders(context)
+        downloadOrders(context, activity)
         Log.i(TAG, "Done syncing!")
     }
 
@@ -77,7 +73,7 @@ object OrderSync: Synchronizer(), CoroutineScope {
         AppDatabase.getDatabase(context).orderDao().getAllBySyncState(SYNC_EDIT)
     }
 
-    private fun downloadOrders(context: Context) {
+    private fun downloadOrders(context: Context, activity: Activity) {
         numInProgress++
         val requestBody = FormBody.Builder().add("cgaId", mCgaId)
                 .build()
@@ -95,8 +91,8 @@ object OrderSync: Synchronizer(), CoroutineScope {
                     orders = gson.fromJson(body, object : TypeToken<List<Order>>() {}.type)
                 } catch (e: Exception) {
                     Log.d("OrderSync", "Caught exception")
-                    callerActivity.runOnUiThread {
-                        Toast.makeText(callerContext,"Please try again later. There may be unexpected behavior until a sync is complete.", Toast.LENGTH_LONG).show()
+                    activity.runOnUiThread {
+                        Toast.makeText(context,"Please try again later. There may be unexpected behavior until a sync is complete.", Toast.LENGTH_LONG).show()
                     }
                 }
 

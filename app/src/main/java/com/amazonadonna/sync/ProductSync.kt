@@ -27,17 +27,12 @@ object ProductSync: Synchronizer(), CoroutineScope {
     private val editItemURL = App.BACKEND_BASE_URL + "/item/editItem"
     private val listAllItemsURL = App.BACKEND_BASE_URL + "/item/listAllForArtisan"
     private val deleteItemURL = App.BACKEND_BASE_URL + "/item/delete"
-    private lateinit var callerContext: Context
-    private lateinit var callerActivity: Activity
 
     fun sync(context: Context, activity: Activity, cgaId: String) {
         super.sync(context, cgaId)
 
-        callerContext = context
-        callerActivity = activity
-
         Log.i(TAG, "Syncing now!")
-        uploadProducts(context)
+        uploadProducts(context, activity)
 
     }
 
@@ -45,7 +40,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
         throw NotImplementedError()
     }
 
-    private fun uploadProducts(context: Context) {
+    private fun uploadProducts(context: Context, activity: Activity) {
         numInProgress++
         //Thread.sleep(5000)
         runBlocking {
@@ -65,23 +60,23 @@ object ProductSync: Synchronizer(), CoroutineScope {
         }
         Log.i(TAG, "Done uploading, now downloading")
         runBlocking {
-            downloadProducts(context)
+            downloadProducts(context, activity)
         }
         Log.i(TAG, "Done syncing!")
         numInProgress--
     }
 
-    private fun downloadProducts(context: Context) {
+    private fun downloadProducts(context: Context, activity: Activity) {
         numInProgress++
         runBlocking {
             var artisans = getAllArtisans(context)
 
             deleteAllProducts(context)
             for (artisan in artisans) {
-                downloadProductsForArtisan(context, artisan)
+                downloadProductsForArtisan(context, activity, artisan)
             }
 
-            OrderSync.sync(context, callerActivity, ArtisanSync.mCgaId)
+            OrderSync.sync(context, activity, ArtisanSync.mCgaId)
         }
         numInProgress--
     }
@@ -151,7 +146,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
         AppDatabase.getDatabase(context).productDao().update(product)
     }
 
-    private fun downloadProductsForArtisan(context: Context, artisan : Artisan) {
+    private fun downloadProductsForArtisan(context: Context, activity: Activity, artisan : Artisan) {
         numInProgress++
         val client = OkHttpClient()
 
@@ -175,8 +170,8 @@ object ProductSync: Synchronizer(), CoroutineScope {
                     products = gson.fromJson(body, object : TypeToken<List<Product>>() {}.type)
                 } catch (e: Exception) {
                     Log.d("ProductSync", "Caught exception")
-                    callerActivity.runOnUiThread {
-                        Toast.makeText(callerContext,"Please try again later. There may be unexpected behavior until a sync is complete.", Toast.LENGTH_LONG).show()
+                    activity.runOnUiThread {
+                        Toast.makeText(context,"Please try again later. There may be unexpected behavior until a sync is complete.", Toast.LENGTH_LONG).show()
                     }
                 }
 

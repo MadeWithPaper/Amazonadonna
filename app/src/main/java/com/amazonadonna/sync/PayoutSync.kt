@@ -21,34 +21,30 @@ object PayoutSync : Synchronizer(), CoroutineScope {
     private val payoutHistory = App.BACKEND_BASE_URL + "/payout/add"
     private val payoutSignatureURL = App.BACKEND_BASE_URL + "/payout/updateImage"
     private val cgaPayoutsURL = App.BACKEND_BASE_URL + "/payout/listAllForCga"
-    private lateinit var callerContext: Context
-    private lateinit var callerActivity: Activity
     private const val TAG = "PayoutSync"
 
     fun sync(context: Context, activity: Activity, cgaId: String) {
         super.sync(context, cgaId)
-        callerActivity = activity
-        callerContext = context
 
         Log.i(TAG, "Syncing now!")
-        uploadNewPayouts(context)
+        uploadNewPayouts(context, activity)
     }
 
     override fun syncArtisanMode(context: Context, artisanId: String) {
         throw NotImplementedError()
     }
 
-    private fun uploadNewPayouts(context : Context) {
+    private fun uploadNewPayouts(context : Context, activity: Activity) {
         runBlocking {
             val newPayouts = getNewPayouts(context)
             for (payout in newPayouts) {
                 uploadSinglePayout(context, payout)
             }
         }
-        downloadPayouts(context)
+        downloadPayouts(context, activity)
     }
 
-    private fun downloadPayouts(context : Context) {
+    private fun downloadPayouts(context : Context, activity : Activity) {
         numInProgress++
         val requestBody = FormBody.Builder().add("cgaId", mCgaId)
                 .build()
@@ -74,8 +70,8 @@ object PayoutSync : Synchronizer(), CoroutineScope {
                     payouts = gson.fromJson(body, object : TypeToken<List<Payout>>() {}.type)
                 } catch (e: Exception) {
                     Log.d("PayoutSync", "Caught exception")
-                    callerActivity.runOnUiThread {
-                        Toast.makeText(callerContext,"Please try again later. There may be unexpected behavior until a sync is complete.", Toast.LENGTH_LONG).show()
+                    activity.runOnUiThread {
+                        Toast.makeText(context,"Please try again later. There may be unexpected behavior until a sync is complete.", Toast.LENGTH_LONG).show()
                     }
                 }
 

@@ -26,13 +26,9 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
     private val editArtisanURL = App.BACKEND_BASE_URL + "/artisan/edit"
     private val updateArtisanURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
     private val deleteArtisanURL = App.BACKEND_BASE_URL + "/artisan/delete"
-    private lateinit var callerContext: Context
-    private lateinit var callerActivity: Activity
 
     fun sync(context: Context, activity: Activity, cgaId: String) {
         super.sync(context, cgaId)
-        callerActivity = activity
-        callerContext = context
 
         Log.i("ArtisanSync", "Syncing now!")
         numInProgress = 1
@@ -42,7 +38,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
             PayoutSync.sync(context, activity, cgaId)
         }
 
-        uploadNewArtisans(context)
+        uploadNewArtisans(context, activity)
        /* Log.i("ArtisanSync", "Done uploading, now downloading")
         downloadArtisans(context)
         Log.i("ArtisanSync", "Done syncing!")*/
@@ -57,7 +53,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
         throw NotImplementedError()
     }
 
-    private fun uploadNewArtisans(context : Context) {
+    private fun uploadNewArtisans(context : Context, activity: Activity) {
         runBlocking {
             val newArtisans = getNewArtisans(context)
             for (artisan in newArtisans) {
@@ -73,12 +69,12 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 deleteSingleArtisan(context, artisan)
             }
             Log.i("ArtisanSync", "Done uploading, now downloading")
-            downloadArtisans(context)
+            downloadArtisans(context, activity)
             Log.i("ArtisanSync", "Done syncing!")
         }
     }
 
-    private fun downloadArtisans(context : Context) {
+    private fun downloadArtisans(context : Context, activity: Activity) {
         numInProgress++
         val requestBody = FormBody.Builder().add("cgaId", mCgaId)
                 .build()
@@ -105,10 +101,9 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                     artisans = gson.fromJson(body, object : TypeToken<List<Artisan>>() {}.type)
                 } catch (e: Exception) {
                     Log.d("ArtisanSync", "Caught exception")
-                    callerActivity.runOnUiThread {
-                        Toast.makeText(callerContext,"Please try again later. There may be unexpected behavior until a sync is complete.",Toast.LENGTH_LONG).show()
+                    activity.runOnUiThread {
+                        Toast.makeText(context,"Please try again later. There may be unexpected behavior until a sync is complete.",Toast.LENGTH_LONG).show()
                     }
-
                 }
 
                 for (artisan in artisans) {
@@ -124,7 +119,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 Log.i("ArtisanSync", "Successfully synced Artisan data")
 
                 runBlocking {
-                    ProductSync.sync(context, callerActivity, mCgaId)
+                    ProductSync.sync(context, activity, mCgaId)
                 }
                 numInProgress--
             }
