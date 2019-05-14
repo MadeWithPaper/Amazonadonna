@@ -1,6 +1,8 @@
 package com.amazonadonna.sync
 
+import android.app.Activity
 import android.content.Context
+import android.widget.Toast
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.database.ImageStorageProvider
@@ -12,6 +14,7 @@ import okhttp3.*
 import java.io.File
 import java.io.IOException
 import android.graphics.BitmapFactory
+import androidx.appcompat.app.AlertDialog
 import com.amazonadonna.model.App
 
 
@@ -24,7 +27,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
     private val updateArtisanURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
     private val deleteArtisanURL = App.BACKEND_BASE_URL + "/artisan/delete"
 
-    override fun sync(context: Context, cgaId: String) {
+    fun sync(context: Context, activity: Activity, cgaId: String) {
         super.sync(context, cgaId)
 
         Log.i("ArtisanSync", "Syncing now!")
@@ -32,21 +35,25 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
         Log.i("ArtisanSync", numInProgress.toString())
 
         runBlocking {
-            PayoutSync.sync(context, cgaId)
+            PayoutSync.sync(context, activity, cgaId)
         }
 
-        uploadNewArtisans(context)
+        uploadNewArtisans(context, activity)
        /* Log.i("ArtisanSync", "Done uploading, now downloading")
         downloadArtisans(context)
         Log.i("ArtisanSync", "Done syncing!")*/
 
-        /*ProductSync.sync(context, cgaId)
-        OrderSync.sync(context, cgaId)*/
+        /*ProductSync.sync(context, activity, cgaId)
+        OrderSync.sync(context, activity, cgaId)*/
         Log.i("ArtisanSync", numInProgress.toString())
         numInProgress--
     }
 
-    private fun uploadNewArtisans(context : Context) {
+    override fun syncArtisanMode(context: Context, artisanId: String) {
+        throw NotImplementedError()
+    }
+
+    private fun uploadNewArtisans(context : Context, activity: Activity) {
         runBlocking {
             val newArtisans = getNewArtisans(context)
             for (artisan in newArtisans) {
@@ -62,12 +69,12 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 deleteSingleArtisan(context, artisan)
             }
             Log.i("ArtisanSync", "Done uploading, now downloading")
-            downloadArtisans(context)
+            downloadArtisans(context, activity)
             Log.i("ArtisanSync", "Done syncing!")
         }
     }
 
-    private fun downloadArtisans(context : Context) {
+    private fun downloadArtisans(context : Context, activity: Activity) {
         numInProgress++
         val requestBody = FormBody.Builder().add("cgaId", mCgaId)
                 .build()
@@ -83,11 +90,22 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call?, response: Response?) {
+                var alertDialog : AlertDialog
                 val body = response?.body()?.string()
+                var artisans = listOf<Artisan>()
                 Log.i("ListAllArtisan", "response body: " + body)
 
                 val gson = GsonBuilder().create()
-                val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
+
+                try {
+                    artisans = gson.fromJson(body, object : TypeToken<List<Artisan>>() {}.type)
+                } catch (e: Exception) {
+                    Log.d("ArtisanSync", "Caught exception")
+                    activity.runOnUiThread {
+                        Toast.makeText(context,"Please try again later. There may be unexpected behavior until a sync is complete.",Toast.LENGTH_LONG).show()
+                    }
+                }
+
                 for (artisan in artisans) {
                     if(artisan.phoneNumber == null)
                         artisan.phoneNumber = "1234567890"
@@ -101,7 +119,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 Log.i("ArtisanSync", "Successfully synced Artisan data")
 
                 runBlocking {
-                    ProductSync.sync(context, mCgaId)
+                    ProductSync.sync(context, activity, mCgaId)
                 }
                 numInProgress--
             }

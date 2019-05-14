@@ -1,8 +1,10 @@
 package com.amazonadonna.sync
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.util.Log
+import android.widget.Toast
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.database.PictureListTypeConverter
@@ -26,15 +28,19 @@ object ProductSync: Synchronizer(), CoroutineScope {
     private val listAllItemsURL = App.BACKEND_BASE_URL + "/item/listAllForArtisan"
     private val deleteItemURL = App.BACKEND_BASE_URL + "/item/delete"
 
-    override fun sync(context: Context, cgaId: String) {
+    fun sync(context: Context, activity: Activity, cgaId: String) {
         super.sync(context, cgaId)
 
         Log.i(TAG, "Syncing now!")
-        uploadProducts(context)
+        uploadProducts(context, activity)
 
     }
 
-    private fun uploadProducts(context: Context) {
+    override fun syncArtisanMode(context: Context, artisanId: String) {
+        throw NotImplementedError()
+    }
+
+    private fun uploadProducts(context: Context, activity: Activity) {
         numInProgress++
         //Thread.sleep(5000)
         runBlocking {
@@ -54,23 +60,23 @@ object ProductSync: Synchronizer(), CoroutineScope {
         }
         Log.i(TAG, "Done uploading, now downloading")
         runBlocking {
-            downloadProducts(context)
+            downloadProducts(context, activity)
         }
         Log.i(TAG, "Done syncing!")
         numInProgress--
     }
 
-    private fun downloadProducts(context: Context) {
+    private fun downloadProducts(context: Context, activity: Activity) {
         numInProgress++
         runBlocking {
             var artisans = getAllArtisans(context)
 
             deleteAllProducts(context)
             for (artisan in artisans) {
-                downloadProductsForArtisan(context, artisan)
+                downloadProductsForArtisan(context, activity, artisan)
             }
 
-            OrderSync.sync(context, ArtisanSync.mCgaId)
+            OrderSync.sync(context, activity, ArtisanSync.mCgaId)
         }
         numInProgress--
     }
@@ -140,7 +146,7 @@ object ProductSync: Synchronizer(), CoroutineScope {
         AppDatabase.getDatabase(context).productDao().update(product)
     }
 
-    private fun downloadProductsForArtisan(context: Context, artisan : Artisan) {
+    private fun downloadProductsForArtisan(context: Context, activity: Activity, artisan : Artisan) {
         numInProgress++
         val client = OkHttpClient()
 
@@ -155,11 +161,20 @@ object ProductSync: Synchronizer(), CoroutineScope {
 
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
+                var products = listOf<Product>()
                 val body = response?.body()?.string()
                 Log.i("ArtisanItemList", body)
                 val gson = GsonBuilder().create()
 
-                val products : List<Product> = gson.fromJson(body,  object : TypeToken<List<Product>>() {}.type)
+                try {
+                    products = gson.fromJson(body, object : TypeToken<List<Product>>() {}.type)
+                } catch (e: Exception) {
+                    Log.d("ProductSync", "Caught exception")
+                    activity.runOnUiThread {
+                        Toast.makeText(context,"Please try again later. There may be unexpected behavior until a sync is complete.", Toast.LENGTH_LONG).show()
+                    }
+                }
+
                 for (product in products) {
                     product.pictureURLs = Array(PictureListTypeConverter.NUM_PICS, { i -> "undefined"})
                     product.pictureURLs[0] = product.pic0URL

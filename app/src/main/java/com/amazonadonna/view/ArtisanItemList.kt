@@ -206,40 +206,6 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
     //TODO GET request to query for all items associated to selected artisan
     //TODO need search bar
 
-    private fun fetchJSON() {
-        val client = OkHttpClient()
-
-        val requestBody = FormBody.Builder().add("artisanId", App.currentArtisan.artisanId).build()
-
-
-        val request = Request.Builder()
-                .url(listAllItemsURL)
-                .post(requestBody)
-                .build()
-
-        client.newCall(request).enqueue(object: Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                Log.i("ArtisanItemList", body)
-                val gson = GsonBuilder().create()
-                //val artisans : List<com.amazonadonna.model.Artisan> =  gson.fromJson(body, mutableListOf<com.amazonadonna.model.Artisan>().javaClass)
-                //System.out.print(artisans.get(0))
-                val products : List<Product> = gson.fromJson(body,  object : TypeToken<List<Product>>() {}.type)
-                originalItems.addAll(products)
-                oldFilteredItems.addAll(products)
-                filteredItems.addAll(products)
-
-                runOnUiThread {
-                    artisanItemList_recyclerView.adapter = ListItemsAdapter(applicationContext, oldFilteredItems)
-                }
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("ArtisanItemList", "failed to do POST request to database")
-            }
-        })
-    }
-
     inner class PostsDiffUtilCallback(private val oldList: List<Product>, private val newList: List<Product>) : DiffUtil.Callback() {
         override fun getOldListSize() = oldList.size
 

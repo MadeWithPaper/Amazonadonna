@@ -116,44 +116,6 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor>, CoroutineScope 
         AppDatabase.getDatabase(application).orderDao().getAll() as List<Order>
     }
 
-    private fun fetchJSON() {
-        val requestBody = FormBody.Builder().add("cgaId", cgaId)
-                .build()
-        val request = Request.Builder().url(listOrderURL).post(requestBody).build()
-        val db = Room.databaseBuilder(
-                applicationContext,
-                AppDatabase::class.java, "amazonadonna-main"
-        ).fallbackToDestructiveMigration().build()
-        val artisanDao = db.artisanDao()
-
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object: Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-
-                Log.d("ListOrders", body)
-                println(body)
-                val gson = GsonBuilder().create()
-                val orders : List<Order> = gson.fromJson(body,  object : TypeToken<List<Order>>() {}.type)
-                originalOrders.addAll(orders)
-                oldFilteredOrders.addAll(orders)
-                filteredOrders.addAll(orders)
-
-//                artisanDao.insertAll(orders)
-                Log.d("ListOrders", "worked")
-                runOnUiThread {
-                    recyclerView_listOrders.adapter = ListOrdersAdapter(applicationContext, oldFilteredOrders)
-                }
-
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                println("Failed to execute request")
-                Log.e("ListOrders", "Failed to execute GET request to " + listOrderURL)
-            }
-        })
-    }
-
     override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<Cursor> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

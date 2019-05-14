@@ -1,13 +1,17 @@
 package com.amazonadonna.sync
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.util.Log
+import android.widget.Toast
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Payout
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.*
 import okhttp3.*
 import java.io.File
@@ -16,22 +20,72 @@ import java.io.IOException
 object PayoutSync : Synchronizer(), CoroutineScope {
     private val payoutHistory = App.BACKEND_BASE_URL + "/payout/add"
     private val payoutSignatureURL = App.BACKEND_BASE_URL + "/payout/updateImage"
+    private val cgaPayoutsURL = App.BACKEND_BASE_URL + "/payout/listAllForCga"
     private const val TAG = "PayoutSync"
 
-    override fun sync(context: Context, cgaId: String) {
+    fun sync(context: Context, activity: Activity, cgaId: String) {
         super.sync(context, cgaId)
 
         Log.i(TAG, "Syncing now!")
-        uploadNewPayouts(context)
+        uploadNewPayouts(context, activity)
     }
 
-    private fun uploadNewPayouts(context : Context) {
-        launch {
+    override fun syncArtisanMode(context: Context, artisanId: String) {
+        throw NotImplementedError()
+    }
+
+    private fun uploadNewPayouts(context : Context, activity: Activity) {
+        runBlocking {
             val newPayouts = getNewPayouts(context)
             for (payout in newPayouts) {
                 uploadSinglePayout(context, payout)
             }
         }
+        downloadPayouts(context, activity)
+    }
+
+    private fun downloadPayouts(context : Context, activity : Activity) {
+        numInProgress++
+        val requestBody = FormBody.Builder().add("cgaId", mCgaId)
+                .build()
+
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+                .url(cgaPayoutsURL)
+                .post(requestBody)
+                .build()
+
+        val payoutDao = AppDatabase.getDatabase(context).payoutDao()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()?.string()
+                var payouts = listOf<Payout>()
+                Log.i("PayoutSync", "response body: " + body)
+
+                val gson = GsonBuilder().create()
+
+                try {
+                    payouts = gson.fromJson(body, object : TypeToken<List<Payout>>() {}.type)
+                } catch (e: Exception) {
+                    Log.d("PayoutSync", "Caught exception")
+                    activity.runOnUiThread {
+                        Toast.makeText(context,"Please try again later. There may be unexpected behavior until a sync is complete.", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                payoutDao.deleteAll()
+                payoutDao.insertAll(payouts)
+
+                numInProgress--
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.e("PayoutSync", "failed to do POST request to database" + cgaPayoutsURL)
+                numInProgress--
+            }
+        })
     }
 
     fun addPayout(context : Context, payout : Payout, artisan : Artisan, photoFile: File? = null) {

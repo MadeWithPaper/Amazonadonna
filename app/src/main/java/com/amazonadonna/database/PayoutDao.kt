@@ -11,10 +11,10 @@ interface PayoutDao {
     @Query("SELECT * FROM payout WHERE synced = (:syncState)")
     fun getAllBySyncState(syncState: Int): List<Payout>
 
-    @Query("SELECT * FROM payout WHERE artisanId = (:artisanId) ORDER BY date")
+    @Query("SELECT * FROM payout WHERE artisanId = (:artisanId) ORDER BY date DESC")
     fun getAllByArtisanId(artisanId: String): List<Payout>
 
-    @Query("SELECT * FROM payout WHERE artisanId IN (:artisanIds) ORDER BY date")
+    @Query("SELECT * FROM payout WHERE artisanId IN (:artisanIds) ORDER BY date DESC")
     fun getAllByMultipleArtisanId(artisanIds: List<String>): List<Payout>
 
     @Query("SELECT * FROM payout WHERE payoutId IN (:payoutIds)")

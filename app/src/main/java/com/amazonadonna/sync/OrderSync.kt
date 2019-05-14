@@ -1,7 +1,9 @@
 package com.amazonadonna.sync
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.database.PictureListTypeConverter
 import com.amazonadonna.model.App
@@ -19,23 +21,23 @@ object OrderSync: Synchronizer(), CoroutineScope {
     private val getItemURL = App.BACKEND_BASE_URL + "/order/getItems"
     private val editOrderURL = App.BACKEND_BASE_URL + "/order/setShippedStatus"
 
-    override fun sync(context: Context, cgaId: String) {
+    fun sync(context: Context, activity: Activity, cgaId: String) {
         super.sync(context, cgaId)
 
         Log.i(TAG, "Syncing now!")
-        updateOrders(context)
+        updateOrders(context, activity)
         Log.i(TAG, "Done uploading, now downloading")
 
     }
 
-    private fun updateOrders(context: Context) {
+    private fun updateOrders(context: Context, activity: Activity) {
         runBlocking {
             val updateOrders = getUpdateOrders(context)
             for (order in updateOrders) {
                 updateSingleOrder(context, order)
             }
         }
-        downloadOrders(context)
+        downloadOrders(context, activity)
         Log.i(TAG, "Done syncing!")
     }
 
@@ -71,7 +73,7 @@ object OrderSync: Synchronizer(), CoroutineScope {
         AppDatabase.getDatabase(context).orderDao().getAllBySyncState(SYNC_EDIT)
     }
 
-    private fun downloadOrders(context: Context) {
+    private fun downloadOrders(context: Context, activity: Activity) {
         numInProgress++
         val requestBody = FormBody.Builder().add("cgaId", mCgaId)
                 .build()
@@ -81,9 +83,18 @@ object OrderSync: Synchronizer(), CoroutineScope {
         val client = OkHttpClient()
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
+                var orders = listOf<Order>()
                 val body = response?.body()?.string()
                 val gson = GsonBuilder().create()
-                val orders : List<Order> = gson.fromJson(body,  object : TypeToken<List<Order>>() {}.type)
+
+                try {
+                    orders = gson.fromJson(body, object : TypeToken<List<Order>>() {}.type)
+                } catch (e: Exception) {
+                    Log.d("OrderSync", "Caught exception")
+                    activity.runOnUiThread {
+                        Toast.makeText(context,"Please try again later. There may be unexpected behavior until a sync is complete.", Toast.LENGTH_LONG).show()
+                    }
+                }
 
                 orderDao.deleteAll()
                 for (order in orders) {

@@ -54,7 +54,7 @@ class HomeScreen : AppCompatActivity() {
             //To change body of created functions use File | Settings | File Templates.
             Log.d("HomeScreen", "no work")
             //TODO remove after testing if error it should not fetch
-            ArtisanSync.sync(applicationContext, cgaID)
+            ArtisanSync.sync(applicationContext, this@HomeScreen, cgaID)
         }
     }
 
@@ -76,7 +76,7 @@ class HomeScreen : AppCompatActivity() {
                 Log.i("HomeScreen", "loading start, show dialog")
             }
 
-            ArtisanSync.sync(applicationContext, cgaID)
+            ArtisanSync.sync(applicationContext,this@HomeScreen, cgaID)
             fetchJSONCGA()
             Log.d("HomeScreen", cgaID)
 
@@ -88,7 +88,8 @@ class HomeScreen : AppCompatActivity() {
             Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
 
             // Perform one more data fetch to ensure data integrity is good
-            ArtisanSync.sync(applicationContext, cgaID)
+            ArtisanSync.sync(applicationContext,this@HomeScreen, cgaID)
+
             do {
                 sleep(500)
             } while (ArtisanSync.inProgress())
