@@ -279,6 +279,94 @@ router.post('/getItems', (req: Request, res: Response) => {
     })
 })
 
+router.post('/getItemsForArtisan', (req: Request, res: Response) => {
+    if (req.body.artisanId === undefined) {
+        const msg = 'Must provide artisanId in order/getItemsForArtisan'
+        console.log(msg)
+        res.status(400).send(msg)
+    } else {
+        const artisanId = req.body.artisanId
+        const getParamsFromItems: aws.DynamoDB.Types.QueryInput = {
+            TableName: 'orderItem',
+            IndexName: 'orderId-index',
+            KeyConditionExpression: 'orderId = :id',
+            ExpressionAttributeValues: {
+                ':id': { S: req.body.orderId }
+            }
+        }
+        ddb.query(getParamsFromItems, (err, data) => {
+            if (err) {
+                console.log(
+                    'Error fetching orderItem in order/getItems: ' + err
+                )
+                res.status(400).send(
+                    'Error fetching orderItem in order/getItems: ' + err.message
+                )
+            } else {
+                const convert = unmarshUtil(data.Items)
+                Promise.all(convert).then((items: OrderItem[]) => {
+                    const queryItems = items.map(item => {
+                        return new Promise(resolve => {
+                            const getItemParams: aws.DynamoDB.Types.GetItemInput = {
+                                TableName: 'item',
+                                Key: { itemId: { S: item.itemId } }
+                            }
+                            ddb.getItem(
+                                getItemParams,
+                                (
+                                    getItemErr,
+                                    getItemData: aws.DynamoDB.Types.GetItemOutput
+                                ) => {
+                                    if (getItemErr) {
+                                        console.log(
+                                            'Error fetching items in order/getItems/getItem: ' +
+                                                getItemErr
+                                        )
+                                        res.status(400).send(
+                                            'Error fetching items in order/getItems/getItem: ' +
+                                                getItemErr.message
+                                        )
+                                    } else {
+                                        resolve(getItemData)
+                                    }
+                                }
+                            )
+                        })
+                    })
+                    Promise.all(queryItems).then(
+                        (marshallItems: aws.DynamoDB.Types.GetItemOutput[]) => {
+                            const convertItems = marshallItems.map(
+                                marshallItem => {
+                                    return new Promise(resolve => {
+                                        const unmarshedItem = aws.DynamoDB.Converter.unmarshall(
+                                            marshallItem.Item
+                                        )
+                                        if (
+                                            unmarshedItem.artisanId ===
+                                            artisanId
+                                        ) {
+                                            resolve(unmarshedItem)
+                                        } else {
+                                            resolve({})
+                                        }
+                                    })
+                                }
+                            )
+                            Promise.all(convertItems).then(itemData => {
+                                res.json(
+                                    itemData.filter(
+                                        value => Object.keys(value).length !== 0
+                                    )
+                                )
+                            })
+                        }
+                    )
+                })
+            }
+        })
+    }
+})
+
 router.post('/setShippedStatus', (req: Request, res: Response) => {
     const shippedBool = req.body.shippedStatus === 'true'
     const negShippedBool = req.body.shippedStatus === 'false'
