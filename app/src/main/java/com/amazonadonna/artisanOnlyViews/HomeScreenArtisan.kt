@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.room.Room
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
+import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.view.ArtisanItemList
 import com.amazonadonna.view.ListOrders
 import com.amazonadonna.view.R
@@ -21,6 +23,7 @@ import java.io.IOException
 
 class HomeScreenArtisan : AppCompatActivity() {
     private val getArtisanUrl = App.BACKEND_BASE_URL + "/artisan/getById"
+    private lateinit var alertDialog : AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +36,12 @@ class HomeScreenArtisan : AppCompatActivity() {
         App.currentArtisan = testArtisan
 
         val extras = intent.extras
+
         if (extras != null) {
-            fetchJSONArtisan(extras.getString("artisanID"))
+            //TODO: Use actual artisan id once login is returning that correctly
+            fetchJSONArtisan(testArtisan.artisanId)
+            //fetchJSONArtisan(extras.getString("artisanID"))
         } else {
-            //TODO fetch for artisan?
             artisanNameTV.text = testArtisan.artisanName
         }
 
@@ -60,10 +65,6 @@ class HomeScreenArtisan : AppCompatActivity() {
     private fun fetchJSONArtisan(artisanID: String) {
         val requestBody = FormBody.Builder().add("artisanId", artisanID)
                 .build()
-        val db = Room.databaseBuilder(
-                applicationContext,
-                AppDatabase::class.java, "amazonadonna-main"
-        ).fallbackToDestructiveMigration().build()
         val client = OkHttpClient()
         val request = Request.Builder()
                 .url(getArtisanUrl)
@@ -84,18 +85,67 @@ class HomeScreenArtisan : AppCompatActivity() {
                 try { // In here, might need to set artisanNameTV.text = artisan.artisanName
                     val artisan: Artisan = gson.fromJson(body, object : TypeToken<Artisan>() {}.type)
                     App.currentArtisan = artisan
+
                 } catch(e: Exception) {
                     Log.d("HomeScreenArtisan", "Caught exception")
                     runOnUiThread {
-                        Toast.makeText(this@HomeScreenArtisan,"Error getting user information", Toast.LENGTH_LONG).show()
+                        //Toast.makeText(this@HomeScreenArtisan,"Error getting user information", Toast.LENGTH_LONG).show()
                     }
                 }
+
+                AppDatabase.getDatabase(applicationContext).artisanDao().insert(App.currentArtisan)
+                artisanNameTV.text = App.currentArtisan.artisanName
+                syncData()
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("HomeScreenArtisan", "failed to do POST request to database" + getArtisanUrl)
             }
         })
+    }
+
+    fun syncData() {
+        if (ArtisanSync.hasInternet(applicationContext)) {
+            runOnUiThread {
+                alertDialog = AlertDialog.Builder(this@HomeScreenArtisan).create()
+                alertDialog.setTitle("Synchronizing Account")
+                alertDialog.setMessage("Please wait while your account data is synchronized, this may take a few minutes...")
+                alertDialog.setCanceledOnTouchOutside(false)
+                alertDialog.show()
+                Log.i("HomeScreen", "loading start, show dialog")
+            }
+
+            //ArtisanSync.resetLocalDB(applicationContext)
+
+            ArtisanSync.syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
+
+            // Wait for sync to finish
+            do {
+                Thread.sleep(1000)
+            } while (ArtisanSync.inProgress())
+
+            Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
+
+            // Perform one more data fetch to ensure data integrity is good
+            ArtisanSync.syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
+
+            do {
+                Thread.sleep(500)
+            } while (ArtisanSync.inProgress())
+
+            runOnUiThread {
+                Log.i("HomeScreen", "end of loading alert dialog dismiss")
+                alertDialog.dismiss()
+            }
+        }
+        else {
+            runOnUiThread {
+                alertDialog = AlertDialog.Builder(this@HomeScreenArtisan).create()
+                alertDialog.setTitle("Error Synchronizing Account")
+                alertDialog.setMessage("No internet connection active. You may attempt to resync your account on the Settings page when internet is available.")
+                alertDialog.show()
+            }
+        }
     }
 
     private fun openArtisanProfile(artisan: Artisan){

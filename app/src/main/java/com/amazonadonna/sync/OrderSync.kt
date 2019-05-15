@@ -18,26 +18,40 @@ import java.io.IOException
 object OrderSync: Synchronizer(), CoroutineScope {
     private const val TAG = "OrderSync"
     private val listOrderURL = App.BACKEND_BASE_URL + "/order/listAllForCga"
+    private val listOrderForArtisanURL = App.BACKEND_BASE_URL + "/order/listAllForArtisan"
     private val getItemURL = App.BACKEND_BASE_URL + "/order/getItems"
+    private val getItemForArtisanURL = App.BACKEND_BASE_URL + "/order/getItemsForArtisan"
     private val editOrderURL = App.BACKEND_BASE_URL + "/order/setShippedStatus"
 
-    fun sync(context: Context, activity: Activity, cgaId: String) {
-        super.sync(context, cgaId)
+    override fun sync(context: Context, activity: Activity, cgaId: String) {
+        super.sync(context, activity, cgaId)
 
         Log.i(TAG, "Syncing now!")
-        updateOrders(context, activity)
+        updateOrders(context, activity, false)
         Log.i(TAG, "Done uploading, now downloading")
 
     }
 
-    private fun updateOrders(context: Context, activity: Activity) {
+    override fun syncArtisanMode(context: Context, activity: Activity, artisanId: String) {
+        super.syncArtisanMode(context, activity, artisanId)
+
+        Log.i(TAG, "Syncing now!")
+        updateOrders(context, activity, true)
+        Log.i(TAG, "Done uploading, now downloading")
+
+    }
+
+    private fun updateOrders(context: Context, activity: Activity, artisanMode: Boolean) {
         runBlocking {
             val updateOrders = getUpdateOrders(context)
             for (order in updateOrders) {
                 updateSingleOrder(context, order)
             }
         }
-        downloadOrders(context, activity)
+        if (artisanMode)
+            downloadOrdersForArtisan(context, activity)
+        else
+            downloadOrders(context, activity)
         Log.i(TAG, "Done syncing!")
     }
 
@@ -111,6 +125,44 @@ object OrderSync: Synchronizer(), CoroutineScope {
         })
     }
 
+    private fun downloadOrdersForArtisan(context: Context, activity: Activity) {
+        numInProgress++
+        val requestBody = FormBody.Builder().add("artisanId", mArtisanId)
+                .build()
+        val request = Request.Builder().url(listOrderForArtisanURL).post(requestBody).build()
+        val orderDao = AppDatabase.getDatabase(context).orderDao()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object: Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                var orders = listOf<Order>()
+                val body = response?.body()?.string()
+                val gson = GsonBuilder().create()
+
+                try {
+                    orders = gson.fromJson(body, object : TypeToken<List<Order>>() {}.type)
+                } catch (e: Exception) {
+                    Log.d("OrderSync", "Caught exception")
+                    activity.runOnUiThread {
+                        Toast.makeText(context,"Please try again later. There may be unexpected behavior until a sync is complete.", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                orderDao.deleteAll()
+                for (order in orders) {
+                    getItemsForOrderArtisan(order, context)
+                }
+                numInProgress--
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                println("Failed to execute request")
+                Log.e(TAG, "Failed to execute GET request to " + listOrderForArtisanURL)
+                numInProgress--
+            }
+        })
+    }
+
     fun updateOrder(context : Context, order: Order) {
         job = Job()
         order.synced = SYNC_EDIT
@@ -131,6 +183,48 @@ object OrderSync: Synchronizer(), CoroutineScope {
                 .add("orderId",order.orderId)
                 .build()
         val request = Request.Builder().url(getItemURL).post(requestBody).build()
+        val productDao = AppDatabase.getDatabase(context).productDao()
+        val orderDao = AppDatabase.getDatabase(context).orderDao()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object: Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()?.string()
+
+                //Log.d("ITEMS", body)
+                val gson = GsonBuilder().create()
+
+                if (body != null && !body!!.contains("<title>Error")) {
+                    val products: MutableList<Product> = gson.fromJson(body, object : TypeToken<List<Product>>() {}.type)
+                    for (product in products) {
+                        product.pictureURLs = Array(PictureListTypeConverter.NUM_PICS, { i -> "undefined" })
+                        product.pictureURLs[0] = product.pic0URL
+                        product.pictureURLs[1] = product.pic1URL
+                        product.pictureURLs[2] = product.pic2URL
+                        product.pictureURLs[3] = product.pic3URL
+                        product.pictureURLs[4] = product.pic4URL
+                        product.pictureURLs[5] = product.pic5URL
+                    }
+                    order.products = products
+                    orderDao.insert(order)
+                }
+                numInProgress--
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                //println("Failed to execute request")
+                Log.d("ERROR", "Failed to execute GET request to " + getItemURL)
+                numInProgress--
+            }
+        })
+    }
+
+    private fun getItemsForOrderArtisan(order : Order, context: Context) {
+        numInProgress++
+        val requestBody = FormBody.Builder()
+                .add("orderId",order.orderId)
+                .build()
+        val request = Request.Builder().url(getItemForArtisanURL).post(requestBody).build()
         val productDao = AppDatabase.getDatabase(context).productDao()
         val orderDao = AppDatabase.getDatabase(context).orderDao()
 

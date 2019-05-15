@@ -21,14 +21,15 @@ import com.amazonadonna.model.App
 object ArtisanSync: Synchronizer(), CoroutineScope {
     //var cgaId : String = "0"
     private val listAllArtisansURL =  App.BACKEND_BASE_URL + "/artisan/listAllForCga"
+    private val getArtisanURL =  App.BACKEND_BASE_URL + "/artisan/getById"
     private val addArtisanURL = App.BACKEND_BASE_URL + "/artisan/add"
     private val artisanPicURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
     private val editArtisanURL = App.BACKEND_BASE_URL + "/artisan/edit"
     private val updateArtisanURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
     private val deleteArtisanURL = App.BACKEND_BASE_URL + "/artisan/delete"
 
-    fun sync(context: Context, activity: Activity, cgaId: String) {
-        super.sync(context, cgaId)
+    override fun sync(context: Context, activity: Activity, cgaId: String) {
+        super.sync(context, activity, cgaId)
 
         Log.i("ArtisanSync", "Syncing now!")
         numInProgress = 1
@@ -39,18 +40,31 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
         }
 
         uploadNewArtisans(context, activity)
-       /* Log.i("ArtisanSync", "Done uploading, now downloading")
-        downloadArtisans(context)
-        Log.i("ArtisanSync", "Done syncing!")*/
 
-        /*ProductSync.sync(context, activity, cgaId)
-        OrderSync.sync(context, activity, cgaId)*/
         Log.i("ArtisanSync", numInProgress.toString())
         numInProgress--
     }
 
-    override fun syncArtisanMode(context: Context, artisanId: String) {
-        throw NotImplementedError()
+    override fun syncArtisanMode(context: Context, activity: Activity, artisanId: String) {
+        super.syncArtisanMode(context, activity, artisanId)
+
+        Log.i("ArtisanSync", "Syncing now!")
+        numInProgress = 1
+        Log.i("ArtisanSync", numInProgress.toString())
+
+        runBlocking {
+            PayoutSync.syncArtisanMode(context, activity, mArtisanId)
+        }
+
+        runBlocking {
+            val updateArtisans = getUpdateArtisans(context)
+            for (artisan in updateArtisans) {
+                updateSingleArtisan(context, artisan)
+            }
+            downloadArtisan(context, activity)
+        }
+
+        numInProgress--
     }
 
     private fun uploadNewArtisans(context : Context, activity: Activity) {
@@ -126,6 +140,51 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("ListAllArtisan", "failed to do POST request to database" + listAllArtisansURL)
+                numInProgress--
+            }
+        })
+    }
+
+    private fun downloadArtisan(context : Context, activity: Activity) {
+        numInProgress++
+        val requestBody = FormBody.Builder().add("artisanId", mArtisanId)
+                .build()
+
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+                .url(getArtisanURL)
+                .post(requestBody)
+                .build()
+
+        val artisanDao = AppDatabase.getDatabase(context).artisanDao()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                var artisan: Artisan
+                val body = response?.body()?.string()
+                Log.i("ListAllArtisan", "response body: " + body)
+
+                val gson = GsonBuilder().create()
+
+                artisan = gson.fromJson(body, object : TypeToken<Artisan>() {}.type)
+
+                if(artisan.phoneNumber == null)
+                    artisan.phoneNumber = "1234567890"
+
+                artisanDao.deleteAll()
+                artisanDao.insert(artisan)
+
+                Log.i("ArtisanSync", "Successfully synced Artisan data")
+
+                runBlocking {
+                    ProductSync.syncArtisanMode(context, activity, mArtisanId)
+                }
+                numInProgress--
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.e("ListAllArtisan", "failed to do POST request to database" + getArtisanURL)
                 numInProgress--
             }
         })
