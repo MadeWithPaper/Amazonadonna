@@ -68,7 +68,9 @@ class LoginScreen : AppCompatActivity() {
                 var idToken = userSession?.idToken?.jwtToken
                 Log.d("LoginScreen", idToken)
                 // go to home screen
+
                 val intent =  Intent(this@LoginScreen, HomeScreenArtisan::class.java)
+                intent.putExtra("artisanID", idToken)
                 startActivity(intent)
             }
 
