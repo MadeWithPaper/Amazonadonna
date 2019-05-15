@@ -426,4 +426,166 @@ function sendText(phoneNumber: string, orderId: string) {
     })
 }
 
+router.post('/tryUpdate', (req: Request, res: Response) => {
+    const getCgaParams: aws.DynamoDB.Types.GetItemInput = {
+        TableName: 'cga',
+        Key: { cgaId: { S: req.body.amznId } }
+    }
+
+    ddb.getItem(getCgaParams, (err, data) => {
+        if (err) {
+            const msg = 'Error getting cga in order/tryUpdate: '
+            console.log(msg + err)
+            res.status(400).send(msg + err.message)
+        } else {
+            const cga: Cga = aws.DynamoDB.Converter.unmarshall(data.Item) as Cga
+            if (Date.now() - cga.lastUpdateOrders > 15000) {
+                // test
+                const amazonMws = new MwsApi()
+                amazonMws.setApiKey(cga.mwsKey, cga.mwsSecret)
+                const lastUpdate = new Date(0)
+                lastUpdate.setUTCMilliseconds(cga.lastUpdateOrders)
+
+                const mwsOrdersParams = {
+                    Version: '2013-09-01',
+                    Action: 'ListOrders',
+                    SellerId: cga.mwsSellerId,
+                    MWSAuthToken: cga.mwsAuthToken,
+                    'MarketplaceId.Id.1': 'A1AM78C64UM0Y8', // Amazon.com.mx
+                    CreatedAfter: lastUpdate.toISOString
+                }
+
+                amazonMws.orders.search(mwsOrdersParams).then(
+                    (orders: MwsOrderRes) => {
+                        const ordersToAdd = orders.Orders.map(order => {
+                            return new Promise(resolve => {
+                                const id = uuid.v1()
+                                const params: aws.DynamoDB.PutItemInput = {
+                                    TableName: 'order',
+                                    Item: {
+                                        orderId: { S: id },
+                                        amazonOrderId: {
+                                            S: order.AmazonOrderId
+                                        },
+                                        cgaId: { S: req.body.amznId },
+                                        shippedStatus: {
+                                            BOOL: false
+                                        },
+                                        numItems: {
+                                            N: (
+                                                order.NumberOfItemsShipped +
+                                                order.NumberOfItemsUnshipped
+                                            ).toString()
+                                        },
+                                        shippingAddress: {
+                                            S:
+                                                order.ShippingAddress
+                                                    .AddressLine1
+                                        },
+                                        totalCostDollars: {
+                                            N: order.OrderTotal.Amount.split(
+                                                '.'
+                                            )[0].toString()
+                                        },
+                                        totalCostCents: {
+                                            N: order.OrderTotal.Amount.split(
+                                                '.'
+                                            )[1].toString()
+                                        }
+                                    }
+                                }
+                                ddb.putItem(
+                                    params,
+                                    (addOrderErr, addOrderData) => {
+                                        if (addOrderErr) {
+                                            const msg =
+                                                'Error adding order in order/tryUpdate: '
+                                            console.log(msg + err)
+                                            res.status(400).send(
+                                                msg + err.message
+                                            )
+                                        } else {
+                                            // get items for order
+                                            const mwsOrderItemParams = {
+                                                Version: '2013-09-01',
+                                                Action: 'ListOrderItems',
+                                                SellerId: cga.mwsSellerId,
+                                                MWSAuthToken: cga.mwsAuthToken,
+                                                AmazonOrderId:
+                                                    order.AmazonOrderId
+                                            }
+
+                                            amazonMws.orders
+                                                .search(mwsOrderItemParams)
+                                                .then(
+                                                    items => {
+                                                        // items
+                                                        // go through each and
+                                                        // search our items via
+                                                        // the new indexer for
+                                                        // amazon item id. Then
+                                                        // add an entry in order
+                                                        // item table. Thats it
+                                                        // resolve()
+                                                    },
+                                                    mwsOrderItemErr => {
+                                                        const msg =
+                                                            'Error getting order items from mws in order/tryUpdate: '
+                                                        console.log(
+                                                            msg +
+                                                                mwsOrderItemErr
+                                                        )
+                                                        res.status(400).send(
+                                                            msg +
+                                                                mwsOrderItemErr
+                                                        )
+                                                    }
+                                                )
+                                        }
+                                    }
+                                )
+                            })
+                        })
+                        Promise.all(ordersToAdd).then(() => {
+                            const updateLastUpdateParam: aws.DynamoDB.Types.UpdateItemInput = {
+                                TableName: 'cga',
+                                Key: { cgaId: { S: req.body.amznId } },
+                                UpdateExpression:
+                                    'set lastUpdateOrders = :time',
+                                ExpressionAttributeValues: {
+                                    ':time': { S: Date.now().toString() }
+                                },
+                                ReturnValues: 'UPDATED_NEW'
+                            }
+                            ddb.updateItem(
+                                updateLastUpdateParam,
+                                (updateErr, updateData) => {
+                                    if (updateErr) {
+                                        const msg =
+                                            'Error updating cga lastUpdateOrder in order/tryUpdate: '
+                                        console.log(msg + updateErr)
+                                        res.status(400).send(
+                                            msg + updateErr.message
+                                        )
+                                    } else {
+                                        res.send('Updated!')
+                                    }
+                                }
+                            )
+                        })
+                    },
+                    mwsErr => {
+                        const msg =
+                            'Error getting orders from mws in order/tryUpdate: '
+                        console.log(msg + mwsErr)
+                        res.status(400).send(msg + mwsErr)
+                    }
+                )
+            } else {
+                res.send('Too soon')
+            }
+        }
+    })
+})
+
 export { router as orderRouter }
