@@ -96,6 +96,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                     ) => {
                         const convertOrderItems = orderItemMarshalledItems.map(
                             orderItemMarshalledItem => {
+                                console.log(orderItemMarshalledItem)
                                 return new Promise(resolve => {
                                     const orderItemsConvert = unmarshUtil(
                                         orderItemMarshalledItem.Items
