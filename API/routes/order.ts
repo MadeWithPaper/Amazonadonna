@@ -7,6 +7,7 @@ import { Cga } from '../models/cga'
 import { unmarshUtil } from '../utilities/unmarshall'
 import * as uuid from 'uuid'
 import * as _ from 'lodash'
+import * as MwsApi from 'amazon-mws'
 
 const router = Router()
 
