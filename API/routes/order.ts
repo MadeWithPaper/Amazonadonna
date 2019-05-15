@@ -113,8 +113,8 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                             (orderItems: OrderItem[][]) => {
                                 const queryOrders = orderItems.map(
                                     orderItem => {
+                                        console.log(orderItem)
                                         if (orderItem.length === 1) {
-                                            console.log(orderItem)
                                             const singleOrderItem = orderItem[0]
                                             return new Promise(resolve => {
                                                 const getOrderParams: aws.DynamoDB.Types.GetItemInput = {
