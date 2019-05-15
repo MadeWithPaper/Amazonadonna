@@ -90,7 +90,7 @@
     <string name="add_item_info_shipping_warning">Please Select a Shipping Method.</string>
 
     <!-- Add Item review -->
-    <string name="item_review_usually_ships">Usually shipped within </string>
+    <string name="item_review_usually_ships">Usually fulfilled within </string>
     <string name="number_in_stock">   in Stock</string>
     <string name="item_review_response_dialog_title">Item Listing …</string>
     <string name="item_review_listing_failed">Your item was NOT submitted!</string>
@@ -104,7 +104,7 @@
     <string name="payout_amount_format_error">Please enter a valid amount! </string>
 
     <!-- Product Detail -->
-    <string name="product_detail_usually_ships_in">"Usually shipped within  "</string>
+    <string name="product_detail_usually_ships_in">"Usually fulfilled within  "</string>
 
     <!-- Order List -->
     <string name="order_date">Order Date: </string>
@@ -115,9 +115,9 @@
 
     <!-- Order Screen -->
     <string name="order_id"> </string>
-    <string name="order_shipped">Shipped: </string>
+    <string name="order_fulfilled">Fulfilled: </string>
     <string name="items_listed">Items listed: </string>
-    <string name="update_shipped">Update Shipped Status</string>
+    <string name="update_fulfilled">Update Fulfilled Status</string>
 
     <!-- Payout Signature -->
     <string name="signature_clear_button">Clear</string>

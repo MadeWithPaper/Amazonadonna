@@ -55,7 +55,7 @@
         android:textColor="#000"/>
 
     <TextView
-        android:id="@+id/textView_Shipped"
+        android:id="@+id/textView_Fulfilled"
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginTop="5dp"
@@ -63,15 +63,15 @@
         app:layout_constraintStart_toStartOf="@+id/textView_OrderID"
         android:textSize="18sp"
         android:textColor="#000"
-        android:text="@string/order_shipped"/>
+        android:text="@string/order_fulfilled"/>
 
     <TextView
-        android:id="@+id/textView_Shipped_input"
+        android:id="@+id/textView_Fulfilled_input"
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@+id/textView_Shipped"
-        app:layout_constraintTop_toTopOf="@+id/textView_Shipped"
+        app:layout_constraintStart_toEndOf="@+id/textView_Fulfilled"
+        app:layout_constraintTop_toTopOf="@+id/textView_Fulfilled"
         app:layout_constraintVertical_bias="1.0"
         android:textSize="18sp"/>
 
@@ -80,7 +80,7 @@
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView_Shipped"
+        app:layout_constraintTop_toBottomOf="@+id/textView_Fulfilled"
         app:layout_constraintStart_toStartOf="@+id/textView_OrderID"
         android:textSize="18sp"
         android:textColor="#000"

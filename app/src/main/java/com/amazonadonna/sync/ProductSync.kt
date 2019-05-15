@@ -28,19 +28,21 @@ object ProductSync: Synchronizer(), CoroutineScope {
     private val listAllItemsURL = App.BACKEND_BASE_URL + "/item/listAllForArtisan"
     private val deleteItemURL = App.BACKEND_BASE_URL + "/item/delete"
 
-    fun sync(context: Context, activity: Activity, cgaId: String) {
-        super.sync(context, cgaId)
+    override fun sync(context: Context, activity: Activity, cgaId: String) {
+        super.sync(context, activity, cgaId)
 
         Log.i(TAG, "Syncing now!")
-        uploadProducts(context, activity)
+        uploadProducts(context, activity, false)
 
     }
 
-    override fun syncArtisanMode(context: Context, artisanId: String) {
-        throw NotImplementedError()
+    override fun syncArtisanMode(context: Context, activity: Activity, artisanId: String) {
+        super.syncArtisanMode(context, activity, artisanId)
+
+        uploadProducts(context, activity, true)
     }
 
-    private fun uploadProducts(context: Context, activity: Activity) {
+    private fun uploadProducts(context: Context, activity: Activity,  artisanMode: Boolean) {
         numInProgress++
         //Thread.sleep(5000)
         runBlocking {
@@ -60,13 +62,13 @@ object ProductSync: Synchronizer(), CoroutineScope {
         }
         Log.i(TAG, "Done uploading, now downloading")
         runBlocking {
-            downloadProducts(context, activity)
+            downloadProducts(context, activity, artisanMode)
         }
         Log.i(TAG, "Done syncing!")
         numInProgress--
     }
 
-    private fun downloadProducts(context: Context, activity: Activity) {
+    private fun downloadProducts(context: Context, activity: Activity, artisanMode: Boolean) {
         numInProgress++
         runBlocking {
             var artisans = getAllArtisans(context)
@@ -76,7 +78,10 @@ object ProductSync: Synchronizer(), CoroutineScope {
                 downloadProductsForArtisan(context, activity, artisan)
             }
 
-            OrderSync.sync(context, activity, ArtisanSync.mCgaId)
+            if (artisanMode)
+                OrderSync.syncArtisanMode(context, activity, ArtisanSync.mArtisanId)
+            else
+                OrderSync.sync(context, activity, ArtisanSync.mCgaId)
         }
         numInProgress--
     }

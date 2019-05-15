@@ -150,7 +150,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                                 )
                                             })
                                         } else {
-                                            return null
+                                            return {}
                                         }
                                     }
                                 )
@@ -171,9 +171,14 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                         Promise.all(convertItems).then(
                                             orderData => {
                                                 res.json(
-                                                    _.uniqBy(
-                                                        orderData,
-                                                        'orderId'
+                                                    _.filter(
+                                                        _.uniqBy(
+                                                            orderData,
+                                                            'orderId'
+                                                        ),
+                                                        (o: any) => {
+                                                            return !_.isEmpty(o)
+                                                        }
                                                     )
                                                 )
                                             }
@@ -196,7 +201,7 @@ router.post('/add', (req: Request, res: Response) => {
         Item: {
             orderId: { S: id },
             cgaId: { S: req.body.cgaId },
-            shippedStatus: { BOOL: req.body.shippedStatus },
+            fulfilledStatus: { BOOL: req.body.fulfilledStatus },
             numItems: { N: req.body.numItems },
             shippingAddress: { S: req.body.shippingAddress },
             totalCostDollars: { N: req.body.totalCostDollars },
@@ -282,121 +287,34 @@ router.post('/getItems', (req: Request, res: Response) => {
     })
 })
 
-router.post('/getItemsForArtisan', (req: Request, res: Response) => {
-    if (req.body.artisanId === undefined) {
-        const msg = 'Must provide artisanId in order/getItemsForArtisan'
-        console.log(msg)
-        res.status(400).send(msg)
-    } else {
-        const artisanId = req.body.artisanId
-        const getParamsFromItems: aws.DynamoDB.Types.QueryInput = {
-            TableName: 'orderItem',
-            IndexName: 'orderId-index',
-            KeyConditionExpression: 'orderId = :id',
-            ExpressionAttributeValues: {
-                ':id': { S: req.body.orderId }
-            }
-        }
-        ddb.query(getParamsFromItems, (err, data) => {
-            if (err) {
-                console.log(
-                    'Error fetching orderItem in order/getItems: ' + err
-                )
-                res.status(400).send(
-                    'Error fetching orderItem in order/getItems: ' + err.message
-                )
-            } else {
-                const convert = unmarshUtil(data.Items)
-                Promise.all(convert).then((items: OrderItem[]) => {
-                    const queryItems = items.map(item => {
-                        return new Promise(resolve => {
-                            const getItemParams: aws.DynamoDB.Types.GetItemInput = {
-                                TableName: 'item',
-                                Key: { itemId: { S: item.itemId } }
-                            }
-                            ddb.getItem(
-                                getItemParams,
-                                (
-                                    getItemErr,
-                                    getItemData: aws.DynamoDB.Types.GetItemOutput
-                                ) => {
-                                    if (getItemErr) {
-                                        console.log(
-                                            'Error fetching items in order/getItems/getItem: ' +
-                                                getItemErr
-                                        )
-                                        res.status(400).send(
-                                            'Error fetching items in order/getItems/getItem: ' +
-                                                getItemErr.message
-                                        )
-                                    } else {
-                                        resolve(getItemData)
-                                    }
-                                }
-                            )
-                        })
-                    })
-                    Promise.all(queryItems).then(
-                        (marshallItems: aws.DynamoDB.Types.GetItemOutput[]) => {
-                            const convertItems = marshallItems.map(
-                                marshallItem => {
-                                    return new Promise(resolve => {
-                                        const unmarshedItem = aws.DynamoDB.Converter.unmarshall(
-                                            marshallItem.Item
-                                        )
-                                        if (
-                                            unmarshedItem.artisanId ===
-                                            artisanId
-                                        ) {
-                                            resolve(unmarshedItem)
-                                        } else {
-                                            resolve({})
-                                        }
-                                    })
-                                }
-                            )
-                            Promise.all(convertItems).then(itemData => {
-                                res.json(
-                                    itemData.filter(
-                                        value => Object.keys(value).length !== 0
-                                    )
-                                )
-                            })
-                        }
-                    )
-                })
-            }
-        })
-    }
-})
-
-router.post('/setShippedStatus', (req: Request, res: Response) => {
-    const shippedBool = req.body.shippedStatus === 'true'
-    const negShippedBool = req.body.shippedStatus === 'false'
-    if (!shippedBool && !negShippedBool) {
-        const msg = 'Error updating shipped status in order/setShippedStatus: '
-        const err = 'shippedStatus key is not true or false or is missing'
+router.post('/setFulfilledStatus', (req: Request, res: Response) => {
+    const fulfilledBool = req.body.fulfilledStatus === 'true'
+    const negFulfilledBool = req.body.fulfilledStatus === 'false'
+    if (!fulfilledBool && !negFulfilledBool) {
+        const msg =
+            'Error updating fulfilled status in order/setFulfilledStatus: '
+        const err = 'fulfilledStatus key is not true or false or is missing'
         console.log(msg + err)
         res.status(400).send(msg + err)
     } else {
-        const setShippedStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
+        const setFulfilledStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
             TableName: 'order',
             Key: { orderId: { S: req.body.orderId } },
-            UpdateExpression: 'set shippedStatus = :u',
+            UpdateExpression: 'set fulfilledStatus = :u',
             ExpressionAttributeValues: {
-                ':u': { BOOL: shippedBool }
+                ':u': { BOOL: fulfilledBool }
             },
             ReturnValues: 'UPDATED_NEW',
             ConditionExpression: 'attribute_exists(orderId)'
         }
-        ddb.updateItem(setShippedStatusParams, (err, data) => {
+        ddb.updateItem(setFulfilledStatusParams, (err, data) => {
             if (err) {
                 console.log(
-                    'Error updating shipped status in order/setShippedStatus: ' +
+                    'Error updating fulfilled status in order/setFulfilledStatus: ' +
                         err
                 )
                 res.status(400).send(
-                    'Error updating shipped status in order/setShippedStatus: ' +
+                    'Error updating fulfilled status in order/setFulfilledStatus: ' +
                         err.message
                 )
             } else {

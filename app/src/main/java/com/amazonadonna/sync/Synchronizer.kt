@@ -1,5 +1,6 @@
 package com.amazonadonna.sync
 
+import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
@@ -24,12 +25,12 @@ abstract class Synchronizer : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    open fun sync(context: Context, cgaId: String) {
+    open fun sync(context: Context, activity: Activity, cgaId: String) {
         job = Job()
         mCgaId = cgaId
     }
 
-    open fun syncArtisanMode(context: Context, artisanId: String) {
+    open fun syncArtisanMode(context: Context, activity: Activity, artisanId: String) {
         job = Job()
         mArtisanId = artisanId
     }
