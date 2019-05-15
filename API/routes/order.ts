@@ -8,6 +8,7 @@ import { unmarshUtil } from '../utilities/unmarshall'
 import * as uuid from 'uuid'
 import * as _ from 'lodash'
 import * as MwsApi from 'amazon-mws'
+import { MwsOrderRes } from '../models/mwsOrderRes'
 
 const router = Router()
 
