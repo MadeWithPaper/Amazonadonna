@@ -176,7 +176,9 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                                             orderData,
                                                             'orderId'
                                                         ),
-                                                        _.isEmpty
+                                                        (o: any) => {
+                                                            return !_.isEmpty(o)
+                                                        }
                                                     )
                                                 )
                                             }
