@@ -6,6 +6,7 @@ import * as mime from 'mime'
 import { ddb, s3 } from '../server'
 import { Item } from '../models/item'
 import { unmarshUtil } from '../utilities/unmarshall'
+import { filterActive } from '../utilities/active'
 import * as uuid from 'uuid'
 import * as _ from 'lodash'
 
@@ -35,7 +36,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
         } else {
             const convert = unmarshUtil(data.Items)
             Promise.all(convert).then(items => {
-                res.json(items)
+                res.json(filterActive(items))
             })
         }
     })
@@ -62,7 +63,8 @@ router.post('/add', (req: Request, res: Response) => {
             pic2URL: { S: 'undefined' },
             pic3URL: { S: 'undefined' },
             pic4URL: { S: 'undefined' },
-            pic5URL: { S: 'undefined' }
+            pic5URL: { S: 'undefined' },
+            active: { S: 'true' }
         }
     }
     ddb.putItem(putItemParams, (err, data) => {
@@ -280,19 +282,47 @@ router.post('/editItem', (req: Request, res: Response) => {
 })
 
 router.post('/delete', (req: Request, res: Response) => {
-    const deleteItemParams: aws.DynamoDB.Types.DeleteItemInput = {
+    const getItemParams: aws.DynamoDB.Types.GetItemInput = {
         TableName: 'item',
         Key: { itemId: { S: req.body.itemId } }
     }
-
-    ddb.deleteItem(deleteItemParams, (err, data) => {
+    ddb.getItem(getItemParams, (err, data) => {
         if (err) {
-            console.log('Error fetching items in item/delete: ' + err)
+            console.log('Error getting item in item/delete/getItem: ' + err)
             res.status(400).send(
-                'Error fetching artisans in item/delete: ' + err.message
+                'Error getting item in item/delete/getItem: ' + err.message
             )
         } else {
-            res.send('Success!')
+            const unmarshed = aws.DynamoDB.Converter.unmarshall(data.Item)
+            if (_.isEmpty(unmarshed)) {
+                const msg = 'Error getting item in item/delete/getItem: '
+                const DNEerr = 'Item does not exist'
+                console.log(msg + DNEerr)
+                res.status(400).send(msg + DNEerr)
+            } else {
+                const editItemParams: aws.DynamoDB.Types.UpdateItemInput = {
+                    TableName: 'item',
+                    Key: { itemId: { S: req.body.itemId } },
+                    UpdateExpression: `set active = :active`,
+                    ExpressionAttributeValues: {
+                        ':active': { S: 'false' }
+                    },
+                    ReturnValues: 'UPDATED_NEW'
+                }
+                ddb.updateItem(editItemParams, (updateErr, updateData) => {
+                    if (updateErr) {
+                        console.log(
+                            'Error updating item in item/delete: ' + updateErr
+                        )
+                        res.status(400).send(
+                            'Error updating item in item/delete: ' +
+                                updateErr.message
+                        )
+                    } else {
+                        res.send('Success!')
+                    }
+                })
+            }
         }
     })
 })

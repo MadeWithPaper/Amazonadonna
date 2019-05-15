@@ -5,6 +5,7 @@ import * as multerS3 from 'multer-s3'
 import * as mime from 'mime'
 import { ddb, s3 } from '../server'
 import { unmarshUtil } from '../utilities/unmarshall'
+import { filterActive } from '../utilities/active'
 import { Artisan } from '../models/artisan'
 import * as uuid from 'uuid'
 import * as _ from 'lodash'
@@ -29,7 +30,7 @@ router.post('/listAllForCga', (req: Request, res: Response) => {
         } else {
             const convert = unmarshUtil(data.Items)
             Promise.all(convert).then(items => {
-                res.json(items)
+                res.json(filterActive(items))
             })
         }
     })
@@ -50,7 +51,8 @@ router.post('/add', (req: Request, res: Response) => {
             lon: { N: req.body.lon },
             balance: { N: req.body.balance },
             picURL: { S: 'Not set' },
-            phoneNumber: { S: req.body.phoneNumber }
+            phoneNumber: { S: req.body.phoneNumber },
+            active: { S: 'true' }
         }
     }
     ddb.putItem(putItemParams, (err, data) => {
@@ -136,7 +138,7 @@ router.post('/getById', (req: Request, res: Response) => {
             console.log(msg + err)
             res.status(400).send(msg + err.message)
         } else {
-            res.json(aws.DynamoDB.Converter.unmarshall(data.Item))
+            res.json(filterActive(aws.DynamoDB.Converter.unmarshall(data.Item)))
         }
     })
 })
@@ -223,68 +225,44 @@ router.post('/edit', (req: Request, res: Response) => {
     })
 })
 
-router.get('/deleteAll', (req: Request, res: Response) => {
-    const listAllArtisansParams: aws.DynamoDB.Types.QueryInput = {
-        TableName: 'artisan',
-        IndexName: 'cgaId-index',
-        KeyConditionExpression: 'cgaId = :id',
-        ExpressionAttributeValues: {
-            ':id': { S: '0' }
-        }
-    }
-
-    ddb.query(listAllArtisansParams, (err, data) => {
-        if (err) {
-            console.log(
-                'Error getting all artisans in artisan/deleteAll: ' + err
-            )
-            res.status(400).send(
-                'Error getting all artisans in artisan/deleteAll: ' +
-                    err.message
-            )
-        } else {
-            const convert = data.Items.map(item => {
-                return new Promise(resolve => {
-                    const unmarshed = aws.DynamoDB.Converter.unmarshall(item)
-                    const params: aws.DynamoDB.DeleteItemInput = {
-                        TableName: 'artisan',
-                        Key: { artisanId: { S: unmarshed.artisanId } }
-                    }
-                    ddb.deleteItem(params, deleteErr => {
-                        if (deleteErr) {
-                            console.log(
-                                'Error deleting an artisan in artisan/deleteAll: ' +
-                                    deleteErr
-                            )
-                            res.status(402).send(
-                                'Error deleting an artisan in artisan/deleteAll: ' +
-                                    deleteErr.message
-                            )
-                        }
-                        resolve('Deleted: ' + unmarshed.artisanId)
-                    })
-                })
-            })
-            Promise.all(convert).then(items => {
-                res.send('All artisans have been deleted')
-            })
-        }
-    })
-})
-
 router.post('/delete', (req: Request, res: Response) => {
-    const deleteArtisanParams: aws.DynamoDB.Types.DeleteItemInput = {
+    const getArtisanParams: aws.DynamoDB.Types.GetItemInput = {
         TableName: 'artisan',
         Key: { artisanId: { S: req.body.artisanId } }
     }
-
-    ddb.deleteItem(deleteArtisanParams, (err, data) => {
+    ddb.getItem(getArtisanParams, (err, data) => {
         if (err) {
-            const msg = 'Error deleting items in artisan/delete: '
+            const msg = 'Error getting artisan in artisan/delete/getArtisan: '
             console.log(msg + err)
             res.status(400).send(msg + err.message)
         } else {
-            res.send('Success!')
+            const unmarshed = aws.DynamoDB.Converter.unmarshall(data.Item)
+            if (_.isEmpty(unmarshed)) {
+                const msg =
+                    'Error deleting artisan in artisan/delete/getArtisan: '
+                const DNEerr = 'Artisan does not exist'
+                console.log(msg + DNEerr)
+                res.status(400).send(msg + DNEerr)
+            } else {
+                const editArtisanParam: aws.DynamoDB.Types.UpdateItemInput = {
+                    TableName: 'artisan',
+                    Key: { artisanId: { S: req.body.artisanId } },
+                    UpdateExpression: `set active = :active`,
+                    ExpressionAttributeValues: {
+                        ':active': { S: 'false' }
+                    },
+                    ReturnValues: 'UPDATED_NEW'
+                }
+                ddb.updateItem(editArtisanParam, (updateErr, updateData) => {
+                    if (updateErr) {
+                        const msg = 'Error updating artisan in artisan/delete: '
+                        console.log(msg + updateErr)
+                        res.status(400).send(msg + updateErr.message)
+                    } else {
+                        res.send('Success!')
+                    }
+                })
+            }
         }
     })
 })

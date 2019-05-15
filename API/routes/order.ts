@@ -3,9 +3,12 @@ import * as aws from 'aws-sdk'
 import { ddb } from '../server'
 import { OrderItem } from '../models/orderItem'
 import { Item } from '../models/item'
+import { Cga } from '../models/cga'
 import { unmarshUtil } from '../utilities/unmarshall'
 import * as uuid from 'uuid'
 import * as _ from 'lodash'
+import * as MwsApi from 'amazon-mws'
+import { MwsOrderRes } from '../models/mwsOrderRes'
 
 const router = Router()
 
@@ -193,7 +196,7 @@ router.post('/add', (req: Request, res: Response) => {
         Item: {
             orderId: { S: id },
             cgaId: { S: req.body.cgaId },
-            shippedStatus: { BOOL: req.body.shippedStatus },
+            fulfilledStatus: { BOOL: req.body.fulfilledStatus },
             numItems: { N: req.body.numItems },
             shippingAddress: { S: req.body.shippingAddress },
             totalCostDollars: { N: req.body.totalCostDollars },
@@ -279,121 +282,33 @@ router.post('/getItems', (req: Request, res: Response) => {
     })
 })
 
-router.post('/getItemsForArtisan', (req: Request, res: Response) => {
-    if (req.body.artisanId === undefined) {
-        const msg = 'Must provide artisanId in order/getItemsForArtisan'
-        console.log(msg)
-        res.status(400).send(msg)
-    } else {
-        const artisanId = req.body.artisanId
-        const getParamsFromItems: aws.DynamoDB.Types.QueryInput = {
-            TableName: 'orderItem',
-            IndexName: 'orderId-index',
-            KeyConditionExpression: 'orderId = :id',
-            ExpressionAttributeValues: {
-                ':id': { S: req.body.orderId }
-            }
-        }
-        ddb.query(getParamsFromItems, (err, data) => {
-            if (err) {
-                console.log(
-                    'Error fetching orderItem in order/getItems: ' + err
-                )
-                res.status(400).send(
-                    'Error fetching orderItem in order/getItems: ' + err.message
-                )
-            } else {
-                const convert = unmarshUtil(data.Items)
-                Promise.all(convert).then((items: OrderItem[]) => {
-                    const queryItems = items.map(item => {
-                        return new Promise(resolve => {
-                            const getItemParams: aws.DynamoDB.Types.GetItemInput = {
-                                TableName: 'item',
-                                Key: { itemId: { S: item.itemId } }
-                            }
-                            ddb.getItem(
-                                getItemParams,
-                                (
-                                    getItemErr,
-                                    getItemData: aws.DynamoDB.Types.GetItemOutput
-                                ) => {
-                                    if (getItemErr) {
-                                        console.log(
-                                            'Error fetching items in order/getItems/getItem: ' +
-                                                getItemErr
-                                        )
-                                        res.status(400).send(
-                                            'Error fetching items in order/getItems/getItem: ' +
-                                                getItemErr.message
-                                        )
-                                    } else {
-                                        resolve(getItemData)
-                                    }
-                                }
-                            )
-                        })
-                    })
-                    Promise.all(queryItems).then(
-                        (marshallItems: aws.DynamoDB.Types.GetItemOutput[]) => {
-                            const convertItems = marshallItems.map(
-                                marshallItem => {
-                                    return new Promise(resolve => {
-                                        const unmarshedItem = aws.DynamoDB.Converter.unmarshall(
-                                            marshallItem.Item
-                                        )
-                                        if (
-                                            unmarshedItem.artisanId ===
-                                            artisanId
-                                        ) {
-                                            resolve(unmarshedItem)
-                                        } else {
-                                            resolve({})
-                                        }
-                                    })
-                                }
-                            )
-                            Promise.all(convertItems).then(itemData => {
-                                res.json(
-                                    itemData.filter(
-                                        value => Object.keys(value).length !== 0
-                                    )
-                                )
-                            })
-                        }
-                    )
-                })
-            }
-        })
-    }
-})
-
-router.post('/setShippedStatus', (req: Request, res: Response) => {
-    const shippedBool = req.body.shippedStatus === 'true'
-    const negShippedBool = req.body.shippedStatus === 'false'
-    if (!shippedBool && !negShippedBool) {
-        const msg = 'Error updating shipped status in order/setShippedStatus: '
-        const err = 'shippedStatus key is not true or false or is missing'
+router.post('/setFulfilledStatus', (req: Request, res: Response) => {
+    const fulfilledBool = req.body.fulfilledStatus === 'true'
+    const negFulfilledBool = req.body.fulfilledStatus === 'false'
+    if (!fulfilledBool && !negFulfilledBool) {
+        const msg = 'Error updating fulfilled status in order/setFulfilledStatus: '
+        const err = 'fulfilledStatus key is not true or false or is missing'
         console.log(msg + err)
         res.status(400).send(msg + err)
     } else {
-        const setShippedStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
+        const setFulfilledStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
             TableName: 'order',
             Key: { orderId: { S: req.body.orderId } },
-            UpdateExpression: 'set shippedStatus = :u',
+            UpdateExpression: 'set fulfilledStatus = :u',
             ExpressionAttributeValues: {
-                ':u': { BOOL: shippedBool }
+                ':u': { BOOL: fulfilledBool }
             },
             ReturnValues: 'UPDATED_NEW',
             ConditionExpression: 'attribute_exists(orderId)'
         }
-        ddb.updateItem(setShippedStatusParams, (err, data) => {
+        ddb.updateItem(setFulfilledStatusParams, (err, data) => {
             if (err) {
                 console.log(
-                    'Error updating shipped status in order/setShippedStatus: ' +
+                    'Error updating fulfilled status in order/setFulfilledStatus: ' +
                         err
                 )
                 res.status(400).send(
-                    'Error updating shipped status in order/setShippedStatus: ' +
+                    'Error updating fulfilled status in order/setFulfilledStatus: ' +
                         err.message
                 )
             } else {
@@ -425,5 +340,167 @@ function sendText(phoneNumber: string, orderId: string) {
         }
     })
 }
+
+router.post('/tryUpdate', (req: Request, res: Response) => {
+    const getCgaParams: aws.DynamoDB.Types.GetItemInput = {
+        TableName: 'cga',
+        Key: { cgaId: { S: req.body.amznId } }
+    }
+
+    ddb.getItem(getCgaParams, (err, data) => {
+        if (err) {
+            const msg = 'Error getting cga in order/tryUpdate: '
+            console.log(msg + err)
+            res.status(400).send(msg + err.message)
+        } else {
+            const cga: Cga = aws.DynamoDB.Converter.unmarshall(data.Item) as Cga
+            if (Date.now() - cga.lastUpdateOrders > 15000) {
+                // test
+                const amazonMws = new MwsApi()
+                amazonMws.setApiKey(cga.mwsKey, cga.mwsSecret)
+                const lastUpdate = new Date(0)
+                lastUpdate.setUTCMilliseconds(cga.lastUpdateOrders)
+
+                const mwsOrdersParams = {
+                    Version: '2013-09-01',
+                    Action: 'ListOrders',
+                    SellerId: cga.mwsSellerId,
+                    MWSAuthToken: cga.mwsAuthToken,
+                    'MarketplaceId.Id.1': 'A1AM78C64UM0Y8', // Amazon.com.mx
+                    CreatedAfter: lastUpdate.toISOString
+                }
+
+                amazonMws.orders.search(mwsOrdersParams).then(
+                    (orders: MwsOrderRes) => {
+                        const ordersToAdd = orders.Orders.map(order => {
+                            return new Promise(resolve => {
+                                const id = uuid.v1()
+                                const params: aws.DynamoDB.PutItemInput = {
+                                    TableName: 'order',
+                                    Item: {
+                                        orderId: { S: id },
+                                        amazonOrderId: {
+                                            S: order.AmazonOrderId
+                                        },
+                                        cgaId: { S: req.body.amznId },
+                                        shippedStatus: {
+                                            BOOL: false
+                                        },
+                                        numItems: {
+                                            N: (
+                                                order.NumberOfItemsShipped +
+                                                order.NumberOfItemsUnshipped
+                                            ).toString()
+                                        },
+                                        shippingAddress: {
+                                            S:
+                                                order.ShippingAddress
+                                                    .AddressLine1
+                                        },
+                                        totalCostDollars: {
+                                            N: order.OrderTotal.Amount.split(
+                                                '.'
+                                            )[0].toString()
+                                        },
+                                        totalCostCents: {
+                                            N: order.OrderTotal.Amount.split(
+                                                '.'
+                                            )[1].toString()
+                                        }
+                                    }
+                                }
+                                ddb.putItem(
+                                    params,
+                                    (addOrderErr, addOrderData) => {
+                                        if (addOrderErr) {
+                                            const msg =
+                                                'Error adding order in order/tryUpdate: '
+                                            console.log(msg + err)
+                                            res.status(400).send(
+                                                msg + err.message
+                                            )
+                                        } else {
+                                            // get items for order
+                                            const mwsOrderItemParams = {
+                                                Version: '2013-09-01',
+                                                Action: 'ListOrderItems',
+                                                SellerId: cga.mwsSellerId,
+                                                MWSAuthToken: cga.mwsAuthToken,
+                                                AmazonOrderId:
+                                                    order.AmazonOrderId
+                                            }
+
+                                            amazonMws.orders
+                                                .search(mwsOrderItemParams)
+                                                .then(
+                                                    items => {
+                                                        // items
+                                                        // go through each and
+                                                        // search our items via
+                                                        // the new indexer for
+                                                        // amazon item id. Then
+                                                        // add an entry in order
+                                                        // item table. Thats it
+                                                        // resolve()
+                                                    },
+                                                    mwsOrderItemErr => {
+                                                        const msg =
+                                                            'Error getting order items from mws in order/tryUpdate: '
+                                                        console.log(
+                                                            msg +
+                                                                mwsOrderItemErr
+                                                        )
+                                                        res.status(400).send(
+                                                            msg +
+                                                                mwsOrderItemErr
+                                                        )
+                                                    }
+                                                )
+                                        }
+                                    }
+                                )
+                            })
+                        })
+                        Promise.all(ordersToAdd).then(() => {
+                            const updateLastUpdateParam: aws.DynamoDB.Types.UpdateItemInput = {
+                                TableName: 'cga',
+                                Key: { cgaId: { S: req.body.amznId } },
+                                UpdateExpression:
+                                    'set lastUpdateOrders = :time',
+                                ExpressionAttributeValues: {
+                                    ':time': { S: Date.now().toString() }
+                                },
+                                ReturnValues: 'UPDATED_NEW'
+                            }
+                            ddb.updateItem(
+                                updateLastUpdateParam,
+                                (updateErr, updateData) => {
+                                    if (updateErr) {
+                                        const msg =
+                                            'Error updating cga lastUpdateOrder in order/tryUpdate: '
+                                        console.log(msg + updateErr)
+                                        res.status(400).send(
+                                            msg + updateErr.message
+                                        )
+                                    } else {
+                                        res.send('Updated!')
+                                    }
+                                }
+                            )
+                        })
+                    },
+                    mwsErr => {
+                        const msg =
+                            'Error getting orders from mws in order/tryUpdate: '
+                        console.log(msg + mwsErr)
+                        res.status(400).send(msg + mwsErr)
+                    }
+                )
+            } else {
+                res.send('Too soon')
+            }
+        }
+    })
+})
 
 export { router as orderRouter }
