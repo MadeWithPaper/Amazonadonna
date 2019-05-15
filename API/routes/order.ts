@@ -153,7 +153,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                                 )
                                             })
                                         } else {
-                                            return null
+                                            return {}
                                         }
                                     }
                                 )
