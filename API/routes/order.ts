@@ -60,6 +60,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
             const convert = unmarshUtil(data.Items)
             Promise.all(convert).then(items => {
                 const ordersQuery = items.map((item: Item) => {
+                    console.log(item)
                     return new Promise(resolve => {
                         const getOrderItemParam: aws.DynamoDB.Types.QueryInput = {
                             TableName: 'orderItem',
