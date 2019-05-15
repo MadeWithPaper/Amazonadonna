@@ -147,10 +147,12 @@ object PayoutSync : Synchronizer(), CoroutineScope {
                 runBlocking {
                     setSyncedState(payout, context)
                 }
-                payout.payoutId = body!!.substring(1, body!!.length - 1)
-                Log.i("PayoutSignature", "payoutid $body")
-                //submitSignatureToDB(artisan, body, signatureFilePath, amount)
-                uploadPayoutSigImage(context, payout)
+                if (body != null && !body!!.contains("<title>Error")) {
+                    payout.payoutId = body!!.substring(1, body!!.length - 1)
+                    Log.i("PayoutSignature", "payoutid $body")
+                    //submitSignatureToDB(artisan, body, signatureFilePath, amount)
+                    uploadPayoutSigImage(context, payout)
+                }
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
