@@ -112,6 +112,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                 const queryOrders = orderItems.map(
                                     orderItem => {
                                         if (orderItem.length === 1) {
+                                            console.log(orderItem)
                                             const singleOrderItem = orderItem[0]
                                             return new Promise(resolve => {
                                                 const getOrderParams: aws.DynamoDB.Types.GetItemInput = {
@@ -286,7 +287,8 @@ router.post('/setFulfilledStatus', (req: Request, res: Response) => {
     const fulfilledBool = req.body.fulfilledStatus === 'true'
     const negFulfilledBool = req.body.fulfilledStatus === 'false'
     if (!fulfilledBool && !negFulfilledBool) {
-        const msg = 'Error updating fulfilled status in order/setFulfilledStatus: '
+        const msg =
+            'Error updating fulfilled status in order/setFulfilledStatus: '
         const err = 'fulfilledStatus key is not true or false or is missing'
         console.log(msg + err)
         res.status(400).send(msg + err)
