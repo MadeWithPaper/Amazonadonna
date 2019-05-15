@@ -60,7 +60,6 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
             const convert = unmarshUtil(data.Items)
             Promise.all(convert).then(items => {
                 const ordersQuery = items.map((item: Item) => {
-                    console.log(item)
                     return new Promise(resolve => {
                         const getOrderItemParam: aws.DynamoDB.Types.QueryInput = {
                             TableName: 'orderItem',
@@ -96,7 +95,6 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                     ) => {
                         const convertOrderItems = orderItemMarshalledItems.map(
                             orderItemMarshalledItem => {
-                                console.log(orderItemMarshalledItem)
                                 return new Promise(resolve => {
                                     const orderItemsConvert = unmarshUtil(
                                         orderItemMarshalledItem.Items
@@ -113,7 +111,6 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                             (orderItems: OrderItem[][]) => {
                                 const queryOrders = orderItems.map(
                                     orderItem => {
-                                        console.log(orderItem)
                                         if (orderItem.length === 1) {
                                             const singleOrderItem = orderItem[0]
                                             return new Promise(resolve => {
@@ -153,7 +150,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                                 )
                                             })
                                         } else {
-                                            return {}
+                                            return undefined
                                         }
                                     }
                                 )
