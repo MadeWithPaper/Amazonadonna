@@ -275,9 +275,11 @@ object ProductSync: Synchronizer(), CoroutineScope {
                         i++
                     }
                 }*/
-                for (i in 0..5) {
-                    if (product.pictureURLs[i] != "Not set" && product.pictureURLs[i] != "undefined" && product.pictureURLs[i].substring(0, 5) != "https") {
-                        uploadProductImage(context, product, i)
+                if (body != null && !body!!.contains("<title>Error")) {
+                    for (i in 0..5) {
+                        if (product.pictureURLs[i] != "Not set" && product.pictureURLs[i] != "undefined" && product.pictureURLs[i].substring(0, 5) != "https") {
+                            uploadProductImage(context, product, i)
+                        }
                     }
                 }
                 numInProgress--
@@ -314,17 +316,20 @@ object ProductSync: Synchronizer(), CoroutineScope {
         client.newCall(request).enqueue(object: Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                runBlocking {
-                    setSyncedState(product, context)
-                }
-                product.itemId = body!!.substring(1, body!!.length - 1)
-                Log.i(TAG, "success $body")
 
-                runBlocking {
-                    var i = 0
-                    for (picURL in product.pictureURLs) {
-                        if (picURL != "Not set" && picURL != "undefined") {
-                            uploadProductImage(context, product, i++)
+                if (body != null && !body!!.contains("<title>Error")) {
+                    runBlocking {
+                        setSyncedState(product, context)
+                    }
+                    product.itemId = body!!.substring(1, body!!.length - 1)
+                    Log.i(TAG, "success $body")
+
+                    runBlocking {
+                        var i = 0
+                        for (picURL in product.pictureURLs) {
+                            if (picURL != "Not set" && picURL != "undefined") {
+                                uploadProductImage(context, product, i++)
+                            }
                         }
                     }
                 }

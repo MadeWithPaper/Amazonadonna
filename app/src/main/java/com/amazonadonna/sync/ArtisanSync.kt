@@ -158,20 +158,22 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 launch {
                     setSyncedState(artisan, context)
                 }
-                val newArtisanId = body!!.substring(1, body!!.length - 1)
+                if (body != null && !body!!.contains("<title>Error")) {
+                    val newArtisanId = body!!.substring(1, body!!.length - 1)
 
-                Log.d("ArtisanSync", "OLDID " + artisan.artisanId)
-                runBlocking {
-                    updateItemsForArtisan(context, artisan.artisanId, newArtisanId)
-                }
+                    Log.d("ArtisanSync", "OLDID " + artisan.artisanId)
+                    runBlocking {
+                        updateItemsForArtisan(context, artisan.artisanId, newArtisanId)
+                    }
 
-                artisan.artisanId = newArtisanId
+                    artisan.artisanId = newArtisanId
 
-                Log.i("AddArtisan", "success $body")
-                if (artisan.picURL != "Not set") {
-                    uploadArtisanImage(context, artisan)
-                } else {
-                    numInProgress--
+                    Log.i("AddArtisan", "success $body")
+                    if (artisan.picURL != "Not set") {
+                        uploadArtisanImage(context, artisan)
+                    } else {
+                        numInProgress--
+                    }
                 }
             }
 
@@ -214,7 +216,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 val body = response?.body()?.string()
                 Log.i("EditArtisan", body)
 
-                if (updatePic) {
+                if (body != null && !body!!.contains("<title>Error") && updatePic) {
                     updateArtisanImage(context, artisan)
                 } else {
                     numInProgress--
