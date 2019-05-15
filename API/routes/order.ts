@@ -282,7 +282,6 @@ router.post('/getItems', (req: Request, res: Response) => {
     })
 })
 
-<<<<<<< HEAD
 router.post('/setFulfilledStatus', (req: Request, res: Response) => {
     const fulfilledBool = req.body.fulfilledStatus === 'true'
     const negFulfilledBool = req.body.fulfilledStatus === 'false'
