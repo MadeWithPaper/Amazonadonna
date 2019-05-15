@@ -150,7 +150,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                                 )
                                             })
                                         } else {
-                                            return undefined
+                                            return {}
                                         }
                                     }
                                 )
@@ -171,9 +171,12 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                         Promise.all(convertItems).then(
                                             orderData => {
                                                 res.json(
-                                                    _.uniqBy(
-                                                        orderData,
-                                                        'orderId'
+                                                    _.filter(
+                                                        _.uniqBy(
+                                                            orderData,
+                                                            'orderId'
+                                                        ),
+                                                        _.isEmpty
                                                     )
                                                 )
                                             }
