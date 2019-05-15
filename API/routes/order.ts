@@ -150,7 +150,7 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                                 )
                                             })
                                         } else {
-                                            return null
+                                            return {}
                                         }
                                     }
                                 )
@@ -171,9 +171,14 @@ router.post('/listAllForArtisan', (req: Request, res: Response) => {
                                         Promise.all(convertItems).then(
                                             orderData => {
                                                 res.json(
-                                                    _.uniqBy(
-                                                        orderData,
-                                                        'orderId'
+                                                    _.filter(
+                                                        _.uniqBy(
+                                                            orderData,
+                                                            'orderId'
+                                                        ),
+                                                        (o: any) => {
+                                                            return !_.isEmpty(o)
+                                                        }
                                                     )
                                                 )
                                             }
@@ -286,7 +291,8 @@ router.post('/setFulfilledStatus', (req: Request, res: Response) => {
     const fulfilledBool = req.body.fulfilledStatus === 'true'
     const negFulfilledBool = req.body.fulfilledStatus === 'false'
     if (!fulfilledBool && !negFulfilledBool) {
-        const msg = 'Error updating fulfilled status in order/setFulfilledStatus: '
+        const msg =
+            'Error updating fulfilled status in order/setFulfilledStatus: '
         const err = 'fulfilledStatus key is not true or false or is missing'
         console.log(msg + err)
         res.status(400).send(msg + err)
