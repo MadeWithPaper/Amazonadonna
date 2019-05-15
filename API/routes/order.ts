@@ -193,7 +193,7 @@ router.post('/add', (req: Request, res: Response) => {
         Item: {
             orderId: { S: id },
             cgaId: { S: req.body.cgaId },
-            shippedStatus: { BOOL: req.body.shippedStatus },
+            fulfilledStatus: { BOOL: req.body.fulfilledStatus },
             numItems: { N: req.body.numItems },
             shippingAddress: { S: req.body.shippingAddress },
             totalCostDollars: { N: req.body.totalCostDollars },
@@ -279,33 +279,33 @@ router.post('/getItems', (req: Request, res: Response) => {
     })
 })
 
-router.post('/setShippedStatus', (req: Request, res: Response) => {
-    const shippedBool = req.body.shippedStatus === 'true'
-    const negShippedBool = req.body.shippedStatus === 'false'
-    if (!shippedBool && !negShippedBool) {
-        const msg = 'Error updating shipped status in order/setShippedStatus: '
-        const err = 'shippedStatus key is not true or false or is missing'
+router.post('/setFulfilledStatus', (req: Request, res: Response) => {
+    const fulfilledBool = req.body.fulfilledStatus === 'true'
+    const negFulfilledBool = req.body.fulfilledStatus === 'false'
+    if (!fulfilledBool && !negFulfilledBool) {
+        const msg = 'Error updating fulfilled status in order/setFulfilledStatus: '
+        const err = 'fulfilledStatus key is not true or false or is missing'
         console.log(msg + err)
         res.status(400).send(msg + err)
     } else {
-        const setShippedStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
+        const setFulfilledStatusParams: aws.DynamoDB.Types.UpdateItemInput = {
             TableName: 'order',
             Key: { orderId: { S: req.body.orderId } },
-            UpdateExpression: 'set shippedStatus = :u',
+            UpdateExpression: 'set fulfilledStatus = :u',
             ExpressionAttributeValues: {
-                ':u': { BOOL: shippedBool }
+                ':u': { BOOL: fulfilledBool }
             },
             ReturnValues: 'UPDATED_NEW',
             ConditionExpression: 'attribute_exists(orderId)'
         }
-        ddb.updateItem(setShippedStatusParams, (err, data) => {
+        ddb.updateItem(setFulfilledStatusParams, (err, data) => {
             if (err) {
                 console.log(
-                    'Error updating shipped status in order/setShippedStatus: ' +
+                    'Error updating fulfilled status in order/setFulfilledStatus: ' +
                         err
                 )
                 res.status(400).send(
-                    'Error updating shipped status in order/setShippedStatus: ' +
+                    'Error updating fulfilled status in order/setFulfilledStatus: ' +
                         err.message
                 )
             } else {

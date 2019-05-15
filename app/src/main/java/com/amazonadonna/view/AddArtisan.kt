@@ -221,7 +221,7 @@ class AddArtisan : AppCompatActivity() {
             else ->
                return bitmap
         }
-        var bmRotated = Bitmap.createBitmap(0, 0, Bitmap.Config.ARGB_8888)
+        var bmRotated : Bitmap? = null
         try {
             bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true)
             bitmap.recycle()
@@ -255,6 +255,8 @@ class AddArtisan : AppCompatActivity() {
                                 ExifInterface.ORIENTATION_UNDEFINED)
                         val bmRotated = rotateBitmap(bitmap, orientation)
 
+                        bmRotated!!.width = 100
+                        bmRotated!!.height = 100
                         ivPreview.setImageBitmap(bmRotated)
 
                         val stream = ByteArrayOutputStream()

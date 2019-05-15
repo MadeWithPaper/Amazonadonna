@@ -58,8 +58,8 @@ class OrderScreen : AppCompatActivity() {
     }
 
     private fun updateShippingStatus() {
-        var shippedStatus = order.shippedStatus
-        order.shippedStatus = !shippedStatus
+        var fulfilledStatus = order.fulfilledStatus
+        order.fulfilledStatus = !fulfilledStatus
         OrderSync.updateOrder(applicationContext, order)
         runOnUiThread {
             populateSelectedOrder(order)
@@ -67,7 +67,7 @@ class OrderScreen : AppCompatActivity() {
         runOnUiThread {
             alertDialog = AlertDialog.Builder(this@OrderScreen).create()
             alertDialog.setTitle("Success!")
-            alertDialog.setMessage("Updated shipped status to: "+order.shippedStatus.toString())
+            alertDialog.setMessage("Updated fulfilled status to: "+order.fulfilledStatus.toString())
             alertDialog.show()
             Log.i("OrderScreen", "showing alert")
         }
@@ -77,12 +77,12 @@ class OrderScreen : AppCompatActivity() {
     private fun populateSelectedOrder(order: Order) {
         val orderIDTextView : TextView = findViewById(R.id.orderScreen_toolbar_input)
         val orderDateTextView : TextView = findViewById(R.id.orderScreen_OrderDate_input)
-        val orderShippedTextView : TextView = findViewById(R.id.orderScreen_Shipped_input)
+        val orderFulfilledTextView : TextView = findViewById(R.id.orderScreen_Fulfilled_input)
         val orderCostTextView : TextView = findViewById(R.id.orderScreen_Payout_input)
 //        orderIDTextView.text = order.amOrderNumber
         orderIDTextView.text = order.orderId
         orderDateTextView.text = "1/23/19"
-        orderShippedTextView.text = order.shippedStatus.toString()
+        orderFulfilledTextView.text = order.fulfilledStatus.toString()
         orderCostTextView.text = "$" + order.totalCostDollars.toString()+"."+order.totalCostCents.toString()
     }
 }

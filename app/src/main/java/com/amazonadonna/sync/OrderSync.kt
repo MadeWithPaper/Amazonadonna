@@ -19,7 +19,7 @@ object OrderSync: Synchronizer(), CoroutineScope {
     private const val TAG = "OrderSync"
     private val listOrderURL = App.BACKEND_BASE_URL + "/order/listAllForCga"
     private val getItemURL = App.BACKEND_BASE_URL + "/order/getItems"
-    private val editOrderURL = App.BACKEND_BASE_URL + "/order/setShippedStatus"
+    private val editOrderURL = App.BACKEND_BASE_URL + "/order/setFulfilledStatus"
 
     fun sync(context: Context, activity: Activity, cgaId: String) {
         super.sync(context, cgaId)
@@ -45,7 +45,7 @@ object OrderSync: Synchronizer(), CoroutineScope {
         numInProgress++
 
         val requestBody = FormBody.Builder().add("orderId", order.orderId)
-                .add("shippedStatus", order.shippedStatus.toString())
+                .add("fulfilledStatus", order.fulfilledStatus.toString())
 
         val client = OkHttpClient()
         val request = Request.Builder()
