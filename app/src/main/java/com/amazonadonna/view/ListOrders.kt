@@ -44,7 +44,7 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor>, CoroutineScope 
     fun search(query: String): Completable = Completable.create {
         val wanted = originalOrders.filter {
             it.orderId.contains(query, true) || it.shippingAddress.contains(query, true) ||
-                    it.shippedStatus.toString().contains(query, true)
+                    it.fulfilledStatus.toString().contains(query, true)
         }.toList()
 
         if (listOrders_Search.text.toString() == "") { // empty search bar

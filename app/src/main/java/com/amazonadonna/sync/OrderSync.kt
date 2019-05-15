@@ -59,7 +59,7 @@ object OrderSync: Synchronizer(), CoroutineScope {
         numInProgress++
 
         val requestBody = FormBody.Builder().add("orderId", order.orderId)
-                .add("shippedStatus", order.shippedStatus.toString())
+                .add("fulfilledStatus", order.fulfilledStatus.toString())
 
         val client = OkHttpClient()
         val request = Request.Builder()
