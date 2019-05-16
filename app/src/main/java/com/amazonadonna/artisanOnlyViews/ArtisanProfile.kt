@@ -6,10 +6,9 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import com.amazonadonna.model.App
-import com.amazonadonna.model.Artisan
 import com.amazonadonna.view.ArtisanItemList
 import com.amazonadonna.view.EditArtisan
-import com.amazonadonna.view.PayoutHistoryCGA
+import com.amazonadonna.view.PayoutHistory
 import com.amazonadonna.view.R
 import kotlinx.android.synthetic.main.activity_artisan_profile.*
 
@@ -45,7 +44,7 @@ class ArtisanProfile : AppCompatActivity() {
     }
 
     private fun payoutHistoryForArtisan(artisanID: String){
-        val intent = Intent(this, PayoutHistoryCGA::class.java)
+        val intent = Intent(this, PayoutHistory::class.java)
         //TODO wait for db implementation
         intent.putExtra("artisanID", artisanID)
         Log.d("ArtisanProfile.kt", "payout history screen with cgaID: ${App.currentArtisan.cgaId}")

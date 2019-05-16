@@ -31,7 +31,7 @@
             android:name="com.amazonadonna.artisanOnlyViews.HomeScreenArtisan"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PayoutHistoryCGA"
+            android:name=".PayoutHistory"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ViewReport"

@@ -84,6 +84,7 @@
             android:layout_weight="1"
             android:inputType="textPassword"
             app:errorEnabled="true"
+            app:passwordToggleEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email_til">
