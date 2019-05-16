@@ -223,9 +223,10 @@ object OrderSync: Synchronizer(), CoroutineScope {
         numInProgress++
         val requestBody = FormBody.Builder()
                 .add("orderId",order.orderId)
+                .add("artisanId", mArtisanId)
                 .build()
         val request = Request.Builder().url(getItemForArtisanURL).post(requestBody).build()
-        val productDao = AppDatabase.getDatabase(context).productDao()
+        //val productDao = AppDatabase.getDatabase(context).productDao()
         val orderDao = AppDatabase.getDatabase(context).orderDao()
 
         val client = OkHttpClient()
