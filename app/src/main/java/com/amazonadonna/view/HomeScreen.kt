@@ -103,7 +103,7 @@ class HomeScreen : AppCompatActivity() {
             runOnUiThread {
                 alertDialog = AlertDialog.Builder(this@HomeScreen).create()
                 alertDialog.setTitle("Error Synchronizing Account")
-                alertDialog.setMessage("No internet connection active. You may attempt to resync your account on the Settings page when internet is aavilable.")
+                alertDialog.setMessage("No internet connection active. You may attempt to resync your account on the Settings page when internet is available.")
                 alertDialog.show()
             }
         }

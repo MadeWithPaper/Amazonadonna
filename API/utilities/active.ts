@@ -6,7 +6,7 @@ const filterActive = (items: any) => {
             return o.active === undefined || o.active === 'true'
         })
     } else {
-        if (items.active === 'true') {
+        if (items.active === undefined || items.active === 'true') {
             return items
         } else {
             return {}

@@ -33,9 +33,6 @@ import android.widget.Toast
 import com.amazon.identity.auth.device.api.authorization.ProfileScope.userId
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails
 
-
-
-
 const val AUTHORITY = "com.amazonadonna.provider"
 const val ACCOUNT_TYPE = "amazonadonna.com"
 const val ACCOUNT = "dummyaccount3"
@@ -55,6 +52,11 @@ class LoginScreen : AppCompatActivity() {
      * Amazon Cognito for Artisans
      */
     private fun signUpNewArtisan(email: String, password: String) {
+
+        if (!validateInput()){
+            return
+        }
+
         var userAttributes = CognitoUserAttributes()
         userAttributes.addAttribute("email", email)
 
@@ -185,7 +187,8 @@ class LoginScreen : AppCompatActivity() {
 
         //TODO implement Artisan login
         artisan_log_in_button.setOnClickListener {
-            signUpNewArtisan("teamamazonadonna@gmail.com", "Password1$")
+            //signUpNewArtisan("teamamazonadonna@gmail.com", "Password1$")
+            signUpNewArtisan(email_et.text.toString(), password_et.text.toString())
         }
 
         cga_log_in_button.setOnClickListener{
@@ -224,20 +227,29 @@ class LoginScreen : AppCompatActivity() {
         requestContext.onResume()
     }
 
+    private fun validateInput() : Boolean {
+        if (email_et.text.toString().isEmpty()){
+            email_til.error = this.resources.getString(R.string.requiredFieldError)
+            return false
+        }
+
+        if (!(email_et.text.toString().contains("@"))){
+            email_til.error = this.resources.getString(R.string.error_invalid_email)
+            return false
+        }
+
+        if (password_et.text.toString().isEmpty()){
+            password_til.error = this.resources.getString(R.string.requiredFieldError)
+            return false
+        }
+
+        return true
+    }
+
     private fun test() {
         // go to home screen
         val intent =  Intent(this, HomeScreenArtisan::class.java)
         startActivity(intent)
-    }
-
-    private fun isEmailValid(email: String): Boolean {
-        //TODO: Replace this with your own logic
-        return email.contains("@")
-    }
-
-    private fun isPasswordValid(password: String): Boolean {
-        //TODO: Replace this with your own logic
-        return password.length > 4
     }
 
     private fun hideKeyboard(view: View) {
