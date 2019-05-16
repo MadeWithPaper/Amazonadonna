@@ -234,7 +234,7 @@ object OrderSync: Synchronizer(), CoroutineScope {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
 
-                Log.d("ITEMS", body)
+                //Log.d("ITEMS", body)
                 val gson = GsonBuilder().create()
 
                 if (body != null && !body!!.contains("<title>Error")) {
