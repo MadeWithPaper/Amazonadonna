@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
+import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.App
 import com.amazonadonna.view.ArtisanItemList
 import com.amazonadonna.view.EditArtisan
 import com.amazonadonna.view.PayoutHistory
 import com.amazonadonna.view.R
 import kotlinx.android.synthetic.main.activity_artisan_profile.*
+import kotlinx.android.synthetic.main.activity_artisan_profile_cga.*
 
 class ArtisanProfile : AppCompatActivity() {
 
@@ -29,6 +31,9 @@ class ArtisanProfile : AppCompatActivity() {
         artisanProfileContact.text = App.currentArtisan.phoneNumber
         artisanProfileLoc.text = "${App.currentArtisan.city},${App.currentArtisan.country}"
         artisanProfileBio.text = App.currentArtisan.bio
+
+        var isp = ImageStorageProvider(applicationContext)
+        isp.loadImageIntoUI(App.currentArtisan.picURL, this.artisanProfilePicture, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
 
         artisanPayoutHistory.setOnClickListener {
             payoutHistoryForArtisan(App.currentArtisan.artisanId)
