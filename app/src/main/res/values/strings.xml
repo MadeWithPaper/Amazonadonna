@@ -147,6 +147,8 @@
     <string name="view_report_done_button">Done</string>
     <string name="view_report_toolbar_text">View Generated Report</string>
 
+    <!-- Payout History -->
+    <string name="payout_histoy_toolbar_text">Payout History</string>
     <!-- Utility Strings -->
     <string name="requiredFieldError">Required!</string>
     <string name="utility_days">"  Days."</string>

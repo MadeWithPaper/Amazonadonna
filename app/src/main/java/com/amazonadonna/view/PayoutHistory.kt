@@ -2,18 +2,16 @@ package com.amazonadonna.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Payout
-import com.amazonadonna.sync.Synchronizer
-import kotlinx.android.synthetic.main.activity_payout_history_cga.*
+import kotlinx.android.synthetic.main.activity_payout_history.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class PayoutHistoryCGA : AppCompatActivity(), CoroutineScope {
+class PayoutHistory : AppCompatActivity(), CoroutineScope {
     lateinit var job: Job
 
     override val coroutineContext: CoroutineContext
@@ -21,11 +19,12 @@ class PayoutHistoryCGA : AppCompatActivity(), CoroutineScope {
 
     private val payoutHistoryPath = App.BACKEND_BASE_URL + "/payout/listAllForCga"
     private val payoutHistoryList : MutableList<Payout> = mutableListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         job = Job()
 
-        setContentView(R.layout.activity_payout_history_cga)
+        setContentView(R.layout.activity_payout_history)
 
         //val cgaID = intent.extras.getString("cgaID")
 
@@ -39,10 +38,18 @@ class PayoutHistoryCGA : AppCompatActivity(), CoroutineScope {
                 payoutHistoryRV.addItemDecoration(DividerItemDecoration(applicationContext, DividerItemDecoration.VERTICAL))
             }
         }
+
+        setSupportActionBar(payoutHistoryToolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
     private suspend fun fetchHistory() = withContext(Dispatchers.IO) {
         AppDatabase.getDatabase(application).payoutDao().getAllByArtisanId(App.currentArtisan.artisanId) as List<Payout>
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.amazonadonna.model.App
 import com.amazonadonna.model.Payout
 import com.jakewharton.rxbinding2.widget.color
 import kotlinx.android.synthetic.main.payout_history_cell.view.*
@@ -37,10 +38,17 @@ class PayoutHistoryViewHolder (val view : View) : RecyclerView.ViewHolder(view) 
         val date = Date(payout.date)
         val format = SimpleDateFormat("MM/dd/yyyy")
 
-       view.payoutHistory_amount.text = "$${payout.amount}"
+        view.payoutHistory_amount.text = "$${payout.amount}"
         view.payoutHistory_date.text = format.format(date)
-        view.payoutHistory_amount.setTextColor(Color.RED)
-        if (payout.amount < 0){
+
+        //change amount text color
+        if (App.artisanMode && payout.amount > 0) {
+            view.payoutHistory_amount.setTextColor(Color.GREEN)
+        } else if (App.artisanMode && payout.amount < 0) {
+            view.payoutHistory_amount.setTextColor(Color.RED)
+        } else if (!App.artisanMode && payout.amount > 0) {
+            view.payoutHistory_amount.setTextColor(Color.RED)
+        } else {
             view.payoutHistory_amount.setTextColor(Color.GREEN)
         }
     }

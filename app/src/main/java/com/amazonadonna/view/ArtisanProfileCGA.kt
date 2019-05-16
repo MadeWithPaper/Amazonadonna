@@ -106,7 +106,7 @@ class ArtisanProfileCGA() : AppCompatActivity() {
     }
 
     private fun payoutHistory() {
-        val intent = Intent(this, PayoutHistoryCGA::class.java)
+        val intent = Intent(this, PayoutHistory::class.java)
         //intent.putExtra("cgaID", artisan.cgaId)
         //Log.d(TAG, "payout history screen with cgaID: ${artisan.cgaId}")
         startActivity(intent)
