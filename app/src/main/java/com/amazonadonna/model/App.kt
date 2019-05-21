@@ -14,4 +14,10 @@ object App {
 
     //CGA mode - current artisan in focus, set when user selects an artisan form List all Artisan screen
     var currentArtisan : Artisan = Artisan("placeholder", "placeholder", "0", "placeholder", "placeholder", "placeholder", "placeholder", 0.0, 0.0, "placeholder", 0, 0.0)
+
+
+    fun setTestingApp(newArtisanMode: Boolean) {
+        currentArtisan = Artisan("placeholder", "placeholder", "0", "placeholder", "placeholder", "placeholder", "placeholder", 0.0, 0.0, "placeholder", 0, 0.0)
+        artisanMode = newArtisanMode
+    }
 }

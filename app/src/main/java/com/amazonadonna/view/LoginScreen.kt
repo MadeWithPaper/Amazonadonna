@@ -57,6 +57,8 @@ class LoginScreen : AppCompatActivity() {
             return
         }
 
+        //disable touch events once log in button is clicked
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         var userAttributes = CognitoUserAttributes()
         userAttributes.addAttribute("email", email)
 
