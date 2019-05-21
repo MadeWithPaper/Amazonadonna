@@ -214,7 +214,6 @@ class LoginScreen : AppCompatActivity() {
                 return true
             }
         })
-
     }
 
     override fun onStart() {
