@@ -155,5 +155,8 @@
     <string name="artisan_profile_message">Mensaje</string>
     <string name="artisan_profile_payout">Pagar</string>
     <string name="artisan_profile_payout_history">Historial de pagos</string>
+    <string name="payout_histoy_toolbar_text">Historial de pagos</string>
+    <string name="cga_log_in">CGA Inicia sesión</string>
+    <string name="artisan_log_in">Ingreso artesanal</string>
 
 </resources>

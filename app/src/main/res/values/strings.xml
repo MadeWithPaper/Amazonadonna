@@ -157,5 +157,6 @@
     <string name="cancel">Cancel</string>
     <string name="chooser_title">Choose a Messaging Application</string>
     <string name="send_message_button">Send</string>
+    <string name="action_log_in_short">Artisan Log In</string>
 
 </resources>
