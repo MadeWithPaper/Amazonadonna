@@ -11,6 +11,7 @@ import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.sync.ArtisanSync
+import com.amazonadonna.sync.Synchronizer
 import com.amazonadonna.view.ArtisanItemList
 import com.amazonadonna.view.ListOrders
 import com.amazonadonna.view.R
@@ -117,7 +118,7 @@ class HomeScreenArtisan : AppCompatActivity() {
 
             //ArtisanSync.resetLocalDB(applicationContext)
 
-            ArtisanSync.syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
+            Synchronizer.getArtisanSync().syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
 
             // Wait for sync to finish
             do {
@@ -127,7 +128,7 @@ class HomeScreenArtisan : AppCompatActivity() {
             Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
 
             // Perform one more data fetch to ensure data integrity is good
-            ArtisanSync.syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
+            Synchronizer.getArtisanSync().syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
 
             do {
                 Thread.sleep(500)

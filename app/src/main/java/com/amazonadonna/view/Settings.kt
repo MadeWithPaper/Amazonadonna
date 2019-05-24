@@ -22,6 +22,7 @@ import com.amazon.identity.auth.device.api.authorization.AuthorizationManager
 import com.amazonadonna.artisanOnlyViews.HomeScreenArtisan
 import com.amazonadonna.model.App
 import com.amazonadonna.sync.ArtisanSync
+import com.amazonadonna.sync.Synchronizer
 import kotlinx.coroutines.*
 import java.lang.Thread.sleep
 import kotlin.coroutines.CoroutineContext
@@ -111,17 +112,17 @@ class Settings : AppCompatActivity(), CoroutineScope {
             launch {
                 val task = async {
                     if (App.artisanMode)
-                        ArtisanSync.syncArtisanMode(applicationContext, this@Settings, App.currentArtisan.artisanId)
+                        Synchronizer.getArtisanSync().syncArtisanMode(applicationContext, this@Settings, App.currentArtisan.artisanId)
                     else
-                        ArtisanSync.sync(applicationContext, this@Settings, cgaID)
+                        Synchronizer.getArtisanSync().sync(applicationContext, this@Settings, cgaID)
 
                     Log.d("Settings", cgaID)
 
                     // Wait for sync to finish
                     do {
-                        Log.i("Settings", ArtisanSync.inProgress().toString())
+                        Log.i("Settings", Synchronizer.getArtisanSync().inProgress().toString())
                         sleep(1000)
-                    } while (ArtisanSync.inProgress())
+                    } while (Synchronizer.getArtisanSync().inProgress())
                 }
                 task.await()
 
@@ -130,13 +131,13 @@ class Settings : AppCompatActivity(), CoroutineScope {
 
                     // Perform one more data fetch to ensure data integrity is goodandroid button do asynch
                     if (App.artisanMode)
-                        ArtisanSync.syncArtisanMode(applicationContext, this@Settings, App.currentArtisan.artisanId)
+                        Synchronizer.getArtisanSync().syncArtisanMode(applicationContext, this@Settings, App.currentArtisan.artisanId)
                     else
-                        ArtisanSync.sync(applicationContext, this@Settings, cgaID)
+                        Synchronizer.getArtisanSync().sync(applicationContext, this@Settings, cgaID)
 
                     do {
                         sleep(500)
-                    } while (ArtisanSync.inProgress())
+                    } while (Synchronizer.getArtisanSync().inProgress())
                 }
                 task2.await()
 

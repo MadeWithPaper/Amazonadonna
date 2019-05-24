@@ -287,6 +287,82 @@ router.post('/getItems', (req: Request, res: Response) => {
     })
 })
 
+router.post('/getItemsForArtisan', (req: Request, res: Response) => {
+    const artisanId = req.body.artisanId
+    if (artisanId === undefined) {
+        console.log('No artisanId given in order/getItemsForArtisan')
+        res.status(400).send('No artisanId given in order/getItemsForArtisan')
+    } else {
+        const getParamsFromItems: aws.DynamoDB.Types.QueryInput = {
+            TableName: 'orderItem',
+            IndexName: 'orderId-index',
+            KeyConditionExpression: 'orderId = :id',
+            ExpressionAttributeValues: {
+                ':id': { S: req.body.orderId }
+            }
+        }
+        ddb.query(getParamsFromItems, (err, data) => {
+            if (err) {
+                console.log(
+                    'Error fetching orderItem in order/getItems: ' + err
+                )
+                res.status(400).send(
+                    'Error fetching orderItem in order/getItems: ' + err.message
+                )
+            } else {
+                const convert = unmarshUtil(data.Items)
+                Promise.all(convert).then((items: OrderItem[]) => {
+                    const queryItems = items.map(item => {
+                        return new Promise(resolve => {
+                            const getItemParams: aws.DynamoDB.Types.GetItemInput = {
+                                TableName: 'item',
+                                Key: { itemId: { S: item.itemId } }
+                            }
+                            ddb.getItem(
+                                getItemParams,
+                                (
+                                    getItemErr,
+                                    getItemData: aws.DynamoDB.Types.GetItemOutput
+                                ) => {
+                                    if (getItemErr) {
+                                        console.log(
+                                            'Error fetching items in order/getItemsForArtisan/getItem: ' +
+                                                getItemErr
+                                        )
+                                        res.status(400).send(
+                                            'Error fetching items in order/getItemsForArtisan/getItem: ' +
+                                                getItemErr.message
+                                        )
+                                    } else {
+                                        resolve(getItemData)
+                                    }
+                                }
+                            )
+                        })
+                    })
+                    Promise.all(queryItems).then(
+                        (marshallItems: aws.DynamoDB.Types.GetItemOutput[]) => {
+                            const convertItems = marshallItems.map(
+                                marshallItem => {
+                                    return new Promise(resolve => {
+                                        const unmarshedItem = aws.DynamoDB.Converter.unmarshall(
+                                            marshallItem.Item
+                                        )
+                                        resolve(unmarshedItem)
+                                    })
+                                }
+                            )
+                            Promise.all(convertItems).then(itemData => {
+                                res.json(_.filter(itemData, { artisanId }))
+                            })
+                        }
+                    )
+                })
+            }
+        })
+    }
+})
+
 router.post('/setFulfilledStatus', (req: Request, res: Response) => {
     const fulfilledBool = req.body.fulfilledStatus === 'true'
     const negFulfilledBool = req.body.fulfilledStatus === 'false'

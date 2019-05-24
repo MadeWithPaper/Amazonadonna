@@ -16,6 +16,15 @@ abstract class Synchronizer : CoroutineScope {
         const val SYNC_DELETE = 3
         const val SYNCED = 0
         var numInProgress: Int = 0
+        var artisanSyncClass: String = "com.amazonadonna.sync.ArtisanSync"
+
+        fun setTestingSync() {
+            artisanSyncClass = "com.amazonadonna.sync.TestingArtisanSync"
+        }
+
+        fun getArtisanSync() : Synchronizer {
+            return Class.forName(artisanSyncClass).kotlin.objectInstance as Synchronizer
+        }
     }
 
     lateinit var job: Job
