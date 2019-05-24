@@ -49,7 +49,7 @@ class HomeScreen : AppCompatActivity() {
                 //do nothing use placeholder text
             }
 
-            syncData()
+            //syncData()
         }
         override fun onError(ae: AuthError?) {
             //To change body of created functions use File | Settings | File Templates.
@@ -66,6 +66,8 @@ class HomeScreen : AppCompatActivity() {
             artisanNameTV.text = currUser!!.userName
         }
     }
+
+
     fun syncData() {
         if (ArtisanSync.hasInternet(applicationContext)) {
             runOnUiThread {
@@ -148,6 +150,11 @@ class HomeScreen : AppCompatActivity() {
 
         reports.setOnClickListener {
             openReports()
+        }
+
+        cgaHomeScreenSwipeRefreshLayout.setOnRefreshListener{
+            syncData()
+            cgaHomeScreenSwipeRefreshLayout.isRefreshing = false
         }
 
     }
