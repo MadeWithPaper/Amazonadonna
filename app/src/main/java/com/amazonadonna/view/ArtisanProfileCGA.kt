@@ -62,15 +62,15 @@ class ArtisanProfileCGA() : AppCompatActivity() {
     }
 
     private fun artisanMessage() {
-        val intent = Intent(this, MessageArtisan::class.java)
+        //val intent = Intent(this, MessageArtisan::class.java)
         //intent.putExtra("selectedArtisan", artisan)
-        startActivity(intent)
-        finish()
-//        val intent = Intent(Intent.ACTION_SEND)
-//        intent.type = "text/plain"
-//        intent.putExtra("address", artisan.phoneNumber)
-//        val messagechooser = createChooser(intent, "Please Choose an Application to Send Messages...")
-//        startActivity(messagechooser)
+        //startActivity(intent)
+        //finish()
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/plain"
+        intent.putExtra("address", App.currentArtisan.phoneNumber)
+        val messageChooser = Intent.createChooser(intent, "Please Choose an Application to Send Messages...")
+        startActivity(messageChooser)
     }
 
     private fun populateSelectedArtisan() {
