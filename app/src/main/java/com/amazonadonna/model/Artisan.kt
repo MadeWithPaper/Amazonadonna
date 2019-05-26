@@ -21,7 +21,7 @@ data class Artisan (
         @ColumnInfo(name = "lon") @Json(name = "lat") var lat : Double,
         @ColumnInfo(name = "picURL") @Json(name = "picURL") var picURL : String?,
         @ColumnInfo(name = "synced") var synced : Int = Synchronizer.SYNCED,
-        @ColumnInfo(name = "balance") @Json(name = "balance") var balance : Double) : Serializable {
+        @ColumnInfo(name = "balance") @Json(name = "balance") var balance : Double) : Serializable{
 
     fun generateTempID() {
        //TODO fill in logic for generating unique ID for artisan

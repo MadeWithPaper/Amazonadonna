@@ -175,8 +175,11 @@ class AddItemCategory : AppCompatActivity() {
             val sub = subMap.get(product.category)!!
             setSpinner(itemCategory_subSpinner, sub, editMode, 0)
 
-            val spc = specificMap.get(product.subCategory)!!
-            setSpinner(itemCategory_specificSpinner, spc, editMode, 1)
+            /*Log.d("specific", specificMap.get(product.subCategory)[0])*/
+            if (specificMap.get(product.subCategory) != null){
+                val spc = specificMap.get(product.subCategory)!!
+                setSpinner(itemCategory_specificSpinner, spc, editMode, 1)
+            }
 
         } else {
             //creating new product set artisanID
@@ -259,7 +262,7 @@ class AddItemCategory : AppCompatActivity() {
                             "Bedding" to beddingsub,
                             "Furniture" to furnituresub,
                             "Home Decor" to homedecorsub,
-                            "Kitchen & Dinning" to kitchendiningsub,
+                            "Kitchen & Dining" to kitchendiningsub,
                             "Lighting" to homelightingsub,
                             "Patio, Lawn & Garden" to lawngardensub,
                             "Storage & Organization" to storageorganizationsub,
