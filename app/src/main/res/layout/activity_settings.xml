@@ -31,22 +31,9 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/settingsToolBarTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/settings_toolbar_text"
-        android:textColor="#fff"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@+id/settings_toolbar"
-        app:layout_constraintEnd_toEndOf="@+id/settings_toolbar"
-        app:layout_constraintStart_toStartOf="@+id/settings_toolbar"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/settings_toolbar_text"
+        app:titleTextColor="#fff" />
 
     <Button
         android:id="@+id/saveSettingsButton"
@@ -87,9 +74,9 @@
         android:layout_marginStart="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="50dp"
+        android:text="@string/setting_change_language_button"
         android:textColor="#fff"
         android:textSize="20sp"
-        android:text="@string/setting_change_language_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -102,8 +89,8 @@
         android:layout_marginStart="50dp"
         android:layout_marginTop="50dp"
         android:text="@string/setting_current_language_TV"
-        android:textSize="25sp"
         android:textColor="#000"
+        android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settings_toolbar" />
 

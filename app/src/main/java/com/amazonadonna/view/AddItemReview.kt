@@ -99,6 +99,16 @@ class AddItemReview : AppCompatActivity() {
         addItemReview_continueButton.setOnClickListener {
             reviewDone(product, photoFilesArr)
         }
+
+        setSupportActionBar(addItemReview_toolBar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        return true
     }
 
     //TODO user horizontal scroll bar to make a nicer item pic gallery
@@ -133,6 +143,8 @@ class AddItemReview : AppCompatActivity() {
             intent = Intent(this, ArtisanProfile::class.java)
         }
         //intent.putExtra("artisan", artisan)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
     }

@@ -26,6 +26,7 @@
     <string name="add_artisan_bio_tv_hint">Artisan Biography</string>
     <string name="add_artisan_bio_tv">Biography: </string>
     <string name="add_artisan_toolbar_text">Add Artisan</string>
+    <string name="add_artisan_email_tv_hint">Artisan Email</string>
 
     <!-- Add Item Category -->
     <string name="item_category_toolbar_text">Add Item</string>
@@ -49,11 +50,6 @@
     <string name="item_info_product_quantity_tv_hint">Product Quantity</string>
     <string name="item_info_product_production_tv_hint">Days</string>
     <string name="item_info_product_toolbar_text">Item Info</string>
-    <string name="item_info_product_name_tv">Name: </string>
-    <string name="item_info_product_desc_tv">Description: </string>
-    <string name="item_info_product_price_tv">Price ($): </string>
-    <string name="item_info_product_quantity_tv">Quantity: </string>
-    <string name="item_info_product_production_tv">Production Time: </string>
     <string name="item_info_shipping_method">Select Shipping Method Below: </string>
 
     <!-- Add Item Review -->
@@ -157,5 +153,6 @@
     <string name="cancel">Cancel</string>
     <string name="chooser_title">Choose a Messaging Application</string>
     <string name="send_message_button">Send</string>
+    <string name="action_log_in_short">Artisan Log In</string>
 
 </resources>

@@ -4,9 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.room.Room
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
@@ -19,6 +17,8 @@ import com.amazonadonna.view.Settings
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_home_screen_artisan.*
+import kotlinx.android.synthetic.main.activity_home_screen_artisan.artisanNameTV
+import kotlinx.android.synthetic.main.activity_home_screen_artisan.setting
 import okhttp3.*
 import java.io.IOException
 
@@ -60,6 +60,11 @@ class HomeScreenArtisan : AppCompatActivity() {
 
         setting.setOnClickListener {
             openSetting(testArtisan)
+        }
+
+        artisanHomeScreenSwipeRefreshLayout.setOnRefreshListener{
+            syncData()
+            artisanHomeScreenSwipeRefreshLayout.isRefreshing = false
         }
     }
 

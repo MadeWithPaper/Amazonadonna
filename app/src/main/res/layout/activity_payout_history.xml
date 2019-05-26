@@ -10,15 +10,15 @@
         android:id="@+id/payoutHistoryToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:titleTextColor="#fff"
-        app:title="@string/payout_histoy_toolbar_text"
-        android:textAlignment="viewStart"
         android:background="?attr/colorPrimary"
+        android:textAlignment="viewStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:theme="?attr/actionBarTheme"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/payout_histoy_toolbar_text"
+        app:titleTextColor="#fff" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/payoutHistoryRV"

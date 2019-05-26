@@ -10,7 +10,7 @@ import com.amazonadonna.model.Order
 import com.amazonadonna.model.Payout
 import com.amazonadonna.model.Product
 
-@Database(entities = arrayOf(Artisan::class, Order::class, Product::class, Payout::class), version = 24, exportSchema = false)
+@Database(entities = arrayOf(Artisan::class, Order::class, Product::class, Payout::class), version = 25, exportSchema = false)
 @TypeConverters(ProductListTypeConverter::class, PictureListTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 

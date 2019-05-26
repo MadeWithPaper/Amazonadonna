@@ -85,6 +85,14 @@ class EditArtisan : AppCompatActivity() {
             }
         })
 
+        setSupportActionBar(editArtisanProfileToolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun selectPicture() {

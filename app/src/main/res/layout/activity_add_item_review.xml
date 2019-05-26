@@ -15,10 +15,12 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/item_review_toolbar_text"
+        app:titleTextColor="#fff" />
 
     <ProgressBar
-        android:id="@+id/addItemProgress_2"
+        android:id="@+id/addItemProgress_4"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="20dp"
@@ -47,20 +49,6 @@
         app:layout_constraintTop_toBottomOf="@+id/addItemReview_itemDescription" />
 
     <TextView
-        android:id="@+id/addItemReview_ToolBarText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/item_review_toolbar_text"
-        android:textAlignment="center"
-        android:textColor="#fff"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="@+id/addItemReview_toolBar"
-        app:layout_constraintStart_toStartOf="@+id/addItemReview_toolBar"
-        app:layout_constraintTop_toTopOf="@+id/addItemReview_toolBar" />
-
-    <TextView
         android:id="@+id/addItemReview_categories"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -68,7 +56,7 @@
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemProgress_2" />
+        app:layout_constraintTop_toBottomOf="@+id/addItemProgress_4" />
 
     <TextView
         android:id="@+id/addIemReview_ProductNameTF"
@@ -83,26 +71,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addItemReview_categories" />
 
-    <!--<ImageView
-        android:id="@+id/addItemReview_Image"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addIemReview_ProductNameTF"
-        app:srcCompat="@drawable/placeholder" />-->
     <HorizontalScrollView
         android:id="@+id/addItemReview_Image"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:scrollbars="horizontal"
         android:scrollbarAlwaysDrawHorizontalTrack="true"
+        android:scrollbars="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addIemReview_ProductNameTF"
-        >
+        app:layout_constraintTop_toBottomOf="@id/addIemReview_ProductNameTF">
 
         <LinearLayout
             android:id="@+id/gallery"

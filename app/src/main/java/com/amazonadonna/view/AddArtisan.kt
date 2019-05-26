@@ -34,6 +34,7 @@ import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import com.amazonadonna.model.App
 import kotlinx.android.synthetic.main.activity_login_screen.*
+import kotlinx.android.synthetic.main.activity_payout_history.*
 import java.io.File
 import java.io.IOException
 
@@ -68,13 +69,21 @@ class AddArtisan : AppCompatActivity() {
 
         artisanContact_et.addTextChangedListener(PhoneNumberFormattingTextWatcher())
 
-        addArtisan_layout.setOnTouchListener(object : View.OnTouchListener {
+        addArtisan_scrollViewContents.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View, m: MotionEvent): Boolean {
                 hideKeyboard(v)
                 return true
             }
         })
 
+        setSupportActionBar(addnewartisan_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun selectImageInAlbum() {
@@ -340,7 +349,7 @@ class AddArtisan : AppCompatActivity() {
         return bm
     }
 
-    public fun calculateInSampleSize(options : BitmapFactory.Options,
+     fun calculateInSampleSize(options : BitmapFactory.Options,
                                       reqWidth : Int, reqHeight : Int): Int {
         // Raw height and width of image
         val height = options.outHeight;
@@ -393,8 +402,9 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
         val name = artisanName_et.text.toString()
         val bio = artisanBio_et.text.toString()
         val number = artisanContact_et.text.toString()
+        val email = artisanEmail_et.text.toString()
 
-        val newArtisan = Artisan(name, "", number, "","", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 3000.00)
+        val newArtisan = Artisan(name, "", number, email,"", "", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 3000.00)
         newArtisan.generateTempID()
         //parse location info
         parseLoc(newArtisan)
@@ -448,6 +458,16 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
 
         if (artisanContact_et.text.toString().isEmpty()){
             artisanContact_til.error = this.resources.getString(R.string.requiredFieldError)
+            return false
+        }
+
+        if (artisanEmail_et.text.toString().isEmpty()){
+            artisanEmail_til.error = this.resources.getString(R.string.requiredFieldError)
+            return false
+        }
+        
+        if (!artisanEmail_et.text.toString().contains(".")){
+            artisanEmail_til.error = this.resources.getString(R.string.error_invalid_email)
             return false
         }
 

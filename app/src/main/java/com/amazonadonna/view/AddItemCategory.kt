@@ -12,6 +12,7 @@ import android.widget.Spinner
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Product
 import com.amazonadonna.sync.Synchronizer.Companion.SYNC_NEW
+import kotlinx.android.synthetic.main.activity_payout_history.*
 
 
 class AddItemCategory : AppCompatActivity() {
@@ -102,6 +103,9 @@ class AddItemCategory : AppCompatActivity() {
         //val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
         initDataMap()
 
+        setSupportActionBar(addItem_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
         // Create an ArrayAdapter
         val mainArrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, mainCategoryList)
         // Set layout to use when the list of choices appear
@@ -188,6 +192,11 @@ class AddItemCategory : AppCompatActivity() {
 
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     private fun editPosition(spinner: Spinner, value : String) : Int {
         Log.d("edit position", "call to edit position" )
 
@@ -230,7 +239,7 @@ class AddItemCategory : AppCompatActivity() {
             intent.putExtra("editMode", editMode)
             //intent.putExtra("selectedArtisan", artisan)
             startActivity(intent)
-            finish()
+            //finish()
         } else {
             // do nothing not all categories are set correctly
             //TODO warning message?

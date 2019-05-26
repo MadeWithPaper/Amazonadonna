@@ -13,6 +13,7 @@ data class Artisan (
         @ColumnInfo(name = "artisanName") @Json(name = "artisanName") var artisanName : String,
         @PrimaryKey @ColumnInfo(name = "artisanId") @Json(name = "artisanId") var artisanId : String,
         @ColumnInfo(name = "phoneNumber") @Json (name = "phoneNumber") var phoneNumber : String,
+        @ColumnInfo(name = "artisanEmail") @Json (name = "artisanEmail") var email : String,
         @ColumnInfo(name = "city") @Json(name = "city") var city : String,
         @ColumnInfo(name = "country") @Json(name = "country") var country : String,
         @ColumnInfo(name = "bio") @Json(name = "bio")var bio : String,

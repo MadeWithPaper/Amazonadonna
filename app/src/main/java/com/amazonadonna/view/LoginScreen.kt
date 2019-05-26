@@ -51,6 +51,13 @@ class LoginScreen : AppCompatActivity() {
     /**
      * Amazon Cognito for Artisans
      */
+
+    private fun signUpNewArtisanDemo() {
+        val intent =  Intent(this@LoginScreen, HomeScreenArtisan::class.java)
+        //intent.putExtra("artisanID", idToken)
+        startActivity(intent)
+    }
+
     private fun signUpNewArtisan(email: String, password: String) {
 
         if (!validateInput()){
@@ -190,7 +197,8 @@ class LoginScreen : AppCompatActivity() {
         //TODO implement Artisan login
         artisan_log_in_button.setOnClickListener {
             //signUpNewArtisan("teamamazonadonna@gmail.com", "Password1$")
-            signUpNewArtisan(email_et.text.toString(), password_et.text.toString())
+            signUpNewArtisanDemo()
+            //signUpNewArtisan(email_et.text.toString(), password_et.text.toString())
         }
 
         cga_log_in_button.setOnClickListener{

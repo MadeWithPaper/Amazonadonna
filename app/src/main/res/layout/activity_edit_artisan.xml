@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/editArtisan_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/editArtisan_layout"
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
@@ -19,21 +19,9 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/artisanProfileToolbarText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/edit_artisan_toolbar_text"
-        android:textAlignment="center"
-        android:textColor="#fff"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="@+id/editArtisanProfileToolbar"
-        app:layout_constraintStart_toStartOf="@+id/editArtisanProfileToolbar"
-        app:layout_constraintTop_toTopOf="@+id/editArtisanProfileToolbar" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/edit_artisan_toolbar_text"
+        app:titleTextColor="#fff" />
 
     <ImageView
         android:id="@+id/editArtisan_pic"
@@ -154,15 +142,15 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/editArisan_SaveButton"
         style="@style/Widget.MaterialComponents.Button"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        app:cornerRadius="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="50dp"
         android:text="@string/edit_artisan_update_button"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="20sp"
+        app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
