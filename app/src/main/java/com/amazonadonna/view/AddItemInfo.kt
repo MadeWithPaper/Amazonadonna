@@ -1,13 +1,16 @@
 package com.amazonadonna.view
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import android.text.TextUtils
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -40,9 +43,8 @@ class AddItemInfo : AppCompatActivity() {
             addItemInfoContinue(product)
         }
 
-        //addItemInfo_ProductDescriptionTF.setImeOptions(EditorInfo.IME_ACTION_NEXT)
-        //addItemInfo_ProductDescriptionTF.setRawInputType(InputType.TYPE_CLASS_TEXT)
-
+        setSupportActionBar(addItemInfo_toolBar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val shippingArrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, shippingSpinnerValues)
         // Set layout to use when the list of choices appear
@@ -63,6 +65,23 @@ class AddItemInfo : AppCompatActivity() {
         if (editMode) {
             addItemInfo_ProductShippingSpinner.setSelection(shippingArrayAdapter.getPosition(product.shippingOption))
         }
+
+        addItemInfo_scrollViewContents.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View, m: MotionEvent): Boolean {
+                hideKeyboard(v)
+                return true
+            }
+        })
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun addItemInfoContinue(product: Product) {
@@ -75,7 +94,7 @@ class AddItemInfo : AppCompatActivity() {
             Log.i("AddItemInfo", "product updated 2/4: " + product)
             //clearFields()
             startActivity(intent)
-            finish()
+            //finish()
         }
     }
 

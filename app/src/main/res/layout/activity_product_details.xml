@@ -57,14 +57,14 @@
         app:layout_constraintTop_toBottomOf="@+id/itemDetail_categories" />
 
     <!--<ImageView-->
-        <!--android:id="@+id/itemDetail_Image"-->
-        <!--android:layout_width="200dp"-->
-        <!--android:layout_height="200dp"-->
-        <!--android:layout_marginStart="10dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/itemDetail_ProductNameTF"-->
-        <!--app:srcCompat="@drawable/insertimage" />-->
+    <!--android:id="@+id/itemDetail_Image"-->
+    <!--android:layout_width="200dp"-->
+    <!--android:layout_height="200dp"-->
+    <!--android:layout_marginStart="10dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/itemDetail_ProductNameTF"-->
+    <!--app:srcCompat="@drawable/insertimage" />-->
 
     <HorizontalScrollView
         android:id="@+id/itemDetail_Image"
@@ -74,8 +74,7 @@
         android:layout_marginTop="10dp"
         android:scrollbars="none"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/itemDetail_ProductNameTF"
-        >
+        app:layout_constraintTop_toBottomOf="@id/itemDetail_ProductNameTF">
 
         <LinearLayout
             android:id="@+id/gallery"
@@ -144,9 +143,9 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
+        android:scrollbars="vertical"
         android:textColor="#000"
         android:textSize="20sp"
-        android:scrollbars = "vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

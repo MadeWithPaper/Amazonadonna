@@ -153,5 +153,6 @@
     <string name="payout_histoy_toolbar_text">Historial de pagos</string>
     <string name="cga_log_in">CGA Inicia sesión</string>
     <string name="artisan_log_in">Ingreso artesanal</string>
+    <string name="add_artisan_email_tv_hint">Correo electrónico del artesano</string>
 
 </resources>

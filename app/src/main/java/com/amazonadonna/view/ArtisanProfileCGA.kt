@@ -44,6 +44,14 @@ class ArtisanProfileCGA() : AppCompatActivity() {
         artisanPayoutHistory_cga.setOnClickListener {
             payoutHistory()
         }
+
+        setSupportActionBar(artisanProfileToolbar_cga)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     override fun onResume() {

@@ -57,10 +57,17 @@ class ProductDetails : AppCompatActivity() {
             }
         }
 
-        //TODO edit items
         itemDetail_edit.setOnClickListener {
             editItem(product)
         }
+
+        setSupportActionBar(itemDetail_toolBar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun editItem(product: Product) {

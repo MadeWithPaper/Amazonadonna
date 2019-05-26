@@ -150,6 +150,14 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(artisanItemList_recyclerView)
 
+        setSupportActionBar(artisanItemList_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     override fun onStart() {
@@ -198,9 +206,9 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
     private fun addItem() {
         //go to list all artisan screen
         val intent = Intent(this, AddItemCategory::class.java)
-        //intent.putExtra("selectedArtisan", artisan)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
-        finish()
+        //finish()
     }
 
     //TODO GET request to query for all items associated to selected artisan

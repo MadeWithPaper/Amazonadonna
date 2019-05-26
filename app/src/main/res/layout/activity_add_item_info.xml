@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addItemInfo_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.amazonadonna.view.AddItemInfo">
@@ -15,7 +16,9 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/item_info_product_toolbar_text"
+        app:titleTextColor="#fff" />
 
     <ProgressBar
         android:id="@+id/addItemProgress_2"
@@ -29,170 +32,170 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addItemInfo_toolBar" />
 
-    <TextView
-        android:id="@+id/addItemInfo_ToolBarText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/item_info_product_toolbar_text"
-        android:textAlignment="center"
-        android:textColor="#fff"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="@+id/addItemInfo_toolBar"
-        app:layout_constraintStart_toStartOf="@+id/addItemInfo_toolBar"
-        app:layout_constraintTop_toTopOf="@+id/addItemInfo_toolBar" />
-
-    <Button
-        android:id="@+id/addItemInfo_continueButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="50dp"
-        android:background="#00a8e1"
-        android:text="@string/continue_button_text"
-        android:textColor="#fff"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductShippingSpinner" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/addItemInfo_ProductName_til"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+    <ScrollView
+        android:id="@+id/addItemInfo_scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemProgress_2">
+        android:layout_height="0dp"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addItemProgress_2">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/addItemInfo_ProductName_et"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/addItemInfo_scrollViewContents"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/item_info_product_name_tv_hint"
-            android:imeOptions="actionNext"
-            android:inputType="textPersonName"
-            android:textColor="#000"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="wrap_content">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/addItemInfo_ProductPrice_til"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductName_til">
+            <Button
+                android:id="@+id/addItemInfo_continueButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="50dp"
+                android:background="#00a8e1"
+                android:text="@string/continue_button_text"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductShippingSpinner" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/addItemInfo_ProductPrice_et"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/item_info_product_price_tv_hint"
-            android:imeOptions="actionNext"
-            android:inputType="numberDecimal"
-            android:textColor="#000" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/addItemInfo_ProductName_til"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/addItemInfo_ProductQuantity_til"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductPrice_til">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/addItemInfo_ProductName_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/item_info_product_name_tv_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:textColor="#000" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/addItemInfo_ProductQuantity_et"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:ems="10"
-            android:hint="@string/item_info_product_quantity_tv_hint"
-            android:imeOptions="actionNext"
-            android:inputType="number"
-            android:textColor="#000"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/addItemInfo_ProductPrice_til"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductName_til">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/addItemInfo_ProductionTime_til"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductQuantity_til">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/addItemInfo_ProductPrice_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/item_info_product_price_tv_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="numberDecimal"
+                    android:textColor="#000" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/addItemInfo_ProductionTime_et"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/item_info_product_production_tv_hint"
-            android:imeOptions="actionNext"
-            android:inputType="time"
-            android:textColor="#000" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/addItemInfo_ProductQuantity_til"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductPrice_til">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/addItemInfo_ProductDescription_til"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductionTime_til">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/addItemInfo_ProductQuantity_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:ems="10"
+                    android:hint="@string/item_info_product_quantity_tv_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:textColor="#000" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/addItemInfo_ProductDescription_et"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/item_info_product_desc_tv_hint"
-            android:imeOptions="actionNext"
-            android:inputType="textCapSentences|textMultiLine"
-            android:textColor="#000"
-            android:textSize="20sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/addItemInfo_ProductionTime_til"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductQuantity_til">
 
-    <Spinner
-        android:id="@+id/addItemInfo_ProductShippingSpinner"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_shippingTV" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/addItemInfo_ProductionTime_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/item_info_product_production_tv_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="time"
+                    android:textColor="#000" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/addItemInfo_shippingTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/item_info_shipping_method"
-        android:textColor="#000"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductDescription_til" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/addItemInfo_ProductDescription_til"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductionTime_til">
 
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/addItemInfo_ProductDescription_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/item_info_product_desc_tv_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:textColor="#000"
+                    android:textSize="20sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/addItemInfo_ProductShippingSpinner"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addItemInfo_shippingTV" />
+
+            <TextView
+                android:id="@+id/addItemInfo_shippingTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/item_info_shipping_method"
+                android:textColor="#000"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addItemInfo_ProductDescription_til" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
