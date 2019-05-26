@@ -102,6 +102,11 @@ class AddItemInfo : AppCompatActivity() {
             return false
         }
 
+        if (TextUtils.isEmpty(addItemInfo_ProductQuantityTF.text.toString())){
+            addItemInfo_ProductQuantityTF.error = this.resources.getString(R.string.requiredFieldError)
+            return false
+        }
+
         if (shippmentMethod == SELECT_SHIPPING_METHOD) {
             Toast.makeText(this@AddItemInfo, this.resources.getString(R.string.add_item_info_shipping_warning), Toast.LENGTH_LONG).show()
             return false
@@ -111,6 +116,7 @@ class AddItemInfo : AppCompatActivity() {
             addItemInfo_ProductPriceTF.error = this.resources.getString(R.string.payout_amount_format_error)
             return false
         }
+
 
         return true
     }
