@@ -49,11 +49,6 @@
     <string name="item_info_product_quantity_tv_hint">Product Quantity</string>
     <string name="item_info_product_production_tv_hint">Days</string>
     <string name="item_info_product_toolbar_text">Item Info</string>
-    <string name="item_info_product_name_tv">Name: </string>
-    <string name="item_info_product_desc_tv">Description: </string>
-    <string name="item_info_product_price_tv">Price ($): </string>
-    <string name="item_info_product_quantity_tv">Quantity: </string>
-    <string name="item_info_product_production_tv">Production Time: </string>
     <string name="item_info_shipping_method">Select Shipping Method Below: </string>
 
     <!-- Add Item Review -->
