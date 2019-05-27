@@ -37,11 +37,11 @@ router.post('/listAllForCga', (req: Request, res: Response) => {
 })
 
 router.post('/add', (req: Request, res: Response) => {
-    const id = uuid.v1()
+    // const id = uuid.v1()
     const putItemParams: aws.DynamoDB.PutItemInput = {
         TableName: 'artisan',
         Item: {
-            artisanId: { S: id },
+            artisanId: { S: req.body.artisanId },
             cgaId: { S: req.body.cgaId },
             bio: { S: req.body.bio },
             city: { S: req.body.city },
@@ -52,7 +52,8 @@ router.post('/add', (req: Request, res: Response) => {
             balance: { N: req.body.balance },
             picURL: { S: 'Not set' },
             phoneNumber: { S: req.body.phoneNumber },
-            active: { S: 'true' }
+            active: { S: 'true' },
+            email: { S: req.body.email }
         }
     }
     ddb.putItem(putItemParams, (err, data) => {
@@ -61,7 +62,7 @@ router.post('/add', (req: Request, res: Response) => {
             console.log(msg, err)
             res.status(400).send(msg + err.message)
         } else {
-            res.json(id.toString())
+            res.json(req.body.artisanId.toString())
         }
     })
 })
@@ -183,7 +184,8 @@ router.post('/edit', (req: Request, res: Response) => {
                         : unmarshed.picURL,
                     phoneNumber: req.body.phoneNumber
                         ? req.body.phoneNumber
-                        : unmarshed.phoneNumber
+                        : unmarshed.phoneNumber,
+                    email: req.body.email ? req.body.email : unmarshed.email
                 }
 
                 const editArtisanParam: aws.DynamoDB.Types.UpdateItemInput = {

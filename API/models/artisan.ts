@@ -10,6 +10,7 @@ interface Artisan {
     balance: string
     picURL: string
     phoneNumber: string
+    email: string
 }
 
 export { Artisan }
