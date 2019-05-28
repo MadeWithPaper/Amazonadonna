@@ -53,7 +53,8 @@ router.post('/add', (req: Request, res: Response) => {
             picURL: { S: 'Not set' },
             phoneNumber: { S: req.body.phoneNumber },
             active: { S: 'true' },
-            email: { S: req.body.email }
+            email: { S: req.body.email },
+            newAccount: { S: 'true' }
         }
     }
     ddb.putItem(putItemParams, (err, data) => {
@@ -185,7 +186,10 @@ router.post('/edit', (req: Request, res: Response) => {
                     phoneNumber: req.body.phoneNumber
                         ? req.body.phoneNumber
                         : unmarshed.phoneNumber,
-                    email: req.body.email ? req.body.email : unmarshed.email
+                    email: req.body.email ? req.body.email : unmarshed.email,
+                    newAccount: req.body.newAccount
+                        ? req.body.newAccount
+                        : unmarshed.newAccount
                 }
 
                 const editArtisanParam: aws.DynamoDB.Types.UpdateItemInput = {

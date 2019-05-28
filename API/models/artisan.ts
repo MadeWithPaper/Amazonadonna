@@ -11,6 +11,7 @@ interface Artisan {
     picURL: string
     phoneNumber: string
     email: string
+    newAccount: string
 }
 
 export { Artisan }
