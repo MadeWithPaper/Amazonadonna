@@ -17,7 +17,7 @@ import com.amazonadonna.sync.Synchronizer
 
 class ListArtisanAdapter (private val context: Context, private val artisans :MutableList<Artisan>) : RecyclerView.Adapter<ArtisanViewHolder> () {
     private var removedPostion = 0
-    private var removedArtisan = Artisan("", "", "", "", "", "", "", "", 0.0,0.0,"", Synchronizer.SYNCED,0.0)
+    private var removedArtisan = Artisan("", "", "", "", false, "", "", "", "", 0.0,0.0,"", Synchronizer.SYNCED,0.0)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtisanViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
