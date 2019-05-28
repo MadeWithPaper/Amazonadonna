@@ -11,7 +11,7 @@
     android:focusableInTouchMode="true"
     tools:context="com.amazonadonna.view.AddArtisan">
 
-    <androidx.appcompat.widget.Toolbar
+<androidx.appcompat.widget.Toolbar
         android:id="@+id/addnewartisan_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

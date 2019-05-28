@@ -10,8 +10,8 @@ import android.view.MotionEvent
 import androidx.appcompat.app.AlertDialog
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 
-//import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandle
 import com.amazonaws.regions.Regions
 
 import com.amazon.identity.auth.device.AuthError
@@ -19,19 +19,16 @@ import com.amazon.identity.auth.device.api.Listener
 import com.amazon.identity.auth.device.api.authorization.*
 import com.amazon.identity.auth.device.api.workflow.RequestContext
 import com.amazonadonna.artisanOnlyViews.HomeScreenArtisan
+import com.amazonadonna.artisanOnlyViews.ArtisanUpdatePassword
+
 
 import kotlinx.android.synthetic.main.activity_login_screen.*
-import com.amazonaws.ClientConfiguration
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.*
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler
-import android.R.attr.password
-import android.widget.Toast
-import com.amazon.identity.auth.device.api.authorization.ProfileScope.userId
-import com.amazonadonna.artisanOnlyViews.ArtisanUpdatePassword
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.NewPasswordContinuation
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails
 
 const val AUTHORITY = "com.amazonadonna.provider"
@@ -52,32 +49,9 @@ class LoginScreen : AppCompatActivity() {
     /**
      * Amazon Cognito for Artisans
      */
-
-    private fun signUpNewArtisanDemo() {
-        val intent =  Intent(this@LoginScreen, HomeScreenArtisan::class.java)
-        //intent.putExtra("artisanID", idToken)
-        startActivity(intent)
-    }
-
-    //TODO call this if password needs to be updated
-    private fun updateArtisanPassword(email: String){
-        val intent =  Intent(this@LoginScreen, ArtisanUpdatePassword::class.java)
-        intent.putExtra("email", email)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun signUpNewArtisan(email: String, password: String) {
-
-        if (!validateInput()){
-            return
-        }
-
-        //disable touch events once log in button is clicked
-        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        var userAttributes = CognitoUserAttributes()
-        userAttributes.addAttribute("email", email)
-
+    private fun signInArtisan() {
+        var email = email_et.text.toString()
+        var password = password_et.text.toString()
         var user = userPool.getUser(email)
 
 
@@ -112,42 +86,52 @@ class LoginScreen : AppCompatActivity() {
                 continuation?.continueTask()
             }
 
+            // Method is called when user logs in for first time with temp password
             override fun authenticationChallenge(continuation: ChallengeContinuation?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                Log.d("LoginScreen", "New user with temp password logging in")
+                // Check the challenge name
+                if("NEW_PASSWORD_REQUIRED".equals(continuation?.challengeName)) {
+                    // A new user is trying to sign in for the first time after
+                    // admin has created the user’s account
+                    // Cast to NewPasswordContinuation for easier access to challenge parameters
+                    var newPasswordContinuation : NewPasswordContinuation? = continuation as NewPasswordContinuation;
+
+                    // Get the list of required parameters
+                    var requiredAttributes = newPasswordContinuation?.requiredAttributes
+
+                    // Get the current user attributes
+                    var currUserAttributes = newPasswordContinuation?.currentUserAttributes
+
+                    // Prompt user to set a new password and values for required attributes
+
+                    // Set new user password
+                    newPasswordContinuation?.setPassword(password)
+
+
+                    // Allow the sign-in to complete
+                    newPasswordContinuation?.continueTask();
+                }
             }
 
             override fun onFailure(exception: Exception?) {
                 Log.d("LoginScreen", "in authHandler fail")
                 Log.d("LoginScreen", exception?.message)
-            }
-        }
-
-
-        var signUpHandler = object : SignUpHandler {
-            override fun onSuccess(user: CognitoUser?, signUpConfirmationState: Boolean, cognitoUserCodeDeliveryDetails: CognitoUserCodeDeliveryDetails?) {
-                Log.d("LoginScreen", "in signUpHandler success")
-                if (!signUpConfirmationState) { // Artisan needs to be confirmed, should have been automatically sent a message
-                    Log.d("LoginScreen", "Signup not confirmed")
-                    Toast.makeText(this@LoginScreen, "Please confirm your email and try again", Toast.LENGTH_LONG)
-                } else { // User is good, allow entry into app
-                    Log.d("LoginScreen", "Signup confirmed")
-                    user?.getSessionInBackground(authenticationHandler)
-                }
-            }
-
-            override fun onFailure(exception: Exception?) {
-                Log.d("LoginScreen", "in signupHandler fail")
-                Log.d("LoginScreen", exception?.message)
-                if (exception?.message!!.contains("UsernameExistsException")) { // Hacky, should be a way to log in user without signing up
-                    user.getSessionInBackground(authenticationHandler)
+                if (exception?.message!!.contains("UserNotConfirmedException")) {
+                    Toast.makeText(this@LoginScreen, "Please confirm your account before logging in.", Toast.LENGTH_LONG)
                 }
             }
         }
 
-        // Sign up this user
-        userPool.signUpInBackground(email, password, userAttributes, null, signUpHandler)
+        user.getSessionInBackground(authenticationHandler)
     }
 
+    //TODO call this if password needs to be updated
+    private fun updateArtisanPassword(email: String){
+        val intent =  Intent(this@LoginScreen, ArtisanUpdatePassword::class.java)
+        intent.putExtra("email", email)
+        startActivity(intent)
+        finish()
+    }
 
 
     /**
@@ -201,18 +185,16 @@ class LoginScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_screen)
 
+
         requestContext.registerListener(signUpListener)
 
         //TODO implement Artisan login
         artisan_log_in_button.setOnClickListener {
-            //signUpNewArtisan("teamamazonadonna@gmail.com", "Password1$")
-            //signUpNewArtisanDemo()
-            updateArtisanPassword(email_et.text.toString())
-            //signUpNewArtisan(email_et.text.toString(), password_et.text.toString())
+            signInArtisan()
         }
 
         cga_log_in_button.setOnClickListener{
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
             AuthorizationManager.authorize(AuthorizeRequest
@@ -234,7 +216,6 @@ class LoginScreen : AppCompatActivity() {
                 return true
             }
         })
-
     }
 
     override fun onStart() {

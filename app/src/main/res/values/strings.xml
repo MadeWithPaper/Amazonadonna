@@ -30,10 +30,10 @@
     <string name="add_artisan_name_tv">Name: </string>
     <string name="add_artisan_add_button">Add Artisan</string>
     <string name="add_artisan_contact_number_tv">Contact :</string>
+    <string name="add_artisan_email_tv_hint">Email (optional)</string>
     <string name="add_artisan_bio_tv_hint">Artisan Biography</string>
     <string name="add_artisan_bio_tv">Biography: </string>
     <string name="add_artisan_toolbar_text">Add Artisan</string>
-    <string name="add_artisan_email_tv_hint">Artisan Email</string>
 
     <!-- Add Item Category -->
     <string name="item_category_toolbar_text">Add Item</string>

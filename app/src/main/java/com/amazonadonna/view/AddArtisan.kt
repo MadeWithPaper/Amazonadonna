@@ -21,6 +21,7 @@ import android.content.ContentUris
 import android.content.pm.PackageManager
 import android.net.Uri
 import java.io.*
+import java.security.SecureRandom
 import android.graphics.BitmapFactory
 import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.sync.Synchronizer
@@ -31,8 +32,17 @@ import android.graphics.Matrix
 import android.os.Build
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.view.MotionEvent
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import com.amazonadonna.model.App
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler
+import com.amazonaws.regions.Regions
+import de.cketti.mailto.EmailIntentBuilder
 import kotlinx.android.synthetic.main.activity_login_screen.*
 import kotlinx.android.synthetic.main.activity_payout_history.*
 import java.io.File
@@ -46,6 +56,8 @@ class AddArtisan : AppCompatActivity() {
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
     private val addArtisanURL = App.BACKEND_BASE_URL + "/artisan/add"
     private val artisanPicURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
+    private var userPool = CognitoUserPool(this@AddArtisan, "us-east-2_ViMIOaCbk","4in76ncc44ufi8n1sq6m5uj7p7", "12qfl0nmg81nlft6aunvj6ec0ocejfecdau80biodpubkfuna0ee", Regions.US_EAST_2)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -377,7 +389,7 @@ class AddArtisan : AppCompatActivity() {
 
 
 
-override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             3 -> {
                 button_addArtisan.setOnClickListener{
@@ -389,6 +401,59 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
             }
 
         }
+    }
+
+    private fun generateTempPassword() : String {
+        val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        var i = 0
+        val rnd = SecureRandom.getInstance("SHA1PRNG")
+        val sb = StringBuilder(10)
+
+        while (i < 10) {
+            val randomInt : Int = rnd.nextInt(charPool.size)
+            sb.append(charPool[randomInt])
+            i++
+        }
+        sb.append("a0")
+
+        return sb.toString()
+    }
+
+    /**
+     * Amazon Cognito for Artisans
+     */
+    private fun signUpNewArtisan(email: String) {
+        //disable touch events once log in button is clicked
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        var userAttributes = CognitoUserAttributes()
+        userAttributes.addAttribute("email", email)
+
+        var tempPassword = generateTempPassword()
+        Log.d("AddArtisan", "tempPass: "+tempPassword)
+
+
+        var signUpHandler = object : SignUpHandler {
+            override fun onSuccess(user: CognitoUser?, signUpConfirmationState: Boolean, cognitoUserCodeDeliveryDetails: CognitoUserCodeDeliveryDetails?) {
+                Log.d("AddArtisan", "in signUpHandler success")
+                var success = EmailIntentBuilder.from(this@AddArtisan).to(email)
+                        .subject("Invitation to join our community")
+                        .body("Welcome to our community! Login to the Amazon Handmade app with " +
+                                "the following credentials. \n\nusername: "+email+"\npassword: "+tempPassword)
+                        .start()
+
+                if (!success) {
+                    Toast.makeText(this@AddArtisan, "Could not send email to '"+email+"'", Toast.LENGTH_SHORT)
+                }
+            }
+
+            override fun onFailure(exception: Exception?) {
+                Log.d("AddArtisan", "in signupHandler fail")
+                Log.d("AddArtisan", exception?.message)
+            }
+        }
+
+        // Sign up this user
+        userPool.signUpInBackground(email, tempPassword, userAttributes, null, signUpHandler)
     }
 
     //TODO clean up
@@ -415,6 +480,10 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
         //submitToDB(newArtisan)
         ArtisanSync.addArtisan(applicationContext, newArtisan, photoFile)
 
+        if (artisanEmail_et.text.toString().length > 0) {
+            signUpNewArtisan(artisanEmail_et.text.toString())
+        }
+
         //clear all fields
         clearFields()
         super.onBackPressed()
@@ -435,6 +504,7 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
         artisanContact_et.text!!.clear()
         artisanBio_et.text!!.clear()
         artisanLoc_et.text!!.clear()
+        artisanEmail_et.text!!.clear()
 
         Log.i("AddArtisan", "Clearing fields")
     }
