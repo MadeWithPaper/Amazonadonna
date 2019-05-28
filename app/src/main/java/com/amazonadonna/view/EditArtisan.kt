@@ -78,7 +78,7 @@ class EditArtisan : AppCompatActivity() {
 
         editArtisanContact_et.addTextChangedListener(PhoneNumberFormattingTextWatcher())
 
-        editArtisan_layout.setOnTouchListener(object : View.OnTouchListener {
+        editArtisan_scrollViewContents.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View, m: MotionEvent): Boolean {
                 hideKeyboard(v)
                 return true

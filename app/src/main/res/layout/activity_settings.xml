@@ -11,16 +11,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginBottom="30dp"
         android:background="@color/colorPrimary"
         android:text="@string/settings_sync_account"
         android:textColor="#fff"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/saveSettingsButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingLanguageButton" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/settings_toolbar"
@@ -40,32 +40,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginBottom="30dp"
         android:backgroundTint="@color/colorGreen"
         android:text="@string/settings_update_setting"
         android:textColor="#fff"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/cancelSettingButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/cancelSettingButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="30dp"
-        android:backgroundTint="@color/colorRed"
-        android:text="@string/cancel"
-        android:textColor="#fff"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/settingLogOut"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/syncDataButton" />
 
     <Button
         android:id="@+id/settingLanguageButton"
@@ -113,13 +97,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginBottom="50dp"
-        android:background="@color/colorRed"
+        android:backgroundTint="@color/colorRed"
         android:text="@string/setting_log_out_button"
         android:textColor="#fff"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/saveSettingsButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
