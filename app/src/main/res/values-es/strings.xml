@@ -23,6 +23,7 @@
     <string name="add_artisan_name_tv">"Nombre del artesano: "</string>
     <string name="add_artisan_add_button">Añadir Artesano</string>
     <string name="add_artisan_contact_number_tv">Contacto :</string>
+    <string name="add_artisan_email_tv_hint">Email (opcional)</string>
     <string name="add_artisan_bio_tv_hint">Biografia artesanal</string>
     <string name="add_artisan_bio_tv">"Biografía: "</string>
     <string name="add_artisan_toolbar_text">Añadir Artesano</string>
