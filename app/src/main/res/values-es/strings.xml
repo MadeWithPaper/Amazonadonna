@@ -154,5 +154,11 @@
     <string name="cga_log_in">CGA Inicia sesión</string>
     <string name="artisan_log_in">Ingreso artesanal</string>
     <string name="add_artisan_email_tv_hint">Correo electrónico del artesano</string>
+    <string name="artisan_update_password_password_not_match_error">La contraseña introducida no coincide</string>
+    <string name="artisan_update_password_toolbar">Actualiza contraseña</string>
+    <string name="utility_update">Actualizar</string>
+    <string name="artisan_update_password_confirm_tv">Confirmar contraseña</string>
+    <string name="artisan_update_password_new_tv">Nueva contraseña</string>
+    <string name="artisan_update_password_welcome_text">Su contraseña actual ha caducado, proporcione una nueva contraseña para la cuenta.</string>
 
 </resources>

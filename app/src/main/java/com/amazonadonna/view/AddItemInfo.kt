@@ -120,7 +120,7 @@ class AddItemInfo : AppCompatActivity() {
             return false
         }
 
-        if (TextUtils.isEmpty(addItemInfo_ProductionTime_et.text.toString())){
+        if (addItemInfo_ProductQuantity_et.text.toString().isEmpty()){
             addItemInfo_ProductQuantity_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }

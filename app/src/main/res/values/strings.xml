@@ -14,6 +14,13 @@
     <string name="title_activity_artisan_profile">ArtisanProfile</string>
     <string name="logout">Logout</string>
 
+    <!-- Artisan Update Password -->
+    <string name="artisan_update_password_toolbar">Update Password</string>
+    <string name="artisan_update_password_password_not_match_error">Password entered does not match</string>
+    <string name="artisan_update_password_confirm_tv">Confirm password</string>
+    <string name="artisan_update_password_new_tv">New password</string>
+    <string name="artisan_update_password_welcome_text">Your current password has expired, please provide a new password for the account.</string>
+
     <!-- Add Artisan -->
     <string name="loc_missing_comma">Missing \',\' between City and Country.</string>
     <string name="add_artisan_contact_number_tv_hint">Artisan Contact Number</string>
@@ -154,5 +161,6 @@
     <string name="chooser_title">Choose a Messaging Application</string>
     <string name="send_message_button">Send</string>
     <string name="action_log_in_short">Artisan Log In</string>
+    <string name="utility_update">Update</string>
 
 </resources>

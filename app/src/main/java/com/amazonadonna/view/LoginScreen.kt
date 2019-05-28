@@ -31,6 +31,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHan
 import android.R.attr.password
 import android.widget.Toast
 import com.amazon.identity.auth.device.api.authorization.ProfileScope.userId
+import com.amazonadonna.artisanOnlyViews.ArtisanUpdatePassword
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails
 
 const val AUTHORITY = "com.amazonadonna.provider"
@@ -56,6 +57,14 @@ class LoginScreen : AppCompatActivity() {
         val intent =  Intent(this@LoginScreen, HomeScreenArtisan::class.java)
         //intent.putExtra("artisanID", idToken)
         startActivity(intent)
+    }
+
+    //TODO call this if password needs to be updated
+    private fun updateArtisanPassword(email: String){
+        val intent =  Intent(this@LoginScreen, ArtisanUpdatePassword::class.java)
+        intent.putExtra("email", email)
+        startActivity(intent)
+        finish()
     }
 
     private fun signUpNewArtisan(email: String, password: String) {
@@ -197,7 +206,8 @@ class LoginScreen : AppCompatActivity() {
         //TODO implement Artisan login
         artisan_log_in_button.setOnClickListener {
             //signUpNewArtisan("teamamazonadonna@gmail.com", "Password1$")
-            signUpNewArtisanDemo()
+            //signUpNewArtisanDemo()
+            updateArtisanPassword(email_et.text.toString())
             //signUpNewArtisan(email_et.text.toString(), password_et.text.toString())
         }
 
