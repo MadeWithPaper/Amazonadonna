@@ -152,7 +152,6 @@
     <string name="payout_histoy_toolbar_text">Historique de paiement</string>
     <string name="cga_log_in">Connexion CGA</string>
     <string name="artisan_log_in">Connexion artisanale</string>
-    <string name="add_artisan_email_tv_hint">Email d\'artisan</string>
     <string name="artisan_update_password_password_not_match_error">Le mot de passe entré ne correspond pas</string>
     <string name="artisan_update_password_toolbar">Mettre à jour le mot de passe</string>
     <string name="utility_update">Mettre à jour</string>

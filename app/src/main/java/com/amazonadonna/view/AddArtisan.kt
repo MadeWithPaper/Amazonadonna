@@ -414,6 +414,7 @@ class AddArtisan : AppCompatActivity() {
             sb.append(charPool[randomInt])
             i++
         }
+        sb.append("a0")
 
         return sb.toString()
     }
