@@ -47,7 +47,36 @@ class LoginScreen : AppCompatActivity() {
     /**
      * Amazon Cognito for Artisans
      */
+<<<<<<< HEAD
     private fun signInArtisan(email: String, password: String) {
+=======
+
+    private fun signUpNewArtisanDemo() {
+        val intent =  Intent(this@LoginScreen, HomeScreenArtisan::class.java)
+        //intent.putExtra("artisanID", idToken)
+        startActivity(intent)
+    }
+
+    //TODO call this if password needs to be updated
+    private fun updateArtisanPassword(email: String){
+        val intent =  Intent(this@LoginScreen, ArtisanUpdatePassword::class.java)
+        intent.putExtra("email", email)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun signUpNewArtisan(email: String, password: String) {
+
+        if (!validateInput()){
+            return
+        }
+
+        //disable touch events once log in button is clicked
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        var userAttributes = CognitoUserAttributes()
+        userAttributes.addAttribute("email", email)
+
+>>>>>>> e07feef8905fc021ac0e77163eb793d7e32d1654
         var user = userPool.getUser(email)
 
 
@@ -175,7 +204,14 @@ class LoginScreen : AppCompatActivity() {
 
         //TODO implement Artisan login
         artisan_log_in_button.setOnClickListener {
+<<<<<<< HEAD
             signInArtisan("teamamazonadonna@gmail.com", "Password1$")
+=======
+            //signUpNewArtisan("teamamazonadonna@gmail.com", "Password1$")
+            //signUpNewArtisanDemo()
+            updateArtisanPassword(email_et.text.toString())
+            //signUpNewArtisan(email_et.text.toString(), password_et.text.toString())
+>>>>>>> e07feef8905fc021ac0e77163eb793d7e32d1654
         }
 
         cga_log_in_button.setOnClickListener{

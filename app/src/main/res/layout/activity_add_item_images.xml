@@ -15,10 +15,12 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/item_images_tv"
+        app:titleTextColor="#fff" />
 
     <ProgressBar
-        android:id="@+id/addItemProgress_2"
+        android:id="@+id/addItemProgress_3"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="20dp"
@@ -44,21 +46,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/addItemImage_ToolBarText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/item_images_tv"
-        android:textAlignment="center"
-        android:textColor="#fff"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="@+id/addItemImage_toolBar"
-        app:layout_constraintStart_toStartOf="@+id/addItemImage_toolBar"
-        app:layout_constraintTop_toTopOf="@+id/addItemImage_toolBar" />
-
-
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/item_images_grid"
         android:layout_width="0dp"
@@ -66,26 +53,25 @@
         android:horizontalSpacing="3dp"
         android:verticalSpacing="3dp"
         app:columnCount="2"
-        app:layout_constraintTop_toBottomOf="@+id/addItemProgress_2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addItemProgress_3"
         app:rowCount="3">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:weightSum="2"
                 android:paddingLeft="15dp"
-                android:paddingRight="15dp">
+                android:paddingRight="15dp"
+                android:weightSum="2">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -96,10 +82,10 @@
                         android:id="@+id/addItemImage0"
                         android:layout_width="140dp"
                         android:layout_height="140dp"
-                        android:scaleType="fitCenter"
+                        android:layout_centerHorizontal="true"
                         android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/insertimage"
-                        android:layout_centerHorizontal="true"/>
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/insertimage" />
 
                     <TextView
                         android:id="@+id/addItem_mainImageTV"
@@ -122,11 +108,11 @@
                         android:id="@+id/addItemImage1"
                         android:layout_width="140dp"
                         android:layout_height="140dp"
-                        android:scaleType="fitCenter"
+                        android:layout_centerHorizontal="true"
                         android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:srcCompat="@drawable/insertimage"
-                        android:layout_centerHorizontal="true"/>
+                        app:srcCompat="@drawable/insertimage" />
 
                     <TextView
                         android:id="@+id/addItem_image1TV"
@@ -145,12 +131,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:weightSum="2"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:layout_marginTop="8dp">
+                android:weightSum="2">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -161,10 +147,10 @@
                         android:id="@+id/addItemImage2"
                         android:layout_width="140dp"
                         android:layout_height="140dp"
-                        android:scaleType="fitCenter"
+                        android:layout_centerHorizontal="true"
                         android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/insertimage"
-                        android:layout_centerHorizontal="true"/>
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/insertimage" />
 
                     <TextView
                         android:id="@+id/addItem_addItemImage2TV"
@@ -187,11 +173,11 @@
                         android:id="@+id/addItemImage3"
                         android:layout_width="140dp"
                         android:layout_height="140dp"
-                        android:scaleType="fitCenter"
+                        android:layout_centerHorizontal="true"
                         android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:srcCompat="@drawable/insertimage"
-                        android:layout_centerHorizontal="true"/>
+                        app:srcCompat="@drawable/insertimage" />
 
                     <TextView
                         android:id="@+id/addItem_image3TV"
@@ -210,12 +196,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:weightSum="2"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:layout_marginTop="8dp">
+                android:weightSum="2">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -226,10 +212,10 @@
                         android:id="@+id/addItemImage4"
                         android:layout_width="140dp"
                         android:layout_height="140dp"
-                        android:scaleType="fitCenter"
+                        android:layout_centerHorizontal="true"
                         android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/insertimage"
-                        android:layout_centerHorizontal="true"/>
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/insertimage" />
 
                     <TextView
                         android:id="@+id/addItem_addItemImage4TV"
@@ -252,11 +238,11 @@
                         android:id="@+id/addItemImage5"
                         android:layout_width="140dp"
                         android:layout_height="140dp"
-                        android:scaleType="fitCenter"
+                        android:layout_centerHorizontal="true"
                         android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:srcCompat="@drawable/insertimage"
-                        android:layout_centerHorizontal="true"/>
+                        app:srcCompat="@drawable/insertimage" />
 
                     <TextView
                         android:id="@+id/addItem_image5TV"

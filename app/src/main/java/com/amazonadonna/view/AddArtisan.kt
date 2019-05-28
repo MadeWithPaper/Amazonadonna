@@ -44,6 +44,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHan
 import com.amazonaws.regions.Regions
 import de.cketti.mailto.EmailIntentBuilder
 import kotlinx.android.synthetic.main.activity_login_screen.*
+import kotlinx.android.synthetic.main.activity_payout_history.*
 import java.io.File
 import java.io.IOException
 
@@ -80,13 +81,21 @@ class AddArtisan : AppCompatActivity() {
 
         artisanContact_et.addTextChangedListener(PhoneNumberFormattingTextWatcher())
 
-        addArtisan_layout.setOnTouchListener(object : View.OnTouchListener {
+        addArtisan_scrollViewContents.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View, m: MotionEvent): Boolean {
                 hideKeyboard(v)
                 return true
             }
         })
 
+        setSupportActionBar(addnewartisan_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun selectImageInAlbum() {
@@ -179,8 +188,6 @@ class AddArtisan : AppCompatActivity() {
         //byteArray = ByteArray(photoFile!!.length().toInt())
 
         try {
-
-
             //convert array of bytes into file
             val fileOuputStream = FileOutputStream(photoFile)
             fileOuputStream.write(byteArray)
@@ -352,7 +359,7 @@ class AddArtisan : AppCompatActivity() {
         return bm
     }
 
-    public fun calculateInSampleSize(options : BitmapFactory.Options,
+     fun calculateInSampleSize(options : BitmapFactory.Options,
                                       reqWidth : Int, reqHeight : Int): Int {
         // Raw height and width of image
         val height = options.outHeight;
@@ -457,8 +464,12 @@ class AddArtisan : AppCompatActivity() {
         val name = artisanName_et.text.toString()
         val bio = artisanBio_et.text.toString()
         val number = artisanContact_et.text.toString()
+        val email = artisanEmail_et.text.toString()
 
-        val newArtisan = Artisan(name, "", number, "","", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 3000.00)
+        //TODO get cognito id before sending to backend
+        val artisanId = ""
+
+        val newArtisan = Artisan(name, artisanId, number, email,"", "", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 3000.00)
         newArtisan.generateTempID()
         //parse location info
         parseLoc(newArtisan)
@@ -517,6 +528,16 @@ class AddArtisan : AppCompatActivity() {
 
         if (artisanContact_et.text.toString().isEmpty()){
             artisanContact_til.error = this.resources.getString(R.string.requiredFieldError)
+            return false
+        }
+
+        if (artisanEmail_et.text.toString().isEmpty()){
+            artisanEmail_til.error = this.resources.getString(R.string.requiredFieldError)
+            return false
+        }
+        
+        if (!artisanEmail_et.text.toString().contains(".")){
+            artisanEmail_til.error = this.resources.getString(R.string.error_invalid_email)
             return false
         }
 

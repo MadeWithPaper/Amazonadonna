@@ -17,6 +17,7 @@ import java.io.IOException
 import java.lang.Exception
 import androidx.appcompat.app.AlertDialog
 import com.amazonadonna.model.App
+import com.amazonadonna.sync.Synchronizer
 import java.lang.Thread.sleep
 
 
@@ -48,13 +49,13 @@ class HomeScreen : AppCompatActivity() {
                 //do nothing use placeholder text
             }
 
-            syncData()
+            //syncData()
         }
         override fun onError(ae: AuthError?) {
             //To change body of created functions use File | Settings | File Templates.
             Log.d("HomeScreen", "no work")
             //TODO remove after testing if error it should not fetch
-            ArtisanSync.sync(applicationContext, this@HomeScreen, cgaID)
+            Synchronizer.getArtisanSync().sync(applicationContext, this@HomeScreen, cgaID)
         }
     }
 
@@ -65,6 +66,8 @@ class HomeScreen : AppCompatActivity() {
             artisanNameTV.text = currUser!!.userName
         }
     }
+
+
     fun syncData() {
         if (ArtisanSync.hasInternet(applicationContext)) {
             runOnUiThread {
@@ -76,7 +79,7 @@ class HomeScreen : AppCompatActivity() {
                 Log.i("HomeScreen", "loading start, show dialog")
             }
 
-            ArtisanSync.sync(applicationContext,this@HomeScreen, cgaID)
+            Synchronizer.getArtisanSync().sync(applicationContext,this@HomeScreen, cgaID)
             fetchJSONCGA()
             Log.d("HomeScreen", cgaID)
 
@@ -88,7 +91,7 @@ class HomeScreen : AppCompatActivity() {
             Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
 
             // Perform one more data fetch to ensure data integrity is good
-            ArtisanSync.sync(applicationContext,this@HomeScreen, cgaID)
+            Synchronizer.getArtisanSync().sync(applicationContext,this@HomeScreen, cgaID)
 
             do {
                 sleep(500)
@@ -147,6 +150,11 @@ class HomeScreen : AppCompatActivity() {
 
         reports.setOnClickListener {
             openReports()
+        }
+
+        cgaHomeScreenSwipeRefreshLayout.setOnRefreshListener{
+            syncData()
+            cgaHomeScreenSwipeRefreshLayout.isRefreshing = false
         }
 
     }

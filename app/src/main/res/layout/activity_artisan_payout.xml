@@ -15,64 +15,55 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/artisan_payout_toolbar_text"
+        app:titleTextColor="#fff" />
 
-    <TextView
-        android:id="@+id/artisanPayoutToolbarText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/artisan_payout_toolbar_text"
-        android:textAlignment="center"
-        android:textSize="25sp"
-        android:textColor="#fff"
-        app:layout_constraintEnd_toEndOf="@+id/artisanPayoutToolbar"
-        app:layout_constraintStart_toStartOf="@+id/artisanPayoutToolbar"
-        app:layout_constraintTop_toTopOf="@+id/artisanPayoutToolbar" />
-
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/artisanPayout_continue"
-        android:layout_width="0dp"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="50dp"
         android:background="#00a8e1"
         android:text="@string/artisan_payout_continue_to_signature_button"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#fff"
         android:textSize="18sp"
+        app:cornerRadius="20dp"
+        app:icon="@drawable/done_icon"
+        app:iconGravity="textStart"
+        app:iconPadding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/artisanPayout_amount"
-        android:layout_width="0dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/artisanPayout_amount_til"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
-        android:ems="10"
-        android:hint="@string/artisan_payout_amount_tv_hint"
-        android:inputType="numberDecimal"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/artisanPayout_amountTV" />
+        app:layout_constraintTop_toBottomOf="@+id/artisanPayout_balance">
 
-    <TextView
-        android:id="@+id/artisanPayout_amountTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/artisan_payout_amount_tv"
-        android:textColor="#000"
-        android:textSize="25sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/artisanPayout_balanceTV" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/artisanPayout_amount_et"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableStart="@drawable/money_label_icon"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="@string/artisan_payout_amount_tv_hint"
+            android:inputType="numberDecimal" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/artisanPayout_dateTV"
@@ -84,7 +75,7 @@
         android:textColor="#000"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/artisanPayout_amount" />
+        app:layout_constraintTop_toBottomOf="@+id/artisanPayout_amount_til" />
 
     <ImageButton
         android:id="@+id/artisanPayout_datePicker"
@@ -96,7 +87,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/artisanPayout_dateTV"
-        app:layout_constraintTop_toBottomOf="@+id/artisanPayout_amount"
+        app:layout_constraintTop_toBottomOf="@+id/artisanPayout_amount_til"
         app:srcCompat="@android:drawable/ic_menu_my_calendar" />
 
     <TextView
@@ -106,8 +97,8 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="50dp"
         android:text="@string/payout_balance"
-        android:textSize="25sp"
         android:textColor="#000"
+        android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/artisanPayoutToolbar" />
 
@@ -117,8 +108,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:text=""
-        android:textSize="25sp"
         android:textColor="#000"
+        android:textSize="25sp"
         app:layout_constraintStart_toEndOf="@+id/artisanPayout_balanceTV"
         app:layout_constraintTop_toBottomOf="@+id/artisanPayoutToolbar" />
 

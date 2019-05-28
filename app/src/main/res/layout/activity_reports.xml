@@ -15,23 +15,9 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/reportTypeToolBar_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/report_toolbar_text"
-        android:textColor="#fff"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="@+id/reportType_toolbar"
-        app:layout_constraintEnd_toEndOf="@+id/reportType_toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/report_toolbar_text"
+        app:titleTextColor="#fff" />
 
     <Spinner
         android:id="@+id/reportTypeSpinner"
@@ -51,8 +37,8 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:text="@string/report_type_tv"
-        android:textSize="30sp"
         android:textColor="#000"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reportType_toolbar" />
 
@@ -88,9 +74,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="5dp"
-        android:textSize="30sp"
-        android:textColor="#000"
         android:text="@string/report_target_tv"
+        android:textColor="#000"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reportTypeSpinner" />
 
@@ -102,9 +88,9 @@
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="10dp"
         android:background="#fff"
+        android:text="@string/report_select_all"
         android:textColor="#000"
         android:textSize="20sp"
-        android:text="@string/report_select_all"
         app:layout_constraintBottom_toTopOf="@+id/generateReports_Button"
         app:layout_constraintEnd_toStartOf="@+id/reportSelectNone"
         app:layout_constraintHorizontal_bias="0.0"
@@ -117,9 +103,9 @@
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="10dp"
         android:background="#fff"
+        android:text="@string/report_select_none"
         android:textColor="#000"
         android:textSize="20sp"
-        android:text="@string/report_select_none"
         app:layout_constraintBottom_toTopOf="@+id/generateReports_Button"
         app:layout_constraintEnd_toEndOf="parent" />
 

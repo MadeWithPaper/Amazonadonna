@@ -138,11 +138,6 @@
     <string name="report_generate_button">Générer un rapport</string>
     <string name="report_select_all">Tout sélectionner</string>
     <string name="report_select_none">Ne rien sélectionner</string>
-    <string name="item_info_product_name_tv">Nom du produit:</string>
-    <string name="item_info_product_desc_tv">Description du produit:</string>
-    <string name="item_info_product_price_tv">Prix ​​du produit ($):</string>
-    <string name="item_info_product_quantity_tv">La quantité de produit:</string>
-    <string name="item_info_product_production_tv">Temps de production du produit:</string>
     <string name="item_info_shipping_method">Sélectionnez la méthode d\'expédition ci-dessous:</string>
     <string name="payout_balance">Solde actuel:</string>
     <string name="view_report_toolbar_text">Voir le rapport généré</string>
@@ -154,5 +149,15 @@
     <string name="artisan_profile_message">Message</string>
     <string name="artisan_profile_payout">Paiement</string>
     <string name="artisan_profile_payout_history">Historique de paiement</string>
+    <string name="payout_histoy_toolbar_text">Historique de paiement</string>
+    <string name="cga_log_in">Connexion CGA</string>
+    <string name="artisan_log_in">Connexion artisanale</string>
+    <string name="add_artisan_email_tv_hint">Email d\'artisan</string>
+    <string name="artisan_update_password_password_not_match_error">Le mot de passe entré ne correspond pas</string>
+    <string name="artisan_update_password_toolbar">Mettre à jour le mot de passe</string>
+    <string name="utility_update">Mettre à jour</string>
+    <string name="artisan_update_password_confirm_tv">Confirmez le mot de passe</string>
+    <string name="artisan_update_password_new_tv">Nouveau mot de passe</string>
+    <string name="artisan_update_password_welcome_text">Votre mot de passe actuel a expiré, veuillez fournir un nouveau mot de passe pour le compte.</string>
 
 </resources>

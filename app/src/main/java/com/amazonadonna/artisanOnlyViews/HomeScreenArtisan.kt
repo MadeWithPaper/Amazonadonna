@@ -4,13 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.room.Room
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.sync.ArtisanSync
+import com.amazonadonna.sync.Synchronizer
 import com.amazonadonna.view.ArtisanItemList
 import com.amazonadonna.view.ListOrders
 import com.amazonadonna.view.R
@@ -18,6 +17,8 @@ import com.amazonadonna.view.Settings
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_home_screen_artisan.*
+import kotlinx.android.synthetic.main.activity_home_screen_artisan.artisanNameTV
+import kotlinx.android.synthetic.main.activity_home_screen_artisan.setting
 import okhttp3.*
 import java.io.IOException
 
@@ -59,6 +60,11 @@ class HomeScreenArtisan : AppCompatActivity() {
 
         setting.setOnClickListener {
             openSetting(testArtisan)
+        }
+
+        artisanHomeScreenSwipeRefreshLayout.setOnRefreshListener{
+            syncData()
+            artisanHomeScreenSwipeRefreshLayout.isRefreshing = false
         }
     }
 
@@ -117,7 +123,7 @@ class HomeScreenArtisan : AppCompatActivity() {
 
             //ArtisanSync.resetLocalDB(applicationContext)
 
-            ArtisanSync.syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
+            Synchronizer.getArtisanSync().syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
 
             // Wait for sync to finish
             do {
@@ -127,7 +133,7 @@ class HomeScreenArtisan : AppCompatActivity() {
             Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
 
             // Perform one more data fetch to ensure data integrity is good
-            ArtisanSync.syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
+            Synchronizer.getArtisanSync().syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
 
             do {
                 Thread.sleep(500)
