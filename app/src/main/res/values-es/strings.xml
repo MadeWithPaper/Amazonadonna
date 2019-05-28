@@ -23,6 +23,7 @@
     <string name="add_artisan_name_tv">"Nombre del artesano: "</string>
     <string name="add_artisan_add_button">Añadir Artesano</string>
     <string name="add_artisan_contact_number_tv">Contacto :</string>
+    <string name="add_artisan_email_tv_hint">Email (opcional)</string>
     <string name="add_artisan_bio_tv_hint">Biografia artesanal</string>
     <string name="add_artisan_bio_tv">"Biografía: "</string>
     <string name="add_artisan_toolbar_text">Añadir Artesano</string>
@@ -153,7 +154,6 @@
     <string name="payout_histoy_toolbar_text">Historial de pagos</string>
     <string name="cga_log_in">CGA Inicia sesión</string>
     <string name="artisan_log_in">Ingreso artesanal</string>
-    <string name="add_artisan_email_tv_hint">Correo electrónico del artesano</string>
     <string name="artisan_update_password_password_not_match_error">La contraseña introducida no coincide</string>
     <string name="artisan_update_password_toolbar">Actualiza contraseña</string>
     <string name="utility_update">Actualizar</string>
