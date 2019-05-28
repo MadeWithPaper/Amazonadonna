@@ -176,8 +176,6 @@ class AddArtisan : AppCompatActivity() {
         //byteArray = ByteArray(photoFile!!.length().toInt())
 
         try {
-
-
             //convert array of bytes into file
             val fileOuputStream = FileOutputStream(photoFile)
             fileOuputStream.write(byteArray)
@@ -404,7 +402,10 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
         val number = artisanContact_et.text.toString()
         val email = artisanEmail_et.text.toString()
 
-        val newArtisan = Artisan(name, "", number, email,"", "", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 3000.00)
+        //TODO get cognito id before sending to backend
+        val artisanId = ""
+
+        val newArtisan = Artisan(name, artisanId, number, email,"", "", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 3000.00)
         newArtisan.generateTempID()
         //parse location info
         parseLoc(newArtisan)
