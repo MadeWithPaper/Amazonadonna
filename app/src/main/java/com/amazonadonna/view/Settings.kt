@@ -56,10 +56,6 @@ class Settings : AppCompatActivity(), CoroutineScope {
             updateSetting()
         }
 
-        cancelSettingButton.setOnClickListener {
-            cancelSetting()
-        }
-
         settingLogOut.setOnClickListener {
             logout()
         }

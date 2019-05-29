@@ -313,8 +313,8 @@ class Reports : AppCompatActivity(), CoroutineScope {
     private fun getCurrentDate(format : String) : String {
         var dateFormat : SimpleDateFormat? = null
         when (format){
-            "file" -> dateFormat = SimpleDateFormat("yyy_mm_dd_HHmmss", Locale.getDefault())
-            "date" -> dateFormat = SimpleDateFormat("dd-mm-yyyy", Locale.getDefault())
+            "file" -> dateFormat = SimpleDateFormat("yyy_MM_dd_HHmmss", Locale.getDefault())
+            "date" -> dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
         }
         //val dateFormat = SimpleDateFormat("yyy_mm_dd_HHmmss", Locale.getDefault())
         val date = Date()
