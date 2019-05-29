@@ -34,6 +34,9 @@
     <string name="add_artisan_bio_tv_hint">Artisan Biography</string>
     <string name="add_artisan_bio_tv">Biography: </string>
     <string name="add_artisan_toolbar_text">Add Artisan</string>
+    <string name="invalid_type_for_artisan_name" translatable="false">Must be alpha characters</string>
+    <string name="invalid_type_for_artisan_number" translatable="false">Must be numbers</string>
+    <string name="invalid_number" translatable="false">invalid number</string>
 
     <!-- Add Item Category -->
     <string name="item_category_toolbar_text">Add Item</string>
