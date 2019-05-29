@@ -38,6 +38,10 @@ router.post('/listAllForCga', (req: Request, res: Response) => {
 
 router.post('/add', (req: Request, res: Response) => {
     // const id = uuid.v1()
+    let email = req.body.email
+    if (email == null) {
+        email = 'null'
+    }
     const putItemParams: aws.DynamoDB.PutItemInput = {
         TableName: 'artisan',
         Item: {
@@ -53,7 +57,7 @@ router.post('/add', (req: Request, res: Response) => {
             picURL: { S: 'Not set' },
             phoneNumber: { S: req.body.phoneNumber },
             active: { S: 'true' },
-            email: { S: req.body.email },
+            email: { S: email },
             newAccount: { S: 'true' }
         }
     }
