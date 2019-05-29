@@ -17,6 +17,7 @@
     <!-- Artisan Update Password -->
     <string name="artisan_update_password_toolbar">Update Password</string>
     <string name="artisan_update_password_password_not_match_error">Password entered does not match</string>
+    <string name="artisan_update_password_old_tv">Old password</string>
     <string name="artisan_update_password_confirm_tv">Confirm password</string>
     <string name="artisan_update_password_new_tv">New password</string>
     <string name="artisan_update_password_welcome_text">Your current password has expired, please provide a new password for the account.</string>

@@ -41,6 +41,15 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttribu
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation
+
+
 import com.amazonaws.regions.Regions
 import de.cketti.mailto.EmailIntentBuilder
 import kotlinx.android.synthetic.main.activity_login_screen.*
@@ -56,7 +65,7 @@ class AddArtisan : AppCompatActivity() {
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
     private val addArtisanURL = App.BACKEND_BASE_URL + "/artisan/add"
     private val artisanPicURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
-    private var userPool = CognitoUserPool(this@AddArtisan, "us-east-2_ViMIOaCbk","4in76ncc44ufi8n1sq6m5uj7p7", "12qfl0nmg81nlft6aunvj6ec0ocejfecdau80biodpubkfuna0ee", Regions.US_EAST_2)
+    private var userPool = CognitoUserPool(this@AddArtisan,"us-east-2_ViMIOaCbk","4in76ncc44ufi8n1sq6m5uj7p7", "12qfl0nmg81nlft6aunvj6ec0ocejfecdau80biodpubkfuna0ee", Regions.US_EAST_2)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -456,6 +465,7 @@ class AddArtisan : AppCompatActivity() {
         userPool.signUpInBackground(email, tempPassword, userAttributes, null, signUpHandler)
     }
 
+
     //TODO clean up
     private fun makeNewArtisan() {
         //validate fields
@@ -467,22 +477,23 @@ class AddArtisan : AppCompatActivity() {
         val number = artisanContact_et.text.toString()
         val email = artisanEmail_et.text.toString()
 
-        //TODO get cognito id before sending to backend
         val artisanId = ""
 
         val newArtisan = Artisan(name, artisanId, number, email, true,"", "", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 3000.00)
         newArtisan.generateTempID()
         //parse location info
+
         parseLoc(newArtisan)
         Log.i("AddArtisan", "created new Artisan $newArtisan")
 
         //pop screen and add
         //submitToDB(newArtisan)
-        ArtisanSync.addArtisan(applicationContext, newArtisan, photoFile)
-
-        if (artisanEmail_et.text.toString().length > 0) {
+        if (!artisanEmail_et.text.toString().isNullOrEmpty()) {
             signUpNewArtisan(artisanEmail_et.text.toString())
         }
+
+        ArtisanSync.addArtisan(applicationContext, newArtisan, photoFile)
+
 
         //clear all fields
         clearFields()
