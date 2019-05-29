@@ -64,6 +64,7 @@ router.post('/add', (req: Request, res: Response) => {
             res.status(400).send(msg + err.message)
         } else {
             res.json(req.body.artisanId.toString())
+            res.json(req.body.email.toString())
         }
     })
 })
@@ -137,6 +138,22 @@ router.post('/getById', (req: Request, res: Response) => {
     ddb.getItem(getArtisanParams, (err, data) => {
         if (err) {
             const msg = 'Error getting all artisans in artisan/getById: '
+            console.log(msg + err)
+            res.status(400).send(msg + err.message)
+        } else {
+            res.json(filterActive(aws.DynamoDB.Converter.unmarshall(data.Item)))
+        }
+    })
+})
+
+router.post('/getByEmail', (req: Request, res: Response) => {
+    const getArtisanParams: aws.DynamoDB.Types.GetItemInput = {
+        TableName: 'artisan',
+        Key: { email: { S: req.body.email } }
+    }
+    ddb.getItem(getArtisanParams, (err, data) => {
+        if (err) {
+            const msg = 'Error getting all artisans in artisan/getByEmail: '
             console.log(msg + err)
             res.status(400).send(msg + err.message)
         } else {

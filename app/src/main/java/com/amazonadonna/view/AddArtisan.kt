@@ -575,12 +575,12 @@ class AddArtisan : AppCompatActivity() {
 //            return false
 //        }
 
-        if (artisanEmail_et.text.toString().isEmpty()){
+        /*if (artisanEmail_et.text.toString().isEmpty()){
             artisanEmail_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
-        }
+        }*/
         
-        if (!artisanEmail_et.text.toString().contains(".")){
+        if (!artisanEmail_et.text.toString().contains(".") && !artisanEmail_et.text.toString().isEmpty()){
             artisanEmail_til.error = this.resources.getString(R.string.error_invalid_email)
             return false
         }
