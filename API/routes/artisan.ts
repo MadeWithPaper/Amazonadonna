@@ -64,7 +64,6 @@ router.post('/add', (req: Request, res: Response) => {
             res.status(400).send(msg + err.message)
         } else {
             res.json(req.body.artisanId.toString())
-            res.json(req.body.email.toString())
         }
     })
 })
