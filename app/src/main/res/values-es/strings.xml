@@ -157,6 +157,7 @@
     <string name="artisan_update_password_password_not_match_error">La contraseña introducida no coincide</string>
     <string name="artisan_update_password_toolbar">Actualiza contraseña</string>
     <string name="utility_update">Actualizar</string>
+    <string name="artisan_update_password_old_tv">Contraseña anterior</string>
     <string name="artisan_update_password_confirm_tv">Confirmar contraseña</string>
     <string name="artisan_update_password_new_tv">Nueva contraseña</string>
     <string name="artisan_update_password_welcome_text">Su contraseña actual ha caducado, proporcione una nueva contraseña para la cuenta.</string>

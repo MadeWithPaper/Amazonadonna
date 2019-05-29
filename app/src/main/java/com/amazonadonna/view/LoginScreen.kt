@@ -20,6 +20,8 @@ import com.amazon.identity.auth.device.api.authorization.*
 import com.amazon.identity.auth.device.api.workflow.RequestContext
 import com.amazonadonna.artisanOnlyViews.HomeScreenArtisan
 import com.amazonadonna.artisanOnlyViews.ArtisanUpdatePassword
+import com.amazonadonna.model.App
+import com.amazonadonna.model.Artisan
 
 
 import kotlinx.android.synthetic.main.activity_login_screen.*
@@ -30,6 +32,10 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.NewPasswordContinuation
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import okhttp3.*
+import java.io.IOException
 
 const val AUTHORITY = "com.amazonadonna.provider"
 const val ACCOUNT_TYPE = "amazonadonna.com"
@@ -39,7 +45,7 @@ const val SYNC_INTERVAL_IN_MINUTES = 60L
 const val SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE
 
 class LoginScreen : AppCompatActivity() {
-
+    private val getArtisanUrl = App.BACKEND_BASE_URL + "/artisan/listAllForEmail"
     private var requestContext : RequestContext = RequestContext.create(this)
     private val scopes : Array<Scope> = arrayOf(ProfileScope.profile(), ProfileScope.postalCode(), ProfileScope.profile())
     private lateinit var alertDialog : AlertDialog
@@ -55,20 +61,17 @@ class LoginScreen : AppCompatActivity() {
         var user = userPool.getUser(email)
 
 
-        var authenticationHandler = object : AuthenticationHandler {
+        var authenticateUser = object : AuthenticationHandler {
             override fun onSuccess(userSession: CognitoUserSession?, newDevice: CognitoDevice?) {
                 // Sign-in was successful, cognitoUserSession will contain tokens for the user
-                Log.d("LoginScreen", "in authHandler success")
-                var idToken = userSession?.idToken?.jwtToken
-                Log.d("LoginScreen", idToken)
+                Log.d("LoginScreen", "in authHandlerLogin success")
                 // go to home screen
 
-                val intent =  Intent(this@LoginScreen, HomeScreenArtisan::class.java)
-                intent.putExtra("artisanID", idToken)
-                startActivity(intent)
+                getArtisanAndCheckPassword(email)
             }
 
             override fun getAuthenticationDetails(authenticationContinuation: AuthenticationContinuation?, userId: String?) {
+                Log.d("LoginScreen", "Getting authentication details from login")
                 // The API needs user sign-in credentials to continue
                 val authenticationDetails = AuthenticationDetails(userId, password, null)
 
@@ -114,21 +117,71 @@ class LoginScreen : AppCompatActivity() {
             }
 
             override fun onFailure(exception: Exception?) {
-                Log.d("LoginScreen", "in authHandler fail")
+                Log.d("LoginScreen", "in authHandlerLogin fail")
                 Log.d("LoginScreen", exception?.message)
-                if (exception?.message!!.contains("UserNotConfirmedException")) {
-                    Toast.makeText(this@LoginScreen, "Please confirm your account before logging in.", Toast.LENGTH_LONG)
-                }
+
+                Toast.makeText(this@LoginScreen, "Unable to login. Please confirm your " +
+                        "email and password are correct AND that you have confirmed your email.", Toast.LENGTH_LONG)
             }
         }
 
-        user.getSessionInBackground(authenticationHandler)
+
+        user.getSessionInBackground(authenticateUser)
     }
 
-    //TODO call this if password needs to be updated
-    private fun updateArtisanPassword(email: String){
+
+
+    private fun getArtisanAndCheckPassword(email: String) {
+        val requestBody = FormBody.Builder().add("email", email)
+                .build()
+        val client = OkHttpClient()
+        val request = Request.Builder()
+                .url(getArtisanUrl)
+                .post(requestBody)
+                .build()
+        Log.d("LoginScreen", "In getARtsian with email: "+email)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()?.string()
+                var artisans = listOf<Artisan>()
+                Log.d("LoginScreen", "response body from fetchArtisan: " + body)
+
+                val gson = GsonBuilder().create()
+
+                if (body == "{}") {
+                    Log.d("LoginScreen", "artisan not in db")
+                }
+
+                try { // In here, might need to set artisanNameTV.text = artisan.artisanName
+                    artisans = gson.fromJson(body, object : TypeToken<List<Artisan>>() {}.type)
+
+                    if (artisans[0].newAccount) {
+                        Log.d("LoginScreen", "new artisan account")
+                        updateArtisanPassword(artisans[0], email)
+                    } else {
+                        Log.d("LoginScreen", "Going to artisan home page")
+                        val intent =  Intent(this@LoginScreen, HomeScreenArtisan::class.java)
+                        intent.putExtra("artisan", artisans[0])
+                        startActivity(intent)
+                    }
+
+                } catch(e: Exception) {
+                    Log.d("LoginScreen", "Caught exception: "+e.message)
+
+                }
+
+            }
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                Log.e("LoginScreen", "failed to do POST request to database" + getArtisanUrl)
+            }
+        })
+    }
+
+    private fun updateArtisanPassword(artisan: Artisan, email: String){
         val intent =  Intent(this@LoginScreen, ArtisanUpdatePassword::class.java)
         intent.putExtra("email", email)
+        intent.putExtra("artisan", artisan)
         startActivity(intent)
         finish()
     }
@@ -190,7 +243,9 @@ class LoginScreen : AppCompatActivity() {
 
         //TODO implement Artisan login
         artisan_log_in_button.setOnClickListener {
+
             signInArtisan()
+
         }
 
         cga_log_in_button.setOnClickListener{
