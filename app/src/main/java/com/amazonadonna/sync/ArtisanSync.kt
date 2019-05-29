@@ -123,6 +123,8 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 for (artisan in artisans) {
                     if(artisan.phoneNumber == null)
                         artisan.phoneNumber = "1234567890"
+                    if(artisan.email == null)
+                        artisan.email = "foo@gmail.com"
                 }
 
                 Log.d("HOTFIX2", artisans.toString())
@@ -171,6 +173,9 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
                 if(artisan.phoneNumber == null)
                     artisan.phoneNumber = "1234567890"
+                if(artisan.email == null)
+                    artisan.email = "foo@gmail.com"
+
 
                 artisanDao.deleteAll()
                 artisanDao.insert(artisan)

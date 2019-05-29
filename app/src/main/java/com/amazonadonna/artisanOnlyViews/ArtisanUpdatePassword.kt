@@ -1,29 +1,41 @@
 package com.amazonadonna.artisanOnlyViews
 
 import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import android.util.Log
 import com.amazonadonna.view.R
+import com.amazonadonna.model.Artisan
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHandler
+import com.amazonaws.regions.Regions
 import kotlinx.android.synthetic.main.activity_artisan_update_password.*
 
 class ArtisanUpdatePassword : AppCompatActivity() {
 
+    var userPool = CognitoUserPool(this@ArtisanUpdatePassword, "us-east-2_ViMIOaCbk","4in76ncc44ufi8n1sq6m5uj7p7", "12qfl0nmg81nlft6aunvj6ec0ocejfecdau80biodpubkfuna0ee", Regions.US_EAST_2)
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_update_password)
+        var artisan : Artisan? = null
 
         if (intent.extras != null) {
             //pre-fill in email passed from login screen
             artisanUpdate_email_et.setText(intent.getStringExtra("email"))
+            artisan = intent.extras.get("artisan") as Artisan
         } else {
             //Intent null, email was not included
         }
 
         artisanUpdatePasswordButton.setOnClickListener {
-            updateArtisanAccountPassword()
+            updateArtisanAccountPassword(artisan!!)
         }
 
         artisanUpdatePasswordLayout.setOnTouchListener(object : View.OnTouchListener {
@@ -64,14 +76,32 @@ class ArtisanUpdatePassword : AppCompatActivity() {
         return true
     }
 
-    private fun updateArtisanAccountPassword(){
+    private fun updateArtisanAccountPassword(artisan: Artisan){
         if (!fieldValidation()) {
             //error in field validation
             return
         }
 
-        //TODO update artisan cognito password
-        //TODO log user in
+        var user = userPool.getUser(artisan.email)
+
+        var changePasswordHandler = object : GenericHandler {
+            override fun onSuccess() {
+                Log.d("ArtisanUpdatePassword", "in updatepassword success")
+                artisan.newAccount = false
+                val intent =  Intent(this@ArtisanUpdatePassword, HomeScreenArtisan::class.java)
+                intent.putExtra("artisan", artisan)
+                startActivity(intent)
+            }
+
+            override fun onFailure(exception: Exception?) {
+                Log.d("ArtisanUpdatePassword", "update password failed: "+exception?.message)
+                Log.d("ArtisanUpdatePassword", "update password failed: "+exception?.localizedMessage)
+                Toast.makeText(this@ArtisanUpdatePassword, "Unable to change password. Please " +
+                        "ensure old password is correct and you have new password is the same in both fields.", Toast.LENGTH_LONG)
+            }
+        }
+
+        user.changePassword(artisanUpdate_oldpassword_et.text.toString(), artisanUpdate_password_et.text.toString(), changePasswordHandler)
     }
 
     private fun hideKeyboard(view: View) {

@@ -40,8 +40,15 @@ class HomeScreenArtisan : AppCompatActivity() {
 
         if (extras != null) {
             //TODO: Use actual artisan id once login is returning that correctly
-            fetchJSONArtisan(testArtisan.artisanId)
-            //fetchJSONArtisan(extras.getString("artisanID"))
+//            fetchJSONArtisan(testArtisan.artisanId)
+//            fetchJSONArtisan(extras.getString("artisanID"))
+            var artisan = extras.get("artisan") as Artisan
+            App.currentArtisan = artisan
+            AppDatabase.getDatabase(applicationContext).artisanDao().insert(App.currentArtisan)
+            artisanNameTV.text = App.currentArtisan.artisanName
+            syncData()
+            ArtisanSync.updateArtisan(this@HomeScreenArtisan, artisan)
+
         } else {
             artisanNameTV.text = testArtisan.artisanName
         }
