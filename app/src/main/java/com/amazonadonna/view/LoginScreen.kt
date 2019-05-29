@@ -155,15 +155,10 @@ class LoginScreen : AppCompatActivity() {
                 try { // In here, might need to set artisanNameTV.text = artisan.artisanName
                     artisans = gson.fromJson(body, object : TypeToken<List<Artisan>>() {}.type)
 
-                    if (artisans[0].newAccount) {
-                        Log.d("LoginScreen", "new artisan account")
-                        updateArtisanPassword(artisans[0], email)
-                    } else {
-                        Log.d("LoginScreen", "Going to artisan home page")
-                        val intent =  Intent(this@LoginScreen, HomeScreenArtisan::class.java)
-                        intent.putExtra("artisan", artisans[0])
-                        startActivity(intent)
-                    }
+                    Log.d("LoginScreen", "Going to artisan home page")
+                    val intent =  Intent(this@LoginScreen, HomeScreenArtisan::class.java)
+                    intent.putExtra("artisan", artisans[0])
+                    startActivity(intent)
 
                 } catch(e: Exception) {
                     Log.d("LoginScreen", "Caught exception: "+e.message)
