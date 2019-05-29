@@ -36,6 +36,30 @@ router.post('/listAllForCga', (req: Request, res: Response) => {
     })
 })
 
+router.post('/listAllForEmail', (req: Request, res: Response) => {
+    const listAllArtisansParams: aws.DynamoDB.Types.QueryInput = {
+        TableName: 'artisan',
+        IndexName: 'email-index',
+        KeyConditionExpression: 'email = :id',
+        ExpressionAttributeValues: {
+            ':id': { S: req.body.email }
+        }
+    }
+
+    ddb.query(listAllArtisansParams, (err, data) => {
+        if (err) {
+            const msg = 'Error fetching artisans in artisan/listAllForEmail: '
+            console.log(msg + err)
+            res.status(400).send(msg + err.message)
+        } else {
+            const convert = unmarshUtil(data.Items)
+            Promise.all(convert).then(items => {
+                res.json(filterActive(items))
+            })
+        }
+    })
+})
+
 router.post('/add', (req: Request, res: Response) => {
     // const id = uuid.v1()
     let email = req.body.email
@@ -141,22 +165,6 @@ router.post('/getById', (req: Request, res: Response) => {
     ddb.getItem(getArtisanParams, (err, data) => {
         if (err) {
             const msg = 'Error getting all artisans in artisan/getById: '
-            console.log(msg + err)
-            res.status(400).send(msg + err.message)
-        } else {
-            res.json(filterActive(aws.DynamoDB.Converter.unmarshall(data.Item)))
-        }
-    })
-})
-
-router.post('/getByEmail', (req: Request, res: Response) => {
-    const getArtisanParams: aws.DynamoDB.Types.GetItemInput = {
-        TableName: 'artisan',
-        Key: { email: { S: req.body.email } }
-    }
-    ddb.getItem(getArtisanParams, (err, data) => {
-        if (err) {
-            const msg = 'Error getting all artisans in artisan/getByEmail: '
             console.log(msg + err)
             res.status(400).send(msg + err.message)
         } else {
