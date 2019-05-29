@@ -520,11 +520,44 @@ class AddArtisan : AppCompatActivity() {
         Log.i("AddArtisan", "Clearing fields")
     }
 
+    private fun isAlpha(s: String): Boolean {
+        val charArr = s.toCharArray()
+
+        for (c in charArr) {
+            if (!Character.isLetter(c)) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun isPhoneNumber(phoneNo: String): Boolean {
+        //validate phone numbers of format "1234567890"
+        return if (phoneNo.matches("\\d{10}".toRegex()))
+            true
+        else if (phoneNo.matches("\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}".toRegex()))
+            true
+        else if (phoneNo.matches("\\d{3} \\d{3}-\\d{4}\\s(x|(ext))\\d{3,5}".toRegex()))
+            true
+        else if (phoneNo.matches("\\(\\d{3}\\) \\d{3}-\\d{4}".toRegex()))
+            true
+        else
+            false//return false if nothing matches the input
+        //validating phone number where area code is in braces ()
+        //validating phone number with extension length from 3 to 5
+        //validating phone number with -, . or spaces
+
+    }
     //Validate all fields entered
     //TODO add more checks
     private fun validateFields() : Boolean {
         if (artisanName_et.text.toString().isEmpty()){
             artisanName_til.error = this.resources.getString(R.string.requiredFieldError)
+            return false
+        }
+
+        if (isAlpha(artisanName_et.text.toString()) == false) {
+            artisanName_til.error = this.resources.getString(R.string.invalid_type_for_artisan_name)
             return false
         }
 
@@ -543,12 +576,22 @@ class AddArtisan : AppCompatActivity() {
             return false
         }
 
-        if (artisanEmail_et.text.toString().isEmpty()){
-            artisanEmail_til.error = this.resources.getString(R.string.requiredFieldError)
+        if (isPhoneNumber(artisanContact_et.text.toString()) == false) {
+            artisanContact_til.error = this.resources.getString(R.string.invalid_type_for_artisan_number)
             return false
         }
+
+//        if (artisanContact_et.text.toString().length > 11 || artisanContact_et.text.toString().length < 10 ){
+//            artisanContact_til.error = this.resources.getString(R.string.invalid_number)
+//            return false
+//        }
+
+        /*if (artisanEmail_et.text.toString().isEmpty()){
+            artisanEmail_til.error = this.resources.getString(R.string.requiredFieldError)
+            return false
+        }*/
         
-        if (!artisanEmail_et.text.toString().contains(".")){
+        if (!artisanEmail_et.text.toString().contains(".") && !artisanEmail_et.text.toString().isEmpty()){
             artisanEmail_til.error = this.resources.getString(R.string.error_invalid_email)
             return false
         }
