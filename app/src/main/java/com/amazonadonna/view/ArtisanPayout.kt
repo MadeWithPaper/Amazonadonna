@@ -1,5 +1,6 @@
 package com.amazonadonna.view
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,8 +11,12 @@ import java.util.*
 import android.app.DatePickerDialog
 import androidx.appcompat.app.AlertDialog
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.amazonadonna.model.App
 import com.amazonadonna.view.R
+import kotlinx.android.synthetic.main.activity_add_artisan.*
 import kotlinx.android.synthetic.main.activity_artisan_profile_cga.*
 
 
@@ -22,6 +27,8 @@ class ArtisanPayout : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_payout)
+
+        setSupportActionBar(artisanPayoutToolbar)
 
         //val artisan = intent.extras?.getSerializable("artisan") as Artisan
 
@@ -36,8 +43,14 @@ class ArtisanPayout : AppCompatActivity() {
             pickDate()
         }
 
-        setSupportActionBar(artisanPayoutToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        artisanPayoutLayout.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View, m: MotionEvent): Boolean {
+                hideKeyboard(v)
+                return true
+            }
+        })
 
     }
 
@@ -111,5 +124,10 @@ class ArtisanPayout : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

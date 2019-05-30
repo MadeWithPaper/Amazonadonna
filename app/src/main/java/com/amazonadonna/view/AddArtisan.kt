@@ -555,11 +555,11 @@ class AddArtisan : AppCompatActivity() {
             artisanName_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
-
-        if (isAlpha(artisanName_et.text.toString()) == false) {
-            artisanName_til.error = this.resources.getString(R.string.invalid_type_for_artisan_name)
-            return false
-        }
+//
+//        if (isAlpha(artisanName_et.text.toString()) == false) {
+//            artisanName_til.error = this.resources.getString(R.string.invalid_type_for_artisan_name)
+//            return false
+//        }
 
         if (artisanLoc_et.text.toString().isEmpty()) {
             artisanLoc_til.error = this.resources.getString(R.string.requiredFieldError)

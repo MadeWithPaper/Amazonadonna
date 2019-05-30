@@ -94,7 +94,7 @@ class AddItemInfo : AppCompatActivity() {
             Log.i("AddItemInfo", "product updated 2/4: " + product)
             //clearFields()
             startActivity(intent)
-            //finish()
+            finish()
         }
     }
 

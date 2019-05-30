@@ -152,7 +152,7 @@ class AddItemImages : AppCompatActivity() {
         Log.i("AddItemImage", "product updated 3/4: " + product)
 
         startActivity(intent)
-        //finish()
+        finish()
     }
 
     private fun selectImageInAlbum() {

@@ -11,6 +11,7 @@ import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
+import kotlinx.android.synthetic.main.activity_artisan_profile_cga.*
 import kotlinx.android.synthetic.main.activity_product_details.*
 import kotlinx.android.synthetic.main.gallery_item.*
 
@@ -27,8 +28,10 @@ class ProductDetails : AppCompatActivity() {
 
         val product = intent.extras?.getSerializable("product") as Product
 
-        itemDetail_ToolBarText.text = product.itemName
+        setSupportActionBar(itemDetail_toolBar)
 
+        //itemDetail_ToolBarText.text = product.itemName
+        supportActionBar!!.title = product.itemName
         val categoryString = product.category + " > " + product.subCategory + " > " + product.specificCategory
         val priceString = "$ " + product.price.toString()
         val productionTimeString = this.resources.getString(R.string.product_detail_usually_ships_in) + product.productionTime + this.resources.getString(R.string.utility_days)
