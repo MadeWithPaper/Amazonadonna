@@ -137,11 +137,10 @@ class AddItemInfo : AppCompatActivity() {
             //return false
         }
 
-        if (addItemInfo_ProductPrice_et.text.toString().contains(".")){
-            addItemInfo_ProductPrice_til.error = this.resources.getString(R.string.payout_amount_format_error)
-            error_check += 1
-            //return false
-        }
+//        if (addItemInfo_ProductPrice_et.text.toString().contains(".")){
+//            addItemInfo_ProductPrice_til.error = this.resources.getString(R.string.payout_amount_format_error)
+//            return false
+//        }
 
         if (error_check > 0) {
             error_check = 0

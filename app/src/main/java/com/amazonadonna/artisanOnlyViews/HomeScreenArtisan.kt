@@ -38,9 +38,9 @@ class HomeScreenArtisan : AppCompatActivity() , CoroutineScope {
 
         App.artisanMode = true
         //TODO replace test data with artisan logged in
-        val testArtisan = App.testArtisan
+        //val testArtisan = App.testArtisan
         //TODO set global artisan
-        App.currentArtisan = testArtisan
+        //App.currentArtisan = testArtisan
 
         val extras = intent.extras
 
@@ -56,23 +56,23 @@ class HomeScreenArtisan : AppCompatActivity() , CoroutineScope {
             //ArtisanSync.updateArtisan(this@HomeScreenArtisan, artisan)
 
         } else {
-            artisanNameTV.text = testArtisan.artisanName
+            artisanNameTV.text = App.currentArtisan.artisanName
         }
 
         artisanProfile.setOnClickListener {
-            openArtisanProfile(testArtisan)
+            openArtisanProfile(App.currentArtisan)
         }
 
         artisanItemList_cga.setOnClickListener {
-            itemListForArtisan(testArtisan)
+            itemListForArtisan(App.currentArtisan)
         }
 
         artisanOrderList.setOnClickListener {
-            orderListForArtisan(testArtisan)
+            orderListForArtisan(App.currentArtisan)
         }
 
         setting.setOnClickListener {
-            openSetting(testArtisan)
+            openSetting(App.currentArtisan)
         }
 
         artisanHomeScreenSwipeRefreshLayout.setOnRefreshListener{

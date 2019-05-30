@@ -24,6 +24,8 @@ import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import com.jakewharton.rxbinding2.widget.textChanges
+import kotlinx.android.synthetic.main.activity_add_artisan.*
+import kotlinx.android.synthetic.main.activity_order_screen.*
 import kotlinx.android.synthetic.main.list_all_artisans.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext

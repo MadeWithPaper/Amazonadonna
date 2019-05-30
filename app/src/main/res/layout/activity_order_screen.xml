@@ -13,6 +13,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        app:titleTextColor="#fff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -128,19 +129,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/orderScreen_toolbar_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/order_id"
-        android:textColor="#FFF"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toStartOf="@+id/orderScreen_editOrder"
-        app:layout_constraintStart_toStartOf="@+id/orderScreen_toolbar"
-        app:layout_constraintTop_toTopOf="@+id/orderScreen_toolbar" />
+    <!--<TextView-->
+        <!--android:id="@+id/orderScreen_toolbar_text"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="9dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:text="@string/order_id"-->
+        <!--android:textColor="#FFF"-->
+        <!--android:textSize="30sp"-->
+        <!--app:layout_constraintEnd_toStartOf="@+id/orderScreen_editOrder"-->
+        <!--app:layout_constraintStart_toStartOf="@+id/orderScreen_toolbar"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/orderScreen_toolbar" />-->
 
     <TextView
         android:id="@+id/orderScreen_toolbar_input"
