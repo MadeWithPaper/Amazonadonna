@@ -73,51 +73,6 @@ class HomeScreen : AppCompatActivity()  , CoroutineScope {
         }
     }
 
-
-    private fun syncData_old() {
-        if (ArtisanSync.hasInternet(applicationContext)) {
-            runOnUiThread {
-                alertDialog = AlertDialog.Builder(this@HomeScreen).create()
-                alertDialog.setTitle("Synchronizing Account")
-                alertDialog.setMessage("Please wait while your account data is synchronized, this may take a few minutes...")
-                alertDialog.setCanceledOnTouchOutside(false)
-                alertDialog.show()
-                Log.i("HomeScreen", "loading start, show dialog")
-            }
-
-            Synchronizer.getArtisanSync().sync(applicationContext,this@HomeScreen, cgaID)
-            fetchJSONCGA()
-            Log.d("HomeScreen", cgaID)
-
-            // Wait for sync to finish
-            do {
-                sleep(1000)
-            } while (ArtisanSync.inProgress())
-
-            Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
-
-            // Perform one more data fetch to ensure data integrity is good
-            Synchronizer.getArtisanSync().sync(applicationContext,this@HomeScreen, cgaID)
-
-            do {
-                sleep(500)
-            } while (ArtisanSync.inProgress())
-
-            runOnUiThread {
-                Log.i("HomeScreen", "end of loading alert dialog dismiss")
-                alertDialog.dismiss()
-            }
-        }
-        else {
-            runOnUiThread {
-                alertDialog = AlertDialog.Builder(this@HomeScreen).create()
-                alertDialog.setTitle("Error Synchronizing Account")
-                alertDialog.setMessage("No internet connection active. You may attempt to resync your account on the Settings page when internet is available.")
-                alertDialog.show()
-            }
-        }
-    }
-
     private fun syncData() {
         job = Job()
 
