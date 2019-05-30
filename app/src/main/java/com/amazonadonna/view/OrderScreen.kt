@@ -16,6 +16,7 @@ import com.amazonadonna.model.Product
 import com.amazonadonna.sync.OrderSync
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.activity_add_artisan.*
 import kotlinx.android.synthetic.main.activity_order_screen.*
 import okhttp3.*
 import java.io.IOException
@@ -29,6 +30,8 @@ class OrderScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order_screen)
+
+        setSupportActionBar(orderScreen_toolbar)
 
         order = intent.extras?.getSerializable("order") as Order
         orderIdString = order.orderId
@@ -75,12 +78,13 @@ class OrderScreen : AppCompatActivity() {
 
 
     private fun populateSelectedOrder(order: Order) {
-        val orderIDTextView : TextView = findViewById(R.id.orderScreen_toolbar_input)
+        supportActionBar!!.title = order.orderId
+        //val orderIDTextView : TextView = findViewById(R.id.orderScreen_toolbar_input)
         val orderDateTextView : TextView = findViewById(R.id.orderScreen_OrderDate_input)
         val orderFulfilledTextView : TextView = findViewById(R.id.orderScreen_Fulfilled_input)
         val orderCostTextView : TextView = findViewById(R.id.orderScreen_Payout_input)
 //        orderIDTextView.text = order.amOrderNumber
-        orderIDTextView.text = order.orderId
+       // orderIDTextView.text = order.orderId
         orderDateTextView.text = "1/23/19"
         orderFulfilledTextView.text = order.fulfilledStatus.toString()
         orderCostTextView.text = "$" + order.totalCostDollars.toString()+"."+order.totalCostCents.toString()

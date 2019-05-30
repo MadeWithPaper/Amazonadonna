@@ -130,10 +130,10 @@ class AddItemInfo : AppCompatActivity() {
             return false
         }
 
-        if (addItemInfo_ProductPrice_et.text.toString().contains(".")){
-            addItemInfo_ProductPrice_til.error = this.resources.getString(R.string.payout_amount_format_error)
-            return false
-        }
+//        if (addItemInfo_ProductPrice_et.text.toString().contains(".")){
+//            addItemInfo_ProductPrice_til.error = this.resources.getString(R.string.payout_amount_format_error)
+//            return false
+//        }
 
 
         return true
