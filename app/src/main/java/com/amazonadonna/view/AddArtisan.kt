@@ -551,9 +551,11 @@ class AddArtisan : AppCompatActivity() {
     //Validate all fields entered
     //TODO add more checks
     private fun validateFields() : Boolean {
+        var error_check = 0
         if (artisanName_et.text.toString().isEmpty()){
             artisanName_til.error = this.resources.getString(R.string.requiredFieldError)
-            return false
+            error_check += 1
+            //return false
         }
 //
 //        if (isAlpha(artisanName_et.text.toString()) == false) {
@@ -563,22 +565,26 @@ class AddArtisan : AppCompatActivity() {
 
         if (artisanLoc_et.text.toString().isEmpty()) {
             artisanLoc_til.error = this.resources.getString(R.string.requiredFieldError)
-            return false
+            error_check += 1
+            //return false
         }
 
         if (!artisanLoc_et.text.toString().contains(",")) {
             artisanLoc_til.error = this.resources.getString(R.string.loc_missing_comma)
-            return false
+            error_check += 1
+            //return false
         }
 
         if (artisanContact_et.text.toString().isEmpty()){
             artisanContact_til.error = this.resources.getString(R.string.requiredFieldError)
-            return false
+            error_check += 1
+            //return false
         }
 
         if (isPhoneNumber(artisanContact_et.text.toString()) == false) {
             artisanContact_til.error = this.resources.getString(R.string.invalid_type_for_artisan_number)
-            return false
+            error_check += 1
+            //return false
         }
 
 //        if (artisanContact_et.text.toString().length > 11 || artisanContact_et.text.toString().length < 10 ){
@@ -593,11 +599,18 @@ class AddArtisan : AppCompatActivity() {
         
         if (!artisanEmail_et.text.toString().contains(".") && !artisanEmail_et.text.toString().isEmpty()){
             artisanEmail_til.error = this.resources.getString(R.string.error_invalid_email)
-            return false
+            error_check += 1
+            //return false
         }
 
         if (artisanBio_et.text.toString().isEmpty()){
             artisanBio_til.error = this.resources.getString(R.string.requiredFieldError)
+            error_check += 1
+            //return false
+        }
+
+        if (error_check > 0) {
+            error_check = 0
             return false
         }
 
