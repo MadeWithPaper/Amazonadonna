@@ -100,34 +100,41 @@ class AddItemInfo : AppCompatActivity() {
 
     //TODO add more checks
     private fun validateFields() : Boolean {
+        var error_check = 0
         if (addItemInfo_ProductName_et.text.toString().isEmpty()){
             addItemInfo_ProductName_til.error = this.resources.getString(R.string.requiredFieldError)
-            return false
+            error_check += 1
+            //return false
         }
 
         if (addItemInfo_ProductDescription_et.text.toString().isEmpty()) {
             addItemInfo_ProductDescription_til.error = this.resources.getString(R.string.requiredFieldError)
-            return false
+            error_check += 1
+            //return false
         }
 
         if (addItemInfo_ProductionTime_et.text.toString().isEmpty()){
             addItemInfo_ProductionTime_til.error = this.resources.getString(R.string.requiredFieldError)
-            return false
+            error_check += 1
+            //return false
         }
 
         if (addItemInfo_ProductPrice_et.text.toString().isEmpty()){
             addItemInfo_ProductPrice_til.error = this.resources.getString(R.string.requiredFieldError)
-            return false
+            error_check += 1
+            //return false
         }
 
         if (addItemInfo_ProductQuantity_et.text.toString().isEmpty()){
             addItemInfo_ProductQuantity_til.error = this.resources.getString(R.string.requiredFieldError)
-            return false
+            error_check += 1
+            //return false
         }
 
         if (shippmentMethod == SELECT_SHIPPING_METHOD) {
             Toast.makeText(this@AddItemInfo, this.resources.getString(R.string.add_item_info_shipping_warning), Toast.LENGTH_LONG).show()
-            return false
+            error_check += 1
+            //return false
         }
 
 //        if (addItemInfo_ProductPrice_et.text.toString().contains(".")){
@@ -135,6 +142,10 @@ class AddItemInfo : AppCompatActivity() {
 //            return false
 //        }
 
+        if (error_check > 0) {
+            error_check = 0
+            return false
+        }
 
         return true
     }
