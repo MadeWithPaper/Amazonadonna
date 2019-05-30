@@ -63,7 +63,7 @@ router.post('/listAllForEmail', (req: Request, res: Response) => {
 router.post('/add', (req: Request, res: Response) => {
     const id = uuid.v1()
     let email = req.body.email
-    if (email == null) {
+    if (email == null || email === '') {
         email = 'null'
     }
     const putItemParams: aws.DynamoDB.PutItemInput = {
