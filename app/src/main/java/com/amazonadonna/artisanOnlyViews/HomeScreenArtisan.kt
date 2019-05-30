@@ -19,12 +19,18 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_home_screen_artisan.*
 import kotlinx.android.synthetic.main.activity_home_screen_artisan.artisanNameTV
 import kotlinx.android.synthetic.main.activity_home_screen_artisan.setting
+import kotlinx.coroutines.*
 import okhttp3.*
 import java.io.IOException
+import kotlin.coroutines.CoroutineContext
 
-class HomeScreenArtisan : AppCompatActivity() {
+class HomeScreenArtisan : AppCompatActivity() , CoroutineScope {
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
     private val getArtisanUrl = App.BACKEND_BASE_URL + "/artisan/getById"
     private lateinit var alertDialog : AlertDialog
+    lateinit var job: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +50,10 @@ class HomeScreenArtisan : AppCompatActivity() {
 //            fetchJSONArtisan(extras.getString("artisanID"))
             var artisan = extras.get("artisan") as Artisan
             App.currentArtisan = artisan
-            AppDatabase.getDatabase(applicationContext).artisanDao().insert(App.currentArtisan)
+            //AppDatabase.getDatabase(applicationContext).artisanDao().insert(App.currentArtisan)
             artisanNameTV.text = App.currentArtisan.artisanName
             syncData()
-            ArtisanSync.updateArtisan(this@HomeScreenArtisan, artisan)
+            //ArtisanSync.updateArtisan(this@HomeScreenArtisan, artisan)
 
         } else {
             artisanNameTV.text = testArtisan.artisanName
@@ -118,37 +124,50 @@ class HomeScreenArtisan : AppCompatActivity() {
     }
 
     fun syncData() {
+        job = Job()
+
         if (ArtisanSync.hasInternet(applicationContext)) {
+
             runOnUiThread {
                 alertDialog = AlertDialog.Builder(this@HomeScreenArtisan).create()
                 alertDialog.setTitle("Synchronizing Account")
-                alertDialog.setMessage("Please wait while your account data is synchronized, this may take a few minutes...")
-                alertDialog.setCanceledOnTouchOutside(false)
+                alertDialog.setMessage("Please wait while your account data is synchronized. Image uploads may take a few minutes...")
                 alertDialog.show()
-                Log.i("HomeScreen", "loading start, show dialog")
             }
 
-            //ArtisanSync.resetLocalDB(applicationContext)
+            launch {
+                val query = async(Dispatchers.IO) {
+                    AppDatabase.getDatabase(applicationContext).artisanDao().insert(App.currentArtisan)
+                }
+            }
 
-            Synchronizer.getArtisanSync().syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
+            launch {
+                val task = async {
+                    Synchronizer.getArtisanSync().syncArtisanMode(applicationContext, this@HomeScreenArtisan, App.currentArtisan.artisanId)
 
-            // Wait for sync to finish
-            do {
-                Thread.sleep(1000)
-            } while (ArtisanSync.inProgress())
+                    // Wait for sync to finish
+                    do {
+                        Log.i("Settings", Synchronizer.getArtisanSync().inProgress().toString())
+                        Thread.sleep(1000)
+                    } while (Synchronizer.getArtisanSync().inProgress())
+                }
+                task.await()
 
-            Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
+                val task2 = async {
+                    Log.d("Settings", "First sync done, now one more to verify data integrity")
 
-            // Perform one more data fetch to ensure data integrity is good
-            Synchronizer.getArtisanSync().syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
+                    // Perform one more data fetch to ensure data integrity is goodandroid button do asynch
+                    Synchronizer.getArtisanSync().syncArtisanMode(applicationContext, this@HomeScreenArtisan, App.currentArtisan.artisanId)
 
-            do {
-                Thread.sleep(500)
-            } while (ArtisanSync.inProgress())
+                    do {
+                        Thread.sleep(500)
+                    } while (Synchronizer.getArtisanSync().inProgress())
+                }
+                task2.await()
 
-            runOnUiThread {
-                Log.i("HomeScreen", "end of loading alert dialog dismiss")
-                alertDialog.dismiss()
+                runOnUiThread {
+                    alertDialog.dismiss()
+                }
             }
         }
         else {
