@@ -143,8 +143,8 @@ class AddItemReview : AppCompatActivity() {
             intent = Intent(this, ArtisanProfile::class.java)
         }
         //intent.putExtra("artisan", artisan)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+//        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+//        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
     }

@@ -239,7 +239,7 @@ class AddItemCategory : AppCompatActivity() {
             intent.putExtra("editMode", editMode)
             //intent.putExtra("selectedArtisan", artisan)
             startActivity(intent)
-            //finish()
+            finish()
         } else {
             // do nothing not all categories are set correctly
             //TODO warning message?

@@ -25,6 +25,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        app:titleTextColor="#fff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,17 +41,17 @@
         app:layout_constraintEnd_toEndOf="@+id/artisanProfileToolbar"
         app:layout_constraintTop_toTopOf="@+id/artisanProfileToolbar" />
 
-    <TextView
-        android:id="@+id/artisanProfileName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="Name"
-        android:textColor="#fff"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@+id/artisanProfileToolbar"
-        app:layout_constraintStart_toStartOf="@+id/artisanProfileToolbar"
-        app:layout_constraintTop_toTopOf="@+id/artisanProfileToolbar" />
+    <!--<TextView-->
+        <!--android:id="@+id/artisanProfileName"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="10dp"-->
+        <!--android:text="Name"-->
+        <!--android:textColor="#fff"-->
+        <!--android:textSize="30sp"-->
+        <!--app:layout_constraintBottom_toBottomOf="@+id/artisanProfileToolbar"-->
+        <!--app:layout_constraintStart_toStartOf="@+id/artisanProfileToolbar"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/artisanProfileToolbar" />-->
 
     <LinearLayout
         android:layout_width="0dp"
