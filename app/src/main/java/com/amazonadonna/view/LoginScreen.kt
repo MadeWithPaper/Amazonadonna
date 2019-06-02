@@ -58,6 +58,10 @@ class LoginScreen : AppCompatActivity() {
     private fun signInArtisan() {
         var email = email_et.text.toString()
         var password = password_et.text.toString()
+        //TODO for testing remove before release
+        email = "jhuang81@calpoly.edu"
+        password = "HBp7X6gXdNa0"
+
         var user = userPool.getUser(email)
 
 
@@ -238,9 +242,7 @@ class LoginScreen : AppCompatActivity() {
 
         //TODO implement Artisan login
         artisan_log_in_button.setOnClickListener {
-
             signInArtisan()
-
         }
 
         cga_log_in_button.setOnClickListener{
