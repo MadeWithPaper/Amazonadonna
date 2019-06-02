@@ -32,7 +32,13 @@ class ProductDetails : AppCompatActivity() {
 
         //itemDetail_ToolBarText.text = product.itemName
         supportActionBar!!.title = product.itemName
-        val categoryString = product.category + " > " + product.subCategory + " > " + product.specificCategory
+        var categoryString = ""
+        if (product.specificCategory == "-- Not Applicable --") {
+            categoryString = product.category + " > " + product.subCategory
+        } else {
+            categoryString = product.category + " > " + product.subCategory + " > " + product.specificCategory
+        }
+
         val priceString = "$ " + product.price.toString()
         val productionTimeString = this.resources.getString(R.string.product_detail_usually_ships_in) + product.productionTime + this.resources.getString(R.string.utility_days)
         val productQuantityString = product.itemQuantity.toString() + " " + this.resources.getString(R.string.number_in_stock)

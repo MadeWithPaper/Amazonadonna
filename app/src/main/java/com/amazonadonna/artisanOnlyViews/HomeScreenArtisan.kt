@@ -37,24 +37,12 @@ class HomeScreenArtisan : AppCompatActivity() , CoroutineScope {
         setContentView(R.layout.activity_home_screen_artisan)
 
         App.artisanMode = true
-        //TODO replace test data with artisan logged in
-        //val testArtisan = App.testArtisan
-        //TODO set global artisan
-        //App.currentArtisan = testArtisan
-
         val extras = intent.extras
-
         if (extras != null) {
-            //TODO: Use actual artisan id once login is returning that correctly
-//            fetchJSONArtisan(testArtisan.artisanId)
-//            fetchJSONArtisan(extras.getString("artisanID"))
             var artisan = extras.get("artisan") as Artisan
             App.currentArtisan = artisan
-            //AppDatabase.getDatabase(applicationContext).artisanDao().insert(App.currentArtisan)
             artisanNameTV.text = App.currentArtisan.artisanName
             syncData()
-            //ArtisanSync.updateArtisan(this@HomeScreenArtisan, artisan)
-
         } else {
             artisanNameTV.text = App.currentArtisan.artisanName
         }
@@ -123,6 +111,11 @@ class HomeScreenArtisan : AppCompatActivity() , CoroutineScope {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        artisanNameTV.text = App.currentArtisan.artisanName
+    }
+    
     fun syncData() {
         job = Job()
 

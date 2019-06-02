@@ -137,16 +137,14 @@ class AddItemReview : AppCompatActivity() {
     }
 
     private fun submitDismiss() {
-        var intent = Intent(this, ArtisanProfileCGA::class.java)
         Log.i("AddItemReview", "review done adding item to db")
         if (App.artisanMode) {
-            intent = Intent(this, ArtisanProfile::class.java)
+            onBackPressed()
+        } else {
+            val intent = Intent(this, ArtisanProfileCGA::class.java)
+            startActivity(intent)
+            finish()
         }
-        //intent.putExtra("artisan", artisan)
-//        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-//        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
     }
 
     private fun showResponseDialog(status: Boolean) {

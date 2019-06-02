@@ -143,15 +143,15 @@
         <!--app:layout_constraintStart_toStartOf="@+id/orderScreen_toolbar"-->
         <!--app:layout_constraintTop_toTopOf="@+id/orderScreen_toolbar" />-->
 
-    <TextView
-        android:id="@+id/orderScreen_toolbar_input"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
-        android:textColor="#FFF"
-        android:textSize="30sp"
-        app:layout_constraintStart_toEndOf="@+id/orderScreen_toolbar_text"
-        app:layout_constraintTop_toTopOf="@+id/orderScreen_toolbar_text" />
+    <!--<TextView-->
+        <!--android:id="@+id/orderScreen_toolbar_input"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="9dp"-->
+        <!--android:textColor="#FFF"-->
+        <!--android:textSize="30sp"-->
+        <!--app:layout_constraintStart_toEndOf="@+id/orderScreen_toolbar_text"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/orderScreen_toolbar_text" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/orderScreen_recyclerView"
