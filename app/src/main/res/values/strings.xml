@@ -40,7 +40,7 @@
     <string name="invalid_number" translatable="false">invalid number</string>
 
     <!-- Add Item Category -->
-    <string name="item_category_toolbar_text">Add Item</string>
+    <string name="item_category_toolbar_text">Item Category</string>
     <string name="item_category_category_tv">Category</string>
     <string name="item_category_sub_category_tv">Sub-Category</string>
     <string name="item_category_specific_category_tv">Specific Category</string>

@@ -115,7 +115,7 @@ class HomeScreenArtisan : AppCompatActivity() , CoroutineScope {
         super.onResume()
         artisanNameTV.text = App.currentArtisan.artisanName
     }
-    
+
     fun syncData() {
         job = Job()
 

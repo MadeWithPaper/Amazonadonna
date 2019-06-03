@@ -18,16 +18,18 @@ import kotlinx.android.synthetic.main.gallery_item.*
 class ProductDetails : AppCompatActivity() {
 
     //private lateinit var artisan : Artisan
-
+    private var fromOrderScreen = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_details)
 
        // artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
-        Log.d("Productdetails", App.currentArtisan.artisanId)
+        //Log.d("Productdetails", App.currentArtisan.artisanId)
 
         val product = intent.extras?.getSerializable("product") as Product
-
+        if (intent.hasExtra("fromOrderScreen")){
+            fromOrderScreen = intent.extras!!.getBoolean("fromOrderScreen")
+        }
         setSupportActionBar(itemDetail_toolBar)
 
         //itemDetail_ToolBarText.text = product.itemName
@@ -82,6 +84,7 @@ class ProductDetails : AppCompatActivity() {
     private fun editItem(product: Product) {
         val intent = Intent(this, AddItemCategory::class.java)
         intent.putExtra("product", product)
+        intent.putExtra("fromOrderScreen", fromOrderScreen)
        // intent.putExtra("selectedArtisan", artisan)
         startActivity(intent)
         finish()
