@@ -16,7 +16,6 @@ import com.amazonadonna.model.Product
 import com.amazonadonna.sync.OrderSync
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.activity_add_artisan.*
 import kotlinx.android.synthetic.main.activity_order_screen.*
 import okhttp3.*
 import java.io.IOException
@@ -45,8 +44,7 @@ class OrderScreen : AppCompatActivity() {
         orderScreen_recyclerView.layoutManager = LinearLayoutManager(this)
         //load an empty list as placeholder before GET request completes
         val emptyItemList : MutableList<Product> = mutableListOf()
-        orderScreen_recyclerView.adapter = ListItemsAdapter(this, emptyItemList)
-        //TODO make order screen adapter
+        orderScreen_recyclerView.adapter = ListItemsAdapter(this, emptyItemList, true)
         orderScreen_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
@@ -55,7 +53,7 @@ class OrderScreen : AppCompatActivity() {
 
         Log.d("OrderScreen", "In order screen")
         runOnUiThread {
-            orderScreen_recyclerView.adapter = ListItemsAdapter(applicationContext, order.products)
+            orderScreen_recyclerView.adapter = ListItemsAdapter(applicationContext, order.products, true)
         }
         //fetchJSON()
     }

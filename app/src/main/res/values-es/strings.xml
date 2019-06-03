@@ -29,7 +29,7 @@
     <string name="add_artisan_toolbar_text">Añadir Artesano</string>
 
     <!-- Add Item Category -->
-    <string name="item_category_toolbar_text">Añadir artículo</string>
+    <string name="item_category_toolbar_text">Categoría de artículo</string>
     <string name="item_category_category_tv">Categoría</string>
     <string name="item_category_sub_category_tv">Subcategoría</string>
     <string name="item_category_specific_category_tv">Categoria especifica</string>
