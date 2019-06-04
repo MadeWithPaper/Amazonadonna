@@ -34,14 +34,12 @@ class HomeScreenArtisan : AppCompatActivity() {
         //TODO replace test data with artisan logged in
         val testArtisan = App.testArtisan
         //TODO set global artisan
-        App.currentArtisan = testArtisan
+//        App.currentArtisan = testArtisan
 
         val extras = intent.extras
 
         if (extras != null) {
             //TODO: Use actual artisan id once login is returning that correctly
-//            fetchJSONArtisan(testArtisan.artisanId)
-//            fetchJSONArtisan(extras.getString("artisanID"))
             var artisan = extras.get("artisan") as Artisan
             App.currentArtisan = artisan
             AppDatabase.getDatabase(applicationContext).artisanDao().insert(App.currentArtisan)
