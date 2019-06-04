@@ -230,7 +230,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                     Log.d("ArtisanSync", "OLDID " + artisan.artisanId)
                     runBlocking {
                         updateItemsForArtisan(context, artisan.artisanId, newArtisanId)
-                    }
+                    } 
 
                     artisan.artisanId = newArtisanId
 
