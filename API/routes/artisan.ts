@@ -61,15 +61,15 @@ router.post('/listAllForEmail', (req: Request, res: Response) => {
 })
 
 router.post('/add', (req: Request, res: Response) => {
-    // const id = uuid.v1()
+    const id = uuid.v1()
     let email = req.body.email
-    if (email == null) {
+    if (email == null || email === '') {
         email = 'null'
     }
     const putItemParams: aws.DynamoDB.PutItemInput = {
         TableName: 'artisan',
         Item: {
-            artisanId: { S: req.body.artisanId },
+            artisanId: { S: id },
             cgaId: { S: req.body.cgaId },
             bio: { S: req.body.bio },
             city: { S: req.body.city },
@@ -91,7 +91,7 @@ router.post('/add', (req: Request, res: Response) => {
             console.log(msg, err)
             res.status(400).send(msg + err.message)
         } else {
-            res.json(req.body.artisanId.toString())
+            res.json(id.toString())
         }
     })
 })

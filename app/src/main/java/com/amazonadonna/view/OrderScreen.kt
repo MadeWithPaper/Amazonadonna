@@ -30,6 +30,8 @@ class OrderScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order_screen)
 
+        setSupportActionBar(orderScreen_toolbar)
+
         order = intent.extras?.getSerializable("order") as Order
         orderIdString = order.orderId
         populateSelectedOrder(order)
@@ -42,8 +44,7 @@ class OrderScreen : AppCompatActivity() {
         orderScreen_recyclerView.layoutManager = LinearLayoutManager(this)
         //load an empty list as placeholder before GET request completes
         val emptyItemList : MutableList<Product> = mutableListOf()
-        orderScreen_recyclerView.adapter = ListItemsAdapter(this, emptyItemList)
-        //TODO make order screen adapter
+        orderScreen_recyclerView.adapter = ListItemsAdapter(this, emptyItemList, true)
         orderScreen_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
@@ -52,7 +53,7 @@ class OrderScreen : AppCompatActivity() {
 
         Log.d("OrderScreen", "In order screen")
         runOnUiThread {
-            orderScreen_recyclerView.adapter = ListItemsAdapter(applicationContext, order.products)
+            orderScreen_recyclerView.adapter = ListItemsAdapter(applicationContext, order.products, true)
         }
         //fetchJSON()
     }
@@ -75,12 +76,13 @@ class OrderScreen : AppCompatActivity() {
 
 
     private fun populateSelectedOrder(order: Order) {
-        val orderIDTextView : TextView = findViewById(R.id.orderScreen_toolbar_input)
+        supportActionBar!!.title = order.orderId
+        //val orderIDTextView : TextView = findViewById(R.id.orderScreen_toolbar_input)
         val orderDateTextView : TextView = findViewById(R.id.orderScreen_OrderDate_input)
         val orderFulfilledTextView : TextView = findViewById(R.id.orderScreen_Fulfilled_input)
         val orderCostTextView : TextView = findViewById(R.id.orderScreen_Payout_input)
 //        orderIDTextView.text = order.amOrderNumber
-        orderIDTextView.text = order.orderId
+       // orderIDTextView.text = order.orderId
         orderDateTextView.text = "1/23/19"
         orderFulfilledTextView.text = order.fulfilledStatus.toString()
         orderCostTextView.text = "$" + order.totalCostDollars.toString()+"."+order.totalCostCents.toString()

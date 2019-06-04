@@ -12,7 +12,6 @@ import com.amazonadonna.view.EditArtisan
 import com.amazonadonna.view.PayoutHistory
 import com.amazonadonna.view.R
 import kotlinx.android.synthetic.main.activity_artisan_profile.*
-import kotlinx.android.synthetic.main.activity_artisan_profile_cga.*
 
 class ArtisanProfile : AppCompatActivity() {
 
@@ -26,7 +25,10 @@ class ArtisanProfile : AppCompatActivity() {
 
         artisanProfileBio.movementMethod = ScrollingMovementMethod()
 
-        artisanProfileName.text = App.currentArtisan.artisanName
+        setSupportActionBar(artisanProfileToolbar)
+
+
+        supportActionBar!!.title = App.currentArtisan.artisanName
         artisanProfileBalance.text = App.currentArtisan.balance.toString()
         artisanProfileContact.text = App.currentArtisan.phoneNumber
         artisanProfileLoc.text = "${App.currentArtisan.city},${App.currentArtisan.country}"

@@ -18,10 +18,16 @@ import java.lang.Exception
 import androidx.appcompat.app.AlertDialog
 import com.amazonadonna.model.App
 import com.amazonadonna.sync.Synchronizer
+import kotlinx.coroutines.*
 import java.lang.Thread.sleep
+import kotlin.coroutines.CoroutineContext
 
 
-class HomeScreen : AppCompatActivity() {
+class HomeScreen : AppCompatActivity()  , CoroutineScope {
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+    lateinit var job: Job
     private var cgaID : String = "0" // initialize to prevent crash while testing
     private var cgaAmaznName : String = ""
     private var newLang : String = "en_US"
@@ -49,7 +55,7 @@ class HomeScreen : AppCompatActivity() {
                 //do nothing use placeholder text
             }
 
-            //syncData()
+            syncData()
         }
         override fun onError(ae: AuthError?) {
             //To change body of created functions use File | Settings | File Templates.
@@ -67,39 +73,45 @@ class HomeScreen : AppCompatActivity() {
         }
     }
 
+    private fun syncData() {
+        job = Job()
 
-    fun syncData() {
         if (ArtisanSync.hasInternet(applicationContext)) {
+
             runOnUiThread {
                 alertDialog = AlertDialog.Builder(this@HomeScreen).create()
                 alertDialog.setTitle("Synchronizing Account")
-                alertDialog.setMessage("Please wait while your account data is synchronized, this may take a few minutes...")
-                alertDialog.setCanceledOnTouchOutside(false)
+                alertDialog.setMessage("Please wait while your account data is synchronized. Image uploads may take a few minutes...")
                 alertDialog.show()
-                Log.i("HomeScreen", "loading start, show dialog")
             }
 
-            Synchronizer.getArtisanSync().sync(applicationContext,this@HomeScreen, cgaID)
-            fetchJSONCGA()
-            Log.d("HomeScreen", cgaID)
+            launch {
+                val task = async {
+                    Synchronizer.getArtisanSync().sync(applicationContext,this@HomeScreen, cgaID)
+                    fetchJSONCGA()
+                    // Wait for sync to finish
+                    do {
+                        Log.i("Settings", Synchronizer.getArtisanSync().inProgress().toString())
+                        Thread.sleep(1000)
+                    } while (Synchronizer.getArtisanSync().inProgress())
+                }
+                task.await()
 
-            // Wait for sync to finish
-            do {
-                sleep(1000)
-            } while (ArtisanSync.inProgress())
+                val task2 = async {
+                    Log.d("Settings", "First sync done, now one more to verify data integrity")
 
-            Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
+                    // Perform one more data fetch to ensure data integrity is goodandroid button do asynch
+                    Synchronizer.getArtisanSync().sync(applicationContext,this@HomeScreen, cgaID)
 
-            // Perform one more data fetch to ensure data integrity is good
-            Synchronizer.getArtisanSync().sync(applicationContext,this@HomeScreen, cgaID)
+                    do {
+                        Thread.sleep(500)
+                    } while (Synchronizer.getArtisanSync().inProgress())
+                }
+                task2.await()
 
-            do {
-                sleep(500)
-            } while (ArtisanSync.inProgress())
-
-            runOnUiThread {
-                Log.i("HomeScreen", "end of loading alert dialog dismiss")
-                alertDialog.dismiss()
+                runOnUiThread {
+                    alertDialog.dismiss()
+                }
             }
         }
         else {

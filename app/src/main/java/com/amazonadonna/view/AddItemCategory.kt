@@ -95,17 +95,23 @@ class AddItemCategory : AppCompatActivity() {
     private var editMode : Boolean = false
     private lateinit var subMap : Map<String, Array<String>>
     private lateinit var specificMap : Map<String, Array<String>>
+    private var fromOrderScreen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_category)
 
-        //val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        if (intent.hasExtra("product")) {
+            product = intent.extras!!.get("product") as Product
+        }
         initDataMap()
 
         setSupportActionBar(addItem_toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        if (intent.hasExtra("fromOrderScreen")){
+            fromOrderScreen = intent.extras!!.getBoolean("fromOrderScreen")
+        }
         // Create an ArrayAdapter
         val mainArrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, mainCategoryList)
         // Set layout to use when the list of choices appear
@@ -234,12 +240,14 @@ class AddItemCategory : AppCompatActivity() {
             product.category = main
             product.subCategory = sub
             product.specificCategory = specific
-            product.artisanId = App.currentArtisan.artisanId
+            if (!fromOrderScreen) {
+                product.artisanId = App.currentArtisan.artisanId
+            }
             intent.putExtra("product", product)
             intent.putExtra("editMode", editMode)
             //intent.putExtra("selectedArtisan", artisan)
             startActivity(intent)
-            //finish()
+            finish()
         } else {
             // do nothing not all categories are set correctly
             //TODO warning message?

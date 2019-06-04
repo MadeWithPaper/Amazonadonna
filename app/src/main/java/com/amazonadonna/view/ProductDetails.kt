@@ -11,25 +11,36 @@ import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
+import kotlinx.android.synthetic.main.activity_artisan_profile_cga.*
 import kotlinx.android.synthetic.main.activity_product_details.*
 import kotlinx.android.synthetic.main.gallery_item.*
 
 class ProductDetails : AppCompatActivity() {
 
     //private lateinit var artisan : Artisan
-
+    private var fromOrderScreen = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_details)
 
        // artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
-        Log.d("Productdetails", App.currentArtisan.artisanId)
+        //Log.d("Productdetails", App.currentArtisan.artisanId)
 
         val product = intent.extras?.getSerializable("product") as Product
+        if (intent.hasExtra("fromOrderScreen")){
+            fromOrderScreen = intent.extras!!.getBoolean("fromOrderScreen")
+        }
+        setSupportActionBar(itemDetail_toolBar)
 
-        itemDetail_ToolBarText.text = product.itemName
+        //itemDetail_ToolBarText.text = product.itemName
+        supportActionBar!!.title = product.itemName
+        var categoryString = ""
+        if (product.specificCategory == "-- Not Applicable --") {
+            categoryString = product.category + " > " + product.subCategory
+        } else {
+            categoryString = product.category + " > " + product.subCategory + " > " + product.specificCategory
+        }
 
-        val categoryString = product.category + " > " + product.subCategory + " > " + product.specificCategory
         val priceString = "$ " + product.price.toString()
         val productionTimeString = this.resources.getString(R.string.product_detail_usually_ships_in) + product.productionTime + this.resources.getString(R.string.utility_days)
         val productQuantityString = product.itemQuantity.toString() + " " + this.resources.getString(R.string.number_in_stock)
@@ -73,6 +84,7 @@ class ProductDetails : AppCompatActivity() {
     private fun editItem(product: Product) {
         val intent = Intent(this, AddItemCategory::class.java)
         intent.putExtra("product", product)
+        intent.putExtra("fromOrderScreen", fromOrderScreen)
        // intent.putExtra("selectedArtisan", artisan)
         startActivity(intent)
         finish()

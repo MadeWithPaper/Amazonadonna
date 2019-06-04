@@ -24,7 +24,6 @@ import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.sync.ArtisanSync
-import kotlinx.android.synthetic.main.activity_add_artisan.*
 import kotlinx.android.synthetic.main.activity_edit_artisan.*
 import okhttp3.*
 import java.io.*
@@ -79,7 +78,7 @@ class EditArtisan : AppCompatActivity() {
 
         editArtisanContact_et.addTextChangedListener(PhoneNumberFormattingTextWatcher())
 
-        editArtisan_layout.setOnTouchListener(object : View.OnTouchListener {
+        editArtisan_scrollViewContents.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View, m: MotionEvent): Boolean {
                 hideKeyboard(v)
                 return true
@@ -374,33 +373,33 @@ class EditArtisan : AppCompatActivity() {
     //Validate all fields entered
     //TODO add more checks
     private fun validateFields() : Boolean {
-        if (artisanName_et.text.toString().isEmpty()){
-            artisanName_til.error = this.resources.getString(R.string.requiredFieldError)
+        if (editArtisanName_et.text.toString().isEmpty()){
+            editArtisanName_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
-        if (isAlpha(artisanName_et.text.toString()) == false) {
-            artisanName_til.error = this.resources.getString(R.string.invalid_type_for_artisan_name)
+//        if (isAlpha(artisanName_et.text.toString()) == false) {
+//            artisanName_til.error = this.resources.getString(R.string.invalid_type_for_artisan_name)
+//            return false
+//        }
+
+        if (editArtisanLoc_et.text.toString().isEmpty()) {
+            editArtisanLoc_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
-        if (artisanLoc_et.text.toString().isEmpty()) {
-            artisanLoc_til.error = this.resources.getString(R.string.requiredFieldError)
+        if (!editArtisanLoc_et.text.toString().contains(",")) {
+            editArtisanLoc_til.error = this.resources.getString(R.string.loc_missing_comma)
             return false
         }
 
-        if (!artisanLoc_et.text.toString().contains(",")) {
-            artisanLoc_til.error = this.resources.getString(R.string.loc_missing_comma)
+        if (editArtisanContact_et.text.toString().isEmpty()){
+            editArtisanContact_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
-        if (artisanContact_et.text.toString().isEmpty()){
-            artisanContact_til.error = this.resources.getString(R.string.requiredFieldError)
-            return false
-        }
-
-        if (isPhoneNumber(artisanContact_et.text.toString()) == false) {
-            artisanContact_til.error = this.resources.getString(R.string.invalid_type_for_artisan_number)
+        if (isPhoneNumber(editArtisanContact_et.text.toString()) == false) {
+            editArtisanContact_til.error = this.resources.getString(R.string.invalid_type_for_artisan_number)
             return false
         }
 
@@ -409,18 +408,19 @@ class EditArtisan : AppCompatActivity() {
 //            return false
 //        }
 
-        if (artisanEmail_et.text.toString().isEmpty()){
-            artisanEmail_til.error = this.resources.getString(R.string.requiredFieldError)
-            return false
-        }
+        //TODO add next sprint
+//        if (artisanEmail_et.text.toString().isEmpty()){
+//            artisanEmail_til.error = this.resources.getString(R.string.requiredFieldError)
+//            return false
+//        }
 
-        if (!artisanEmail_et.text.toString().contains(".")){
-            artisanEmail_til.error = this.resources.getString(R.string.error_invalid_email)
-            return false
-        }
+//        if (!artisanEmail_et.text.toString().contains(".")){
+//            artisanEmail_til.error = this.resources.getString(R.string.error_invalid_email)
+//            return false
+//        }
 
-        if (artisanBio_et.text.toString().isEmpty()){
-            artisanBio_til.error = this.resources.getString(R.string.requiredFieldError)
+        if (editArtisanBio_et.text.toString().isEmpty()){
+            editArtisanBio_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 

@@ -24,6 +24,9 @@ class ArtisanProfileCGA() : AppCompatActivity() {
         artisanProfileBio_cga.movementMethod = ScrollingMovementMethod()
         //Log.d("ArtisanProfileCGA", "in onCreate payout ${artisan.balance}")
 
+        setSupportActionBar(artisanProfileToolbar_cga)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
         populateSelectedArtisan()
 
         artisanItemList_cga.setOnClickListener {
@@ -45,8 +48,6 @@ class ArtisanProfileCGA() : AppCompatActivity() {
             payoutHistory()
         }
 
-        setSupportActionBar(artisanProfileToolbar_cga)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -85,7 +86,7 @@ class ArtisanProfileCGA() : AppCompatActivity() {
         isp.loadImageIntoUI(App.currentArtisan.picURL, this.artisanProfilePicture_cga, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
 
         Log.d("ArtisanProfileCGA", "$App.currentArtisan")
-        artisanProfileName_cga.text = App.currentArtisan.artisanName
+        supportActionBar!!.title = App.currentArtisan.artisanName
         artisanProfileBio_cga.text = App.currentArtisan.bio
         artisanProfileBalance_cga.text = "$${App.currentArtisan.balance}"
         artisanProfileLoc_cga.text = "${App.currentArtisan.city}, ${App.currentArtisan.country}"
