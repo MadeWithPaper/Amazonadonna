@@ -479,7 +479,7 @@ class AddArtisan : AppCompatActivity() {
 
         val artisanId = ""
 
-        val newArtisan = Artisan(name, artisanId, number, email, true,"", "", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 3000.00)
+        val newArtisan = Artisan(name, artisanId, number, email, true,"", "", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 5000.00)
         newArtisan.generateTempID()
         //parse location info
 
