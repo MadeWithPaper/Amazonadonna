@@ -70,10 +70,10 @@ class Settings : AppCompatActivity(), CoroutineScope {
             alertDialog = AlertDialog.Builder(this@Settings).create()
             alertDialog.setTitle("Are you sure?")
             alertDialog.setMessage("Any changed settings will be overridden if you have not clicked 'Update Settings'")
-            alertDialog.setButton(-1, "Continue") { dialog, which ->
+            alertDialog.setButton(-1, "Home") { dialog, which ->
                 super.onBackPressed()
             }
-            alertDialog.setButton(-2, "Go back") { dialog, which ->
+            alertDialog.setButton(-2, "Stay Here") { dialog, which ->
                 alertDialog.dismiss()
             }
             alertDialog.setCanceledOnTouchOutside(false)
