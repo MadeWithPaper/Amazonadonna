@@ -59,8 +59,8 @@ class LoginScreen : AppCompatActivity() {
         var email = email_et.text.toString()
         var password = password_et.text.toString()
         //TODO for testing remove before release
-        email = "jhuang81@calpoly.edu"
-        password = "HBp7X6gXdNa0"
+//        email = "jhuang81@calpoly.edu"
+//        password = "HBp7X6gXdNa0"
 
         var user = userPool.getUser(email)
 

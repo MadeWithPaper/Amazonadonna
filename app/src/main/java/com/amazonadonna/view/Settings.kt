@@ -23,11 +23,16 @@ import com.amazonadonna.artisanOnlyViews.HomeScreenArtisan
 import com.amazonadonna.model.App
 import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.sync.Synchronizer
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool
+import com.amazonaws.regions.Regions
 import kotlinx.coroutines.*
 import java.lang.Thread.sleep
 import kotlin.coroutines.CoroutineContext
 
 class Settings : AppCompatActivity(), CoroutineScope {
+
+    private var userPool = CognitoUserPool(this, "us-east-2_ViMIOaCbk","4in76ncc44ufi8n1sq6m5uj7p7", "12qfl0nmg81nlft6aunvj6ec0ocejfecdau80biodpubkfuna0ee", Regions.US_EAST_2)
+
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -166,8 +171,17 @@ class Settings : AppCompatActivity(), CoroutineScope {
     }
 
     private fun logout() {
-        App.artisanMode = false
-        AuthorizationManager.signOut(this, signoutListener)
+        if (App.artisanMode) {
+            App.artisanMode = false
+            var user = userPool.getUser(App.currentArtisan.email)
+            user.signOut()
+
+            val intent = Intent(this@Settings, LoginScreen::class.java)
+            finishAffinity()
+            startActivity(intent)
+        } else {
+            AuthorizationManager.signOut(this, signoutListener)
+        }
     }
 
     private fun toChangeLanguage() {
