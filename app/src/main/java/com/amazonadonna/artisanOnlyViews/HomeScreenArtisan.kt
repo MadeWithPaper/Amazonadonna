@@ -37,8 +37,10 @@ class HomeScreenArtisan : AppCompatActivity() , CoroutineScope {
         setContentView(R.layout.activity_home_screen_artisan)
 
         App.artisanMode = true
+
         val extras = intent.extras
         if (extras != null) {
+            //TODO: Use actual artisan id once login is returning that correctly
             var artisan = extras.get("artisan") as Artisan
             App.currentArtisan = artisan
             artisanNameTV.text = App.currentArtisan.artisanName
