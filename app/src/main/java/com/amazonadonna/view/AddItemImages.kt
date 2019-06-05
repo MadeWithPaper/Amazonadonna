@@ -130,6 +130,13 @@ class AddItemImages : AppCompatActivity() {
             }
         }
 
+        setSupportActionBar(addItemImage_toolBar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun addItemImageContinue(product: Product) {
@@ -143,6 +150,7 @@ class AddItemImages : AppCompatActivity() {
 //        intent.putExtra("image0", pic)
         intent.putExtra("editMode", editMode)
         Log.i("AddItemImage", "product updated 3/4: " + product)
+
         startActivity(intent)
         finish()
     }

@@ -21,6 +21,7 @@ import android.content.ContentUris
 import android.content.pm.PackageManager
 import android.net.Uri
 import java.io.*
+import java.security.SecureRandom
 import android.graphics.BitmapFactory
 import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.sync.Synchronizer
@@ -31,9 +32,28 @@ import android.graphics.Matrix
 import android.os.Build
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.view.MotionEvent
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import com.amazonadonna.model.App
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation
+
+
+import com.amazonaws.regions.Regions
+import de.cketti.mailto.EmailIntentBuilder
 import kotlinx.android.synthetic.main.activity_login_screen.*
+import kotlinx.android.synthetic.main.activity_payout_history.*
 import java.io.File
 import java.io.IOException
 
@@ -45,6 +65,8 @@ class AddArtisan : AppCompatActivity() {
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
     private val addArtisanURL = App.BACKEND_BASE_URL + "/artisan/add"
     private val artisanPicURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
+    private var userPool = CognitoUserPool(this@AddArtisan,"us-east-2_ViMIOaCbk","4in76ncc44ufi8n1sq6m5uj7p7", "12qfl0nmg81nlft6aunvj6ec0ocejfecdau80biodpubkfuna0ee", Regions.US_EAST_2)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,13 +90,21 @@ class AddArtisan : AppCompatActivity() {
 
         artisanContact_et.addTextChangedListener(PhoneNumberFormattingTextWatcher())
 
-        addArtisan_layout.setOnTouchListener(object : View.OnTouchListener {
+        addArtisan_scrollViewContents.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View, m: MotionEvent): Boolean {
                 hideKeyboard(v)
                 return true
             }
         })
 
+        setSupportActionBar(addnewartisan_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun selectImageInAlbum() {
@@ -167,8 +197,6 @@ class AddArtisan : AppCompatActivity() {
         //byteArray = ByteArray(photoFile!!.length().toInt())
 
         try {
-
-
             //convert array of bytes into file
             val fileOuputStream = FileOutputStream(photoFile)
             fileOuputStream.write(byteArray)
@@ -340,7 +368,7 @@ class AddArtisan : AppCompatActivity() {
         return bm
     }
 
-    public fun calculateInSampleSize(options : BitmapFactory.Options,
+     fun calculateInSampleSize(options : BitmapFactory.Options,
                                       reqWidth : Int, reqHeight : Int): Int {
         // Raw height and width of image
         val height = options.outHeight;
@@ -370,7 +398,7 @@ class AddArtisan : AppCompatActivity() {
 
 
 
-override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             3 -> {
                 button_addArtisan.setOnClickListener{
@@ -384,6 +412,60 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
         }
     }
 
+    private fun generateTempPassword() : String {
+        val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        var i = 0
+        val rnd = SecureRandom.getInstance("SHA1PRNG")
+        val sb = StringBuilder(10)
+
+        while (i < 10) {
+            val randomInt : Int = rnd.nextInt(charPool.size)
+            sb.append(charPool[randomInt])
+            i++
+        }
+        sb.append("a0")
+
+        return sb.toString()
+    }
+
+    /**
+     * Amazon Cognito for Artisans
+     */
+    private fun signUpNewArtisan(email: String) {
+        //disable touch events once log in button is clicked
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        var userAttributes = CognitoUserAttributes()
+        userAttributes.addAttribute("email", email)
+
+        var tempPassword = generateTempPassword()
+        Log.d("AddArtisan", "tempPass: "+tempPassword)
+
+
+        var signUpHandler = object : SignUpHandler {
+            override fun onSuccess(user: CognitoUser?, signUpConfirmationState: Boolean, cognitoUserCodeDeliveryDetails: CognitoUserCodeDeliveryDetails?) {
+                Log.d("AddArtisan", "in signUpHandler success")
+                var success = EmailIntentBuilder.from(this@AddArtisan).to(email)
+                        .subject("Invitation to join our community")
+                        .body("Welcome to our community! Login to the Amazon Handmade app with " +
+                                "the following credentials. \n\nusername: "+email+"\npassword: "+tempPassword)
+                        .start()
+
+                if (!success) {
+                    Toast.makeText(this@AddArtisan, "Could not send email to '"+email+"'", Toast.LENGTH_SHORT)
+                }
+            }
+
+            override fun onFailure(exception: Exception?) {
+                Log.d("AddArtisan", "in signupHandler fail")
+                Log.d("AddArtisan", exception?.message)
+            }
+        }
+
+        // Sign up this user
+        userPool.signUpInBackground(email, tempPassword, userAttributes, null, signUpHandler)
+    }
+
+
     //TODO clean up
     private fun makeNewArtisan() {
         //validate fields
@@ -393,16 +475,25 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
         val name = artisanName_et.text.toString()
         val bio = artisanBio_et.text.toString()
         val number = artisanContact_et.text.toString()
+        val email = artisanEmail_et.text.toString()
 
-        val newArtisan = Artisan(name, "", number, "","", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 3000.00)
+        val artisanId = ""
+
+        val newArtisan = Artisan(name, artisanId, number, email, true,"", "", bio, cgaId,0.0,0.0, "Not set", Synchronizer.SYNC_NEW, 3000.00)
         newArtisan.generateTempID()
         //parse location info
+
         parseLoc(newArtisan)
         Log.i("AddArtisan", "created new Artisan $newArtisan")
 
         //pop screen and add
         //submitToDB(newArtisan)
+        if (!artisanEmail_et.text.toString().isNullOrEmpty()) {
+            signUpNewArtisan(artisanEmail_et.text.toString())
+        }
+
         ArtisanSync.addArtisan(applicationContext, newArtisan, photoFile)
+
 
         //clear all fields
         clearFields()
@@ -424,35 +515,102 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<Str
         artisanContact_et.text!!.clear()
         artisanBio_et.text!!.clear()
         artisanLoc_et.text!!.clear()
+        artisanEmail_et.text!!.clear()
 
         Log.i("AddArtisan", "Clearing fields")
     }
 
+    private fun isAlpha(s: String): Boolean {
+        val charArr = s.toCharArray()
+
+        for (c in charArr) {
+            if (!Character.isLetter(c)) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun isPhoneNumber(phoneNo: String): Boolean {
+        //validate phone numbers of format "1234567890"
+        return if (phoneNo.matches("\\d{10}".toRegex()))
+            true
+        else if (phoneNo.matches("\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}".toRegex()))
+            true
+        else if (phoneNo.matches("\\d{3} \\d{3}-\\d{4}\\s(x|(ext))\\d{3,5}".toRegex()))
+            true
+        else if (phoneNo.matches("\\(\\d{3}\\) \\d{3}-\\d{4}".toRegex()))
+            true
+        else
+            false//return false if nothing matches the input
+        //validating phone number where area code is in braces ()
+        //validating phone number with extension length from 3 to 5
+        //validating phone number with -, . or spaces
+
+    }
     //Validate all fields entered
     //TODO add more checks
     private fun validateFields() : Boolean {
+        var error_check = 0
         if (artisanName_et.text.toString().isEmpty()){
             artisanName_til.error = this.resources.getString(R.string.requiredFieldError)
-            return false
+            error_check += 1
+            //return false
         }
+//
+//        if (isAlpha(artisanName_et.text.toString()) == false) {
+//            artisanName_til.error = this.resources.getString(R.string.invalid_type_for_artisan_name)
+//            return false
+//        }
 
         if (artisanLoc_et.text.toString().isEmpty()) {
             artisanLoc_til.error = this.resources.getString(R.string.requiredFieldError)
-            return false
+            error_check += 1
+            //return false
         }
 
         if (!artisanLoc_et.text.toString().contains(",")) {
             artisanLoc_til.error = this.resources.getString(R.string.loc_missing_comma)
-            return false
+            error_check += 1
+            //return false
         }
 
         if (artisanContact_et.text.toString().isEmpty()){
             artisanContact_til.error = this.resources.getString(R.string.requiredFieldError)
+            error_check += 1
+            //return false
+        }
+
+        if (isPhoneNumber(artisanContact_et.text.toString()) == false) {
+            artisanContact_til.error = this.resources.getString(R.string.invalid_type_for_artisan_number)
+            error_check += 1
+            //return false
+        }
+
+//        if (artisanContact_et.text.toString().length > 11 || artisanContact_et.text.toString().length < 10 ){
+//            artisanContact_til.error = this.resources.getString(R.string.invalid_number)
+//            return false
+//        }
+
+        /*if (artisanEmail_et.text.toString().isEmpty()){
+            artisanEmail_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
+        }*/
+        
+        if (!artisanEmail_et.text.toString().contains(".") && !artisanEmail_et.text.toString().isEmpty()){
+            artisanEmail_til.error = this.resources.getString(R.string.error_invalid_email)
+            error_check += 1
+            //return false
         }
 
         if (artisanBio_et.text.toString().isEmpty()){
             artisanBio_til.error = this.resources.getString(R.string.requiredFieldError)
+            error_check += 1
+            //return false
+        }
+
+        if (error_check > 0) {
+            error_check = 0
             return false
         }
 

@@ -15,21 +15,9 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/addItemCatgory_toolbar_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/item_category_toolbar_text"
-        android:textAlignment="center"
-        android:textColor="#fff"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="@+id/addItem_toolbar"
-        app:layout_constraintStart_toStartOf="@+id/addItem_toolbar"
-        app:layout_constraintTop_toTopOf="@+id/addItem_toolbar" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/item_category_toolbar_text"
+        app:titleTextColor="#fff" />
 
     <Spinner
         android:id="@+id/itemCategory_mainSpinner"
@@ -65,7 +53,7 @@
         android:textColor="#000"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintTop_toBottomOf="@+id/progressBar_1" />
 
     <TextView
         android:id="@+id/subcategory_textView"
@@ -101,9 +89,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/specificCategory_textView" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/addItemCategory_continueButton"
-        android:layout_width="0dp"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginTop="50dp"
@@ -112,14 +101,18 @@
         android:background="#00a8e1"
         android:text="@string/continue_button_text"
         android:textColor="#fff"
-        android:textSize="18sp"
+        android:textSize="20sp"
+        app:cornerRadius="20dp"
+        app:icon="@drawable/done_icon"
+        app:iconGravity="textStart"
+        app:iconPadding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemCategory_specificSpinner" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBar_1"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="20dp"

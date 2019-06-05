@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/editArtisan_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/editArtisan_layout"
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
@@ -19,174 +19,179 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/edit_artisan_toolbar_text"
+        app:titleTextColor="#fff" />
 
-    <TextView
-        android:id="@+id/artisanProfileToolbarText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/edit_artisan_toolbar_text"
-        android:textAlignment="center"
-        android:textColor="#fff"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="@+id/editArtisanProfileToolbar"
-        app:layout_constraintStart_toStartOf="@+id/editArtisanProfileToolbar"
-        app:layout_constraintTop_toTopOf="@+id/editArtisanProfileToolbar" />
-
-    <ImageView
-        android:id="@+id/editArtisan_pic"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editArtisanProfileToolbar"
-        app:srcCompat="@drawable/placeholder" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editArtisanName_til"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="30dp"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editArtisan_pic">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editArtisanName_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/profile_icon"
-            android:drawablePadding="5dp"
-            android:hint="@string/add_artisan_name_tv_hint"
-            android:imeOptions="actionNext"
-            android:inputType="textPersonName"
-            android:lines="1" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editArtisanLoc_til"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editArtisanName_til">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editArtisanLoc_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/location_icon"
-            android:drawablePadding="5dp"
-            android:hint="@string/add_artisan_loc_tv_hint"
-            android:imeOptions="actionNext"
-            android:inputType="textPostalAddress"
-            android:lines="1" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editArtisanContact_til"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editArtisanLoc_til">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editArtisanContact_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/phone_icon"
-            android:drawablePadding="5dp"
-            android:hint="@string/add_artisan_contact_number_tv_hint"
-            android:imeOptions="actionNext"
-            android:inputType="phone"
-            android:lines="1" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editArtisanBio_til"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+    <ScrollView
+        android:id="@+id/editArtisan_scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="8dp"
-        app:errorEnabled="true"
-        app:layout_constraintBottom_toTopOf="@+id/editArisan_SaveButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editArtisanContact_til">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editArtisanBio_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/bio_icon"
-            android:drawablePadding="5dp"
-            android:hint="@string/add_artisan_bio_tv_hint"
-            android:imeOptions="actionDone"
-            android:inputType="textMultiLine" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/editArisan_SaveButton"
-        style="@style/Widget.MaterialComponents.Button"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        app:cornerRadius="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="50dp"
-        android:text="@string/edit_artisan_update_button"
-        android:textSize="20sp"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editArtisanProfileToolbar">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/editTakePicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="130dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@+id/editArtisanName_til"
-        app:layout_constraintEnd_toEndOf="@+id/editArtisan_pic"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/editArtisan_scrollViewContents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/editSelectPicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="130dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@+id/editArtisanName_til"
-        app:layout_constraintStart_toStartOf="@+id/editArtisan_pic"
-        app:srcCompat="@android:drawable/ic_menu_gallery" />
+            <ImageView
+                android:id="@+id/editArtisan_pic"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/placeholder" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editArtisanName_til"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="30dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editArtisan_pic">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editArtisanName_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/profile_icon"
+                    android:drawablePadding="5dp"
+                    android:hint="@string/add_artisan_name_tv_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:lines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editArtisanLoc_til"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editArtisanName_til">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editArtisanLoc_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/location_icon"
+                    android:drawablePadding="5dp"
+                    android:hint="@string/add_artisan_loc_tv_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPostalAddress"
+                    android:lines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editArtisanContact_til"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editArtisanLoc_til">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editArtisanContact_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/phone_icon"
+                    android:drawablePadding="5dp"
+                    android:hint="@string/add_artisan_contact_number_tv_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone"
+                    android:lines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editArtisanBio_til"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="8dp"
+                app:errorEnabled="true"
+                app:layout_constraintBottom_toTopOf="@+id/editArisan_SaveButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editArtisanContact_til">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editArtisanBio_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/bio_icon"
+                    android:drawablePadding="5dp"
+                    android:hint="@string/add_artisan_bio_tv_hint"
+                    android:imeOptions="actionDone"
+                    android:inputType="textMultiLine" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/editArisan_SaveButton"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="50dp"
+                android:text="@string/edit_artisan_update_button"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textSize="20sp"
+                app:cornerRadius="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/editTakePicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="130dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toTopOf="@+id/editArtisanName_til"
+                app:layout_constraintEnd_toEndOf="@+id/editArtisan_pic"
+                app:srcCompat="@android:drawable/ic_menu_camera" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/editSelectPicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="130dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toTopOf="@+id/editArtisanName_til"
+                app:layout_constraintStart_toStartOf="@+id/editArtisan_pic"
+                app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

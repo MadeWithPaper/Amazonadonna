@@ -1,5 +1,6 @@
 package com.amazonadonna.view
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,8 +11,12 @@ import java.util.*
 import android.app.DatePickerDialog
 import androidx.appcompat.app.AlertDialog
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.amazonadonna.model.App
 import com.amazonadonna.view.R
+import kotlinx.android.synthetic.main.activity_add_artisan.*
 import kotlinx.android.synthetic.main.activity_artisan_profile_cga.*
 
 
@@ -23,10 +28,12 @@ class ArtisanPayout : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_payout)
 
+        setSupportActionBar(artisanPayoutToolbar)
+
         //val artisan = intent.extras?.getSerializable("artisan") as Artisan
 
         artisanPayout_balance.text = " $ ${App.currentArtisan.balance}"
-        artisanPayout_amount.setText(App.currentArtisan.balance.toString())
+        artisanPayout_amount_et.setText(App.currentArtisan.balance.toString())
         artisanPayout_dateTV.text = this.resources.getString(R.string.payout_date) + " " + getCurrDate()
         artisanPayout_continue.setOnClickListener {
             continueToSignature()
@@ -35,6 +42,15 @@ class ArtisanPayout : AppCompatActivity() {
         artisanPayout_datePicker.setOnClickListener {
             pickDate()
         }
+
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        artisanPayoutLayout.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View, m: MotionEvent): Boolean {
+                hideKeyboard(v)
+                return true
+            }
+        })
 
     }
 
@@ -80,7 +96,7 @@ class ArtisanPayout : AppCompatActivity() {
             } else {
                 val intent = Intent(this, PayoutSignature::class.java)
                // intent.putExtra("artisan", artisan)
-                intent.putExtra("payoutAmount", artisanPayout_amount.text.toString().toDouble())
+                intent.putExtra("payoutAmount", artisanPayout_amount_et.text.toString().toDouble())
                 startActivity(intent)
                 finish()
             }
@@ -88,20 +104,30 @@ class ArtisanPayout : AppCompatActivity() {
     }
 
     private fun validateAmount(): Boolean {
-        return (artisanPayout_amount.text.toString().toDouble() > App.currentArtisan.balance)
+        return (artisanPayout_amount_et.text.toString().toDouble() > App.currentArtisan.balance)
     }
 
     private fun validateFields(): Boolean {
-        if (artisanPayout_amount.text.toString() == "."){
-            artisanPayout_amount.error = this.resources.getString(R.string.payout_amount_format_error)
+        if (artisanPayout_amount_et.text.toString().isEmpty()){
+            artisanPayout_amount_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
 
-        if (artisanPayout_amount.text.toString().isEmpty()){
-            artisanPayout_amount.error = this.resources.getString(R.string.requiredFieldError)
+        if (artisanPayout_amount_et.text.toString() == "."){
+            artisanPayout_amount_til.error = this.resources.getString(R.string.payout_amount_format_error)
             return false
         }
 
         return true
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

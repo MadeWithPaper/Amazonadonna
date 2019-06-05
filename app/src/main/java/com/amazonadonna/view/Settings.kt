@@ -22,11 +22,17 @@ import com.amazon.identity.auth.device.api.authorization.AuthorizationManager
 import com.amazonadonna.artisanOnlyViews.HomeScreenArtisan
 import com.amazonadonna.model.App
 import com.amazonadonna.sync.ArtisanSync
+import com.amazonadonna.sync.Synchronizer
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool
+import com.amazonaws.regions.Regions
 import kotlinx.coroutines.*
 import java.lang.Thread.sleep
 import kotlin.coroutines.CoroutineContext
 
 class Settings : AppCompatActivity(), CoroutineScope {
+
+    private var userPool = CognitoUserPool(this, "us-east-2_ViMIOaCbk","4in76ncc44ufi8n1sq6m5uj7p7", "12qfl0nmg81nlft6aunvj6ec0ocejfecdau80biodpubkfuna0ee", Regions.US_EAST_2)
+
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -55,10 +61,6 @@ class Settings : AppCompatActivity(), CoroutineScope {
             updateSetting()
         }
 
-        cancelSettingButton.setOnClickListener {
-            cancelSetting()
-        }
-
         settingLogOut.setOnClickListener {
             logout()
         }
@@ -73,10 +75,10 @@ class Settings : AppCompatActivity(), CoroutineScope {
             alertDialog = AlertDialog.Builder(this@Settings).create()
             alertDialog.setTitle("Are you sure?")
             alertDialog.setMessage("Any changed settings will be overridden if you have not clicked 'Update Settings'")
-            alertDialog.setButton(-1, "Continue") { dialog, which ->
+            alertDialog.setButton(-1, "Home") { dialog, which ->
                 super.onBackPressed()
             }
-            alertDialog.setButton(-2, "Go back") { dialog, which ->
+            alertDialog.setButton(-2, "Stay Here") { dialog, which ->
                 alertDialog.dismiss()
             }
             alertDialog.setCanceledOnTouchOutside(false)
@@ -111,17 +113,17 @@ class Settings : AppCompatActivity(), CoroutineScope {
             launch {
                 val task = async {
                     if (App.artisanMode)
-                        ArtisanSync.syncArtisanMode(applicationContext, this@Settings, App.currentArtisan.artisanId)
+                        Synchronizer.getArtisanSync().syncArtisanMode(applicationContext, this@Settings, App.currentArtisan.artisanId)
                     else
-                        ArtisanSync.sync(applicationContext, this@Settings, cgaID)
+                        Synchronizer.getArtisanSync().sync(applicationContext, this@Settings, cgaID)
 
                     Log.d("Settings", cgaID)
 
                     // Wait for sync to finish
                     do {
-                        Log.i("Settings", ArtisanSync.inProgress().toString())
+                        Log.i("Settings", Synchronizer.getArtisanSync().inProgress().toString())
                         sleep(1000)
-                    } while (ArtisanSync.inProgress())
+                    } while (Synchronizer.getArtisanSync().inProgress())
                 }
                 task.await()
 
@@ -130,13 +132,13 @@ class Settings : AppCompatActivity(), CoroutineScope {
 
                     // Perform one more data fetch to ensure data integrity is goodandroid button do asynch
                     if (App.artisanMode)
-                        ArtisanSync.syncArtisanMode(applicationContext, this@Settings, App.currentArtisan.artisanId)
+                        Synchronizer.getArtisanSync().syncArtisanMode(applicationContext, this@Settings, App.currentArtisan.artisanId)
                     else
-                        ArtisanSync.sync(applicationContext, this@Settings, cgaID)
+                        Synchronizer.getArtisanSync().sync(applicationContext, this@Settings, cgaID)
 
                     do {
                         sleep(500)
-                    } while (ArtisanSync.inProgress())
+                    } while (Synchronizer.getArtisanSync().inProgress())
                 }
                 task2.await()
 
@@ -169,8 +171,17 @@ class Settings : AppCompatActivity(), CoroutineScope {
     }
 
     private fun logout() {
-        App.artisanMode = false
-        AuthorizationManager.signOut(this, signoutListener)
+        if (App.artisanMode) {
+            App.artisanMode = false
+            var user = userPool.getUser(App.currentArtisan.email)
+            user.signOut()
+
+            val intent = Intent(this@Settings, LoginScreen::class.java)
+            finishAffinity()
+            startActivity(intent)
+        } else {
+            AuthorizationManager.signOut(this, signoutListener)
+        }
     }
 
     private fun toChangeLanguage() {

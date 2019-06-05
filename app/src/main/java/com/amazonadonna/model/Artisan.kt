@@ -13,6 +13,8 @@ data class Artisan (
         @ColumnInfo(name = "artisanName") @Json(name = "artisanName") var artisanName : String,
         @PrimaryKey @ColumnInfo(name = "artisanId") @Json(name = "artisanId") var artisanId : String,
         @ColumnInfo(name = "phoneNumber") @Json (name = "phoneNumber") var phoneNumber : String,
+        @ColumnInfo(name = "email") @Json (name = "email") var email : String,
+        @ColumnInfo(name = "newAccount") @Json (name = "newAccount") var newAccount : Boolean,
         @ColumnInfo(name = "city") @Json(name = "city") var city : String,
         @ColumnInfo(name = "country") @Json(name = "country") var country : String,
         @ColumnInfo(name = "bio") @Json(name = "bio")var bio : String,
@@ -21,7 +23,7 @@ data class Artisan (
         @ColumnInfo(name = "lon") @Json(name = "lat") var lat : Double,
         @ColumnInfo(name = "picURL") @Json(name = "picURL") var picURL : String?,
         @ColumnInfo(name = "synced") var synced : Int = Synchronizer.SYNCED,
-        @ColumnInfo(name = "balance") @Json(name = "balance") var balance : Double) : Serializable {
+        @ColumnInfo(name = "balance") @Json(name = "balance") var balance : Double) : Serializable{
 
     fun generateTempID() {
        //TODO fill in logic for generating unique ID for artisan

@@ -14,6 +14,14 @@
     <string name="title_activity_artisan_profile">ArtisanProfile</string>
     <string name="logout">Logout</string>
 
+    <!-- Artisan Update Password -->
+    <string name="artisan_update_password_toolbar">Update Password</string>
+    <string name="artisan_update_password_password_not_match_error">Password entered does not match</string>
+    <string name="artisan_update_password_old_tv">Old password</string>
+    <string name="artisan_update_password_confirm_tv">Confirm password</string>
+    <string name="artisan_update_password_new_tv">New password</string>
+    <string name="artisan_update_password_welcome_text">Your current password has expired, please provide a new password for the account.</string>
+
     <!-- Add Artisan -->
     <string name="loc_missing_comma">Missing \',\' between City and Country.</string>
     <string name="add_artisan_contact_number_tv_hint">Artisan Contact Number</string>
@@ -23,12 +31,16 @@
     <string name="add_artisan_name_tv">Name: </string>
     <string name="add_artisan_add_button">Add Artisan</string>
     <string name="add_artisan_contact_number_tv">Contact :</string>
+    <string name="add_artisan_email_tv_hint">Email (optional)</string>
     <string name="add_artisan_bio_tv_hint">Artisan Biography</string>
     <string name="add_artisan_bio_tv">Biography: </string>
     <string name="add_artisan_toolbar_text">Add Artisan</string>
+    <string name="invalid_type_for_artisan_name" translatable="false">Must be alpha characters</string>
+    <string name="invalid_type_for_artisan_number" translatable="false">Must be numbers</string>
+    <string name="invalid_number" translatable="false">invalid number</string>
 
     <!-- Add Item Category -->
-    <string name="item_category_toolbar_text">Add Item</string>
+    <string name="item_category_toolbar_text">Item Category</string>
     <string name="item_category_category_tv">Category</string>
     <string name="item_category_sub_category_tv">Sub-Category</string>
     <string name="item_category_specific_category_tv">Specific Category</string>
@@ -49,11 +61,6 @@
     <string name="item_info_product_quantity_tv_hint">Product Quantity</string>
     <string name="item_info_product_production_tv_hint">Days</string>
     <string name="item_info_product_toolbar_text">Item Info</string>
-    <string name="item_info_product_name_tv">Name: </string>
-    <string name="item_info_product_desc_tv">Description: </string>
-    <string name="item_info_product_price_tv">Price ($): </string>
-    <string name="item_info_product_quantity_tv">Quantity: </string>
-    <string name="item_info_product_production_tv">Production Time: </string>
     <string name="item_info_shipping_method">Select Shipping Method Below: </string>
 
     <!-- Add Item Review -->
@@ -157,5 +164,7 @@
     <string name="cancel">Cancel</string>
     <string name="chooser_title">Choose a Messaging Application</string>
     <string name="send_message_button">Send</string>
+    <string name="action_log_in_short">Artisan Log In</string>
+    <string name="utility_update">Update</string>
 
 </resources>

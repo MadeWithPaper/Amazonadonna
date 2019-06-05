@@ -36,8 +36,36 @@ router.post('/listAllForCga', (req: Request, res: Response) => {
     })
 })
 
+router.post('/listAllForEmail', (req: Request, res: Response) => {
+    const listAllArtisansParams: aws.DynamoDB.Types.QueryInput = {
+        TableName: 'artisan',
+        IndexName: 'email-index',
+        KeyConditionExpression: 'email = :id',
+        ExpressionAttributeValues: {
+            ':id': { S: req.body.email }
+        }
+    }
+
+    ddb.query(listAllArtisansParams, (err, data) => {
+        if (err) {
+            const msg = 'Error fetching artisans in artisan/listAllForEmail: '
+            console.log(msg + err)
+            res.status(400).send(msg + err.message)
+        } else {
+            const convert = unmarshUtil(data.Items)
+            Promise.all(convert).then(items => {
+                res.json(filterActive(items))
+            })
+        }
+    })
+})
+
 router.post('/add', (req: Request, res: Response) => {
     const id = uuid.v1()
+    let email = req.body.email
+    if (email == null || email === '') {
+        email = 'null'
+    }
     const putItemParams: aws.DynamoDB.PutItemInput = {
         TableName: 'artisan',
         Item: {
@@ -52,7 +80,9 @@ router.post('/add', (req: Request, res: Response) => {
             balance: { N: req.body.balance },
             picURL: { S: 'Not set' },
             phoneNumber: { S: req.body.phoneNumber },
-            active: { S: 'true' }
+            active: { S: 'true' },
+            email: { S: email },
+            newAccount: { S: 'true' }
         }
     }
     ddb.putItem(putItemParams, (err, data) => {
@@ -183,7 +213,11 @@ router.post('/edit', (req: Request, res: Response) => {
                         : unmarshed.picURL,
                     phoneNumber: req.body.phoneNumber
                         ? req.body.phoneNumber
-                        : unmarshed.phoneNumber
+                        : unmarshed.phoneNumber,
+                    email: req.body.email ? req.body.email : unmarshed.email,
+                    newAccount: req.body.newAccount
+                        ? req.body.newAccount
+                        : unmarshed.newAccount
                 }
 
                 const editArtisanParam: aws.DynamoDB.Types.UpdateItemInput = {

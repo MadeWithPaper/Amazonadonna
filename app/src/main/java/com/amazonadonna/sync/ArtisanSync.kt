@@ -123,6 +123,8 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 for (artisan in artisans) {
                     if(artisan.phoneNumber == null)
                         artisan.phoneNumber = "1234567890"
+                    if(artisan.email == null)
+                        artisan.email = "foo@gmail.com"
                 }
 
                 Log.d("HOTFIX2", artisans.toString())
@@ -171,6 +173,9 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
 
                 if(artisan.phoneNumber == null)
                     artisan.phoneNumber = "1234567890"
+                if(artisan.email == null)
+                    artisan.email = "foo@gmail.com"
+
 
                 artisanDao.deleteAll()
                 artisanDao.insert(artisan)
@@ -199,6 +204,8 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 .add("country", artisan.country)
                 .add("artisanName", artisan.artisanName)
                 .add("phoneNumber", artisan.phoneNumber)
+                .add("email", artisan.email)
+                .add("newAccount", artisan.newAccount.toString())
                 .add("lat", artisan.lat.toString())
                 .add("lon", artisan.lon.toString())
                 .add("balance", "5000.0")
@@ -223,7 +230,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                     Log.d("ArtisanSync", "OLDID " + artisan.artisanId)
                     runBlocking {
                         updateItemsForArtisan(context, artisan.artisanId, newArtisanId)
-                    }
+                    } 
 
                     artisan.artisanId = newArtisanId
 
@@ -254,6 +261,8 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 .add("country", artisan.country)
                 .add("artisanName", artisan.artisanName)
                 .add("phoneNumber", artisan.phoneNumber)
+                .add("email", artisan.email)
+                .add("newAccount", artisan.newAccount.toString())
                 .add("lat", artisan.lat.toString())
                 .add("lon", artisan.lat.toString())
                 .add("balance", artisan.balance.toString())

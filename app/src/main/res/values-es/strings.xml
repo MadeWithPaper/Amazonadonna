@@ -23,12 +23,13 @@
     <string name="add_artisan_name_tv">"Nombre del artesano: "</string>
     <string name="add_artisan_add_button">Añadir Artesano</string>
     <string name="add_artisan_contact_number_tv">Contacto :</string>
+    <string name="add_artisan_email_tv_hint">Email (opcional)</string>
     <string name="add_artisan_bio_tv_hint">Biografia artesanal</string>
     <string name="add_artisan_bio_tv">"Biografía: "</string>
     <string name="add_artisan_toolbar_text">Añadir Artesano</string>
 
     <!-- Add Item Category -->
-    <string name="item_category_toolbar_text">Añadir artículo</string>
+    <string name="item_category_toolbar_text">Categoría de artículo</string>
     <string name="item_category_category_tv">Categoría</string>
     <string name="item_category_sub_category_tv">Subcategoría</string>
     <string name="item_category_specific_category_tv">Categoria especifica</string>
@@ -139,11 +140,6 @@
     <string name="report_generate_button">Generar informe</string>
     <string name="report_select_all">Seleccionar todo</string>
     <string name="report_select_none">Seleccione Ninguno</string>
-    <string name="item_info_product_name_tv">Nombre del producto:</string>
-    <string name="item_info_product_desc_tv">Descripción del producto:</string>
-    <string name="item_info_product_price_tv">Precio del producto ($):</string>
-    <string name="item_info_product_quantity_tv">La cantidad de producto:</string>
-    <string name="item_info_product_production_tv">Tiempo de producción del producto:</string>
     <string name="item_info_shipping_method">Seleccione el método de envío a continuación:</string>
     <string name="payout_balance">Saldo actual:</string>
     <string name="view_report_toolbar_text">Ver informe generado</string>
@@ -155,5 +151,15 @@
     <string name="artisan_profile_message">Mensaje</string>
     <string name="artisan_profile_payout">Pagar</string>
     <string name="artisan_profile_payout_history">Historial de pagos</string>
+    <string name="payout_histoy_toolbar_text">Historial de pagos</string>
+    <string name="cga_log_in">CGA Inicia sesión</string>
+    <string name="artisan_log_in">Ingreso artesanal</string>
+    <string name="artisan_update_password_password_not_match_error">La contraseña introducida no coincide</string>
+    <string name="artisan_update_password_toolbar">Actualiza contraseña</string>
+    <string name="utility_update">Actualizar</string>
+    <string name="artisan_update_password_old_tv">Contraseña anterior</string>
+    <string name="artisan_update_password_confirm_tv">Confirmar contraseña</string>
+    <string name="artisan_update_password_new_tv">Nueva contraseña</string>
+    <string name="artisan_update_password_welcome_text">Su contraseña actual ha caducado, proporcione una nueva contraseña para la cuenta.</string>
 
 </resources>

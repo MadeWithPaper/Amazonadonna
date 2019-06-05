@@ -13,11 +13,16 @@ import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.App
 import com.amazonadonna.sync.ArtisanSync
 import com.amazonadonna.sync.Synchronizer
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHandler
+import com.amazonaws.regions.Regions
 
 
 class ListArtisanAdapter (private val context: Context, private val artisans :MutableList<Artisan>) : RecyclerView.Adapter<ArtisanViewHolder> () {
     private var removedPostion = 0
-    private var removedArtisan = Artisan("", "", "", "", "", "", "", 0.0,0.0,"", Synchronizer.SYNCED,0.0)
+    private var removedArtisan = Artisan("", "", "", "", false, "", "", "", "", 0.0,0.0,"", Synchronizer.SYNCED,0.0)
+    private var userPool = CognitoUserPool(context, "us-east-2_ViMIOaCbk","4in76ncc44ufi8n1sq6m5uj7p7", "12qfl0nmg81nlft6aunvj6ec0ocejfecdau80biodpubkfuna0ee", Regions.US_EAST_2)
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtisanViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -33,6 +38,25 @@ class ListArtisanAdapter (private val context: Context, private val artisans :Mu
         artisans.removeAt(viewHolder.adapterPosition)
         notifyItemRemoved(viewHolder.adapterPosition)
         ArtisanSync.deleteArtisan(context, removedArtisan)
+
+
+        val removeHandler = object : GenericHandler {
+            override fun onSuccess() {
+                // Delete was successful!
+                Log.d("ListArtisan", "successfully removed artisan")
+            }
+
+            override fun onFailure(exception: Exception) {
+                // Delete failed, probe exception for details
+                Log.d("ListArtisan", "failed at removing artisan")
+            }
+        }
+
+        if (!removedArtisan.email.isNullOrEmpty()) {
+            var user = userPool.getUser(removedArtisan.email)
+            user.deleteUser(removeHandler)
+        }
+
 
         //undo functionality
         /*

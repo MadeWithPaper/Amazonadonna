@@ -4,13 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.room.Room
 import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
 import com.amazonadonna.sync.ArtisanSync
+import com.amazonadonna.sync.Synchronizer
 import com.amazonadonna.view.ArtisanItemList
 import com.amazonadonna.view.ListOrders
 import com.amazonadonna.view.R
@@ -18,47 +17,57 @@ import com.amazonadonna.view.Settings
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_home_screen_artisan.*
+import kotlinx.android.synthetic.main.activity_home_screen_artisan.artisanNameTV
+import kotlinx.android.synthetic.main.activity_home_screen_artisan.setting
+import kotlinx.coroutines.*
 import okhttp3.*
 import java.io.IOException
+import kotlin.coroutines.CoroutineContext
 
-class HomeScreenArtisan : AppCompatActivity() {
+class HomeScreenArtisan : AppCompatActivity() , CoroutineScope {
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
     private val getArtisanUrl = App.BACKEND_BASE_URL + "/artisan/getById"
     private lateinit var alertDialog : AlertDialog
+    lateinit var job: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_screen_artisan)
 
         App.artisanMode = true
-        //TODO replace test data with artisan logged in
-        val testArtisan = App.testArtisan
-        //TODO set global artisan
-        App.currentArtisan = testArtisan
 
         val extras = intent.extras
-
         if (extras != null) {
             //TODO: Use actual artisan id once login is returning that correctly
-            fetchJSONArtisan(testArtisan.artisanId)
-            //fetchJSONArtisan(extras.getString("artisanID"))
+            var artisan = extras.get("artisan") as Artisan
+            App.currentArtisan = artisan
+            artisanNameTV.text = App.currentArtisan.artisanName
+            syncData()
         } else {
-            artisanNameTV.text = testArtisan.artisanName
+            artisanNameTV.text = App.currentArtisan.artisanName
         }
 
         artisanProfile.setOnClickListener {
-            openArtisanProfile(testArtisan)
+            openArtisanProfile(App.currentArtisan)
         }
 
         artisanItemList_cga.setOnClickListener {
-            itemListForArtisan(testArtisan)
+            itemListForArtisan(App.currentArtisan)
         }
 
         artisanOrderList.setOnClickListener {
-            orderListForArtisan(testArtisan)
+            orderListForArtisan(App.currentArtisan)
         }
 
         setting.setOnClickListener {
-            openSetting(testArtisan)
+            openSetting(App.currentArtisan)
+        }
+
+        artisanHomeScreenSwipeRefreshLayout.setOnRefreshListener{
+            syncData()
+            artisanHomeScreenSwipeRefreshLayout.isRefreshing = false
         }
     }
 
@@ -104,38 +113,56 @@ class HomeScreenArtisan : AppCompatActivity() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        artisanNameTV.text = App.currentArtisan.artisanName
+    }
+
     fun syncData() {
+        job = Job()
+
         if (ArtisanSync.hasInternet(applicationContext)) {
+
             runOnUiThread {
                 alertDialog = AlertDialog.Builder(this@HomeScreenArtisan).create()
                 alertDialog.setTitle("Synchronizing Account")
-                alertDialog.setMessage("Please wait while your account data is synchronized, this may take a few minutes...")
-                alertDialog.setCanceledOnTouchOutside(false)
+                alertDialog.setMessage("Please wait while your account data is synchronized. Image uploads may take a few minutes...")
                 alertDialog.show()
-                Log.i("HomeScreen", "loading start, show dialog")
             }
 
-            //ArtisanSync.resetLocalDB(applicationContext)
+            launch {
+                val query = async(Dispatchers.IO) {
+                    AppDatabase.getDatabase(applicationContext).artisanDao().insert(App.currentArtisan)
+                }
+            }
 
-            ArtisanSync.syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
+            launch {
+                val task = async {
+                    Synchronizer.getArtisanSync().syncArtisanMode(applicationContext, this@HomeScreenArtisan, App.currentArtisan.artisanId)
 
-            // Wait for sync to finish
-            do {
-                Thread.sleep(1000)
-            } while (ArtisanSync.inProgress())
+                    // Wait for sync to finish
+                    do {
+                        Log.i("Settings", Synchronizer.getArtisanSync().inProgress().toString())
+                        Thread.sleep(1000)
+                    } while (Synchronizer.getArtisanSync().inProgress())
+                }
+                task.await()
 
-            Log.d("HomeScreen", "First sync done, now one more to verify data integrity")
+                val task2 = async {
+                    Log.d("Settings", "First sync done, now one more to verify data integrity")
 
-            // Perform one more data fetch to ensure data integrity is good
-            ArtisanSync.syncArtisanMode(applicationContext,this@HomeScreenArtisan, App.currentArtisan.artisanId)
+                    // Perform one more data fetch to ensure data integrity is goodandroid button do asynch
+                    Synchronizer.getArtisanSync().syncArtisanMode(applicationContext, this@HomeScreenArtisan, App.currentArtisan.artisanId)
 
-            do {
-                Thread.sleep(500)
-            } while (ArtisanSync.inProgress())
+                    do {
+                        Thread.sleep(500)
+                    } while (Synchronizer.getArtisanSync().inProgress())
+                }
+                task2.await()
 
-            runOnUiThread {
-                Log.i("HomeScreen", "end of loading alert dialog dismiss")
-                alertDialog.dismiss()
+                runOnUiThread {
+                    alertDialog.dismiss()
+                }
             }
         }
         else {

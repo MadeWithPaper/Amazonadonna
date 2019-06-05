@@ -25,6 +25,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        app:titleTextColor="#fff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,17 +41,17 @@
         app:layout_constraintEnd_toEndOf="@+id/artisanProfileToolbar_cga"
         app:layout_constraintTop_toTopOf="@+id/artisanProfileToolbar_cga" />
 
-    <TextView
-        android:id="@+id/artisanProfileName_cga"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="Name"
-        android:textColor="#fff"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@+id/artisanProfileToolbar_cga"
-        app:layout_constraintStart_toStartOf="@+id/artisanProfileToolbar_cga"
-        app:layout_constraintTop_toTopOf="@+id/artisanProfileToolbar_cga" />
+    <!--<TextView-->
+        <!--android:id="@+id/artisanProfileName_cga"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="10dp"-->
+        <!--android:text="Name"-->
+        <!--android:textColor="#fff"-->
+        <!--android:textSize="30sp"-->
+        <!--app:layout_constraintBottom_toBottomOf="@+id/artisanProfileToolbar_cga"-->
+        <!--app:layout_constraintStart_toStartOf="@+id/artisanProfileToolbar_cga"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/artisanProfileToolbar_cga" />-->
 
     <LinearLayout
         android:layout_width="0dp"
@@ -119,8 +120,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="10dp"
-            android:paddingEnd="10dp"
             android:paddingTop="10dp"
+            android:paddingEnd="10dp"
             android:paddingBottom="10dp"
             android:scrollbars="vertical"
             android:text="Bio"
@@ -158,14 +159,14 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/artisanPayoutButton_cga"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:paddingStart="10dp"
                 android:paddingTop="10dp"
                 android:paddingEnd="10dp"
-                android:paddingStart="10dp"
                 android:paddingBottom="10dp"
                 android:text="@string/artisan_profile_payout"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -175,16 +176,16 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/artisanPayoutHistory_cga"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingEnd="10dp"
+                android:layout_weight="1"
                 android:paddingStart="10dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp"
                 android:text="@string/artisan_profile_payout_history"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:cornerRadius="20dp"
@@ -201,15 +202,15 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/artisanMessageButton_cga"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="20dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingEnd="10dp"
+                android:layout_weight="1"
                 android:paddingStart="10dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp"
                 android:text="@string/artisan_profile_message"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:cornerRadius="20dp"
@@ -218,16 +219,16 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/artisanItemList_cga"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingEnd="10dp"
+                android:layout_weight="1"
                 android:paddingStart="10dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp"
                 android:text="@string/artisan_profile_item_list"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:cornerRadius="20dp"
@@ -235,7 +236,6 @@
 
         </LinearLayout>
     </LinearLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

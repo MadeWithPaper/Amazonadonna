@@ -24,6 +24,9 @@ class ArtisanProfileCGA() : AppCompatActivity() {
         artisanProfileBio_cga.movementMethod = ScrollingMovementMethod()
         //Log.d("ArtisanProfileCGA", "in onCreate payout ${artisan.balance}")
 
+        setSupportActionBar(artisanProfileToolbar_cga)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
         populateSelectedArtisan()
 
         artisanItemList_cga.setOnClickListener {
@@ -44,6 +47,12 @@ class ArtisanProfileCGA() : AppCompatActivity() {
         artisanPayoutHistory_cga.setOnClickListener {
             payoutHistory()
         }
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     override fun onResume() {
@@ -54,15 +63,15 @@ class ArtisanProfileCGA() : AppCompatActivity() {
     }
 
     private fun artisanMessage() {
-        val intent = Intent(this, MessageArtisan::class.java)
+        //val intent = Intent(this, MessageArtisan::class.java)
         //intent.putExtra("selectedArtisan", artisan)
-        startActivity(intent)
-        finish()
-//        val intent = Intent(Intent.ACTION_SEND)
-//        intent.type = "text/plain"
-//        intent.putExtra("address", artisan.phoneNumber)
-//        val messagechooser = createChooser(intent, "Please Choose an Application to Send Messages...")
-//        startActivity(messagechooser)
+        //startActivity(intent)
+        //finish()
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/plain"
+        intent.putExtra("address", App.currentArtisan.phoneNumber)
+        val messageChooser = Intent.createChooser(intent, "Please Choose an Application to Send Messages...")
+        startActivity(messageChooser)
     }
 
     private fun populateSelectedArtisan() {
@@ -77,7 +86,7 @@ class ArtisanProfileCGA() : AppCompatActivity() {
         isp.loadImageIntoUI(App.currentArtisan.picURL, this.artisanProfilePicture_cga, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
 
         Log.d("ArtisanProfileCGA", "$App.currentArtisan")
-        artisanProfileName_cga.text = App.currentArtisan.artisanName
+        supportActionBar!!.title = App.currentArtisan.artisanName
         artisanProfileBio_cga.text = App.currentArtisan.bio
         artisanProfileBalance_cga.text = "$${App.currentArtisan.balance}"
         artisanProfileLoc_cga.text = "${App.currentArtisan.city}, ${App.currentArtisan.country}"

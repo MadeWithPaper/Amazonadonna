@@ -12,6 +12,7 @@ import android.widget.Spinner
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Product
 import com.amazonadonna.sync.Synchronizer.Companion.SYNC_NEW
+import kotlinx.android.synthetic.main.activity_payout_history.*
 
 
 class AddItemCategory : AppCompatActivity() {
@@ -94,14 +95,23 @@ class AddItemCategory : AppCompatActivity() {
     private var editMode : Boolean = false
     private lateinit var subMap : Map<String, Array<String>>
     private lateinit var specificMap : Map<String, Array<String>>
+    private var fromOrderScreen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_category)
 
-        //val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
+        if (intent.hasExtra("product")) {
+            product = intent.extras!!.get("product") as Product
+        }
         initDataMap()
 
+        setSupportActionBar(addItem_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        if (intent.hasExtra("fromOrderScreen")){
+            fromOrderScreen = intent.extras!!.getBoolean("fromOrderScreen")
+        }
         // Create an ArrayAdapter
         val mainArrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, mainCategoryList)
         // Set layout to use when the list of choices appear
@@ -175,14 +185,22 @@ class AddItemCategory : AppCompatActivity() {
             val sub = subMap.get(product.category)!!
             setSpinner(itemCategory_subSpinner, sub, editMode, 0)
 
-            val spc = specificMap.get(product.subCategory)!!
-            setSpinner(itemCategory_specificSpinner, spc, editMode, 1)
+            /*Log.d("specific", specificMap.get(product.subCategory)[0])*/
+            if (specificMap.get(product.subCategory) != null){
+                val spc = specificMap.get(product.subCategory)!!
+                setSpinner(itemCategory_specificSpinner, spc, editMode, 1)
+            }
 
         } else {
             //creating new product set artisanID
             product.artisanId = App.currentArtisan.artisanId
         }
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun editPosition(spinner: Spinner, value : String) : Int {
@@ -222,7 +240,9 @@ class AddItemCategory : AppCompatActivity() {
             product.category = main
             product.subCategory = sub
             product.specificCategory = specific
-            product.artisanId = App.currentArtisan.artisanId
+            if (!fromOrderScreen) {
+                product.artisanId = App.currentArtisan.artisanId
+            }
             intent.putExtra("product", product)
             intent.putExtra("editMode", editMode)
             //intent.putExtra("selectedArtisan", artisan)
@@ -259,7 +279,7 @@ class AddItemCategory : AppCompatActivity() {
                             "Bedding" to beddingsub,
                             "Furniture" to furnituresub,
                             "Home Decor" to homedecorsub,
-                            "Kitchen & Dinning" to kitchendiningsub,
+                            "Kitchen & Dining" to kitchendiningsub,
                             "Lighting" to homelightingsub,
                             "Patio, Lawn & Garden" to lawngardensub,
                             "Storage & Organization" to storageorganizationsub,
