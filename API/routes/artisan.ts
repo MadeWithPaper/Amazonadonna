@@ -243,7 +243,7 @@ router.post('/edit', (req: Request, res: Response) => {
                         ':lon': { N: whatToUpdate.lon.toString() },
                         ':balance': { N: whatToUpdate.balance.toString() },
                         ':picURL': { S: whatToUpdate.picURL },
-                        phoneNumber: { S: whatToUpdate.phoneNumber }
+                        ':phoneNumber': { S: whatToUpdate.phoneNumber }
                     },
                     ReturnValues: 'UPDATED_NEW'
                 }
