@@ -1,7 +1,6 @@
 package com.amazonadonna.model
 
 import android.content.Context
-
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes

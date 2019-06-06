@@ -4,17 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.InputType
-import android.text.TextUtils
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
 import kotlinx.android.synthetic.main.activity_add_item_info.*
 
@@ -24,6 +20,7 @@ class AddItemInfo : AppCompatActivity() {
     val shippingSpinnerValues = arrayOf(SELECT_SHIPPING_METHOD, "Fulfilled by Amazon", "Self Shipping")
     var shippmentMethod = SELECT_SHIPPING_METHOD
     var editMode : Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_info)
@@ -98,49 +95,37 @@ class AddItemInfo : AppCompatActivity() {
         }
     }
 
-    //TODO add more checks
     private fun validateFields() : Boolean {
         var error_check = 0
         if (addItemInfo_ProductName_et.text.toString().isEmpty()){
             addItemInfo_ProductName_til.error = this.resources.getString(R.string.requiredFieldError)
             error_check += 1
-            //return false
         }
 
         if (addItemInfo_ProductDescription_et.text.toString().isEmpty()) {
             addItemInfo_ProductDescription_til.error = this.resources.getString(R.string.requiredFieldError)
             error_check += 1
-            //return false
         }
 
         if (addItemInfo_ProductionTime_et.text.toString().isEmpty()){
             addItemInfo_ProductionTime_til.error = this.resources.getString(R.string.requiredFieldError)
             error_check += 1
-            //return false
         }
 
         if (addItemInfo_ProductPrice_et.text.toString().isEmpty()){
             addItemInfo_ProductPrice_til.error = this.resources.getString(R.string.requiredFieldError)
             error_check += 1
-            //return false
         }
 
         if (addItemInfo_ProductQuantity_et.text.toString().isEmpty()){
             addItemInfo_ProductQuantity_til.error = this.resources.getString(R.string.requiredFieldError)
             error_check += 1
-            //return false
         }
 
         if (shippmentMethod == SELECT_SHIPPING_METHOD) {
             Toast.makeText(this@AddItemInfo, this.resources.getString(R.string.add_item_info_shipping_warning), Toast.LENGTH_LONG).show()
             error_check += 1
-            //return false
         }
-
-//        if (addItemInfo_ProductPrice_et.text.toString().contains(".")){
-//            addItemInfo_ProductPrice_til.error = this.resources.getString(R.string.payout_amount_format_error)
-//            return false
-//        }
 
         if (error_check > 0) {
             error_check = 0
@@ -150,16 +135,6 @@ class AddItemInfo : AppCompatActivity() {
         return true
     }
 
-//    private fun clearFields() {
-//        addItemInfo_ProductNameTF.text.clear()
-//        addItemInfo_ProductDescriptionTF.text.clear()
-//        addItemInfo_ProductionTimeTF.text.clear()
-//        addItemInfo_ProductPriceTF.text.clear()
-//        addItemInfo_ProductQuantityTF.text.clear()
-//        addItemInfo_ProductShippingSpinner.setSelection(0)
-//        Log.i("AddItemInfo", "Clearing fields")
-//    }
-
     private fun updateProduct(product: Product) {
         product.itemName = addItemInfo_ProductName_et.text.toString()
         product.price = addItemInfo_ProductPrice_et.text.toString().toDouble()
@@ -167,12 +142,5 @@ class AddItemInfo : AppCompatActivity() {
         product.itemQuantity = addItemInfo_ProductQuantity_et.text.toString().toInt()
         product.shippingOption = shippmentMethod
         product.productionTime = addItemInfo_ProductionTime_et.text.toString().toInt()
-
-        if (editMode)
-        {
-        //TODO fix
-        } else {
-
-        }
     }
 }

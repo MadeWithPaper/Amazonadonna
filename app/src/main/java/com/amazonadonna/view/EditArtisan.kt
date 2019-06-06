@@ -22,18 +22,14 @@ import android.widget.ImageView
 import com.amazonadonna.artisanOnlyViews.ArtisanProfile
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.App
-import com.amazonadonna.model.Artisan
 import com.amazonadonna.sync.ArtisanSync
 import kotlinx.android.synthetic.main.activity_edit_artisan.*
-import okhttp3.*
 import java.io.*
 
 class EditArtisan : AppCompatActivity() {
 
     private var photoFile: File? = null
     private val fileName: String = "editProfilePic.png"
-    private val editArtisanURL = App.BACKEND_BASE_URL + "/artisan/edit"
-    private val updateArtisanURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
     private val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
 
@@ -43,22 +39,14 @@ class EditArtisan : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_artisan)
         val IMAGE_UPLOADING_PERMISSION = 3
-//        ArtisanSync.sync(this, cgaId)
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
 
-       // val oldArtisan = intent.extras?.getSerializable("artisan") as Artisan
-        //Log.d("HOT FIX 12", oldArtisan.toString())
         //fill in information from old artisan
         editArtisanBio_et.setText(App.currentArtisan.bio)
         editArtisanLoc_et.setText(App.currentArtisan.city + "," + App.currentArtisan.country)
         editArtisanName_et.setText(App.currentArtisan.artisanName)
         editArtisanContact_et.setText(App.currentArtisan.phoneNumber)
 
-        /*if (oldArtisan.picURL != "Not set") {
-            Picasso.with(this).load(oldArtisan.picURL).into(this.editArtisan_pic)
-        } else {
-            this.editArtisan_pic.setImageResource(R.drawable.placeholder)
-        }*/
         var isp = ImageStorageProvider(applicationContext)
         isp.loadImageIntoUI(App.currentArtisan.picURL, this.editArtisan_pic, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, applicationContext)
 
@@ -152,18 +140,13 @@ class EditArtisan : AppCompatActivity() {
         val stream = ByteArrayOutputStream()
         bm!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
         var byteArray = stream.toByteArray()
-        //byteArray = ByteArray(photoFile!!.length().toInt())
 
         try {
-
-
             //convert array of bytes into file
             val fileOuputStream = FileOutputStream(photoFile)
             fileOuputStream.write(byteArray)
             fileOuputStream.close()
             Log.d("SKETIT", "lol")
-
-            println("Done")
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -206,30 +189,6 @@ class EditArtisan : AppCompatActivity() {
                     catch (e: Error) {
                         Log.d("Add Artisan post Photo", "it failed")
                     }
-//                    val dataURI = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
-//                    val cr = contentResolver
-//                    try {
-//                        val bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, dataURI)
-//                        Bitmap.createScaledBitmap(bitmap,331,273,true)
-//                        val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
-//                        ivPreview.setImageBitmap(bitmap)
-//
-//                    }
-//                    catch (e: Error) {
-//                        Log.d("Add Artisan post Photo", "it failed")
-//                    }
-//                    val dataURI = FileProvider.getUriForFile(this@EditArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
-//                    try {
-//                        Log.d("Add Artisan post photo", "Success")
-//                        Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
-//                        val bm = loadScaledBitmap(dataURI, w, h)
-//                        val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
-//                        ivPreview.setImageBitmap(bm)
-//                        //setImageView()
-//                    } catch (e: Error) {
-//                        Log.d("Add Artisan post Photo", "it failed")
-//                    }
-
                 }
             CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
@@ -244,7 +203,6 @@ class EditArtisan : AppCompatActivity() {
 
                             val ivPreview = findViewById(R.id.editArtisan_pic) as ImageView
                             ivPreview.setImageBitmap(bm)
-                            //setImageView()
                         } catch (e: Error) {
                             Log.d("Add Artisan post Photo", "it failed")
                         }
@@ -277,8 +235,7 @@ class EditArtisan : AppCompatActivity() {
         return bm
     }
 
-    public fun calculateInSampleSize(options : BitmapFactory.Options,
-                                     reqWidth : Int, reqHeight : Int): Int {
+    private fun calculateInSampleSize(options : BitmapFactory.Options, reqWidth : Int, reqHeight : Int): Int {
         // Raw height and width of image
         val height = options.outHeight;
         val width = options.outWidth;
@@ -311,7 +268,6 @@ class EditArtisan : AppCompatActivity() {
         return Pair(rawLoc.substring(0, ind), rawLoc.substring(ind+1))
     }
 
-    //TODO need to update pic on back button
     private fun updateArtisan() {
         if (!validateFields()) {
             return
@@ -323,7 +279,6 @@ class EditArtisan : AppCompatActivity() {
             App.currentArtisan.country = parseLoc().second
             App.currentArtisan.phoneNumber = editArtisanContact_et.text.toString()
 
-
             var newPhoto: File? = null
             if (editArtisan_pic.drawable != pic) {
                 newPhoto = photoFile
@@ -331,26 +286,13 @@ class EditArtisan : AppCompatActivity() {
 
             ArtisanSync.updateArtisan(applicationContext, App.currentArtisan, newPhoto)
 
-            //submitToDB(oldArtisan)
             var intent = Intent(this, ArtisanProfileCGA::class.java)
             if (App.artisanMode){
                 intent = Intent(this, ArtisanProfile::class.java)
             }
-            //intent.putExtra("artisan", oldArtisan)
             startActivity(intent)
             finish()
         }
-    }
-
-    private fun isAlpha(s: String): Boolean {
-        val charArr = s.toCharArray()
-
-        for (c in charArr) {
-            if (!Character.isLetter(c)) {
-                return false
-            }
-        }
-        return true
     }
 
     private fun isPhoneNumber(phoneNo: String): Boolean {
@@ -371,17 +313,11 @@ class EditArtisan : AppCompatActivity() {
 
     }
     //Validate all fields entered
-    //TODO add more checks
     private fun validateFields() : Boolean {
         if (editArtisanName_et.text.toString().isEmpty()){
             editArtisanName_til.error = this.resources.getString(R.string.requiredFieldError)
             return false
         }
-
-//        if (isAlpha(artisanName_et.text.toString()) == false) {
-//            artisanName_til.error = this.resources.getString(R.string.invalid_type_for_artisan_name)
-//            return false
-//        }
 
         if (editArtisanLoc_et.text.toString().isEmpty()) {
             editArtisanLoc_til.error = this.resources.getString(R.string.requiredFieldError)
@@ -402,11 +338,6 @@ class EditArtisan : AppCompatActivity() {
             editArtisanContact_til.error = this.resources.getString(R.string.invalid_type_for_artisan_number)
             return false
         }
-
-//        if (artisanContact_et.text.toString().length > 11 || artisanContact_et.text.toString().length < 10 ){
-//            artisanContact_til.error = this.resources.getString(R.string.invalid_number)
-//            return false
-//        }
 
         //TODO add next sprint
 //        if (artisanEmail_et.text.toString().isEmpty()){

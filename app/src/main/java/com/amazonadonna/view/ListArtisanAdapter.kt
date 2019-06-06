@@ -17,12 +17,10 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHandler
 import com.amazonaws.regions.Regions
 
-
 class ListArtisanAdapter (private val context: Context, private val artisans :MutableList<Artisan>) : RecyclerView.Adapter<ArtisanViewHolder> () {
     private var removedPostion = 0
     private var removedArtisan = Artisan("", "", "", "", false, "", "", "", "", 0.0,0.0,"", Synchronizer.SYNCED,0.0)
-    private var userPool = CognitoUserPool(context, "us-east-2_ViMIOaCbk","4in76ncc44ufi8n1sq6m5uj7p7", "12qfl0nmg81nlft6aunvj6ec0ocejfecdau80biodpubkfuna0ee", Regions.US_EAST_2)
-
+    private var userPool = CognitoUserPool(context, context.resources.getString(R.string.userPoolID),context.resources.getString(R.string.clientID), context.resources.getString(R.string.clientScret), Regions.US_EAST_2)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtisanViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -56,17 +54,7 @@ class ListArtisanAdapter (private val context: Context, private val artisans :Mu
             var user = userPool.getUser(removedArtisan.email)
             user.deleteUser(removeHandler)
         }
-
-
-        //undo functionality
-        /*
-        Snackbar.make(viewHolder.itemView, "${removedArtisan.artisanName} deleted.", Snackbar.LENGTH_LONG).setAction("UNDO") {
-            artisans.add(removedPostion, removedArtisan)
-            notifyItemInserted(removedPostion)
-        }.show()*/
     }
-
-
 
     override fun getItemCount(): Int {
         return artisans.count()
@@ -78,7 +66,6 @@ class ListArtisanAdapter (private val context: Context, private val artisans :Mu
 
         holder.view.setOnClickListener{
             val intent = Intent(context, ArtisanProfileCGA::class.java)
-            //intent.putExtra("artisan", artisan)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             App.currentArtisan = artisan
             Log.i("ListArtisanAdapter.kt", "new artisan selected, updating global artisan")
@@ -87,7 +74,6 @@ class ListArtisanAdapter (private val context: Context, private val artisans :Mu
     }
 
 }
-
 
 class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
 
@@ -98,7 +84,6 @@ class ArtisanViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
         isp.loadImageIntoUI(artisan.picURL, view.imageView_artisanProfilePic, ImageStorageProvider.ARTISAN_IMAGE_PREFIX, view.context)
 
         view.textView_artisanName.text = artisan.artisanName
-        //view.textView_bio.text = artisan.bio
         view.textView_artisanLoc.text = (artisan.city + "," + artisan.country)
     }
 }   

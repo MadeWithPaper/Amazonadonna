@@ -8,10 +8,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Payout
-import com.jakewharton.rxbinding2.widget.color
 import kotlinx.android.synthetic.main.payout_history_cell.view.*
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class PayoutHistoryAdapter (private val context: Context, private val recalls : List<Payout>) : RecyclerView.Adapter<PayoutHistoryViewHolder> () {
@@ -27,14 +25,14 @@ class PayoutHistoryAdapter (private val context: Context, private val recalls : 
     }
 
     override fun onBindViewHolder(holder: PayoutHistoryViewHolder, position: Int) {
-        val recall = recalls.get(position)
-        holder.bindRecall(recall, context)
+        val recall = recalls[position]
+        holder.bindRecall(recall)
     }
 }
 
 class PayoutHistoryViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
 
-    fun bindRecall(payout: Payout, context: Context) {
+    fun bindRecall(payout: Payout) {
         val date = Date(payout.date)
         val format = SimpleDateFormat("MM/dd/yyyy")
 

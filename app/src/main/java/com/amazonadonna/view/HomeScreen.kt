@@ -1,6 +1,5 @@
 package com.amazonadonna.view
 
-import androidx.room.Room
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,9 +7,7 @@ import android.util.Log
 import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
 import com.amazon.identity.auth.device.api.authorization.User
-import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.sync.ArtisanSync
-import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_home_screen.*
 import okhttp3.*
 import java.io.IOException
@@ -19,9 +16,7 @@ import androidx.appcompat.app.AlertDialog
 import com.amazonadonna.model.App
 import com.amazonadonna.sync.Synchronizer
 import kotlinx.coroutines.*
-import java.lang.Thread.sleep
 import kotlin.coroutines.CoroutineContext
-
 
 class HomeScreen : AppCompatActivity()  , CoroutineScope {
 
@@ -30,7 +25,6 @@ class HomeScreen : AppCompatActivity()  , CoroutineScope {
     lateinit var job: Job
     private var cgaID : String = "0" // initialize to prevent crash while testing
     private var cgaAmaznName : String = ""
-    private var newLang : String = "en_US"
     private val amaznIdURL = App.BACKEND_BASE_URL + "/cga/getByAmznId"
     private val addAmaznIdURL = App.BACKEND_BASE_URL + "/cga/add"
 
@@ -40,13 +34,6 @@ class HomeScreen : AppCompatActivity()  , CoroutineScope {
         override fun onSuccess(p0: User?) {
             cgaID = p0!!.userId.substringAfter("amzn1.account.")
 
-            //cgaID = "0" //******** Uncomment this to go back to default for testing ****
-            //--------------------------------------------------------//
-            // UNCOMMENT THE METHOD CALL BELOW TO CLEAR SQLITE TABLES //
-            //--------------------------------------------------------//
-            //ArtisanSync.resetLocalDB(applicationContext)
-            //--------------------------------------------------------//
-
             try {
                 currUser = p0
                 artisanNameTV.text = p0.userName
@@ -54,7 +41,6 @@ class HomeScreen : AppCompatActivity()  , CoroutineScope {
             } catch (e : Exception) {
                 //do nothing use placeholder text
             }
-
             syncData()
         }
         override fun onError(ae: AuthError?) {
@@ -124,22 +110,11 @@ class HomeScreen : AppCompatActivity()  , CoroutineScope {
         }
     }
 
-    private var signoutListener = object : Listener<Void, AuthError> {
-        override fun onSuccess(p0: Void?) {
-            Log.d("HomeScreen", "Logout worked")
-        }
-
-        override fun onError(ae: AuthError?) {
-            Log.d("HomeScreen", "Logout failed :(")
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_screen)
 
         val extras = intent.extras
-        //cgaID = "0"
 
         if (extras != null) {
             cgaID = extras.getString("cgaId")
@@ -147,7 +122,6 @@ class HomeScreen : AppCompatActivity()  , CoroutineScope {
             User.fetch(this, getUserInfoListener)
         }
 
-        //List All com.amazonadonna.model.Artisan button
         listAllArtisan.setOnClickListener{
             queryAllArtisan()
         }
@@ -184,16 +158,13 @@ class HomeScreen : AppCompatActivity()  , CoroutineScope {
     }
 
     private fun queryAllArtisan() {
-        //go to list all artisan screen
         val intent = Intent(this, ListAllArtisans::class.java)
         intent.putExtra("cgaId", cgaID!!)
         startActivity(intent)
 
     }
 
-
     private fun queryAllOrder() {
-        //go to list all artisan screen
         val intent = Intent(this, ListOrders::class.java)
         intent.putExtra("cgaId", cgaID!!)
         startActivity(intent)
@@ -201,12 +172,10 @@ class HomeScreen : AppCompatActivity()  , CoroutineScope {
     }
 
     private fun fetchJSONCGA() {
-        val requestBody = FormBody.Builder().add("amznId", cgaID!!)
+        val requestBody = FormBody.Builder()
+                .add("amznId", cgaID!!)
                 .build()
-        val db = Room.databaseBuilder(
-                applicationContext,
-                AppDatabase::class.java, "amazonadonna-main"
-        ).fallbackToDestructiveMigration().build()
+
         val client = OkHttpClient()
         val request = Request.Builder()
                 .url(amaznIdURL)
@@ -218,15 +187,10 @@ class HomeScreen : AppCompatActivity()  , CoroutineScope {
                 val body = response?.body()?.string()
                 Log.d("HomeScreen", "response body from fetchCga: " + body)
 
-                val gson = GsonBuilder().create()
-
                 if (body == "{}") {
                     Log.d("HomeScreen", "artisan not in db")
                     addCGAToDB()
                 }
-
-//                val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
-
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
@@ -236,14 +200,14 @@ class HomeScreen : AppCompatActivity()  , CoroutineScope {
     }
 
     private fun addCGAToDB() {
-       // val url = "https://7bd92aed.ngrok.io/cga/add"
         val requestBody = FormBody.Builder().add("amznId", cgaID!!)
-                .add("city", "San Francisco").add("country","USA")
-                .add("name", cgaAmaznName).add("lat", "32.19").add("lon", "77.398").build()
-        val db = Room.databaseBuilder(
-                applicationContext,
-                AppDatabase::class.java, "amazonadonna-main"
-        ).fallbackToDestructiveMigration().build()
+                .add("city", "San Francisco")
+                .add("country","USA")
+                .add("name", cgaAmaznName)
+                .add("lat", "32.19")
+                .add("lon", "77.398")
+                .build()
+
         val client = OkHttpClient()
         val request = Request.Builder()
                 .url(addAmaznIdURL)
@@ -254,11 +218,6 @@ class HomeScreen : AppCompatActivity()  , CoroutineScope {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
                 Log.d("HomeScreen", "response body from addCga: " + body)
-
-                val gson = GsonBuilder().create()
-
-//                val artisans : List<Artisan> = gson.fromJson(body,  object : TypeToken<List<Artisan>>() {}.type)
-
             }
 
             override fun onFailure(call: Call?, e: IOException?) {
@@ -266,6 +225,4 @@ class HomeScreen : AppCompatActivity()  , CoroutineScope {
             }
         })
     }
-
-
 }

@@ -10,29 +10,20 @@ import android.content.Intent
 import android.graphics.Bitmap
 import androidx.appcompat.app.AlertDialog
 import com.amazonadonna.model.App
-import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Payout
 import com.amazonadonna.sync.PayoutSync
 import com.amazonadonna.sync.Synchronizer.Companion.SYNC_NEW
-import okhttp3.*
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class PayoutSignature : AppCompatActivity() {
 
-    private val REQUEST_EXTERNAL_STORAGE = 3
-    private val updateURL = App.BACKEND_BASE_URL + "/artisan/edit"
-    private val payoutHistory = App.BACKEND_BASE_URL + "/payout/add"
-    private val payoutSignatureURL = App.BACKEND_BASE_URL + "/payout/updateImage"
-    //private lateinit var artisan: Artisan
     private var amount = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payout_signature)
-        //artisan = intent.extras?.getSerializable("artisan") as Artisan
         amount = intent.getDoubleExtra("payoutAmount", 0.0)
         Log.i("PayoutSignature", "Artisan original balance: ${App.currentArtisan.balance}")
         Log.i("PayoutSignature", "Processing payout amount of : $amount")
@@ -78,21 +69,15 @@ class PayoutSignature : AppCompatActivity() {
         val signatureFilePath = saveSignatureToCache()
         var payout = Payout("", amount, System.currentTimeMillis(), App.currentArtisan.artisanId, SYNC_NEW, "Not set", App.currentArtisan.cgaId)
         PayoutSync.addPayout(applicationContext, payout, App.currentArtisan, File(signatureFilePath))
-        //App.currentArtisan.balance -= amount
         runOnUiThread{
             showResponseDialog(true)
         }
-        //updateArtisanBalance(artisan, amount, signatureFilePath)
-        //showResponseDialog(artisan, true)
     }
 
     private fun saveSignatureToCache() : String {
-        //file/storage/emulated/0/DCIM/Camera/IMG_20190206_201443.jpg
         val fileName = getCurrentDate()
         val file = File(externalCacheDir, fileName)
         file.createNewFile()
-        //val fileProvider = FileProvider.getUriForFile(this@PayoutSignature, "com.amazonadonna.amazonhandmade.fileprovider", file)
-        //Log.d("PayoutSignature", "file created: " + file.absolutePath + " : " + file.exists())
 
         var fileOutputStream: FileOutputStream? = null
         try {
@@ -125,12 +110,6 @@ class PayoutSignature : AppCompatActivity() {
             builder.setOnDismissListener {
                 Log.i("PayoutSignature.kt", "before payout dismiss ${App.currentArtisan.balance}")
                 submitDismiss()
-//                val intent = Intent(this, ArtisanProfileCGA::class.java)
-//                intent.putExtra("artisan", artisan)
-//                //finishAffinity()
-//                startActivity(intent)
-//               // finishAffinity()
-//               finish()
             }
         } else {
             builder.setTitle("Payout Failed!")
@@ -146,8 +125,6 @@ class PayoutSignature : AppCompatActivity() {
 
     private fun submitDismiss() {
         val intent = Intent(this, ArtisanProfileCGA::class.java)
-        //intent.putExtra("artisan", artisan)
-       // Log.i("PayoutSignature.kt", "post payout amount ${artisan.balance}")
         startActivity(intent)
         finish()
     }

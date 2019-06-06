@@ -17,7 +17,6 @@ class PayoutHistory : AppCompatActivity(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private val payoutHistoryPath = App.BACKEND_BASE_URL + "/payout/listAllForCga"
     private val payoutHistoryList : MutableList<Payout> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,8 +24,6 @@ class PayoutHistory : AppCompatActivity(), CoroutineScope {
         job = Job()
 
         setContentView(R.layout.activity_payout_history)
-
-        //val cgaID = intent.extras.getString("cgaID")
 
         launch {
             val payouts = fetchHistory()

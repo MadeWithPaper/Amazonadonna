@@ -1,6 +1,5 @@
 package com.amazonadonna.view
 
-import androidx.room.Room
 import androidx.appcompat.app.AppCompatActivity
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import android.database.Cursor
@@ -11,22 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.DiffUtil
 import android.util.Log
 import com.amazonadonna.database.AppDatabase
-import com.amazonadonna.model.App
-import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Order
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_list_orders.*
-import okhttp3.*
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import com.jakewharton.rxbinding2.widget.textChanges
-import kotlinx.android.synthetic.main.activity_add_artisan.*
-import kotlinx.android.synthetic.main.activity_order_screen.*
-import kotlinx.android.synthetic.main.list_all_artisans.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -38,7 +28,6 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor>, CoroutineScope 
 
     var cgaId : String = "0"
     private lateinit var artisanID : String
-    val listOrderURL = App.BACKEND_BASE_URL + "/order/listAllForCga"
     val originalOrders : MutableList<Order> = mutableListOf()
     val filteredOrders: MutableList<Order> = mutableListOf()
     val oldFilteredOrders: MutableList<Order> = mutableListOf()
@@ -73,7 +62,6 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor>, CoroutineScope 
         }
         recyclerView_listOrders.layoutManager = LinearLayoutManager(this)
 
-        //load an empty list as placeholder before GET request completes
         recyclerView_listOrders.adapter = ListOrdersAdapter(this, originalOrders)
         recyclerView_listOrders.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
@@ -99,10 +87,8 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor>, CoroutineScope 
         originalOrders.clear()
         oldFilteredOrders.clear()
         super.onStart()
-        //fetchJSON()
         job = Job()
 
-        //TODO check if App.artisanMode is true, if so fetch aritsan orders from db
         launch {
             val dbOrders: List<Order> = getOrdersFromDb()
             originalOrders.addAll(dbOrders)
@@ -123,11 +109,11 @@ class ListOrders : AppCompatActivity(), LoaderCallbacks<Cursor>, CoroutineScope 
     }
 
     override fun onLoadFinished(p0: Loader<Cursor>, p1: Cursor?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //not implemented
     }
 
     override fun onLoaderReset(p0: Loader<Cursor>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //not implemented
     }
 
     inner class PostsDiffUtilCallback(private val oldList: List<Order>, private val newList: List<Order>) : DiffUtil.Callback() {

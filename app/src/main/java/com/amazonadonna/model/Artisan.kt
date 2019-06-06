@@ -26,11 +26,7 @@ data class Artisan (
         @ColumnInfo(name = "balance") @Json(name = "balance") var balance : Double) : Serializable{
 
     fun generateTempID() {
-       //TODO fill in logic for generating unique ID for artisan
         var num = Random().nextInt()
         artisanId = artisanName + cgaId + num.toString()
     }
-
-
-    //TODO need to add maps functionality
 }

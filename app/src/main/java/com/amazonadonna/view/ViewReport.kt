@@ -1,23 +1,14 @@
 package com.amazonadonna.view
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.graphics.pdf.PdfRenderer
 import android.graphics.Bitmap
-import android.net.Uri
-import android.os.Environment
-import android.widget.Toast
 import android.os.ParcelFileDescriptor
-import android.util.Log
 import kotlinx.android.synthetic.main.activity_view_report.*
 import java.io.File
 import java.io.IOException
-import java.io.OutputStream
-import android.os.Environment.DIRECTORY_PICTURES
-
-
 
 class ViewReport : AppCompatActivity() {
 
@@ -47,9 +38,6 @@ class ViewReport : AppCompatActivity() {
             //min. API Level 21
             pdfRenderer = PdfRenderer(fileDescriptor!!)
 
-            //val pageCount = pdfRenderer.pageCount
-            //Toast.makeText(this, "pageCount = $pageCount", Toast.LENGTH_LONG).show()
-
             //Display page 0
             rendererPage = pdfRenderer.openPage(0)
             val bitmap = Bitmap.createBitmap(
@@ -72,10 +60,7 @@ class ViewReport : AppCompatActivity() {
     }
 
     private fun saveReport() {
-        //TODO save report to storage
         val intent = Intent(this, Reports::class.java)
-        //intent.putExtra("reportName", pdfName)
-        //savePDFToExternal()
         startActivity(intent)
         finish()
     }
