@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import com.amazonadonna.model.ReportTarget
 import kotlinx.android.synthetic.main.report_target_cell.view.*
 
-
 class ReportTargetAdapter (private val context: Context, private val targets : List<ReportTarget>) : RecyclerView.Adapter<TargetViewHolder> () {
 
     private val TAG = "ReportTargetAdapter"
@@ -27,12 +26,8 @@ class ReportTargetAdapter (private val context: Context, private val targets : L
     override fun onBindViewHolder(holder: TargetViewHolder, position: Int) {
         val target = targets[position]
         holder.bindOrder(target)
-        //holder.view.setBackgroundColor(if (target.selected) Color.GREEN else Color.WHITE)
-        //holder.view.setBackgroundColor(Color.GREEN)
         holder.view.setOnClickListener{
-            //notifyItemChanged(position)
             target.selected = !target.selected
-            //holder.view.setBackgroundColor(if (target.selected) Color.GREEN else Color.WHITE)
             Log.i(TAG, "clicked ${target.selected}")
             notifyItemChanged(position)
         }
@@ -43,7 +38,6 @@ class ReportTargetAdapter (private val context: Context, private val targets : L
 class TargetViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
     fun bindOrder(target : ReportTarget) {
         view.targetNameTV.text = target.artisan.artisanName
-        //view.setBackgroundColor(Color.RED)
         view.setBackgroundColor(if (target.selected) Color.GREEN else Color.WHITE)
     }
 }

@@ -40,7 +40,6 @@ class HomeScreenArtisan : AppCompatActivity() , CoroutineScope {
 
         val extras = intent.extras
         if (extras != null) {
-            //TODO: Use actual artisan id once login is returning that correctly
             var artisan = extras.get("artisan") as Artisan
             App.currentArtisan = artisan
             artisanNameTV.text = App.currentArtisan.artisanName
@@ -71,54 +70,12 @@ class HomeScreenArtisan : AppCompatActivity() , CoroutineScope {
         }
     }
 
-    private fun fetchJSONArtisan(artisanID: String) {
-        val requestBody = FormBody.Builder().add("artisanId", artisanID)
-                .build()
-        val client = OkHttpClient()
-        val request = Request.Builder()
-                .url(getArtisanUrl)
-                .post(requestBody)
-                .build()
-        Log.d("HomeScreenArtisan", "In fetchArtisan with id: "+artisanID)
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                Log.d("HomeScreenArtisan", "response body from fetchArtisan: " + body)
-
-                val gson = GsonBuilder().create()
-
-                if (body == "{}") {
-                    Log.d("HomeScreenArtisan", "artisan not in db")
-                }
-
-                try { // In here, might need to set artisanNameTV.text = artisan.artisanName
-                    val artisan: Artisan = gson.fromJson(body, object : TypeToken<Artisan>() {}.type)
-                    App.currentArtisan = artisan
-
-                } catch(e: Exception) {
-                    Log.d("HomeScreenArtisan", "Caught exception")
-                    runOnUiThread {
-                        //Toast.makeText(this@HomeScreenArtisan,"Error getting user information", Toast.LENGTH_LONG).show()
-                    }
-                }
-
-                AppDatabase.getDatabase(applicationContext).artisanDao().insert(App.currentArtisan)
-                artisanNameTV.text = App.currentArtisan.artisanName
-                syncData()
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("HomeScreenArtisan", "failed to do POST request to database" + getArtisanUrl)
-            }
-        })
-    }
-
     override fun onResume() {
         super.onResume()
         artisanNameTV.text = App.currentArtisan.artisanName
     }
 
-    fun syncData() {
+    private fun syncData() {
         job = Job()
 
         if (ArtisanSync.hasInternet(applicationContext)) {

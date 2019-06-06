@@ -2,10 +2,8 @@ package com.amazonadonna.view
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Point
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -24,12 +22,9 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 import android.graphics.pdf.PdfDocument
 import com.amazonadonna.model.Payout
-import kotlinx.android.synthetic.main.activity_view_report.*
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.EnumSet.range
-import kotlin.collections.HashMap
 
 class Reports : AppCompatActivity(), CoroutineScope {
 
@@ -43,8 +38,6 @@ class Reports : AppCompatActivity(), CoroutineScope {
     private var reportType = SELECT_REPORT_TYPE
     private var reportTargetList : MutableList<ReportTarget> = mutableListOf()
     private val TAG = "Reports.kt"
-    private val SPACING = 15f
-    private val payoutHistoryMap : HashMap<String, List<Payout>> = HashMap()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -153,7 +146,6 @@ class Reports : AppCompatActivity(), CoroutineScope {
     }
 
     //TODO optimization pdf scaling
-//    Artisans/Communities Performance/Stats/Transaction History Report
     private fun generatePerformanceReport(selectedTargets : MutableList<ReportTarget>) {
         // create a new document
         val document = PdfDocument()
@@ -175,14 +167,11 @@ class Reports : AppCompatActivity(), CoroutineScope {
             canvas.drawText("Artisan Name: ${currArtisan.artisanName}", 0f, 40f, paint)
             canvas.drawText("Balance: $${currArtisan.balance}", 0f, 55f, paint)
             canvas.drawText("Item Sold: ${(0..100).random()}", 0f, 70f, paint)
-//            attachPayoutHistory(canvas, currArtisan.artisanId, paint)
             canvas.drawText("Payout History: ", 0f, 85f, paint)
 
             canvas.drawText("1 : 2/10/2019 $342.12", 10f, 100f, paint)
             canvas.drawText("2 : 2/25/2019 $3664.24", 10f, 115f, paint)
             canvas.drawText("3 : 3/11/2019 $123.45", 10f, 130f, paint)
-
-            //canvas.drawText("Payout History: ${currArtisan.artisanName}", 0f, 25f, paint)
 
             // finish the page
             document.finishPage(page)
@@ -208,14 +197,12 @@ class Reports : AppCompatActivity(), CoroutineScope {
         startActivity(intent)
         finish()
     }
-    //    Artisans/Communities Accounting summary (units sold, $) / Financial Report
     private fun generateSummaryReport(selectedTargets : MutableList<ReportTarget>) {
         // create a new document
         val document = PdfDocument()
         // crate a page description
         var pageNum = 1
         selectedTargets.forEach{
-            //Log.i(TAG, "index $pageNum, ${selectedTargets.size}")
             val currArtisan = it.artisan
             val pageInfo = PdfDocument.PageInfo.Builder(300, 400, pageNum).create()
             // start a page
@@ -256,14 +243,12 @@ class Reports : AppCompatActivity(), CoroutineScope {
         finish()
     }
 
-    //    Artisans/Communities Account Payables/Receivables Report
     private fun generatePayablesReport(selectedTargets : MutableList<ReportTarget>) {
         // create a new document
         val document = PdfDocument()
         // crate a page description
         var pageNum = 1
         selectedTargets.forEach{
-            //Log.i(TAG, "index $pageNum, ${selectedTargets.size}")
             val currArtisan = it.artisan
             val pageInfo = PdfDocument.PageInfo.Builder(300, 400, pageNum).create()
             // start a page
@@ -319,21 +304,5 @@ class Reports : AppCompatActivity(), CoroutineScope {
         //val dateFormat = SimpleDateFormat("yyy_mm_dd_HHmmss", Locale.getDefault())
         val date = Date()
         return dateFormat!!.format(date)
-    }
-
-//    private fun attachPayoutHistory(canvas: Canvas, artisanId : String, paint : Paint) {
-//        launch {
-//            Log.d(TAG, "payout list:  $payoutList")
-//            runOnUiThread {  var payoutNum = 1
-//                payoutList.forEach {
-//                    canvas.drawText("$payoutNum : ${it.date}, ${it.amount}", 0f, 70f + (SPACING * payoutNum), paint)
-//                    payoutNum++
-//                }
-//            }
-//        }
-//    }
-
-    private suspend fun getPayoutsByArtisanIDFromDb(artisanId: String) = withContext(Dispatchers.IO) {
-        AppDatabase.getDatabase(application).payoutDao().getAllByArtisanId(artisanId) as List<Payout>
     }
 }

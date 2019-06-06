@@ -15,18 +15,13 @@ import kotlinx.android.synthetic.main.activity_artisan_profile.*
 
 class ArtisanProfile : AppCompatActivity() {
 
-    //private lateinit var artisan : Artisan
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_profile)
 
-        //artisan = intent.extras?.getSerializable("artisan") as Artisan
-
         artisanProfileBio.movementMethod = ScrollingMovementMethod()
 
         setSupportActionBar(artisanProfileToolbar)
-
 
         supportActionBar!!.title = App.currentArtisan.artisanName
         artisanProfileBalance.text = App.currentArtisan.balance.toString()
@@ -52,7 +47,6 @@ class ArtisanProfile : AppCompatActivity() {
 
     private fun payoutHistoryForArtisan(artisanID: String){
         val intent = Intent(this, PayoutHistory::class.java)
-        //TODO wait for db implementation
         intent.putExtra("artisanID", artisanID)
         Log.d("ArtisanProfile.kt", "payout history screen with cgaID: ${App.currentArtisan.cgaId}")
         startActivity(intent)
@@ -60,13 +54,11 @@ class ArtisanProfile : AppCompatActivity() {
 
     private fun itemListForArtisan() {
         val intent = Intent(this, ArtisanItemList::class.java)
-        //intent.putExtra("selectedArtisan", artisan)
         startActivity(intent)
     }
 
     private fun editArtisan() {
         val intent = Intent(this, EditArtisan::class.java)
-        //intent.putExtra("artisan", artisan)
         startActivity(intent)
         finish()
     }

@@ -19,3 +19,4 @@
 /app/release
 /app/src/main/assets/api_key_backup.txt
 /API/*.pem
+/app/src/main/res/values/user_pool_secrets.xml

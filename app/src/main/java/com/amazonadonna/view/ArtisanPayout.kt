@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.amazonadonna.model.Artisan
 import kotlinx.android.synthetic.main.activity_artisan_payout.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -15,22 +14,16 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.amazonadonna.model.App
-import com.amazonadonna.view.R
-import kotlinx.android.synthetic.main.activity_add_artisan.*
-import kotlinx.android.synthetic.main.activity_artisan_profile_cga.*
-
 
 class ArtisanPayout : AppCompatActivity() {
 
-    private val TAG = "ArtisanPayout.kt"
+    //private val TAG = "ArtisanPayout.kt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_payout)
 
         setSupportActionBar(artisanPayoutToolbar)
-
-        //val artisan = intent.extras?.getSerializable("artisan") as Artisan
 
         artisanPayout_balance.text = " $ ${App.currentArtisan.balance}"
         artisanPayout_amount_et.setText(App.currentArtisan.balance.toString())
@@ -67,7 +60,6 @@ class ArtisanPayout : AppCompatActivity() {
 
             Log.i("ArtisanPayout", "new picked Date: " + initMonth + "/" + initDay + "/" + initYear)
             artisanPayout_dateTV.setText(this.resources.getString(R.string.payout_date) + initMonth + "/" + initDay + "/" + initYear)
-            //lblDate.setText("" + dayOfMonth + " " + MONTHS[monthOfYear] + ", " + year)
         }, initYear, initMonth, initDay)
         dpd.show()
     }
@@ -95,7 +87,6 @@ class ArtisanPayout : AppCompatActivity() {
                 dialog.show()
             } else {
                 val intent = Intent(this, PayoutSignature::class.java)
-               // intent.putExtra("artisan", artisan)
                 intent.putExtra("payoutAmount", artisanPayout_amount_et.text.toString().toDouble())
                 startActivity(intent)
                 finish()

@@ -2,7 +2,6 @@ package com.amazonadonna.view
 
 import android.content.Context
 import android.content.Intent
-import com.google.android.material.snackbar.Snackbar
 import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,11 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.amazonadonna.database.ImageStorageProvider
 import com.amazonadonna.model.Product
-import com.amazonadonna.model.Artisan
 import com.amazonadonna.sync.ProductSync
 import kotlinx.android.synthetic.main.list_item_cell.view.*
 import com.amazonadonna.sync.Synchronizer
-import kotlinx.android.synthetic.main.list_artisan_cell.view.*
 
 class ListItemsAdapter (private val context: Context, private val products : MutableList<Product>, private var fromOrderScreen : Boolean = false) : RecyclerView.Adapter<ItemsViewHolder> () {
     private var removedPostion = 0
@@ -34,11 +31,6 @@ class ListItemsAdapter (private val context: Context, private val products : Mut
         products.removeAt(viewHolder.adapterPosition)
         notifyItemRemoved(viewHolder.adapterPosition)
         ProductSync.deleteProduct(context, removedProduct)
-        //undo functionality
-//        Snackbar.make(viewHolder.itemView, "${removedArtisan.artisanName} deleted.", Snackbar.LENGTH_INDEFINITE).setAction("UNDO") {
-//            products.add(removedPostion, removedArtisan)
-//            notifyItemInserted(removedPostion)
-//        }.show()
     }
 
     override fun getItemCount(): Int {
@@ -53,7 +45,6 @@ class ListItemsAdapter (private val context: Context, private val products : Mut
             val intent = Intent(context, ProductDetails::class.java)
             intent.putExtra("product", product)
             intent.putExtra("fromOrderScreen", fromOrderScreen)
-            //intent.putExtra("selectedArtisan", artisan)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
         }
@@ -61,7 +52,6 @@ class ListItemsAdapter (private val context: Context, private val products : Mut
 }
 
 class ItemsViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
-    //TODO fill in cell info from the passes in order
     fun bindOrder(product: Product, context: Context) {
         var isp = ImageStorageProvider(context)
         Log.i("ListItemAdapter", product.pictureURLs[0])

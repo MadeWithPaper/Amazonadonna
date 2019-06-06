@@ -12,7 +12,6 @@ import android.widget.Spinner
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Product
 import com.amazonadonna.sync.Synchronizer.Companion.SYNC_NEW
-import kotlinx.android.synthetic.main.activity_payout_history.*
 
 
 class AddItemCategory : AppCompatActivity() {
@@ -185,7 +184,6 @@ class AddItemCategory : AppCompatActivity() {
             val sub = subMap.get(product.category)!!
             setSpinner(itemCategory_subSpinner, sub, editMode, 0)
 
-            /*Log.d("specific", specificMap.get(product.subCategory)[0])*/
             if (specificMap.get(product.subCategory) != null){
                 val spc = specificMap.get(product.subCategory)!!
                 setSpinner(itemCategory_specificSpinner, spc, editMode, 1)
@@ -245,12 +243,10 @@ class AddItemCategory : AppCompatActivity() {
             }
             intent.putExtra("product", product)
             intent.putExtra("editMode", editMode)
-            //intent.putExtra("selectedArtisan", artisan)
             startActivity(intent)
             finish()
         } else {
             // do nothing not all categories are set correctly
-            //TODO warning message?
         }
     }
 
@@ -321,5 +317,4 @@ class AddItemCategory : AppCompatActivity() {
                             "Nursing & Feeding" to nursingfeedingsub,
                             "Pacifiers & Teethers" to pacifierssub)
     }
-
 }

@@ -19,16 +19,12 @@ import com.amazonadonna.database.AppDatabase
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Product
 import com.amazonadonna.sync.Synchronizer
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import com.jakewharton.rxbinding2.widget.textChanges
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_artisan_item_list.*
 import kotlinx.coroutines.*
-import okhttp3.*
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
 
@@ -40,7 +36,6 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
         get() = Dispatchers.Main + job
 
     //lateinit var artisan : Artisan
-    private val listAllItemsURL = App.BACKEND_BASE_URL + "/item/listAllForArtisan"
     private val originalItems: MutableList<Product> = mutableListOf()
     private val filteredItems: MutableList<Product> = mutableListOf()
     private val oldFilteredItems: MutableList<Product> = mutableListOf()
@@ -55,21 +50,7 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_artisan_item_list)
 
-       // artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
-
         artisanItemList_recyclerView.layoutManager = LinearLayoutManager(this)
-
-        //load an empty list as placeholder before GET request completes
-
-        //TODO remove testing
-        //val testItem = Product(1.0, "id", "des", "aid", "url", "Jewelry", "Earrings", "Hoop Earrings", "item name", "shipping", 1, 2)
-        val emptyProductList : MutableList<Product> = mutableListOf()
-//        if (originalItems.isEmpty()) {
-//            artisanItemList_recyclerView.adapter = ListItemsAdapter(this, emptyProductList)
-//        }
-//        else {
-//            artisanItemList_recyclerView.adapter = ListItemsAdapter(this, originalItems)
-//        }
         artisanItemList_recyclerView.adapter = ListItemsAdapter(this, originalItems)
         artisanItemList_recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
@@ -91,9 +72,6 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
                                 diffResult.dispatchUpdatesTo((artisanItemList_recyclerView.adapter as ListItemsAdapter))
                             }
                 }
-
-
-
 
         //item swipe to delete functionality
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -178,7 +156,6 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
                 artisanItemList_recyclerView.adapter = ListItemsAdapter(applicationContext, oldFilteredItems)
             }
         }
-        //fetchJSON()
     }
 
     private suspend fun getProductsFromDb() = withContext(Dispatchers.IO) {
@@ -204,15 +181,10 @@ class ArtisanItemList : AppCompatActivity() , CoroutineScope {
     }
 
     private fun addItem() {
-        //go to list all artisan screen
         val intent = Intent(this, AddItemCategory::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
-        //finish()
     }
-
-    //TODO GET request to query for all items associated to selected artisan
-    //TODO need search bar
 
     inner class PostsDiffUtilCallback(private val oldList: List<Product>, private val newList: List<Product>) : DiffUtil.Callback() {
         override fun getOldListSize() = oldList.size

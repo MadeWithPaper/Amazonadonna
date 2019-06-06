@@ -63,10 +63,6 @@ class AddArtisan : AppCompatActivity() {
     private val fileName: String = "output.png"
     private val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
-    private val addArtisanURL = App.BACKEND_BASE_URL + "/artisan/add"
-    private val artisanPicURL = App.BACKEND_BASE_URL + "/artisan/updateImage"
-    private var userPool = CognitoUserPool(this@AddArtisan,"us-east-2_ViMIOaCbk","4in76ncc44ufi8n1sq6m5uj7p7", "12qfl0nmg81nlft6aunvj6ec0ocejfecdau80biodpubkfuna0ee", Regions.US_EAST_2)
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,8 +73,6 @@ class AddArtisan : AppCompatActivity() {
 
         val IMAGE_UPLOADING_PERMISSION = 3
         ActivityCompat.requestPermissions(this, PERMISSIONS, IMAGE_UPLOADING_PERMISSION)
-//        val IMAGE_WRTING_PERMISSION = 4
-//        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), IMAGE_WRTING_PERMISSION)
 
         takePicture.setOnClickListener{
             takePhoto()
@@ -140,27 +134,6 @@ class AddArtisan : AppCompatActivity() {
         }
     }
 
-    private fun setImageView() {
-        val takenImage = BitmapFactory.decodeFile(photoFile!!.absolutePath)
-        //Log.d("PLLLLLZZZZZZ",takenImage)
-        // RESIZE BITMAP, see section below
-        // Load the taken image into a preview
-        val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
-        ivPreview.setImageBitmap(takenImage)
-    }
-    fun customCompressImage(view: View) {
-            // Compress image in main thread using custom Compressor
-//            compressedImage = CompressorKt.create(this) {
-//                maxWidth { 640f }
-//                maxHeight { 480f }
-//                quality { 75 }
-//                compressFormat { WEBP }
-//            }.compressToFile(actualImage)
-//
-//            Compressor.Builder(this).setMaxWidth(640f).build().compressToFile(actualImage)
-
-    }
-
     @TargetApi(19)
     private fun createImageFile(data: Intent?) {
         var imagePath: String? = null
@@ -194,7 +167,6 @@ class AddArtisan : AppCompatActivity() {
         val stream = ByteArrayOutputStream()
         bm!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
         var byteArray = stream.toByteArray()
-        //byteArray = ByteArray(photoFile!!.length().toInt())
 
         try {
             //convert array of bytes into file
@@ -203,7 +175,6 @@ class AddArtisan : AppCompatActivity() {
             fileOuputStream.close()
             Log.d("SKETIT", "lol")
 
-            println("Done")
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -225,7 +196,7 @@ class AddArtisan : AppCompatActivity() {
 
     //helper for preventing unwanted rotation when importing pictures
     private fun rotateBitmap(bitmap: Bitmap, orientation: Int) : Bitmap? {
-        val matrix = Matrix();
+        val matrix = Matrix()
         when (orientation) {
             ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
             ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
@@ -289,19 +260,6 @@ class AddArtisan : AppCompatActivity() {
                     catch (e: Error) {
                             Log.d("Add Artisan post Photo", "it failed")
                         }
-//                    val w = imageView_artisanProfilePic.width
-//                    val h = imageView_artisanProfilePic.height
-//                    val dataURI = FileProvider.getUriForFile(this@AddArtisan, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
-//                        try {
-//                            Log.d("Add Artisan post photo", "Success")
-//                            Log.d("Add Artisan post photo", "Exists?: " + photoFile!!.exists())
-//                            val bm = loadScaledBitmap(dataURI, w, h)
-//                            val ivPreview = findViewById(R.id.imageView_artisanProfilePic) as ImageView
-//                            ivPreview.setImageBitmap(bm)
-//                            //setImageView()
-//                        } catch (e: Error) {
-//                            Log.d("Add Artisan post Photo", "it failed")
-//                        }
                     }
             CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
@@ -336,9 +294,6 @@ class AddArtisan : AppCompatActivity() {
                         catch(e: Error) {
                             Log.d("Add Artisan post Photo", "it failed")
                         }
-//                        createImageFile(data)
-//                        Log.d("Add Artisan postGallery", "File:  Exists?: " + photoFile!!.exists())
-//                        setImageView()
                     }
                     else {
                         Log.d("Add Artisan postGallery", "Data was null")
@@ -368,7 +323,7 @@ class AddArtisan : AppCompatActivity() {
         return bm
     }
 
-     fun calculateInSampleSize(options : BitmapFactory.Options,
+     private fun calculateInSampleSize(options : BitmapFactory.Options,
                                       reqWidth : Int, reqHeight : Int): Int {
         // Raw height and width of image
         val height = options.outHeight;
@@ -390,7 +345,6 @@ class AddArtisan : AppCompatActivity() {
                 inSampleSize = heightRatio
             else
                 inSampleSize = widthRatio
-           // inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio
         }
 
         return inSampleSize
@@ -402,7 +356,6 @@ class AddArtisan : AppCompatActivity() {
         when (requestCode) {
             3 -> {
                 button_addArtisan.setOnClickListener{
-                    //Toast.makeText(this@AddArtisan, "add button clicked.", Toast.LENGTH_SHORT).show()
                     Log.d("testing_4",grantResults.isNotEmpty().toString())
                     Log.d("testing_5", PackageManager.PERMISSION_GRANTED.toString())
                     makeNewArtisan()
@@ -432,6 +385,7 @@ class AddArtisan : AppCompatActivity() {
      * Amazon Cognito for Artisans
      */
     private fun signUpNewArtisan(email: String) {
+        var userPool = CognitoUserPool(this@AddArtisan,this.resources.getString(R.string.userPoolID),this.resources.getString(R.string.clientID), this.resources.getString(R.string.clientScret), Regions.US_EAST_2)
         //disable touch events once log in button is clicked
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         var userAttributes = CognitoUserAttributes()
@@ -466,9 +420,7 @@ class AddArtisan : AppCompatActivity() {
     }
 
 
-    //TODO clean up
     private fun makeNewArtisan() {
-        //validate fields
         if (!validateFields()) {
             return
         }
@@ -487,18 +439,15 @@ class AddArtisan : AppCompatActivity() {
         Log.i("AddArtisan", "created new Artisan $newArtisan")
 
         //pop screen and add
-        //submitToDB(newArtisan)
         if (!artisanEmail_et.text.toString().isNullOrEmpty()) {
             signUpNewArtisan(artisanEmail_et.text.toString())
         }
 
         ArtisanSync.addArtisan(applicationContext, newArtisan, photoFile)
 
-
         //clear all fields
         clearFields()
         super.onBackPressed()
-
     }
 
     private fun parseLoc (artisan: Artisan) {
@@ -520,17 +469,6 @@ class AddArtisan : AppCompatActivity() {
         Log.i("AddArtisan", "Clearing fields")
     }
 
-    private fun isAlpha(s: String): Boolean {
-        val charArr = s.toCharArray()
-
-        for (c in charArr) {
-            if (!Character.isLetter(c)) {
-                return false
-            }
-        }
-        return true
-    }
-
     private fun isPhoneNumber(phoneNo: String): Boolean {
         //validate phone numbers of format "1234567890"
         return if (phoneNo.matches("\\d{10}".toRegex()))
@@ -549,64 +487,41 @@ class AddArtisan : AppCompatActivity() {
 
     }
     //Validate all fields entered
-    //TODO add more checks
     private fun validateFields() : Boolean {
         var error_check = 0
         if (artisanName_et.text.toString().isEmpty()){
             artisanName_til.error = this.resources.getString(R.string.requiredFieldError)
             error_check += 1
-            //return false
         }
-//
-//        if (isAlpha(artisanName_et.text.toString()) == false) {
-//            artisanName_til.error = this.resources.getString(R.string.invalid_type_for_artisan_name)
-//            return false
-//        }
 
         if (artisanLoc_et.text.toString().isEmpty()) {
             artisanLoc_til.error = this.resources.getString(R.string.requiredFieldError)
             error_check += 1
-            //return false
         }
 
         if (!artisanLoc_et.text.toString().contains(",")) {
             artisanLoc_til.error = this.resources.getString(R.string.loc_missing_comma)
             error_check += 1
-            //return false
         }
 
         if (artisanContact_et.text.toString().isEmpty()){
             artisanContact_til.error = this.resources.getString(R.string.requiredFieldError)
             error_check += 1
-            //return false
         }
 
         if (isPhoneNumber(artisanContact_et.text.toString()) == false) {
             artisanContact_til.error = this.resources.getString(R.string.invalid_type_for_artisan_number)
             error_check += 1
-            //return false
         }
 
-//        if (artisanContact_et.text.toString().length > 11 || artisanContact_et.text.toString().length < 10 ){
-//            artisanContact_til.error = this.resources.getString(R.string.invalid_number)
-//            return false
-//        }
-
-        /*if (artisanEmail_et.text.toString().isEmpty()){
-            artisanEmail_til.error = this.resources.getString(R.string.requiredFieldError)
-            return false
-        }*/
-        
         if (!artisanEmail_et.text.toString().contains(".") && !artisanEmail_et.text.toString().isEmpty()){
             artisanEmail_til.error = this.resources.getString(R.string.error_invalid_email)
             error_check += 1
-            //return false
         }
 
         if (artisanBio_et.text.toString().isEmpty()){
             artisanBio_til.error = this.resources.getString(R.string.requiredFieldError)
             error_check += 1
-            //return false
         }
 
         if (error_check > 0) {

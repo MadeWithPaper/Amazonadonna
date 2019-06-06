@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.amazonadonna.database.AppDatabase
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
-import com.amazonadonna.model.App
 import com.amazonadonna.sync.Synchronizer
 import com.jakewharton.rxbinding2.widget.textChanges
 import io.reactivex.Completable
@@ -36,7 +35,6 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
         get() = Dispatchers.Main + job
 
     var cgaId: String = "0"
-    val listAllArtisansURL = App.BACKEND_BASE_URL + "/artisan/listAllForCga"
     val originalArtisans: MutableList<Artisan> = mutableListOf()
     val filteredArtisans: MutableList<Artisan> = mutableListOf()
     val oldFilteredArtisans: MutableList<Artisan> = mutableListOf()
@@ -53,9 +51,6 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
         cgaId = intent.extras.getString("cgaId")
 
         recyclerView_listAllartisans.layoutManager = LinearLayoutManager(this)
-
-        //load an empty list as placeholder before GET request completes
-       // originalArtisans.clear()
         recyclerView_listAllartisans.adapter = ListArtisanAdapter(this, originalArtisans)
         recyclerView_listAllartisans.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
@@ -134,13 +129,6 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
 
     }
 
-
-    override fun onResume() {
-        super.onResume()
-
-        //ArtisanSync.sync(this, cgaId)
-    }
-
     override fun onStart() {
         filteredArtisans.clear()
         originalArtisans.clear()
@@ -158,7 +146,6 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
                 recyclerView_listAllartisans.adapter = ListArtisanAdapter(applicationContext, oldFilteredArtisans)
             }
         }
-
         Log.d("ListAllArtisans", "fetching")
     }
 
@@ -189,7 +176,6 @@ class ListAllArtisans : AppCompatActivity(), CoroutineScope {
         val intent = Intent(this, AddArtisan::class.java)
         intent.putExtra("cgaId", cgaId)
         startActivity(intent)
-
     }
 
     override fun onDestroy() {

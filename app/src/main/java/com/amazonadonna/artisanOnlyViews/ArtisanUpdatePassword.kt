@@ -18,8 +18,7 @@ import kotlinx.android.synthetic.main.activity_artisan_update_password.*
 
 class ArtisanUpdatePassword : AppCompatActivity() {
 
-    var userPool = CognitoUserPool(this@ArtisanUpdatePassword, "us-east-2_ViMIOaCbk","4in76ncc44ufi8n1sq6m5uj7p7", "12qfl0nmg81nlft6aunvj6ec0ocejfecdau80biodpubkfuna0ee", Regions.US_EAST_2)
-
+    private var userPool = CognitoUserPool(this@ArtisanUpdatePassword, this.resources.getString(R.string.userPoolID),this.resources.getString(R.string.clientID), this.resources.getString(R.string.clientScret), Regions.US_EAST_2)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +28,7 @@ class ArtisanUpdatePassword : AppCompatActivity() {
         if (intent.extras != null) {
             //pre-fill in email passed from login screen
             artisanUpdate_email_et.setText(intent.getStringExtra("email"))
-            artisan = intent.extras.get("artisan") as Artisan
+            artisan = intent.extras!!.get("artisan") as Artisan
         } else {
             //Intent null, email was not included
         }

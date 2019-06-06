@@ -36,10 +36,7 @@ class ListOrdersAdapter (private val context: Context, private val orders : List
 }
 
 class OrdersViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
-    //TODO fill in cell info from the passes in order
     fun bindOrder(order: Order) {
-//        view.textView_OrderID_input.text = order.amOrderNumber
-//        view.textView_OrderDate.text = order.orderDate
         view.textView_OrderDate.text = "1/23/19"
         view.textView_OrderID_input.text = order.orderId
         view.textView_Fulfilled_input.text = order.fulfilledStatus.toString()

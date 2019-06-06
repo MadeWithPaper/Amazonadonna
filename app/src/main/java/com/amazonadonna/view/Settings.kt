@@ -1,20 +1,12 @@
 package com.amazonadonna.view
 
-import android.app.Application
-import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_settings.*
 import java.util.*
 import android.content.ComponentName
-import android.content.DialogInterface
-import android.os.AsyncTask
 import androidx.appcompat.app.AlertDialog
 import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
@@ -31,25 +23,18 @@ import kotlin.coroutines.CoroutineContext
 
 class Settings : AppCompatActivity(), CoroutineScope {
 
-    private var userPool = CognitoUserPool(this, "us-east-2_ViMIOaCbk","4in76ncc44ufi8n1sq6m5uj7p7", "12qfl0nmg81nlft6aunvj6ec0ocejfecdau80biodpubkfuna0ee", Regions.US_EAST_2)
-
-
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    val languageList = arrayOf("English", "Spanish", "French")
     private val SETTING_INTENT = 13
-    private var languageSelected = "en_US"
     private lateinit var alertDialog : AlertDialog
     private lateinit var cgaID : String
-    //private lateinit var artisanName : String
     lateinit var job: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         cgaID = intent.extras!!.getString("cgaID")!!
-       // artisanName = intent.extras!!.getString("artisanName")!!
 
         settingCurrentLanguageTV.text = Locale.getDefault().displayLanguage
 
@@ -89,10 +74,8 @@ class Settings : AppCompatActivity(), CoroutineScope {
 
     private fun updateSetting(){
         var intent = Intent(this, HomeScreen::class.java)
-       // intent.putExtra("cgaId", cgaID)
         if (App.artisanMode) {
             intent = Intent(this, HomeScreenArtisan::class.java)
-            //intent.putExtra("artisanName", artisanName)
         }
         startActivity(intent)
         finish()
@@ -171,6 +154,7 @@ class Settings : AppCompatActivity(), CoroutineScope {
     }
 
     private fun logout() {
+        var userPool = CognitoUserPool(this, this.resources.getString(R.string.userPoolID), this.resources.getString(R.string.clientID), this.resources.getString(R.string.clientScret), Regions.US_EAST_2)
         if (App.artisanMode) {
             App.artisanMode = false
             var user = userPool.getUser(App.currentArtisan.email)
@@ -194,17 +178,5 @@ class Settings : AppCompatActivity(), CoroutineScope {
         if (requestCode == SETTING_INTENT) {
            recreate()
         }
-    }
-
-    private fun cancelSetting() {
-        var intent = Intent(this, HomeScreen::class.java)
-        Log.d("inside setting", "${App.artisanMode}")
-        if (App.artisanMode){
-            intent = Intent(this, HomeScreenArtisan::class.java)
-            //intent.putExtra("artisanName", artisanName)
-            //Log.d("from Setting", "$artisanName")
-        }
-        startActivity(intent)
-        finish()
     }
 }

@@ -1,33 +1,23 @@
 package com.amazonadonna.view
 
-import android.annotation.TargetApi
 import android.app.Activity
-import android.content.ContentUris
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.Image
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.DocumentsContract
-import android.provider.MediaStore
 import androidx.core.app.ActivityCompat
-import androidx.core.content.FileProvider
-import android.util.ArrayMap
 import android.util.Log
 import android.util.SparseArray
 import android.widget.ImageView
 import com.amazonadonna.database.ImageStorageProvider
-import com.amazonadonna.model.Artisan
 import com.amazonadonna.model.Product
-import com.amazonadonna.view.R
 import kotlinx.android.synthetic.main.activity_add_item_images.*
 import java.io.*
 import java.util.*
-
 
 class AddItemImages : AppCompatActivity() {
 
@@ -35,12 +25,9 @@ class AddItemImages : AppCompatActivity() {
     private val CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE = 1046
     private var imageNum : Int = 0
     private var photoFilesArr : HashMap<Int, File?> = HashMap(6)
-
     private val imageViewMap = SparseArray<ImageView>()
-    //TODO add editMode functionality
-    //TODO limit pics to 300kb size
-
     var editMode : Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item_images)
@@ -52,16 +39,12 @@ class AddItemImages : AppCompatActivity() {
         imageViewMap.put(4, addItemImage4)
         imageViewMap.put(5, addItemImage5)
 
-        //val IMAGE_UPLOADING_PERMISSION = 3
-        //ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), IMAGE_UPLOADING_PERMISSION)
-
         val PERMISSIONS = arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
         val IMAGE_UPLOADING_PERMISSION = 3
         ActivityCompat.requestPermissions(this, PERMISSIONS, IMAGE_UPLOADING_PERMISSION)
 
         val product = intent.extras?.getSerializable("product") as Product
-        //val artisan = intent.extras?.getSerializable("selectedArtisan") as Artisan
         editMode = intent.extras?.get("editMode") as Boolean
 
         addItemImage_continueButton.setOnClickListener {
@@ -142,15 +125,9 @@ class AddItemImages : AppCompatActivity() {
     private fun addItemImageContinue(product: Product) {
         val intent = Intent(this, AddItemReview::class.java)
         intent.putExtra("product", product)
-        //intent.putExtra("selectedArtisan", artisan)
         intent.putExtra("photoFiles", photoFilesArr)
-//        val bitmap = (addItemImage0.drawable as BitmapDrawable).bitmap
-//        val pic = Bitmap.createScaledBitmap(bitmap, 300, 300, true)
-//
-//        intent.putExtra("image0", pic)
         intent.putExtra("editMode", editMode)
         Log.i("AddItemImage", "product updated 3/4: " + product)
-
         startActivity(intent)
         finish()
     }
@@ -195,40 +172,9 @@ class AddItemImages : AppCompatActivity() {
         return Uri.parse(file.absolutePath)
     }
 
-    private fun scalePhotoFile(uri: Uri,w:Int, h:Int) {
-        val bm = loadScaledBitmap(uri, w, h)
-        val stream = ByteArrayOutputStream()
-        bm!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        var byteArray = stream.toByteArray()
-        //byteArray = ByteArray(photoFile!!.length().toInt())
-
-        try {
-            //convert array of bytes into file
-            val fileOuputStream = FileOutputStream(photoFile)
-            fileOuputStream.write(byteArray)
-            fileOuputStream.close()
-
-            println("Done")
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode) {
-            //TODO discuss if we want to have pic taken in list item
-//            CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE ->
-//                if (resultCode == Activity.RESULT_OK) {
-//                    try {
-//                        Log.d("AFTERPHOTO", "IT WORK 34")
-//                        Log.d("AFTERPHOTO", "Exists?: " + photoFile!!.exists())
-//                        setImageView()
-//                    }
-//                    catch(e: Error) {
-//                        Log.d("AFTERPHOTO", "AINT WORK 34")
-//                    }
-//                }
             CHOOSE_PHOTO_ACTIVITY_REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
                     val w = 331
@@ -254,54 +200,6 @@ class AddItemImages : AppCompatActivity() {
         }
     }
 
-    @TargetApi(19)
-    private fun createImageFile(data: Intent?) {
-        var imagePath: String? = null
-        val uri = data!!.data
-        val w = 331
-        val h = 273
-        if (DocumentsContract.isDocumentUri(this, uri)){
-            val docId = DocumentsContract.getDocumentId(uri)
-            if ("com.android.providers.media.documents" == uri.authority){
-                val id = docId.split(":")[1]
-                val selsetion = MediaStore.Images.Media._ID + "=" + id
-                imagePath = imagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selsetion)
-            }
-            else if ("com.android.providers.downloads.documents" == uri.authority){
-                val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(docId))
-                imagePath = imagePath(contentUri, null)
-            }
-        }
-        else if ("content".equals(uri.scheme, ignoreCase = true)){
-            imagePath = imagePath(uri, null)
-        }
-        else if ("file".equals(uri.scheme, ignoreCase = true)){
-            imagePath = uri.path
-        }
-
-        photoFile = File(imagePath)
-
-        //pre-scaling bits
-        val uri_test = FileProvider.getUriForFile(this@AddItemImages, "com.amazonadonna.amazonhandmade.fileprovider", photoFile!!)
-        val bm = loadScaledBitmap(uri_test, w, h)
-        val stream = ByteArrayOutputStream()
-        bm!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        var byteArray = stream.toByteArray()
-        //byteArray = ByteArray(photoFile!!.length().toInt())
-
-        try {
-            //convert array of bytes into file
-            val fileOuputStream = FileOutputStream(photoFile)
-            fileOuputStream.write(byteArray)
-            fileOuputStream.close()
-            Log.d("SKETIT", "lol")
-
-            println("Done")
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
     @Throws(FileNotFoundException::class)
     private fun loadScaledBitmap(src: Uri, req_w: Int, req_h: Int): Bitmap? {
 
@@ -323,8 +221,7 @@ class AddItemImages : AppCompatActivity() {
         return bm
     }
 
-    public fun calculateInSampleSize(options : BitmapFactory.Options,
-                                     reqWidth : Int, reqHeight : Int): Int {
+     fun calculateInSampleSize(options : BitmapFactory.Options, reqWidth : Int, reqHeight : Int): Int {
         // Raw height and width of image
         val height = options.outHeight;
         val width = options.outWidth;
@@ -351,18 +248,6 @@ class AddItemImages : AppCompatActivity() {
         return inSampleSize
     }
 
-    private fun imagePath(uri: Uri?, selection: String?): String {
-        var path: String? = null
-        val cursor = contentResolver.query(uri, null, selection, null, null )
-        if (cursor != null){
-            if (cursor.moveToFirst()) {
-                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
-            }
-            cursor.close()
-        }
-        return path!!
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             3 -> {
@@ -370,8 +255,4 @@ class AddItemImages : AppCompatActivity() {
                 }
             }
         }
-
-    //TODO save images to cache or sqlite to be fetched in the next screen.
-    //TODO clear image scources after saving the pics
-
 }

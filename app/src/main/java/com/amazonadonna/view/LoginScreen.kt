@@ -11,19 +11,14 @@ import androidx.appcompat.app.AlertDialog
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-
 import com.amazonaws.regions.Regions
-
 import com.amazon.identity.auth.device.AuthError
 import com.amazon.identity.auth.device.api.Listener
 import com.amazon.identity.auth.device.api.authorization.*
 import com.amazon.identity.auth.device.api.workflow.RequestContext
 import com.amazonadonna.artisanOnlyViews.HomeScreenArtisan
-import com.amazonadonna.artisanOnlyViews.ArtisanUpdatePassword
 import com.amazonadonna.model.App
 import com.amazonadonna.model.Artisan
-
-
 import kotlinx.android.synthetic.main.activity_login_screen.*
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.*
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation
@@ -37,40 +32,34 @@ import com.google.gson.reflect.TypeToken
 import okhttp3.*
 import java.io.IOException
 
-const val AUTHORITY = "com.amazonadonna.provider"
-const val ACCOUNT_TYPE = "amazonadonna.com"
-const val ACCOUNT = "dummyaccount3"
-const val SECONDS_PER_MINUTE = 60L
-const val SYNC_INTERVAL_IN_MINUTES = 60L
-const val SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE
-
 class LoginScreen : AppCompatActivity() {
     private val getArtisanUrl = App.BACKEND_BASE_URL + "/artisan/listAllForEmail"
     private var requestContext : RequestContext = RequestContext.create(this)
     private val scopes : Array<Scope> = arrayOf(ProfileScope.profile(), ProfileScope.postalCode(), ProfileScope.profile())
     private lateinit var alertDialog : AlertDialog
-    var userPool = CognitoUserPool(this@LoginScreen, "us-east-2_ViMIOaCbk","4in76ncc44ufi8n1sq6m5uj7p7", "12qfl0nmg81nlft6aunvj6ec0ocejfecdau80biodpubkfuna0ee", Regions.US_EAST_2)
-
-
     /**
      * Amazon Cognito for Artisans
      */
     private fun signInArtisan() {
+
+        if(!validateInput()){
+            return
+        }
+
         var email = email_et.text.toString()
         var password = password_et.text.toString()
         //TODO for testing remove before release
 //        email = "jhuang81@calpoly.edu"
 //        password = "HBp7X6gXdNa0"
 
+        var userPool = CognitoUserPool(this@LoginScreen, this.resources.getString(R.string.userPoolID), this.resources.getString(R.string.clientID), this.resources.getString(R.string.clientScret), Regions.US_EAST_2)
         var user = userPool.getUser(email)
-
 
         var authenticateUser = object : AuthenticationHandler {
             override fun onSuccess(userSession: CognitoUserSession?, newDevice: CognitoDevice?) {
                 // Sign-in was successful, cognitoUserSession will contain tokens for the user
                 Log.d("LoginScreen", "in authHandlerLogin success")
                 // go to home screen
-
                 getArtisanAndCheckPassword(email)
             }
 
@@ -114,7 +103,6 @@ class LoginScreen : AppCompatActivity() {
                     // Set new user password
                     newPasswordContinuation?.setPassword(password)
 
-
                     // Allow the sign-in to complete
                     newPasswordContinuation?.continueTask();
                 }
@@ -128,12 +116,8 @@ class LoginScreen : AppCompatActivity() {
                         "email and password are correct AND that you have confirmed your email.", Toast.LENGTH_LONG)
             }
         }
-
-
         user.getSessionInBackground(authenticateUser)
     }
-
-
 
     private fun getArtisanAndCheckPassword(email: String) {
         val requestBody = FormBody.Builder().add("email", email)
@@ -177,15 +161,6 @@ class LoginScreen : AppCompatActivity() {
         })
     }
 
-    private fun updateArtisanPassword(artisan: Artisan, email: String){
-        val intent =  Intent(this@LoginScreen, ArtisanUpdatePassword::class.java)
-        intent.putExtra("email", email)
-        intent.putExtra("artisan", artisan)
-        startActivity(intent)
-        finish()
-    }
-
-
     /**
      * Amazon OAuth for CGAs
      */
@@ -202,14 +177,14 @@ class LoginScreen : AppCompatActivity() {
         /* There was an error during the attempt to authorize the application. */
         override fun onError(ae: AuthError) {
             /* Inform the user of the error */
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             alertDialog.dismiss()
         }
 
         /* Authorization was cancelled before it could be completed. */
         override fun onCancel(cancellation: AuthCancellation) {
             /* Reset the UI to a ready-to-login state */
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             alertDialog.dismiss()
         }
     }
@@ -240,7 +215,6 @@ class LoginScreen : AppCompatActivity() {
 
         requestContext.registerListener(signUpListener)
 
-        //TODO implement Artisan login
         artisan_log_in_button.setOnClickListener {
             signInArtisan()
         }
@@ -297,12 +271,6 @@ class LoginScreen : AppCompatActivity() {
         }
 
         return true
-    }
-
-    private fun test() {
-        // go to home screen
-        val intent =  Intent(this, HomeScreenArtisan::class.java)
-        startActivity(intent)
     }
 
     private fun hideKeyboard(view: View) {

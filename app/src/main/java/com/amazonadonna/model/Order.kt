@@ -20,15 +20,7 @@ data class Order (
         @ColumnInfo(name = "products") @Json(name = "products") var products : MutableList<Product>,
         @ColumnInfo(name = "cgaId") @Json(name = "cgaId") var cgaId : String,
         @ColumnInfo(name = "synced") var synced : Int = Synchronizer.SYNCED)
-        //TODO change format of date
         //TODO uncomment when backend route supports orderDate, otherwise causes crash
         //@ColumnInfo(name = "orderDate") @Json(name = "orderDate") var orderDate : String)
         : Serializable {
-
-//    fun generateOrderID() {
-//        //TODO fill in logic for generating unique ID for artisan
-//        var num = Random().nextInt()
-//        orderId = shippingAddress + cgaId + num.toString()
-//    }
-
 }
