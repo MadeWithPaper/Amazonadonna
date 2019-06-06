@@ -27,6 +27,9 @@ interface PayoutDao {
             "LIMIT 1")
     fun findByID(id: String): Payout
 
+    @Query("UPDATE payout SET artisanId = :newArtisanId, synced = :syncState WHERE artisanId = :oldArtisanId")
+    fun updateArtisanIdAndUnsync(oldArtisanId: String, newArtisanId : String, syncState: Int)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(payouts: List<Payout>)
 

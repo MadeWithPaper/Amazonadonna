@@ -231,7 +231,8 @@ router.post('/edit', (req: Request, res: Response) => {
                                     lat = :lat,
                                     lon = :lon,
                                     balance = :balance,
-                                    picURL = :picURL`,
+                                    picURL = :picURL,
+                                    phoneNumber = :phoneNumber`,
                     ExpressionAttributeValues: {
                         ':cgaId': { S: whatToUpdate.cgaId },
                         ':bio': { S: whatToUpdate.bio },
@@ -241,7 +242,8 @@ router.post('/edit', (req: Request, res: Response) => {
                         ':lat': { N: whatToUpdate.lat.toString() },
                         ':lon': { N: whatToUpdate.lon.toString() },
                         ':balance': { N: whatToUpdate.balance.toString() },
-                        ':picURL': { S: whatToUpdate.picURL }
+                        ':picURL': { S: whatToUpdate.picURL },
+                        ':phoneNumber': { S: whatToUpdate.phoneNumber }
                     },
                     ReturnValues: 'UPDATED_NEW'
                 }

@@ -208,7 +208,7 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                 .add("newAccount", artisan.newAccount.toString())
                 .add("lat", artisan.lat.toString())
                 .add("lon", artisan.lon.toString())
-                .add("balance", "5000.0")
+                .add("balance", artisan.balance.toString())
                 .build()
 
         val client = OkHttpClient()
@@ -230,7 +230,8 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
                     Log.d("ArtisanSync", "OLDID " + artisan.artisanId)
                     runBlocking {
                         updateItemsForArtisan(context, artisan.artisanId, newArtisanId)
-                    }
+                        updatePayoutsForArtisan(context, artisan.artisanId, newArtisanId)
+                    } 
 
                     artisan.artisanId = newArtisanId
 
@@ -477,6 +478,10 @@ object ArtisanSync: Synchronizer(), CoroutineScope {
         AppDatabase.getDatabase(context).productDao().updateArtisanId(oldArtisanId, newArtisanId)
     }
 
+    private suspend fun updatePayoutsForArtisan(context : Context, oldArtisanId : String, newArtisanId : String) = withContext(Dispatchers.IO) {
+        Log.d("ArtisanSync", "Updating payouts " + oldArtisanId + " " + newArtisanId)
+        AppDatabase.getDatabase(context).payoutDao().updateArtisanIdAndUnsync(oldArtisanId, newArtisanId, SYNC_NEW)
+    }
 
     private suspend fun setSyncedState(artisan: Artisan, context : Context) = withContext(Dispatchers.IO) {
         //AppDatabase.getDatabase(context).artisanDao().setSyncedState(artisan.artisanId, SYNCED)

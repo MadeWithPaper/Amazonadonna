@@ -78,6 +78,7 @@ class PayoutSignature : AppCompatActivity() {
         val signatureFilePath = saveSignatureToCache()
         var payout = Payout("", amount, System.currentTimeMillis(), App.currentArtisan.artisanId, SYNC_NEW, "Not set", App.currentArtisan.cgaId)
         PayoutSync.addPayout(applicationContext, payout, App.currentArtisan, File(signatureFilePath))
+        //App.currentArtisan.balance -= amount
         runOnUiThread{
             showResponseDialog(true)
         }
