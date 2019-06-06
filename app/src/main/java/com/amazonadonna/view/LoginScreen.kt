@@ -48,9 +48,6 @@ class LoginScreen : AppCompatActivity() {
 
         var email = email_et.text.toString()
         var password = password_et.text.toString()
-        //TODO for testing remove before release
-//        email = "jhuang81@calpoly.edu"
-//        password = "HBp7X6gXdNa0"
 
         var userPool = CognitoUserPool(this@LoginScreen, this.resources.getString(R.string.userPoolID), this.resources.getString(R.string.clientID), this.resources.getString(R.string.clientScret), Regions.US_EAST_2)
         var user = userPool.getUser(email)
